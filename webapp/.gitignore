@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+*.pyo
+.streamlit/secrets.toml
+*.egg-info/
+dist/
+build/
+.env
+venv/
+.venv/
+
+# Symlinked directories (point to parent project root)
+# These should NOT be committed; setup.sh creates them.
+src
+data
+checkpoints
+configs
+demo
+results

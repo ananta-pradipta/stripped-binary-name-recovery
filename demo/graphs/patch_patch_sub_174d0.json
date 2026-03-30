@@ -1,0 +1,119 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_174d0",
+  "address": "0x174d0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00062632",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_ARITH_SUB",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "ARG_SETUP",
+        "RET_LOAD_ADDR",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP",
+        "ASSIGN_ADDR",
+        "ARG_SETUP_ONE",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 25,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 1,
+      "label": "000626f0",
+      "tokens": [
+        "ARG_SETUP",
+        "ARG_SETUP_SMALL",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 13,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 2,
+      "label": "00062736",
+      "tokens": [
+        "ARG_SETUP",
+        "ARG_SETUP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "ARG_SETUP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "RETVAL",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_error"
+      ],
+      "num_tokens": 31,
+      "has_external_call": true,
+      "external_call_name": "error"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "num_blocks": 3,
+  "num_edges": 2,
+  "internal_callees": [
+    "sub_205b0",
+    "sub_20db0"
+  ]
+}

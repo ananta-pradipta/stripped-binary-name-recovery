@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "__ctype_b_loc",
+  "address": "0x00016d84",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00016d84",
+      "tokens": [
+        "CALL___ctype_b_loc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_b_loc"
+    },
+    {
+      "id": 1,
+      "label": "000266f1",
+      "tokens": [
+        "CALL_iconv_open"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv_open"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,21 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "__cxa_finalize",
+  "address": "0x00088e21",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00088e21",
+      "tokens": [
+        "CALL___cxa_finalize"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__cxa_finalize"
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

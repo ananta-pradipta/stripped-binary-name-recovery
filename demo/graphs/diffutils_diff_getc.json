@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "getc",
+  "address": "0x00053b1d",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00053b1d",
+      "tokens": [
+        "CALL_getc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getc"
+    },
+    {
+      "id": 1,
+      "label": "0008cf64",
+      "tokens": [
+        "CALL_sigaddset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigaddset"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

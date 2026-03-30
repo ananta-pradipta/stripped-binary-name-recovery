@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "mktime",
+  "address": "0x00096564",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00096564",
+      "tokens": [
+        "CALL_mktime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mktime"
+    },
+    {
+      "id": 1,
+      "label": "000aceb0",
+      "tokens": [
+        "CALL_fseek"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fseek"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

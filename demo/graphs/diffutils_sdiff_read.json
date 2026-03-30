@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "read",
+  "address": "0x0001a7e3",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001a7e3",
+      "tokens": [
+        "CALL_read"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "read"
+    },
+    {
+      "id": 1,
+      "label": "000264d5",
+      "tokens": [
+        "CALL_memcmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memcmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

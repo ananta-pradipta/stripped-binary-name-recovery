@@ -1,0 +1,219 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_a000",
+  "address": "0xa000",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00068580",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "MEM_READ_GLOBAL",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 25,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 1,
+      "label": "00068630",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL___errno_location"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "__errno_location"
+    },
+    {
+      "id": 2,
+      "label": "00068648",
+      "tokens": [
+        "MEM_READ_GLOBAL",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "ARG_SETUP",
+        "STACK_OP",
+        "MEM_WRITE_RET_32",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 12,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 3,
+      "label": "00068698",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_strcoll"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "strcoll"
+    },
+    {
+      "id": 4,
+      "label": "000686b1",
+      "tokens": [
+        "RETVAL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 9,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 5,
+      "label": "0006875a",
+      "tokens": [
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 15,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 6,
+      "label": "0007ae36",
+      "tokens": [
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_strcasecmp"
+      ],
+      "num_tokens": 13,
+      "has_external_call": true,
+      "external_call_name": "strcasecmp"
+    },
+    {
+      "id": 7,
+      "label": "000686db",
+      "tokens": [
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_strcmp"
+      ],
+      "num_tokens": 15,
+      "has_external_call": true,
+      "external_call_name": "strcmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ]
+  ],
+  "num_blocks": 8,
+  "num_edges": 10,
+  "internal_callees": []
+}

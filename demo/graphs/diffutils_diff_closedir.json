@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "closedir",
+  "address": "0x0007a84a",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0007a84a",
+      "tokens": [
+        "CALL_closedir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "closedir"
+    },
+    {
+      "id": 1,
+      "label": "0008ccac",
+      "tokens": [
+        "CALL_regcomp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "regcomp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fchownat",
+  "address": "0x0005ef26",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005ef26",
+      "tokens": [
+        "CALL_fchownat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fchownat"
+    },
+    {
+      "id": 1,
+      "label": "000acf94",
+      "tokens": [
+        "CALL_renameat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "renameat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

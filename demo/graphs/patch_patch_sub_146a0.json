@@ -1,0 +1,457 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_146a0",
+  "address": "0x146a0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00067d06",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP_POW2",
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "MEM_READ_RET_64",
+        "STACK_STORE_64",
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigemptyset"
+      ],
+      "num_tokens": 35,
+      "has_external_call": true,
+      "external_call_name": "sigemptyset"
+    },
+    {
+      "id": 1,
+      "label": "00067e1d",
+      "tokens": [
+        "STACK_STORE_32",
+        "ASSIGN_SMALL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 10,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 2,
+      "label": "00067e51",
+      "tokens": [
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_LOAD_ADDR",
+        "ARG_SETUP_SMALL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigprocmask"
+      ],
+      "num_tokens": 12,
+      "has_external_call": true,
+      "external_call_name": "sigprocmask"
+    },
+    {
+      "id": 3,
+      "label": "00067e94",
+      "tokens": [
+        "BRANCH"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 4,
+      "label": "0009292a",
+      "tokens": [
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP_BYTE",
+        "STACK_OP",
+        "STACK_OP",
+        "ASSIGN_ADDR",
+        "ASSIGN_ADDR",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_signal"
+      ],
+      "num_tokens": 15,
+      "has_external_call": true,
+      "external_call_name": "signal"
+    },
+    {
+      "id": 5,
+      "label": "0009297a",
+      "tokens": [
+        "ARG_SETUP",
+        "ARITH_ADD",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigemptyset"
+      ],
+      "num_tokens": 6,
+      "has_external_call": true,
+      "external_call_name": "sigemptyset"
+    },
+    {
+      "id": 6,
+      "label": "000929a4",
+      "tokens": [
+        "BRANCH"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 7,
+      "label": "000929a5",
+      "tokens": [
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigaction"
+      ],
+      "num_tokens": 12,
+      "has_external_call": true,
+      "external_call_name": "sigaction"
+    },
+    {
+      "id": 8,
+      "label": "000929e9",
+      "tokens": [
+        "RETVAL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 9,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 9,
+      "label": "00092aa7",
+      "tokens": [
+        "STACK_LOAD_64",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 9,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 10,
+      "label": "00092aed",
+      "tokens": [
+        "STACK_OP",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigaddset"
+      ],
+      "num_tokens": 5,
+      "has_external_call": true,
+      "external_call_name": "sigaddset"
+    },
+    {
+      "id": 11,
+      "label": "00092b0f",
+      "tokens": [
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigaction"
+      ],
+      "num_tokens": 12,
+      "has_external_call": true,
+      "external_call_name": "sigaction"
+    },
+    {
+      "id": 12,
+      "label": "00092a13",
+      "tokens": [
+        "ASSIGN",
+        "ARITH_ADD",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "ARITH_SUB",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 17,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 13,
+      "label": "00067e95",
+      "tokens": [
+        "STACK_LOAD_64",
+        "RETVAL",
+        "MEM_READ_64",
+        "MEM_READ_RET_64",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 12,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 14,
+      "label": "00067ef0",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL___stack_chk_fail"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "__stack_chk_fail"
+    },
+    {
+      "id": 15,
+      "label": "00067f08",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 16,
+      "label": "00092871",
+      "tokens": [
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 23,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 17,
+      "label": "00092a97",
+      "tokens": [
+        "STACK_LOAD_32",
+        "BRANCH"
+      ],
+      "num_tokens": 2,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      13
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      8,
+      12
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      9,
+      12
+    ],
+    [
+      9,
+      10
+    ],
+    [
+      10,
+      11
+    ],
+    [
+      11,
+      12
+    ],
+    [
+      12,
+      17
+    ],
+    [
+      12,
+      13
+    ],
+    [
+      13,
+      14
+    ],
+    [
+      13,
+      16
+    ],
+    [
+      14,
+      15
+    ],
+    [
+      17,
+      7
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      15,
+      16
+    ],
+    [
+      16,
+      17
+    ]
+  ],
+  "num_blocks": 18,
+  "num_edges": 24,
+  "internal_callees": [
+    "sub_147b0"
+  ]
+}

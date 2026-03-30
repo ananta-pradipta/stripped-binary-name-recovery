@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "freopen",
+  "address": "0x00009d22",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00009d22",
+      "tokens": [
+        "CALL_freopen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "freopen"
+    },
+    {
+      "id": 1,
+      "label": "00035e9f",
+      "tokens": [
+        "CALL_strnlen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strnlen"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

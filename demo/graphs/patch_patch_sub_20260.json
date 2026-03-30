@@ -1,0 +1,33 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_20260",
+  "address": "0x20260",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000586cc",
+      "tokens": [
+        "ARG_SETUP",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "RET_LOAD_ADDR",
+        "ARG_SETUP",
+        "MEM_WRITE_ARG_32",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 13,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

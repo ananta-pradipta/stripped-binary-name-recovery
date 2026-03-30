@@ -1,0 +1,149 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_175b0",
+  "address": "0x175b0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000275df",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 6,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 1,
+      "label": "0002760b",
+      "tokens": [
+        "RETVAL",
+        "RETVAL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 10,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 2,
+      "label": "0002763d",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL___errno_location"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "__errno_location"
+    },
+    {
+      "id": 3,
+      "label": "00027655",
+      "tokens": [
+        "MEM_READ_RET_32",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 9,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 4,
+      "label": "000276cc",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 3,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 5,
+      "label": "000276de",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 6,
+      "label": "00027695",
+      "tokens": [
+        "RETVAL",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 6,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      6
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ]
+  ],
+  "num_blocks": 7,
+  "num_edges": 8,
+  "internal_callees": [
+    "sub_17550",
+    "sub_175e0",
+    "sub_18310"
+  ]
+}

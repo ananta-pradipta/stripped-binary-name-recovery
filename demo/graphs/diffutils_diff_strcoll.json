@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "strcoll",
+  "address": "0x000686a4",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000686a4",
+      "tokens": [
+        "CALL_strcoll"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strcoll"
+    },
+    {
+      "id": 1,
+      "label": "0008cdf0",
+      "tokens": [
+        "CALL_re_search"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "re_search"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

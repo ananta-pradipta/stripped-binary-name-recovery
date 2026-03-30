@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "__vfprintf_chk",
+  "address": "0x00058691",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00058691",
+      "tokens": [
+        "CALL___vfprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__vfprintf_chk"
+    },
+    {
+      "id": 1,
+      "label": "0008ca9c",
+      "tokens": [
+        "CALL___mempcpy_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__mempcpy_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

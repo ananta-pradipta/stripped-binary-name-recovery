@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "close",
+  "address": "0x000205bb",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000205bb",
+      "tokens": [
+        "CALL_close"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "close"
+    },
+    {
+      "id": 1,
+      "label": "000acd3c",
+      "tokens": [
+        "CALL_rewinddir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "rewinddir"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

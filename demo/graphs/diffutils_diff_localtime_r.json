@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "localtime_r",
+  "address": "0x0004e5fc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004e5fc",
+      "tokens": [
+        "CALL_localtime_r"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "localtime_r"
+    },
+    {
+      "id": 1,
+      "label": "0008cff6",
+      "tokens": [
+        "CALL_gmtime_r"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "gmtime_r"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

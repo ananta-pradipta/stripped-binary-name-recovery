@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "fstat",
+  "address": "0x0007c294",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0007c294",
+      "tokens": [
+        "CALL_fstat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fstat"
+    },
+    {
+      "id": 1,
+      "label": "0008cf58",
+      "tokens": [
+        "CALL_getc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

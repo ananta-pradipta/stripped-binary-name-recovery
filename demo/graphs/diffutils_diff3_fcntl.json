@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "fcntl",
+  "address": "0x0001ced9",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001ced9",
+      "tokens": [
+        "CALL_fcntl"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fcntl"
+    },
+    {
+      "id": 1,
+      "label": "00035daf",
+      "tokens": [
+        "CALL_write"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "write"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

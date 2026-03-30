@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "geteuid",
+  "address": "0x00064df8",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00064df8",
+      "tokens": [
+        "CALL_geteuid"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "geteuid"
+    },
+    {
+      "id": 1,
+      "label": "000acd30",
+      "tokens": [
+        "CALL_close"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "close"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

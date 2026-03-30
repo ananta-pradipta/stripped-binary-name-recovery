@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "readlink",
+  "address": "0x0005ed0b",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005ed0b",
+      "tokens": [
+        "CALL_readlink"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "readlink"
+    },
+    {
+      "id": 1,
+      "label": "000acbb0",
+      "tokens": [
+        "CALL_fcntl"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fcntl"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

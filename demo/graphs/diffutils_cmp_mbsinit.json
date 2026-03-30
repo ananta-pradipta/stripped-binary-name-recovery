@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "mbsinit",
+  "address": "0x00007538",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00007538",
+      "tokens": [
+        "CALL_mbsinit"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mbsinit"
+    },
+    {
+      "id": 1,
+      "label": "0002532e",
+      "tokens": [
+        "CALL_sigaltstack"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigaltstack"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

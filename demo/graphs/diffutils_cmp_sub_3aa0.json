@@ -1,0 +1,101 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "sub_3aa0",
+  "address": "0x3aa0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020be6",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "RETVAL",
+        "ARG_SETUP_POW2",
+        "MEM_READ_RET",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 14,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 1,
+      "label": "00020c56",
+      "tokens": [
+        "MEM_WRITE_RET",
+        "RETVAL",
+        "ARG_SETUP_ONE",
+        "MEM_READ_ARG_64",
+        "RETVAL",
+        "MEM_READ_ARG_32",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_lseek"
+      ],
+      "num_tokens": 9,
+      "has_external_call": true,
+      "external_call_name": "lseek"
+    },
+    {
+      "id": 2,
+      "label": "00020ca4",
+      "tokens": [
+        "ARG_SETUP_WORD",
+        "MEM_WRITE_ARG_64",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 7,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 3,
+      "label": "00021001",
+      "tokens": [
+        "RETVAL",
+        "MEM_READ_RET_64",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 7,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "num_blocks": 4,
+  "num_edges": 4,
+  "internal_callees": []
+}

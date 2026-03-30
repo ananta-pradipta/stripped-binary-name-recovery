@@ -1,0 +1,365 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_11bd0",
+  "address": "0x11bd0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00040513",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "RET_LOAD_ADDR",
+        "ARG_SETUP",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP",
+        "ARG_SETUP_BYTE",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "ARG_SETUP",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "STACK_OP",
+        "ARG_SETUP",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "RET_LOAD_ADDR",
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_malloc"
+      ],
+      "num_tokens": 53,
+      "has_external_call": true,
+      "external_call_name": "malloc"
+    },
+    {
+      "id": 1,
+      "label": "00040693",
+      "tokens": [
+        "RETVAL",
+        "RETVAL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 10,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 2,
+      "label": "00042c02",
+      "tokens": [
+        "ASSIGN",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "RET_LOAD_ADDR",
+        "ARG_SETUP",
+        "RETVAL",
+        "MEM_WRITE_IMM_BYTE_64",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 14,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 3,
+      "label": "00042c62",
+      "tokens": [
+        "RETVAL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 9,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 4,
+      "label": "00042c92",
+      "tokens": [
+        "ARG_SETUP",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 5,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 5,
+      "label": "00042cb4",
+      "tokens": [
+        "MEM_WRITE_RET_64",
+        "RETVAL",
+        "RETVAL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 11,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 6,
+      "label": "00042cf8",
+      "tokens": [
+        "ARG_SETUP_POW2",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_calloc"
+      ],
+      "num_tokens": 5,
+      "has_external_call": true,
+      "external_call_name": "calloc"
+    },
+    {
+      "id": 7,
+      "label": "00042d18",
+      "tokens": [
+        "MEM_WRITE_RET_64",
+        "RETVAL",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_ZF",
+        "BRANCH"
+      ],
+      "num_tokens": 10,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 8,
+      "label": "0004078c",
+      "tokens": [
+        "ARG_SETUP",
+        "ASSIGN_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_free"
+      ],
+      "num_tokens": 11,
+      "has_external_call": true,
+      "external_call_name": "free"
+    },
+    {
+      "id": 9,
+      "label": "000407c4",
+      "tokens": [
+        "BRANCH"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 10,
+      "label": "00042d54",
+      "tokens": [
+        "ASSIGN",
+        "ARITH_SHIFT",
+        "FLAG_CF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_AF",
+        "FLAG_OF",
+        "STACK_STORE_64",
+        "RETVAL",
+        "ASSIGN",
+        "RET_ARITH_ADD",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "MEM_WRITE_IMM_BYTE_64",
+        "MEM_WRITE_RET_64",
+        "MEM_WRITE_IMM_BYTE_64",
+        "MEM_WRITE_IMM_POW2_64",
+        "MEM_WRITE_IMM_POW2_64",
+        "MEM_WRITE_IMM_BYTE_64",
+        "BRANCH"
+      ],
+      "num_tokens": 25,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 11,
+      "label": "000406c5",
+      "tokens": [
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "RETVAL",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 24,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      11
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      8
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      8
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      7,
+      10
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      9,
+      11
+    ],
+    [
+      10,
+      11
+    ],
+    [
+      9,
+      10
+    ]
+  ],
+  "num_blocks": 12,
+  "num_edges": 16,
+  "internal_callees": [
+    "sub_11280",
+    "sub_11310"
+  ]
+}

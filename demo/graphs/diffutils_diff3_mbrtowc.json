@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "mbrtowc",
+  "address": "0x0000af0a",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000af0a",
+      "tokens": [
+        "CALL_mbrtowc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mbrtowc"
+    },
+    {
+      "id": 1,
+      "label": "00035e3f",
+      "tokens": [
+        "CALL_dup2"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dup2"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

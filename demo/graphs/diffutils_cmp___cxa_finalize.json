@@ -1,0 +1,21 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "__cxa_finalize",
+  "address": "0x000210e6",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000210e6",
+      "tokens": [
+        "CALL___cxa_finalize"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__cxa_finalize"
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

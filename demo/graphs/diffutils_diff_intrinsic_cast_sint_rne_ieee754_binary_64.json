@@ -1,0 +1,21 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "intrinsic:cast_sint_rne_ieee754_binary_64",
+  "address": "0x00092deb",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00092deb",
+      "tokens": [
+        "ASSIGN"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

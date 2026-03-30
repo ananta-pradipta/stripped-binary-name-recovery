@@ -1,0 +1,118 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "sub_4ba0",
+  "address": "0x4ba0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001e4c0",
+      "tokens": [
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "ARG_SETUP_SMALL",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_dcgettext"
+      ],
+      "num_tokens": 25,
+      "has_external_call": true,
+      "external_call_name": "dcgettext"
+    },
+    {
+      "id": 1,
+      "label": "0001e560",
+      "tokens": [
+        "ARG_SETUP_WORD",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP",
+        "RETVAL",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_error"
+      ],
+      "num_tokens": 26,
+      "has_external_call": true,
+      "external_call_name": "error"
+    },
+    {
+      "id": 2,
+      "label": "0001e5da",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 3,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 3,
+      "label": "0001e5ec",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "num_blocks": 4,
+  "num_edges": 3,
+  "internal_callees": [
+    "sub_4b70",
+    "sub_4bd0"
+  ]
+}

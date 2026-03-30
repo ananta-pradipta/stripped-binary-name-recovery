@@ -1,0 +1,111 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "sub_6840",
+  "address": "0x6840",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00006caa",
+      "tokens": [
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "ARG_SETUP_SMALL",
+        "ARG_SETUP_WORD",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_dcgettext"
+      ],
+      "num_tokens": 25,
+      "has_external_call": true,
+      "external_call_name": "dcgettext"
+    },
+    {
+      "id": 1,
+      "label": "00006d57",
+      "tokens": [
+        "MEM_READ_ARG_32",
+        "ARG_SETUP_WORD",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP",
+        "RETVAL",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_error"
+      ],
+      "num_tokens": 20,
+      "has_external_call": true,
+      "external_call_name": "error"
+    },
+    {
+      "id": 2,
+      "label": "00006dbc",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 3,
+      "label": "00006dce",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "num_blocks": 4,
+  "num_edges": 3,
+  "internal_callees": [
+    "sub_6880"
+  ]
+}

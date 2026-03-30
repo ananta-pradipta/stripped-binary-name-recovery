@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "sigaction",
+  "address": "0x00028513",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00028513",
+      "tokens": [
+        "CALL_sigaction"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigaction"
+    },
+    {
+      "id": 1,
+      "label": "00035d8b",
+      "tokens": [
+        "CALL_iswcntrl"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswcntrl"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

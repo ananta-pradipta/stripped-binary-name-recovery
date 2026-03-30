@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "unsetenv",
+  "address": "0x0004e7fb",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004e7fb",
+      "tokens": [
+        "CALL_unsetenv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "unsetenv"
+    },
+    {
+      "id": 1,
+      "label": "0008ced4",
+      "tokens": [
+        "CALL_getpagesize"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getpagesize"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

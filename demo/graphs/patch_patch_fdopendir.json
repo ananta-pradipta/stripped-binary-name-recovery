@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fdopendir",
+  "address": "0x00061101",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00061101",
+      "tokens": [
+        "CALL_fdopendir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fdopendir"
+    },
+    {
+      "id": 1,
+      "label": "000acf7c",
+      "tokens": [
+        "CALL_unsetenv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "unsetenv"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

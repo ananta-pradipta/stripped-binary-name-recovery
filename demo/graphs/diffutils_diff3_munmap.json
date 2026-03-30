@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "munmap",
+  "address": "0x00026153",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00026153",
+      "tokens": [
+        "CALL_munmap"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "munmap"
+    },
+    {
+      "id": 1,
+      "label": "00035f9b",
+      "tokens": [
+        "CALL_setlocale"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "setlocale"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,26 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_ddd0",
+  "address": "0xddd0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005c0a8",
+      "tokens": [
+        "MEM_READ_ARG_64",
+        "MEM_READ_ARG_64",
+        "ARG_SETUP_ONE",
+        "MEM_READ_ARG_64",
+        "ARG_SETUP",
+        "CALL_fwrite_unlocked"
+      ],
+      "num_tokens": 6,
+      "has_external_call": true,
+      "external_call_name": "fwrite_unlocked"
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

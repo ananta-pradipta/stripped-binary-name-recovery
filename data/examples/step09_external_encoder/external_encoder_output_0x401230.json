@@ -1,0 +1,49 @@
+{
+    "_meta": {
+        "step": "Step 9: External Call Encoder (Option B: Bi-GRU)",
+        "input": "Ordered list of external call names [\"socket\", \"bind\", \"listen\"]",
+        "output": "Calling context embedding c ∈ ℝ⁵¹²"
+    },
+    "function": "sub_401230",
+    "input_calls": ["socket", "bind", "listen"],
+
+    "step_1_embedding_lookup": {
+        "description": "Each external function name → dense vector via nn.Embedding",
+        "e_socket": [0.82, -0.14, 0.33, 0.57, "... (512 dims)"],
+        "e_bind":   [0.45, 0.67, -0.21, 0.19, "..."],
+        "e_listen": [0.61, 0.38, 0.12, -0.44, "..."],
+        "shape": "[3, 512]"
+    },
+
+    "step_2_bigru": {
+        "description": "Bidirectional GRU processes the sequence of call embeddings",
+        "forward_gru": {
+            "direction": "left → right: socket → bind → listen",
+            "final_hidden": [0.41, 0.22, -0.18, "... (256 dims)"],
+            "note": "Captures 'socket then bind then listen' sequential pattern"
+        },
+        "backward_gru": {
+            "direction": "right → left: listen → bind → socket",
+            "final_hidden": [0.14, 0.07, 0.23, "... (256 dims)"],
+            "note": "Captures reverse context"
+        },
+        "concatenated": {
+            "shape": "[512]",
+            "note": "Forward (256) + Backward (256) = 512"
+        }
+    },
+
+    "output": {
+        "calling_context_c": [0.55, 0.29, -0.08, 0.41, -0.33, 0.67, "... (512 total floats)"],
+        "shape": "[512]",
+        "description": "Single vector encoding the external call pattern of this function"
+    },
+
+    "no_external_calls_example": {
+        "function": "sub_401400 (compute_checksum)",
+        "input_calls": [],
+        "handling": "Use learned parameter: c = self.no_context_emb",
+        "no_context_emb": [0.01, -0.02, 0.03, -0.01, 0.02, -0.03, "... (512 dims, near-zero after training)"],
+        "note": "The gate in Step 10 will learn to push g → 1.0 for this case, effectively ignoring c"
+    }
+}

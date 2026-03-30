@@ -1,0 +1,89 @@
+{
+    "_meta": {
+        "step": "Step 4: BAP-IR → Per-Function Graph JSON (CFG + Normalized Tokens)",
+        "input": "BAP-IR text (output.bir) for function sub_401230",
+        "output": "This file: structured JSON with normalized tokens + CFG edges",
+        "normalization_rules": [
+            "Memory addresses → MEM",
+            "Constants > threshold → NUM",
+            "All mnemonics lowercased",
+            "Register names kept as-is (carry semantic meaning)"
+        ]
+    },
+    "binary": "net_utils",
+    "address": "0x401230",
+    "num_blocks": 5,
+    "num_edges": 4,
+    "blocks": [
+        {
+            "id": 0,
+            "label": "prologue",
+            "tokens": [
+                "mem", ":=", "mem", "with", "MEM", ":=", "RBP",
+                "RSP", ":=", "RSP", "-", "NUM",
+                "RBP", ":=", "RSP",
+                "RSP", ":=", "RSP", "-", "NUM",
+                "goto"
+            ],
+            "num_tokens": 21,
+            "has_external_call": false
+        },
+        {
+            "id": 1,
+            "label": "call_socket",
+            "tokens": [
+                "RDI", ":=", "NUM",
+                "RSI", ":=", "NUM",
+                "RDX", ":=", "NUM",
+                "call", "MEM"
+            ],
+            "num_tokens": 11,
+            "has_external_call": true,
+            "external_call_name": "socket"
+        },
+        {
+            "id": 2,
+            "label": "call_bind",
+            "tokens": [
+                "mem", "MEM", ":=", "low", "RAX",
+                "RDI", ":=", "pad", "low", "RAX",
+                "RSI", ":=", "RBP", "-", "NUM",
+                "RDX", ":=", "NUM",
+                "call", "MEM"
+            ],
+            "num_tokens": 21,
+            "has_external_call": true,
+            "external_call_name": "bind"
+        },
+        {
+            "id": 3,
+            "label": "call_listen",
+            "tokens": [
+                "RDI", ":=", "pad", "mem", "MEM",
+                "RSI", ":=", "NUM",
+                "call", "MEM"
+            ],
+            "num_tokens": 10,
+            "has_external_call": true,
+            "external_call_name": "listen"
+        },
+        {
+            "id": 4,
+            "label": "epilogue",
+            "tokens": [
+                "RSP", ":=", "RBP",
+                "RBP", ":=", "mem", "MEM",
+                "RSP", ":=", "RSP", "+", "NUM",
+                "return"
+            ],
+            "num_tokens": 13,
+            "has_external_call": false
+        }
+    ],
+    "edges": [
+        {"from": 0, "to": 1},
+        {"from": 1, "to": 2},
+        {"from": 2, "to": 3},
+        {"from": 3, "to": 4}
+    ]
+}

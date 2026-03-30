@@ -1,0 +1,88 @@
+# Ablation Model 4: GAT + Ext Call Encoder + Callee/Caller Context
+# All context encoders enabled, no pretraining, 8M params
+# V3 tokenization + Votes decoder
+data:
+  graphs_dir: data/graphs
+  labels_dir: data/labels
+  external_calls_dir: data/external_calls
+  bpe_model_path: data/bpe_model/bpe.model
+  votes_vocab_path: data/votes_vocab.json
+  external_vocab_path: data/external_calls/external_vocab.json
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  max_blocks_per_function: 30
+  max_tokens_per_block: 20
+  max_name_length: 20
+block_encoder:
+  type: transformer
+  token_vocab_size: 3000
+  token_embed_dim: 128
+  num_layers: 2
+  num_heads: 4
+  dropout: 0.15
+  output_dim: 256
+  token_pooling: mean
+  use_block_features: false
+  token_dropout: 0.0
+graph_encoder:
+  type: gat
+  hidden_dim: 256
+  num_layers: 2
+  num_heads: 4
+  dropout: 0.15
+  pooling: attention
+  output_dim: 512
+external_encoder:
+  enabled: true
+  vocab_size: 1000
+  embed_dim: 256
+  hidden_dim: 256
+  num_layers: 1
+  dropout: 0.1
+  output_dim: 512
+callee_encoder:
+  enabled: true
+  embed_dim: 64
+  hidden_dim: 128
+  dropout: 0.1
+caller_encoder:
+  enabled: true
+  embed_dim: 64
+  hidden_dim: 128
+  dropout: 0.1
+string_encoder:
+  enabled: false
+  vocab_size: 503
+  embed_dim: 64
+  hidden_dim: 128
+  dropout: 0.1
+multilabel:
+  enabled: false
+  hidden_dim: 512
+binary_fingerprint:
+  enabled: false
+  embed_dim: 64
+fusion:
+  type: gated
+  input_dim: 512
+decoder:
+  bpe_vocab_size: 3000
+  embed_dim: 256
+  hidden_dim: 512
+  num_layers: 1
+  dropout: 0.15
+  beam_width: 5
+  max_length: 20
+training:
+  epochs: 50
+  batch_size: 128
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler: cosine
+  warmup_steps: 200
+  gradient_clip: 1.0
+  early_stopping_patience: 10
+  checkpoint_dir: checkpoints/ablation_model4
+  aux_loss_weight: 0.0
+  aux_num_blocks_buckets: 7

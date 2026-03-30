@@ -1,0 +1,166 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_147d0",
+  "address": "0x147d0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00067f42",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "MEM_READ_RET_64",
+        "STACK_STORE_64",
+        "RETVAL",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_signal"
+      ],
+      "num_tokens": 35,
+      "has_external_call": true,
+      "external_call_name": "signal"
+    },
+    {
+      "id": 1,
+      "label": "00068023",
+      "tokens": [
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigemptyset"
+      ],
+      "num_tokens": 4,
+      "has_external_call": true,
+      "external_call_name": "sigemptyset"
+    },
+    {
+      "id": 2,
+      "label": "0006803d",
+      "tokens": [
+        "STACK_OP",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigaddset"
+      ],
+      "num_tokens": 5,
+      "has_external_call": true,
+      "external_call_name": "sigaddset"
+    },
+    {
+      "id": 3,
+      "label": "00068060",
+      "tokens": [
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP",
+        "ARG_SETUP_ONE",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_sigprocmask"
+      ],
+      "num_tokens": 12,
+      "has_external_call": true,
+      "external_call_name": "sigprocmask"
+    },
+    {
+      "id": 4,
+      "label": "0006809e",
+      "tokens": [
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_raise"
+      ],
+      "num_tokens": 4,
+      "has_external_call": true,
+      "external_call_name": "raise"
+    },
+    {
+      "id": 5,
+      "label": "000680b9",
+      "tokens": [
+        "ARG_SETUP_SMALL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_exit"
+      ],
+      "num_tokens": 4,
+      "has_external_call": true,
+      "external_call_name": "exit"
+    },
+    {
+      "id": 6,
+      "label": "000680d2",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ]
+  ],
+  "num_blocks": 7,
+  "num_edges": 6,
+  "internal_callees": [
+    "sub_14830"
+  ]
+}

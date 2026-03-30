@@ -1,0 +1,341 @@
+[
+  {
+    "address": "0x2ea0",
+    "bap_name": "sub_2ea0",
+    "predicted_name": "file_reader_add_file",
+    "score": -0.012155535102769106,
+    "num_blocks": 7,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x2e30",
+    "bap_name": "sub_2e30",
+    "predicted_name": "file_reader_init",
+    "score": -0.016014893022249004,
+    "num_blocks": 3,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x3d10",
+    "bap_name": "sub_3d10",
+    "predicted_name": "xrealloc",
+    "score": -0.023599094591791367,
+    "num_blocks": 30,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "free",
+      "realloc"
+    ]
+  },
+  {
+    "address": "0x3650",
+    "bap_name": "sub_3650",
+    "predicted_name": "hashtab_set_value",
+    "score": -0.02725044391341876,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x3760",
+    "bap_name": "sub_3760",
+    "predicted_name": "hashtab_dump_keys",
+    "score": -0.027381953690091488,
+    "num_blocks": 12,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x31a0",
+    "bap_name": "sub_31a0",
+    "predicted_name": "get_key_len",
+    "score": -0.029925876959914978,
+    "num_blocks": 18,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "strlen"
+    ]
+  },
+  {
+    "address": "0x2d50",
+    "bap_name": "sub_2d50",
+    "predicted_name": "dev_gnu_name",
+    "score": -0.02996992030345144,
+    "num_blocks": 15,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x3e80",
+    "bap_name": "sub_3e80",
+    "predicted_name": "xmemdup",
+    "score": -0.03125459324773656,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x3aa0",
+    "bap_name": "sub_3aa0",
+    "predicted_name": "fix_ut_type_field",
+    "score": -0.032821913001161274,
+    "num_blocks": 30,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "strcmp",
+      "strcmp",
+      "strcmp",
+      "strcmp",
+      "strcmp",
+      "strcmp"
+    ]
+  },
+  {
+    "address": "0x36f0",
+    "bap_name": "sub_36f0",
+    "predicted_name": "hashtab_next",
+    "score": -0.036401927631176785,
+    "num_blocks": 9,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x3820",
+    "bap_name": "sub_3820",
+    "predicted_name": "hashtab_delete",
+    "score": -0.039178709998690255,
+    "num_blocks": 9,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "free",
+      "free",
+      "free"
+    ]
+  },
+  {
+    "address": "0x3250",
+    "bap_name": "sub_3250",
+    "predicted_name": "hashtab_create",
+    "score": -0.04016123495519411,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "memcmp",
+      "memcpy",
+      "memset",
+      "free"
+    ]
+  },
+  {
+    "address": "0x3eb0",
+    "bap_name": "sub_3eb0",
+    "predicted_name": "xstrdup",
+    "score": -0.040708846941185255,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "strlen"
+    ]
+  },
+  {
+    "address": "0x29c0",
+    "bap_name": "sub_29c0",
+    "predicted_name": "setup_devices",
+    "score": -0.04116524431361638,
+    "num_blocks": 30,
+    "num_ext_calls": 10,
+    "ext_calls": [
+      "fwrite",
+      "strcmp",
+      "strcmp",
+      "strcmp",
+      "strlen",
+      "strlen",
+      "stat",
+      "strlen",
+      "strcpy",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x3220",
+    "bap_name": "sub_3220",
+    "predicted_name": "hashtab_init",
+    "score": -0.04358483103042557,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x27f0",
+    "bap_name": "sub_27f0",
+    "predicted_name": "file_open",
+    "score": -0.04670629173420731,
+    "num_blocks": 19,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "fopen",
+      "__stack_chk_fail",
+      "strlen",
+      "perror"
+    ]
+  },
+  {
+    "address": "0x3560",
+    "bap_name": "sub_3560",
+    "predicted_name": "hashtab_find",
+    "score": -0.04782012756341888,
+    "num_blocks": 24,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "memcmp"
+    ]
+  },
+  {
+    "address": "0x38e0",
+    "bap_name": "sub_38e0",
+    "predicted_name": "file_reader_get_entry",
+    "score": -0.05268332448921148,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "fseek",
+      "fseek",
+      "fclose",
+      "fseek"
+    ]
+  },
+  {
+    "address": "0x2f00",
+    "bap_name": "sub_2f00",
+    "predicted_name": "file_reader_get_entry",
+    "score": -0.0533180365703692,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "fseek",
+      "fseek",
+      "fclose",
+      "fseek"
+    ]
+  },
+  {
+    "address": "0x3ed0",
+    "bap_name": "sub_3ed0",
+    "predicted_name": "xalloc_die",
+    "score": -0.05862848743715877,
+    "num_blocks": 2,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "error",
+      "abort"
+    ]
+  },
+  {
+    "address": "0x3890",
+    "bap_name": "sub_3890",
+    "predicted_name": "sqlite3value_text",
+    "score": -0.07194714696185427,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x26c0",
+    "bap_name": "sub_26c0",
+    "predicted_name": "lua_c_runtilstate",
+    "score": -0.0984597972058083,
+    "num_blocks": 4,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x2690",
+    "bap_name": "sub_2690",
+    "predicted_name": "bfd_plugin_specified_p",
+    "score": -0.10921694295723282,
+    "num_blocks": 3,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x3cc0",
+    "bap_name": "sub_3cc0",
+    "predicted_name": "xmalloc",
+    "score": -0.12794478547826438,
+    "num_blocks": 9,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "malloc"
+    ]
+  },
+  {
+    "address": "0x2780",
+    "bap_name": "sub_2780",
+    "predicted_name": "debug_print_addr",
+    "score": -0.2137774929844435,
+    "num_blocks": 3,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x27b0",
+    "bap_name": "sub_27b0",
+    "predicted_name": "fatal",
+    "score": -0.2139610375262153,
+    "num_blocks": 3,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "exit"
+    ]
+  },
+  {
+    "address": "0x38f0",
+    "bap_name": "sub_38f0",
+    "predicted_name": "print_utmp_record",
+    "score": -0.30340067319431185,
+    "num_blocks": 22,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "__ctype_b_loc",
+      "fputc",
+      "fputc",
+      "fputc",
+      "fputs",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x27f4",
+    "bap_name": "sub_27f4",
+    "predicted_name": "file_open",
+    "score": -0.4041900025363962,
+    "num_blocks": 19,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "fopen",
+      "__stack_chk_fail",
+      "strlen",
+      "perror"
+    ]
+  },
+  {
+    "address": "0x3e40",
+    "bap_name": "sub_3e40",
+    "predicted_name": "xzalloc",
+    "score": -0.42301619063735163,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "memset"
+    ]
+  }
+]

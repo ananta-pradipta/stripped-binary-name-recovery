@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "fputc_unlocked",
+  "address": "0x0004af52",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004af52",
+      "tokens": [
+        "CALL_fputc_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputc_unlocked"
+    },
+    {
+      "id": 1,
+      "label": "0008cd3c",
+      "tokens": [
+        "CALL___memcpy_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__memcpy_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

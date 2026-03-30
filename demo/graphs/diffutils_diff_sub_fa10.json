@@ -1,0 +1,89 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_fa10",
+  "address": "0xfa10",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005c515",
+      "tokens": [
+        "MEM_READ_ARG_64",
+        "ARG_SETUP",
+        "MEM_READ_GLOBAL_64",
+        "ARG_ARITH_ADD",
+        "ARG_ARITH_ADD",
+        "ARG_ARITH_SUB",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "COND_BRANCH_OF",
+        "BRANCH"
+      ],
+      "num_tokens": 14,
+      "has_external_call": false,
+      "external_call_name": null
+    },
+    {
+      "id": 1,
+      "label": "0005c586",
+      "tokens": [
+        "ARG_SETUP",
+        "ARG_LOAD_ADDR",
+        "ARG_SETUP",
+        "RETVAL",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP_ONE",
+        "CALL___fprintf_chk"
+      ],
+      "num_tokens": 12,
+      "has_external_call": true,
+      "external_call_name": "__fprintf_chk"
+    },
+    {
+      "id": 2,
+      "label": "0005da15",
+      "tokens": [
+        "ARG_SETUP_POW2",
+        "ARG_LOAD_ADDR",
+        "ARG_SETUP_ONE",
+        "RETVAL",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP",
+        "CALL___fprintf_chk"
+      ],
+      "num_tokens": 12,
+      "has_external_call": true,
+      "external_call_name": "__fprintf_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "num_blocks": 3,
+  "num_edges": 3,
+  "internal_callees": []
+}

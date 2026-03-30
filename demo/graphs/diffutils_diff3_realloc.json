@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "realloc",
+  "address": "0x0001855c",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001855c",
+      "tokens": [
+        "CALL_realloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "realloc"
+    },
+    {
+      "id": 1,
+      "label": "00035f8f",
+      "tokens": [
+        "CALL_munmap"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "munmap"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

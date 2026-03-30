@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "textdomain",
+  "address": "0x0001dacc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001dacc",
+      "tokens": [
+        "CALL_textdomain"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "textdomain"
+    },
+    {
+      "id": 1,
+      "label": "000263c1",
+      "tokens": [
+        "CALL___open_2"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__open_2"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "renameat",
+  "address": "0x0004ad5a",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004ad5a",
+      "tokens": [
+        "CALL_renameat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "renameat"
+    },
+    {
+      "id": 1,
+      "label": "000acfa0",
+      "tokens": [
+        "CALL_exit"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "exit"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

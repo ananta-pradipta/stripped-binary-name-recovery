@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "ungetc",
+  "address": "0x0009cfa8",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0009cfa8",
+      "tokens": [
+        "CALL_ungetc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "ungetc"
+    },
+    {
+      "id": 1,
+      "label": "000ace8c",
+      "tokens": [
+        "CALL_lchown"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "lchown"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

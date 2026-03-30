@@ -1,0 +1,57 @@
+data:
+  graphs_dir: data/graphs
+  labels_dir: data/labels
+  external_calls_dir: data/external_calls
+  bpe_model_path: data/bpe_model/bpe.model
+  external_vocab_path: data/external_calls/external_vocab.json
+  train_split: 0.80
+  val_split: 0.10
+  test_split: 0.10
+  max_blocks_per_function: 50
+  max_tokens_per_block: 48
+  max_name_length: 12
+block_encoder:
+  type: transformer
+  token_vocab_size: 3000
+  token_embed_dim: 128
+  num_layers: 2
+  num_heads: 4
+  dropout: 0.15
+  output_dim: 256
+graph_encoder:
+  type: gat
+  hidden_dim: 256
+  num_layers: 2
+  num_heads: 4
+  dropout: 0.15
+  pooling: attention
+  output_dim: 512
+external_encoder:
+  enabled: false
+  vocab_size: 1000
+  embed_dim: 256
+  hidden_dim: 256
+  num_layers: 1
+  dropout: 0.1
+  output_dim: 512
+fusion:
+  type: none
+  input_dim: 512
+decoder:
+  bpe_vocab_size: 3000
+  embed_dim: 256
+  hidden_dim: 512
+  num_layers: 1
+  dropout: 0.15
+  beam_width: 5
+  max_length: 12
+training:
+  epochs: 50
+  batch_size: 128
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  scheduler: cosine
+  warmup_steps: 200
+  gradient_clip: 1.0
+  early_stopping_patience: 7
+  checkpoint_dir: checkpoints/variant3_gat

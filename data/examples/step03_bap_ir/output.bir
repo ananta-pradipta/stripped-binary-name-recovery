@@ -1,0 +1,110 @@
+; ============================================================
+; STEP 3: Stripped Binary → BAP-IR via BAP Lifting
+; ============================================================
+; INPUT:  net_utils_stripped (stripped binary, no symbols)
+; OUTPUT: This file: BAP Intermediate Representation (BIR)
+; COMMAND: bap net_utils_stripped --dump=bir:output.bir
+; ============================================================
+; NOTE: In the stripped binary, function names are gone.
+;       BAP recovers function boundaries and lifts to IR.
+;       "sub_401230" is what BAP calls the function at 0x401230.
+;       (We know from labels it's "socket_init", but model doesn't)
+; ============================================================
+
+sub_401230:
+  ; ---- block_0 (prologue) ----
+  block_0:
+    mem := mem with [RSP - 8, el]:u64 := RBP
+    RSP := RSP - 8
+    RBP := RSP
+    RSP := RSP - 0x20
+    goto block_1
+
+  ; ---- block_1 (call socket) ----
+  block_1:
+    RDI := 2
+    RSI := 1
+    RDX := 0
+    call @socket with return block_2
+
+  ; ---- block_2 (call bind) ----
+  block_2:
+    mem[RBP - 0x4, el]:u32 := low:32[RAX]
+    RDI := pad:64[low:32[RAX]]
+    RSI := RBP - 0x18
+    RDX := 0x10
+    call @bind with return block_3
+
+  ; ---- block_3 (call listen) ----
+  block_3:
+    RDI := pad:64[mem[RBP - 0x4, el]:u32]
+    RSI := 5
+    call @listen with return block_4
+
+  ; ---- block_4 (epilogue) ----
+  block_4:
+    RSP := RBP
+    RBP := mem[RSP, el]:u64
+    RSP := RSP + 8
+    return
+
+
+; ============================================================
+; Another function: sub_4012a0 (actually "parse_config")
+; ============================================================
+
+sub_4012a0:
+  block_0:
+    mem := mem with [RSP - 8, el]:u64 := RBP
+    RSP := RSP - 8
+    RBP := RSP
+    RSP := RSP - 0x110
+    RDI := RDI
+    RSI := 0x402010
+    call @fopen with return block_1
+
+  block_1:
+    mem[RBP - 0x8, el]:u64 := RAX
+    when RAX = 0 goto block_3
+    goto block_2
+
+  block_2:
+    RDI := mem[RBP - 0x110, el]:u64
+    RSI := 0x100
+    RDX := mem[RBP - 0x8, el]:u64
+    call @fgets with return block_1
+
+  block_3:
+    RDI := mem[RBP - 0x8, el]:u64
+    call @fclose with return block_4
+
+  block_4:
+    RAX := pad:64[mem[RBP - 0xC, el]:u32]
+    RSP := RBP
+    RBP := mem[RSP, el]:u64
+    RSP := RSP + 8
+    return
+
+
+; ============================================================
+; Another function: sub_401400 (actually "compute_checksum")
+; NOTE: This function has NO external calls - pure computation
+; ============================================================
+
+sub_401400:
+  block_0:
+    RAX := 0
+    RCX := 0
+    when RSI = 0 goto block_2
+    goto block_1
+
+  block_1:
+    RAX := RAX + pad:64[mem[RDI + RCX, el]:u8]
+    RAX := (RAX << 3) | (RAX >> 0x3D)
+    RAX := RAX ^ 0xA5A5A5A5
+    RCX := RCX + 1
+    when RCX < RSI goto block_1
+    goto block_2
+
+  block_2:
+    return

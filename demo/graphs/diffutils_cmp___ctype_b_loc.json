@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "__ctype_b_loc",
+  "address": "0x0001c879",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001c879",
+      "tokens": [
+        "CALL___ctype_b_loc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_b_loc"
+    },
+    {
+      "id": 1,
+      "label": "0002535e",
+      "tokens": [
+        "CALL_iconv_open"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv_open"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "rawmemchr",
+  "address": "0x00023bc3",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00023bc3",
+      "tokens": [
+        "CALL_rawmemchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "rawmemchr"
+    },
+    {
+      "id": 1,
+      "label": "000251d2",
+      "tokens": [
+        "CALL_calloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "calloc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

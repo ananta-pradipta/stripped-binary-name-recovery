@@ -1,0 +1,2566 @@
+[
+  {
+    "address": "0x117d0",
+    "bap_name": "sub_117d0",
+    "predicted_name": "hash_print_statistics",
+    "score": -0.012568993685009064,
+    "num_blocks": 30,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x11ae0",
+    "bap_name": "sub_11ae0",
+    "predicted_name": "hash_do_for_each",
+    "score": -0.014416982299942574,
+    "num_blocks": 12,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x17220",
+    "bap_name": "sub_17220",
+    "predicted_name": "x2nrealloc",
+    "score": -0.017442003223000057,
+    "num_blocks": 23,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x17190",
+    "bap_name": "sub_17190",
+    "predicted_name": "x2realloc",
+    "score": -0.017696075346593707,
+    "num_blocks": 11,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x16f90",
+    "bap_name": "sub_16f90",
+    "predicted_name": "xnrealloc",
+    "score": -0.02157202835323442,
+    "num_blocks": 8,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x17090",
+    "bap_name": "sub_17090",
+    "predicted_name": "xreallocarray",
+    "score": -0.02185660262886175,
+    "num_blocks": 15,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x18330",
+    "bap_name": "sub_18330",
+    "predicted_name": "c_strcasecmp",
+    "score": -0.023608379979228943,
+    "num_blocks": 10,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x15270",
+    "bap_name": "sub_15270",
+    "predicted_name": "install_for.constprop.0",
+    "score": -0.024423668001565924,
+    "num_blocks": 25,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "sigaction",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x4f73",
+    "bap_name": "sub_4f73",
+    "predicted_name": "quotearg_buffer_restyled.cold",
+    "score": -0.024868716901608863,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x11a00",
+    "bap_name": "sub_11a00",
+    "predicted_name": "hash_get_next",
+    "score": -0.02582092885101785,
+    "num_blocks": 12,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x104d0",
+    "bap_name": "sub_104d0",
+    "predicted_name": "exclude_add_pattern_buffer",
+    "score": -0.027398060247773744,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x14770",
+    "bap_name": "sub_14770",
+    "predicted_name": "mbsstr_trimmed_wordbounded",
+    "score": -0.028024040607130173,
+    "num_blocks": 30,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "strlen",
+      "__ctype_b_loc",
+      "__ctype_b_loc",
+      "free",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x10500",
+    "bap_name": "sub_10500",
+    "predicted_name": "fnmatch_pattern_has_wildcards",
+    "score": -0.028910350876688893,
+    "num_blocks": 30,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x17110",
+    "bap_name": "sub_17110",
+    "predicted_name": "xnmalloc",
+    "score": -0.028921687152186345,
+    "num_blocks": 13,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x12490",
+    "bap_name": "sub_12490",
+    "predicted_name": "mb_width_aux",
+    "score": -0.029967868449013245,
+    "num_blocks": 5,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x15600",
+    "bap_name": "sub_15600",
+    "predicted_name": "rof_scanf_lx",
+    "score": -0.030465145415836385,
+    "num_blocks": 13,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x153f0",
+    "bap_name": "sub_153f0",
+    "predicted_name": "sigsegv_install_handler",
+    "score": -0.030728151620126914,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x15dd0",
+    "bap_name": "sub_15dd0",
+    "predicted_name": "strnlen1",
+    "score": -0.030777616910780417,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x4f5e",
+    "bap_name": "sub_4f5e",
+    "predicted_name": "mbsstr_trimmed_wordbounded.cold",
+    "score": -0.031313424775146745,
+    "num_blocks": 3,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "abort",
+      "abort"
+    ]
+  },
+  {
+    "address": "0x11450",
+    "bap_name": "sub_11450",
+    "predicted_name": "hash_find_entry",
+    "score": -0.032485333998565666,
+    "num_blocks": 21,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x12540",
+    "bap_name": "sub_12540",
+    "predicted_name": "rpl_mbrtowc",
+    "score": -0.03265978828284643,
+    "num_blocks": 10,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x4f78",
+    "bap_name": "sub_4f78",
+    "predicted_name": "quotearg_n_options.cold",
+    "score": -0.03498507594879753,
+    "num_blocks": 12,
+    "num_ext_calls": 11,
+    "ext_calls": [
+      "abort",
+      "abort",
+      "abort",
+      "abort",
+      "abort",
+      "abort",
+      "abort",
+      "abort",
+      "abort",
+      "abort",
+      "abort"
+    ]
+  },
+  {
+    "address": "0x4f34",
+    "bap_name": "sub_4f34",
+    "predicted_name": "hash_find_entry.cold",
+    "score": -0.03547966103454422,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0xde10",
+    "bap_name": "sub_de10",
+    "predicted_name": "gettext_quote.part.0",
+    "score": -0.035561467013563615,
+    "num_blocks": 30,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x188b0",
+    "bap_name": "sub_188b0",
+    "predicted_name": "knuth_morris_pratt_multibyte",
+    "score": -0.03805782446235527,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "memcpy",
+      "memcmp",
+      "memcmp",
+      "memcpy",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x4f3e",
+    "bap_name": "sub_4f3e",
+    "predicted_name": "hash_lookup.cold",
+    "score": -0.03828937675246233,
+    "num_blocks": 3,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "abort",
+      "abort"
+    ]
+  },
+  {
+    "address": "0x1baa0",
+    "bap_name": "sub_1baa0",
+    "predicted_name": "str_cd_iconv",
+    "score": -0.03962194709808843,
+    "num_blocks": 30,
+    "num_ext_calls": 13,
+    "ext_calls": [
+      "strlen",
+      "malloc",
+      "iconv",
+      "iconv",
+      "__errno_location",
+      "iconv",
+      "realloc",
+      "__errno_location",
+      "realloc",
+      "realloc",
+      "free",
+      "__stack_chk_fail",
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0x11cd0",
+    "bap_name": "sub_11cd0",
+    "predicted_name": "hash_clear",
+    "score": -0.039914133042198895,
+    "num_blocks": 15,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x17510",
+    "bap_name": "sub_17510",
+    "predicted_name": "xstrdup",
+    "score": -0.04042199301955527,
+    "num_blocks": 6,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "strlen",
+      "malloc",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x15470",
+    "bap_name": "sub_15470",
+    "predicted_name": "stackoverflow_install_handler",
+    "score": -0.04097368172165948,
+    "num_blocks": 26,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "__stack_chk_fail",
+      "signal",
+      "perror",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x4f25",
+    "bap_name": "sub_4f25",
+    "predicted_name": "hash_rehash.cold",
+    "score": -0.04358601715107221,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x4f4e",
+    "bap_name": "sub_4f4e",
+    "predicted_name": "hash_rehash.cold",
+    "score": -0.04358601715107221,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x1b820",
+    "bap_name": "sub_1b820",
+    "predicted_name": "mem_cd_iconv",
+    "score": -0.0449833176527564,
+    "num_blocks": 30,
+    "num_ext_calls": 12,
+    "ext_calls": [
+      "iconv",
+      "iconv",
+      "__errno_location",
+      "iconv",
+      "malloc",
+      "__errno_location",
+      "iconv",
+      "iconv",
+      "__errno_location",
+      "iconv",
+      "free",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x161b0",
+    "bap_name": "sub_161b0",
+    "predicted_name": "localtime_rz",
+    "score": -0.04548006897412978,
+    "num_blocks": 16,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xb7a0",
+    "bap_name": "sub_b7a0",
+    "predicted_name": "vdbe_pma_reader_init",
+    "score": -0.04721064515294456,
+    "num_blocks": 10,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x168e0",
+    "bap_name": "sub_168e0",
+    "predicted_name": "version_etc_arn",
+    "score": -0.047800812433310344,
+    "num_blocks": 17,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "dcgettext",
+      "dcgettext",
+      "dcgettext"
+    ]
+  },
+  {
+    "address": "0x8ce0",
+    "bap_name": "sub_8ce0",
+    "predicted_name": "grecs_line_acc_grow_char",
+    "score": -0.050319994349484275,
+    "num_blocks": 18,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x1bcf0",
+    "bap_name": "sub_1bcf0",
+    "predicted_name": "str_iconv",
+    "score": -0.05079539749695098,
+    "num_blocks": 20,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "iconv_open",
+      "__errno_location",
+      "iconv_close",
+      "iconv_close",
+      "free",
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0x11280",
+    "bap_name": "sub_11280",
+    "predicted_name": "check_tuning",
+    "score": -0.05179944026373823,
+    "num_blocks": 13,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x14a80",
+    "bap_name": "sub_14a80",
+    "predicted_name": "proper_name_utf8",
+    "score": -0.05194529749118955,
+    "num_blocks": 30,
+    "num_ext_calls": 16,
+    "ext_calls": [
+      "dcgettext",
+      "strlen",
+      "memcpy",
+      "free",
+      "strchr",
+      "strcmp",
+      "free",
+      "free",
+      "strcmp",
+      "strcmp",
+      "strcmp",
+      "strlen",
+      "strlen",
+      "free",
+      "free",
+      "free"
+    ]
+  },
+  {
+    "address": "0x182c0",
+    "bap_name": "sub_182c0",
+    "predicted_name": "rpl_mktime",
+    "score": -0.05405727073546344,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x159b0",
+    "bap_name": "sub_159b0",
+    "predicted_name": "sigsegv_get_vma",
+    "score": -0.05533411295655592,
+    "num_blocks": 30,
+    "num_ext_calls": 15,
+    "ext_calls": [
+      "open",
+      "read",
+      "read",
+      "__errno_location",
+      "close",
+      "close",
+      "munmap",
+      "mmap",
+      "close",
+      "lseek",
+      "close",
+      "open",
+      "munmap",
+      "__stack_chk_fail",
+      "munmap"
+    ]
+  },
+  {
+    "address": "0x11310",
+    "bap_name": "sub_11310",
+    "predicted_name": "compute_bucket_size",
+    "score": -0.058645543347150775,
+    "num_blocks": 30,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x4f39",
+    "bap_name": "sub_4f39",
+    "predicted_name": "transfer_entries.cold",
+    "score": -0.059935240564049246,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0xabb0",
+    "bap_name": "sub_abb0",
+    "predicted_name": "ctf_dedup_maybe_synthesize_forward",
+    "score": -0.060422493951339314,
+    "num_blocks": 18,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x19570",
+    "bap_name": "sub_19570",
+    "predicted_name": "quotearg_buffer_restyled",
+    "score": -0.06106022812685171,
+    "num_blocks": 4,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max"
+    ]
+  },
+  {
+    "address": "0x4f53",
+    "bap_name": "sub_4f53",
+    "predicted_name": "hash_insert_if_absent.cold",
+    "score": -0.06169349727009007,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x8580",
+    "bap_name": "sub_8580",
+    "predicted_name": "lz4f_compress_begin_using_cdict",
+    "score": -0.06259870249861904,
+    "num_blocks": 9,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x129c0",
+    "bap_name": "sub_129c0",
+    "predicted_name": "strftime_intern.constprop",
+    "score": -0.06383382295116677,
+    "num_blocks": 30,
+    "num_ext_calls": 14,
+    "ext_calls": [
+      "__errno_location",
+      "memset",
+      "memset",
+      "memcpy",
+      "memset",
+      "__stack_chk_fail",
+      "memset",
+      "memset",
+      "memset",
+      "memcpy",
+      "strftime",
+      "memset",
+      "memset",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x17450",
+    "bap_name": "sub_17450",
+    "predicted_name": "xmemdup",
+    "score": -0.06479702923836758,
+    "num_blocks": 5,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "malloc",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x4f69",
+    "bap_name": "sub_4f69",
+    "predicted_name": "knuth_morris_pratt_multibyte.cons",
+    "score": -0.06496434605332406,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x17010",
+    "bap_name": "sub_17010",
+    "predicted_name": "xcharalloc",
+    "score": -0.06508882867873166,
+    "num_blocks": 5,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "malloc"
+    ]
+  },
+  {
+    "address": "0x8030",
+    "bap_name": "sub_8030",
+    "predicted_name": "lz4f_compress_frame_using_cdict",
+    "score": -0.06673402352212286,
+    "num_blocks": 9,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x172b0",
+    "bap_name": "sub_172b0",
+    "predicted_name": "xpalloc",
+    "score": -0.06699529218730689,
+    "num_blocks": 30,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "realloc"
+    ]
+  },
+  {
+    "address": "0xfa10",
+    "bap_name": "sub_fa10",
+    "predicted_name": "put_short_msb",
+    "score": -0.06759928930825866,
+    "num_blocks": 3,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x17550",
+    "bap_name": "sub_17550",
+    "predicted_name": "xalloc_die",
+    "score": -0.07024076597232404,
+    "num_blocks": 4,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "dcgettext",
+      "error",
+      "abort"
+    ]
+  },
+  {
+    "address": "0x17b10",
+    "bap_name": "sub_17b10",
+    "predicted_name": "ranged_convert",
+    "score": -0.07079689598575524,
+    "num_blocks": 21,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__errno_location",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x14530",
+    "bap_name": "sub_14530",
+    "predicted_name": "zn11environment14se",
+    "score": -0.07133874575176377,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x157d0",
+    "bap_name": "sub_157d0",
+    "predicted_name": "mapped_range_start",
+    "score": -0.07236544915039347,
+    "num_blocks": 24,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x106d0",
+    "bap_name": "sub_106d0",
+    "predicted_name": "exclude_fnmatch",
+    "score": -0.07267952767900548,
+    "num_blocks": 16,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x4f6e",
+    "bap_name": "sub_4f6e",
+    "predicted_name": "mbsstring.cold",
+    "score": -0.07309104871692142,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x19490",
+    "bap_name": "sub_19490",
+    "predicted_name": "gettext_quote.part.0",
+    "score": -0.07318466835609794,
+    "num_blocks": 18,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x185b0",
+    "bap_name": "sub_185b0",
+    "predicted_name": "knuth_morris_pratt",
+    "score": -0.07938883380971476,
+    "num_blocks": 30,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x63b0",
+    "bap_name": "sub_63b0",
+    "predicted_name": "fts5expr_clear_poslist",
+    "score": -0.07947218043285637,
+    "num_blocks": 30,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x16400",
+    "bap_name": "sub_16400",
+    "predicted_name": "trim2",
+    "score": -0.07984162763279488,
+    "num_blocks": 30,
+    "num_ext_calls": 13,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "__ctype_b_loc",
+      "strlen",
+      "memmove",
+      "strlen",
+      "__ctype_b_loc",
+      "strlen",
+      "strlen",
+      "memmove",
+      "strlen",
+      "__stack_chk_fail",
+      "__assert_fail",
+      "__assert_fail"
+    ]
+  },
+  {
+    "address": "0x4f2f",
+    "bap_name": "sub_4f2f",
+    "predicted_name": "byte_get_keymaps.cold",
+    "score": -0.07995213585742557,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0xf010",
+    "bap_name": "sub_f010",
+    "predicted_name": "unmap_matchword",
+    "score": -0.08155440961297372,
+    "num_blocks": 30,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "__ctype_b_loc",
+      "__ctype_b_loc",
+      "__ctype_b_loc"
+    ]
+  },
+  {
+    "address": "0x62f0",
+    "bap_name": "sub_62f0",
+    "predicted_name": "grecs_tree_first_node",
+    "score": -0.08206046982017731,
+    "num_blocks": 4,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x62c0",
+    "bap_name": "sub_62c0",
+    "predicted_name": "sqlite3_compileoptio",
+    "score": -0.08461321356559492,
+    "num_blocks": 3,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x11e70",
+    "bap_name": "sub_11e70",
+    "predicted_name": "hash_rehash",
+    "score": -0.08581606814255417,
+    "num_blocks": 20,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "calloc",
+      "free",
+      "free",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x12740",
+    "bap_name": "sub_12740",
+    "predicted_name": "mbscasecmp",
+    "score": -0.08723522660580539,
+    "num_blocks": 30,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "__ctype_b_loc",
+      "memcmp",
+      "memcmp",
+      "memcmp",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xba00",
+    "bap_name": "sub_ba00",
+    "predicted_name": "grecs_value_match",
+    "score": -0.08883934973932696,
+    "num_blocks": 10,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x7ea0",
+    "bap_name": "sub_7ea0",
+    "predicted_name": "bfd_elf_strtab_clear_all_refs",
+    "score": -0.08891724961396663,
+    "num_blocks": 8,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x16ff0",
+    "bap_name": "sub_16ff0",
+    "predicted_name": "xnrealloc",
+    "score": -0.09173857559460266,
+    "num_blocks": 5,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "malloc"
+    ]
+  },
+  {
+    "address": "0x17060",
+    "bap_name": "sub_17060",
+    "predicted_name": "xrealloc",
+    "score": -0.09225268784405839,
+    "num_blocks": 5,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "realloc"
+    ]
+  },
+  {
+    "address": "0x17030",
+    "bap_name": "sub_17030",
+    "predicted_name": "xrealloc",
+    "score": -0.09249661422836991,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "realloc"
+    ]
+  },
+  {
+    "address": "0x11040",
+    "bap_name": "sub_11040",
+    "predicted_name": "file_name_concat",
+    "score": -0.09363931424684976,
+    "num_blocks": 5,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xb640",
+    "bap_name": "sub_b640",
+    "predicted_name": "btree_overwrite",
+    "score": -0.09621596956589036,
+    "num_blocks": 13,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xec00",
+    "bap_name": "sub_ec00",
+    "predicted_name": "insert_entry.part.0",
+    "score": -0.09696036350909494,
+    "num_blocks": 30,
+    "num_ext_calls": 18,
+    "ext_calls": [
+      "strlen",
+      "strlen",
+      "strlen",
+      "strcpy",
+      "pipe",
+      "fork",
+      "close",
+      "close",
+      "dup2",
+      "close",
+      "__errno_location",
+      "_exit",
+      "puts",
+      "free",
+      "free",
+      "free",
+      "__stack_chk_fail",
+      "dcgettext"
+    ]
+  },
+  {
+    "address": "0x17490",
+    "bap_name": "sub_17490",
+    "predicted_name": "ximemdup",
+    "score": -0.09886824902424945,
+    "num_blocks": 5,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "malloc",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x15690",
+    "bap_name": "sub_15690",
+    "predicted_name": "mincore_is_near_this",
+    "score": -0.09915237358087348,
+    "num_blocks": 30,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xfe30",
+    "bap_name": "sub_fe30",
+    "predicted_name": "last_component",
+    "score": -0.10161543154563646,
+    "num_blocks": 11,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x9050",
+    "bap_name": "sub_9050",
+    "predicted_name": "move_file_options.part.0",
+    "score": -0.10446119574674238,
+    "num_blocks": 30,
+    "num_ext_calls": 30,
+    "ext_calls": [
+      "strcmp",
+      "isatty",
+      "fstat",
+      "lseek",
+      "__errno_location",
+      "stat",
+      "__errno_location",
+      "lstat",
+      "__errno_location",
+      "__errno_location",
+      "stat",
+      "lstat",
+      "__assert_fail",
+      "__assert_fail",
+      "strcmp",
+      "free",
+      "free",
+      "free",
+      "free",
+      "open",
+      "open",
+      "close",
+      "close",
+      "close",
+      "free",
+      "__errno_location",
+      "free",
+      "free",
+      "__stack_chk_fail",
+      "dcgettext"
+    ]
+  },
+  {
+    "address": "0xa310",
+    "bap_name": "sub_a310",
+    "predicted_name": "straaseed.part.0",
+    "score": -0.10501962970473327,
+    "num_blocks": 30,
+    "num_ext_calls": 12,
+    "ext_calls": [
+      "qsort",
+      "qsort",
+      "strcmp",
+      "strcmp",
+      "memmove",
+      "free",
+      "free",
+      "free",
+      "free",
+      "dcgettext",
+      "error",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x10c70",
+    "bap_name": "sub_10c70",
+    "predicted_name": "add_exclude_fp",
+    "score": -0.10528380435847542,
+    "num_blocks": 30,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "__errno_location",
+      "__ctype_b_loc",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x4f58",
+    "bap_name": "sub_4f58",
+    "predicted_name": "freea.cold",
+    "score": -0.10619556337633147,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x173b0",
+    "bap_name": "sub_173b0",
+    "predicted_name": "xcalloc",
+    "score": -0.10796619916601288,
+    "num_blocks": 9,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "calloc",
+      "calloc"
+    ]
+  },
+  {
+    "address": "0x124c0",
+    "bap_name": "sub_124c0",
+    "predicted_name": "bfd_x86_elf_copy_private_section_data",
+    "score": -0.10810500930408026,
+    "num_blocks": 6,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x4f2a",
+    "bap_name": "sub_4f2a",
+    "predicted_name": "mem_signein.cold",
+    "score": -0.11112020812909591,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x17760",
+    "bap_name": "sub_17760",
+    "predicted_name": "comp.part.0",
+    "score": -0.11135632581483704,
+    "num_blocks": 30,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xb890",
+    "bap_name": "sub_b890",
+    "predicted_name": "z24compose_unicode_pkc",
+    "score": -0.11366072678425418,
+    "num_blocks": 18,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x174d0",
+    "bap_name": "sub_174d0",
+    "predicted_name": "ximemdup0",
+    "score": -0.11434045830634185,
+    "num_blocks": 5,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "malloc",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x8c50",
+    "bap_name": "sub_8c50",
+    "predicted_name": "command_all_stmt.part.0",
+    "score": -0.11517606111072047,
+    "num_blocks": 5,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x1a990",
+    "bap_name": "sub_1a990",
+    "predicted_name": "count_array_format_meter_draw",
+    "score": -0.11613704135460907,
+    "num_blocks": 22,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "__errno_location",
+      "memset",
+      "free",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xeae0",
+    "bap_name": "sub_eae0",
+    "predicted_name": "warn_junits_panel_event_handler",
+    "score": -0.12017422022190022,
+    "num_blocks": 4,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "dcgettext",
+      "error"
+    ]
+  },
+  {
+    "address": "0x105e0",
+    "bap_name": "sub_105e0",
+    "predicted_name": "free_exclude",
+    "score": -0.12357293332000223,
+    "num_blocks": 23,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "free",
+      "free",
+      "free",
+      "free",
+      "free",
+      "free"
+    ]
+  },
+  {
+    "address": "0x10160",
+    "bap_name": "sub_10160",
+    "predicted_name": "fnmatch_no_wildcards",
+    "score": -0.12417298819973681,
+    "num_blocks": 20,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "strcmp",
+      "strchr",
+      "free",
+      "strlen",
+      "strncmp"
+    ]
+  },
+  {
+    "address": "0x16e10",
+    "bap_name": "sub_16e10",
+    "predicted_name": "version_etc",
+    "score": -0.12461002048879834,
+    "num_blocks": 11,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x163d0",
+    "bap_name": "sub_163d0",
+    "predicted_name": "mbiter_multi_next.part.0",
+    "score": -0.12876601217583378,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__assert_fail"
+    ]
+  },
+  {
+    "address": "0x177d0",
+    "bap_name": "sub_177d0",
+    "predicted_name": "rpl_fopen",
+    "score": -0.12912904767792485,
+    "num_blocks": 27,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "strlen",
+      "open",
+      "__errno_location",
+      "close",
+      "fopen",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x111d0",
+    "bap_name": "sub_111d0",
+    "predicted_name": "hard_locale",
+    "score": -0.13471796881497877,
+    "num_blocks": 20,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x17410",
+    "bap_name": "sub_17410",
+    "predicted_name": "xnmalloc",
+    "score": -0.13529052547566395,
+    "num_blocks": 9,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "calloc",
+      "calloc"
+    ]
+  },
+  {
+    "address": "0x11ff0",
+    "bap_name": "sub_11ff0",
+    "predicted_name": "hash_insert_if_absent",
+    "score": -0.13674463841678777,
+    "num_blocks": 30,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "malloc",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x149f0",
+    "bap_name": "sub_149f0",
+    "predicted_name": "proper_name",
+    "score": -0.13721831107856833,
+    "num_blocks": 10,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "dcgettext",
+      "strlen",
+      "strlen"
+    ]
+  },
+  {
+    "address": "0x1aca0",
+    "bap_name": "sub_1aca0",
+    "predicted_name": "quotearg_buffer",
+    "score": -0.13890957002983223,
+    "num_blocks": 3,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0x158b0",
+    "bap_name": "sub_158b0",
+    "predicted_name": "mapped_range_end",
+    "score": -0.1393086834494361,
+    "num_blocks": 24,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x18740",
+    "bap_name": "sub_18740",
+    "predicted_name": "mbuiter_multi_next.part.0",
+    "score": -0.13952356721611875,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "strlen",
+      "__assert_fail",
+      "__assert_fail",
+      "__assert_fail"
+    ]
+  },
+  {
+    "address": "0xe2c0",
+    "bap_name": "sub_e2c0",
+    "predicted_name": "regex_get_insert_by_referenced",
+    "score": -0.14071429087080356,
+    "num_blocks": 23,
+    "num_ext_calls": 7,
+    "ext_calls": [
+      "strlen",
+      "strlen",
+      "strlen",
+      "dcgettext",
+      "strlen",
+      "dcgettext",
+      "free"
+    ]
+  },
+  {
+    "address": "0x15f40",
+    "bap_name": "sub_15f40",
+    "predicted_name": "save_abbr",
+    "score": -0.14264311211677552,
+    "num_blocks": 28,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "strcmp",
+      "strlen",
+      "memcpy",
+      "strlen",
+      "strcmp"
+    ]
+  },
+  {
+    "address": "0x16260",
+    "bap_name": "sub_16260",
+    "predicted_name": "mktime_z",
+    "score": -0.1470433380780205,
+    "num_blocks": 30,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x16ef0",
+    "bap_name": "sub_16ef0",
+    "predicted_name": "version_etc_arn",
+    "score": -0.14788263918947897,
+    "num_blocks": 7,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "dcgettext",
+      "dcgettext",
+      "dcgettext"
+    ]
+  },
+  {
+    "address": "0x11060",
+    "bap_name": "sub_11060",
+    "predicted_name": "mfile_name_concat",
+    "score": -0.15113539020640612,
+    "num_blocks": 16,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "strlen",
+      "malloc"
+    ]
+  },
+  {
+    "address": "0x17590",
+    "bap_name": "sub_17590",
+    "predicted_name": "x2malloc",
+    "score": -0.15621572842644804,
+    "num_blocks": 5,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xf490",
+    "bap_name": "sub_f490",
+    "predicted_name": "bfd_calc_gnu_debuglink_crc32",
+    "score": -0.16184704009350354,
+    "num_blocks": 7,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xa740",
+    "bap_name": "sub_a740",
+    "predicted_name": "load_specific_debug_info",
+    "score": -0.16576099315950793,
+    "num_blocks": 22,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "strcmp",
+      "free",
+      "free",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x11bd0",
+    "bap_name": "sub_11bd0",
+    "predicted_name": "xnrealloc",
+    "score": -0.16919930629421703,
+    "num_blocks": 12,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "malloc",
+      "calloc",
+      "free"
+    ]
+  },
+  {
+    "address": "0xf920",
+    "bap_name": "sub_f920",
+    "predicted_name": "symtab_straction",
+    "score": -0.17122715013884082,
+    "num_blocks": 8,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x125d0",
+    "bap_name": "sub_125d0",
+    "predicted_name": "mbuiter_multi_next.part.0",
+    "score": -0.17236771450350435,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "strlen",
+      "__assert_fail",
+      "__assert_fail",
+      "__assert_fail"
+    ]
+  },
+  {
+    "address": "0xaa60",
+    "bap_name": "sub_aa60",
+    "predicted_name": "where_loop_add",
+    "score": -0.1746502141833513,
+    "num_blocks": 23,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "__overflow",
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x8fc0",
+    "bap_name": "sub_8fc0",
+    "predicted_name": "set_a_defstring",
+    "score": -0.17759631977586368,
+    "num_blocks": 8,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "strcmp",
+      "dcgettext",
+      "error"
+    ]
+  },
+  {
+    "address": "0x4f49",
+    "bap_name": "sub_4f49",
+    "predicted_name": "hash_get_next.cold",
+    "score": -0.18183906502495695,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0xfa70",
+    "bap_name": "sub_fa70",
+    "predicted_name": "terminal_get_matcher",
+    "score": -0.18910455531184908,
+    "num_blocks": 30,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__ctype_b_loc",
+      "__ctype_b_loc"
+    ]
+  },
+  {
+    "address": "0x14600",
+    "bap_name": "sub_14600",
+    "predicted_name": "mbuiter_multi_next.part.0",
+    "score": -0.1906071453604361,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "strlen",
+      "__assert_fail",
+      "__assert_fail",
+      "__assert_fail"
+    ]
+  },
+  {
+    "address": "0x12410",
+    "bap_name": "sub_12410",
+    "predicted_name": "mmalloc",
+    "score": -0.19436932288289904,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "malloc"
+    ]
+  },
+  {
+    "address": "0xd7a0",
+    "bap_name": "sub_d7a0",
+    "predicted_name": "demangle_bare_function_type",
+    "score": -0.19441699519147335,
+    "num_blocks": 23,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xe610",
+    "bap_name": "sub_e610",
+    "predicted_name": "setup_archive_member_name",
+    "score": -0.19823838111986933,
+    "num_blocks": 30,
+    "num_ext_calls": 9,
+    "ext_calls": [
+      "isatty",
+      "strcmp",
+      "dcgettext",
+      "error",
+      "dcgettext",
+      "error",
+      "free",
+      "free",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x12460",
+    "bap_name": "sub_12460",
+    "predicted_name": "freea",
+    "score": -0.19952318952565742,
+    "num_blocks": 4,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "free"
+    ]
+  },
+  {
+    "address": "0x17d10",
+    "bap_name": "sub_17d10",
+    "predicted_name": "mktime_internal",
+    "score": -0.20138204511486224,
+    "num_blocks": 30,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "__errno_location",
+      "__errno_location",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x14ec0",
+    "bap_name": "sub_14ec0",
+    "predicted_name": "bfd_coff_write_ar_hdr",
+    "score": -0.20368988386467862,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "strlen"
+    ]
+  },
+  {
+    "address": "0x1bdb0",
+    "bap_name": "sub_1bdb0",
+    "predicted_name": "rpl_fcntl",
+    "score": -0.20493367616087285,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "__errno_location",
+      "__errno_location",
+      "close",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x12270",
+    "bap_name": "sub_12270",
+    "predicted_name": "hash_remove",
+    "score": -0.2154953787822499,
+    "num_blocks": 30,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "free",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xfed0",
+    "bap_name": "sub_fed0",
+    "predicted_name": "die",
+    "score": -0.21773668435316337,
+    "num_blocks": 26,
+    "num_ext_calls": 9,
+    "ext_calls": [
+      "strlen",
+      "strlen",
+      "write",
+      "write",
+      "write",
+      "write",
+      "raise",
+      "abort",
+      "_exit"
+    ]
+  },
+  {
+    "address": "0x175b0",
+    "bap_name": "sub_175b0",
+    "predicted_name": "xanalloc",
+    "score": -0.21922440774178956,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0xa000",
+    "bap_name": "sub_a000",
+    "predicted_name": "kill_delayed_set_stat",
+    "score": -0.22104011380117536,
+    "num_blocks": 8,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__errno_location",
+      "strcmp"
+    ]
+  },
+  {
+    "address": "0x11560",
+    "bap_name": "sub_11560",
+    "predicted_name": "transfer_entries",
+    "score": -0.2233904944105385,
+    "num_blocks": 26,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "malloc"
+    ]
+  },
+  {
+    "address": "0xeee0",
+    "bap_name": "sub_eee0",
+    "predicted_name": "get_volume_file_name",
+    "score": -0.22637142682856431,
+    "num_blocks": 21,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "fclose",
+      "waitpid",
+      "__stack_chk_fail",
+      "dcgettext",
+      "dcgettext",
+      "error"
+    ]
+  },
+  {
+    "address": "0xad80",
+    "bap_name": "sub_ad80",
+    "predicted_name": "elf_i386_reloc_type",
+    "score": -0.23026084852209952,
+    "num_blocks": 6,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xa2a0",
+    "bap_name": "sub_a2a0",
+    "predicted_name": "settime",
+    "score": -0.23080445614738052,
+    "num_blocks": 9,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__errno_location",
+      "strcmp"
+    ]
+  },
+  {
+    "address": "0x10f50",
+    "bap_name": "sub_10f50",
+    "predicted_name": "fetch_indirect_line_string",
+    "score": -0.23353766721572694,
+    "num_blocks": 17,
+    "num_ext_calls": 9,
+    "ext_calls": [
+      "dcgettext",
+      "dcgettext",
+      "dcgettext",
+      "dcgettext",
+      "dcgettext",
+      "dcgettext",
+      "dcgettext",
+      "dcgettext",
+      "dcgettext"
+    ]
+  },
+  {
+    "address": "0xd900",
+    "bap_name": "sub_d900",
+    "predicted_name": "gzputc",
+    "score": -0.23782969300922044,
+    "num_blocks": 30,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x15ea0",
+    "bap_name": "sub_15ea0",
+    "predicted_name": "dstrdup",
+    "score": -0.24249705953156614,
+    "num_blocks": 10,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "malloc",
+      "strlen",
+      "malloc",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0xfe90",
+    "bap_name": "sub_fe90",
+    "predicted_name": "xstrdup",
+    "score": -0.24277518983087992,
+    "num_blocks": 5,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "strlen"
+    ]
+  },
+  {
+    "address": "0x1ab80",
+    "bap_name": "sub_1ab80",
+    "predicted_name": "clone_quoting_options",
+    "score": -0.2445139814721681,
+    "num_blocks": 3,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0xbca0",
+    "bap_name": "sub_bca0",
+    "predicted_name": "doparse",
+    "score": -0.2542135643833966,
+    "num_blocks": 30,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "__ctype_b_loc",
+      "__ctype_b_loc",
+      "memcmp",
+      "free",
+      "free",
+      "__ctype_b_loc"
+    ]
+  },
+  {
+    "address": "0x18dc0",
+    "bap_name": "sub_18dc0",
+    "predicted_name": "mbsstr",
+    "score": -0.2550068460164849,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "memcmp",
+      "memcmp",
+      "strlen",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x10e80",
+    "bap_name": "sub_10e80",
+    "predicted_name": "close_stdout",
+    "score": -0.2554053851855644,
+    "num_blocks": 13,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__errno_location",
+      "fclose"
+    ]
+  },
+  {
+    "address": "0xd5a0",
+    "bap_name": "sub_d5a0",
+    "predicted_name": "print_llose",
+    "score": -0.25718624446735644,
+    "num_blocks": 30,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__overflow",
+      "__overflow"
+    ]
+  },
+  {
+    "address": "0xe440",
+    "bap_name": "sub_e440",
+    "predicted_name": "make_display_handler",
+    "score": -0.26558670191552997,
+    "num_blocks": 27,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "sigaction",
+      "sigaction",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x9f30",
+    "bap_name": "sub_9f30",
+    "predicted_name": "line_find_var_internal",
+    "score": -0.2661302942709537,
+    "num_blocks": 16,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x176b0",
+    "bap_name": "sub_176b0",
+    "predicted_name": "read_num",
+    "score": -0.26634865086029896,
+    "num_blocks": 11,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "read",
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0x7d40",
+    "bap_name": "sub_7d40",
+    "predicted_name": "print_exit_status",
+    "score": -0.2678999763831257,
+    "num_blocks": 18,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "localtime",
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xd170",
+    "bap_name": "sub_d170",
+    "predicted_name": "print_file_control",
+    "score": -0.26873356090089867,
+    "num_blocks": 30,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "__overflow",
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x175e0",
+    "bap_name": "sub_175e0",
+    "predicted_name": "xalloc_die",
+    "score": -0.26988808573566364,
+    "num_blocks": 5,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "dcgettext",
+      "error"
+    ]
+  },
+  {
+    "address": "0x8f00",
+    "bap_name": "sub_8f00",
+    "predicted_name": "read_quote_error",
+    "score": -0.2801387875250514,
+    "num_blocks": 6,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "dcgettext",
+      "error",
+      "dcgettext",
+      "error"
+    ]
+  },
+  {
+    "address": "0x10790",
+    "bap_name": "sub_10790",
+    "predicted_name": "add_file_name",
+    "score": -0.29232283989465335,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "strlen",
+      "strcpy",
+      "strrchr",
+      "strchr",
+      "free"
+    ]
+  },
+  {
+    "address": "0x80c0",
+    "bap_name": "sub_80c0",
+    "predicted_name": "format_total_file",
+    "score": -0.30008985928469023,
+    "num_blocks": 30,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x10940",
+    "bap_name": "sub_10940",
+    "predicted_name": "add_exclude",
+    "score": -0.30349241076511496,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "free",
+      "strlen",
+      "memcpy",
+      "free"
+    ]
+  },
+  {
+    "address": "0xb980",
+    "bap_name": "sub_b980",
+    "predicted_name": "get_instruction_pointer",
+    "score": -0.3087962190394379,
+    "num_blocks": 9,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xe400",
+    "bap_name": "sub_e400",
+    "predicted_name": "clean_temp_asyncsafe_close",
+    "score": -0.30939976062451524,
+    "num_blocks": 4,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__errno_location",
+      "error"
+    ]
+  },
+  {
+    "address": "0xb380",
+    "bap_name": "sub_b380",
+    "predicted_name": "print_file_name",
+    "score": -0.3103569180220054,
+    "num_blocks": 21,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x16070",
+    "bap_name": "sub_16070",
+    "predicted_name": "set_tz",
+    "score": -0.31061543178758494,
+    "num_blocks": 22,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "getenv",
+      "strcmp",
+      "setenv",
+      "unsetenv",
+      "__errno_location",
+      "free"
+    ]
+  },
+  {
+    "address": "0x8e30",
+    "bap_name": "sub_8e30",
+    "predicted_name": "simple_backup_name",
+    "score": -0.3117235128075752,
+    "num_blocks": 13,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "strlen",
+      "error",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x183a0",
+    "bap_name": "sub_183a0",
+    "predicted_name": "hash_find_source",
+    "score": -0.32043646600196013,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "__errno_location",
+      "memcpy",
+      "__errno_location",
+      "__errno_location",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x17680",
+    "bap_name": "sub_17680",
+    "predicted_name": "xstr_iconv",
+    "score": -0.32591716781371854,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0xf4f0",
+    "bap_name": "sub_f4f0",
+    "predicted_name": "print_command",
+    "score": -0.3280929059335242,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "__overflow",
+      "__ctype_b_loc",
+      "__overflow",
+      "__overflow"
+    ]
+  },
+  {
+    "address": "0x14550",
+    "bap_name": "sub_14550",
+    "predicted_name": "re_string_context_filename",
+    "score": -0.3365279725801053,
+    "num_blocks": 15,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "fwrite",
+      "abort",
+      "strrchr",
+      "strncmp"
+    ]
+  },
+  {
+    "address": "0xdb60",
+    "bap_name": "sub_db60",
+    "predicted_name": "copy_tree",
+    "score": -0.34851712209255253,
+    "num_blocks": 25,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x11d80",
+    "bap_name": "sub_11d80",
+    "predicted_name": "sframe_decoder_free",
+    "score": -0.35151200382681463,
+    "num_blocks": 25,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "free",
+      "free",
+      "free",
+      "free"
+    ]
+  },
+  {
+    "address": "0x1b770",
+    "bap_name": "sub_1b770",
+    "predicted_name": "rpl_fts_open",
+    "score": -0.36106554309634753,
+    "num_blocks": 19,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__errno_location",
+      "close"
+    ]
+  },
+  {
+    "address": "0x14d90",
+    "bap_name": "sub_14d90",
+    "predicted_name": "setlocale_null_r",
+    "score": -0.37074108151133706,
+    "num_blocks": 12,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "setlocale",
+      "strlen",
+      "memcpy",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x8f60",
+    "bap_name": "sub_8f60",
+    "predicted_name": "regex_warn_to_name",
+    "score": -0.3758833663611367,
+    "num_blocks": 9,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "error"
+    ]
+  },
+  {
+    "address": "0x14e50",
+    "bap_name": "sub_14e50",
+    "predicted_name": "text_to_date_time",
+    "score": -0.37606964914303276,
+    "num_blocks": 6,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "strlen"
+    ]
+  },
+  {
+    "address": "0x9020",
+    "bap_name": "sub_9020",
+    "predicted_name": "wordsplit_add_str",
+    "score": -0.3825751073457541,
+    "num_blocks": 6,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x17650",
+    "bap_name": "sub_17650",
+    "predicted_name": "xstr_iconv",
+    "score": -0.3893144565516564,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0xae70",
+    "bap_name": "sub_ae70",
+    "predicted_name": "afm_font_arg",
+    "score": -0.3934203397862871,
+    "num_blocks": 30,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xf740",
+    "bap_name": "sub_f740",
+    "predicted_name": "watchpoint_recent_deinit",
+    "score": -0.39787906390580297,
+    "num_blocks": 26,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "dcgettext"
+    ]
+  },
+  {
+    "address": "0x4fb0",
+    "bap_name": "sub_4fb0",
+    "predicted_name": "rpl_fts_open",
+    "score": -0.4017721321646155,
+    "num_blocks": 2,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "abort"
+    ]
+  },
+  {
+    "address": "0x12210",
+    "bap_name": "sub_12210",
+    "predicted_name": "register_temp_file",
+    "score": -0.40500519241813376,
+    "num_blocks": 8,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x11930",
+    "bap_name": "sub_11930",
+    "predicted_name": "hash_lookup",
+    "score": -0.4262463104912442,
+    "num_blocks": 12,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x150e0",
+    "bap_name": "sub_150e0",
+    "predicted_name": "sigsegv_handler",
+    "score": -0.43048527676844045,
+    "num_blocks": 28,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "__errno_location",
+      "__stack_chk_fail",
+      "signal"
+    ]
+  },
+  {
+    "address": "0xdfc0",
+    "bap_name": "sub_dfc0",
+    "predicted_name": "exit_cleanup_details",
+    "score": -0.43722711043648904,
+    "num_blocks": 2,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__errno_location",
+      "error"
+    ]
+  },
+  {
+    "address": "0x18570",
+    "bap_name": "sub_18570",
+    "predicted_name": "locale_charset",
+    "score": -0.4625091106333908,
+    "num_blocks": 4,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "nl_langinfo"
+    ]
+  },
+  {
+    "address": "0x1ad20",
+    "bap_name": "sub_1ad20",
+    "predicted_name": "quotearg_buffer",
+    "score": -0.4883319538825986,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0x10040",
+    "bap_name": "sub_10040",
+    "predicted_name": "c_stack_action",
+    "score": -0.48953789627968325,
+    "num_blocks": 10,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "dcgettext",
+      "dcgettext",
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0x17620",
+    "bap_name": "sub_17620",
+    "predicted_name": "cb_env",
+    "score": -0.49751779385018435,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__errno_location"
+    ]
+  },
+  {
+    "address": "0xcdd0",
+    "bap_name": "sub_cdd0",
+    "predicted_name": "print_segment",
+    "score": -0.49892468581692834,
+    "num_blocks": 30,
+    "num_ext_calls": 5,
+    "ext_calls": [
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xa8a0",
+    "bap_name": "sub_a8a0",
+    "predicted_name": "stack_print",
+    "score": -0.5012016235207152,
+    "num_blocks": 29,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "__overflow",
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xeb20",
+    "bap_name": "sub_eb20",
+    "predicted_name": "struct_member",
+    "score": -0.502675754920468,
+    "num_blocks": 15,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "signal"
+    ]
+  },
+  {
+    "address": "0x15e10",
+    "bap_name": "sub_15e10",
+    "predicted_name": "list_create",
+    "score": -0.5189348612864438,
+    "num_blocks": 12,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "__errno_location",
+      "setenv",
+      "unsetenv",
+      "free"
+    ]
+  },
+  {
+    "address": "0x14f30",
+    "bap_name": "sub_14f30",
+    "predicted_name": "fix_file_name",
+    "score": -0.5295193598194438,
+    "num_blocks": 7,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "strlen"
+    ]
+  },
+  {
+    "address": "0xdaf0",
+    "bap_name": "sub_daf0",
+    "predicted_name": "watchpoint_gc",
+    "score": -0.5321782627748447,
+    "num_blocks": 3,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0xdff0",
+    "bap_name": "sub_dff0",
+    "predicted_name": "print_colon",
+    "score": -0.5616254741387101,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "__overflow",
+      "dcgettext",
+      "strlen",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xb150",
+    "bap_name": "sub_b150",
+    "predicted_name": "print_option",
+    "score": -0.5674063428014343,
+    "num_blocks": 30,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__overflow"
+    ]
+  },
+  {
+    "address": "0xd0b0",
+    "bap_name": "sub_d0b0",
+    "predicted_name": "section_size",
+    "score": -0.5736412217333065,
+    "num_blocks": 26,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "__overflow",
+      "__overflow"
+    ]
+  },
+  {
+    "address": "0x14fa0",
+    "bap_name": "sub_14fa0",
+    "predicted_name": "file_match",
+    "score": -0.5991797861468714,
+    "num_blocks": 21,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "strlen",
+      "strlen"
+    ]
+  },
+  {
+    "address": "0xe960",
+    "bap_name": "sub_e960",
+    "predicted_name": "byte_match",
+    "score": -0.6004284195527968,
+    "num_blocks": 28,
+    "num_ext_calls": 3,
+    "ext_calls": [
+      "signal",
+      "raise",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x6de0",
+    "bap_name": "sub_6de0",
+    "predicted_name": "disassemble_section",
+    "score": -0.6009937488467296,
+    "num_blocks": 30,
+    "num_ext_calls": 16,
+    "ext_calls": [
+      "free",
+      "free",
+      "memcmp",
+      "free",
+      "free",
+      "__stack_chk_fail",
+      "free",
+      "free",
+      "free",
+      "free",
+      "free",
+      "free",
+      "free",
+      "free",
+      "dcgettext",
+      "error"
+    ]
+  },
+  {
+    "address": "0xa080",
+    "bap_name": "sub_a080",
+    "predicted_name": "path_search",
+    "score": -0.6135785072429706,
+    "num_blocks": 30,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "__errno_location",
+      "strlen",
+      "strlen",
+      "memcpy"
+    ]
+  },
+  {
+    "address": "0x7f50",
+    "bap_name": "sub_7f50",
+    "predicted_name": "print_token",
+    "score": -0.6188389149869987,
+    "num_blocks": 23,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "__overflow"
+    ]
+  },
+  {
+    "address": "0x8620",
+    "bap_name": "sub_8620",
+    "predicted_name": "print_version",
+    "score": -0.6189512941391959,
+    "num_blocks": 30,
+    "num_ext_calls": 9,
+    "ext_calls": [
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__overflow",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0xbac0",
+    "bap_name": "sub_bac0",
+    "predicted_name": "tree_exists",
+    "score": -0.637959778602602,
+    "num_blocks": 30,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x10250",
+    "bap_name": "sub_10250",
+    "predicted_name": "on_hasher",
+    "score": -0.6939454385111913,
+    "num_blocks": 30,
+    "num_ext_calls": 6,
+    "ext_calls": [
+      "__assert_fail",
+      "__ctype_get_mb_cur_max",
+      "strlen",
+      "__assert_fail",
+      "__assert_fail",
+      "__stack_chk_fail"
+    ]
+  },
+  {
+    "address": "0x9ed0",
+    "bap_name": "sub_9ed0",
+    "predicted_name": "handler_delete",
+    "score": -0.7378551555390714,
+    "num_blocks": 8,
+    "num_ext_calls": 2,
+    "ext_calls": [
+      "fclose",
+      "dcgettext"
+    ]
+  },
+  {
+    "address": "0x1c020",
+    "bap_name": "sub_1c020",
+    "predicted_name": "mbslen",
+    "score": -0.8363843045883161,
+    "num_blocks": 30,
+    "num_ext_calls": 8,
+    "ext_calls": [
+      "__ctype_get_mb_cur_max",
+      "__assert_fail",
+      "__ctype_get_mb_cur_max",
+      "strlen",
+      "__stack_chk_fail",
+      "__assert_fail",
+      "__assert_fail",
+      "strlen"
+    ]
+  },
+  {
+    "address": "0x16fd0",
+    "bap_name": "sub_16fd0",
+    "predicted_name": "xmalloc",
+    "score": -0.934252145779305,
+    "num_blocks": 5,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "malloc"
+    ]
+  }
+]

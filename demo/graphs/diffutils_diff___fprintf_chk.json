@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "__fprintf_chk",
+  "address": "0x0003f5bd",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0003f5bd",
+      "tokens": [
+        "CALL___fprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__fprintf_chk"
+    },
+    {
+      "id": 1,
+      "label": "0008cf04",
+      "tokens": [
+        "CALL_re_compile_pattern"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "re_compile_pattern"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

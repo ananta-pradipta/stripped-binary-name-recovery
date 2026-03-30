@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "strlen",
+  "address": "0x000181d2",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000181d2",
+      "tokens": [
+        "CALL_strlen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strlen"
+    },
+    {
+      "id": 1,
+      "label": "0008cbf8",
+      "tokens": [
+        "CALL___stack_chk_fail"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__stack_chk_fail"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

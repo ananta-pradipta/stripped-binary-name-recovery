@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "iswcntrl",
+  "address": "0x0000f0a1",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000f0a1",
+      "tokens": [
+        "CALL_iswcntrl"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswcntrl"
+    },
+    {
+      "id": 1,
+      "label": "00026385",
+      "tokens": [
+        "CALL_reallocarray"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "reallocarray"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

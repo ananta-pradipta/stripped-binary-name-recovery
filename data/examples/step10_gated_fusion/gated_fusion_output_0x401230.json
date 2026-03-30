@@ -1,0 +1,65 @@
+{
+    "_meta": {
+        "step": "Step 10: Gated Fusion (Option B)",
+        "input": "f ∈ ℝ⁵¹² (from graph encoder) + c ∈ ℝ⁵¹² (from external encoder)",
+        "output": "Fused representation z ∈ ℝ⁵¹²"
+    },
+
+    "example_1_socket_init": {
+        "function": "sub_401230 (socket_init — has external calls)",
+        "inputs": {
+            "f": [0.38, 0.21, -0.15, 0.67, "... (512 dims — code structure)"],
+            "c": [0.55, 0.29, -0.08, 0.41, "... (512 dims — ext call pattern)"]
+        },
+        "step_1_concat": {
+            "description": "[f ; c] = concatenate f and c",
+            "shape": "[1024]",
+            "value": [0.38, 0.21, -0.15, 0.67, "...", 0.55, 0.29, -0.08, 0.41, "..."]
+        },
+        "step_2_gate": {
+            "description": "g = σ(Wg · [f ; c] + bg)",
+            "Wg_shape": "[512, 1024]",
+            "bg_shape": "[512]",
+            "output_g": [0.3, 0.7, 0.4, 0.2, 0.6, 0.1, "... (512 values between 0 and 1)"],
+            "average_gate_value": 0.35,
+            "interpretation": "g ≈ 0.35 means model trusts external calls (65%) more than code structure (35%) for this function. Makes sense — socket_init is a thin wrapper around library calls."
+        },
+        "step_3_fusion": {
+            "description": "z = g ⊙ f + (1-g) ⊙ c",
+            "example_dim_0": "z[0] = 0.3 × 0.38 + 0.7 × 0.55 = 0.114 + 0.385 = 0.499",
+            "example_dim_1": "z[1] = 0.7 × 0.21 + 0.3 × 0.29 = 0.147 + 0.087 = 0.234",
+            "output_z": [0.50, 0.23, -0.10, 0.46, "... (512 dims)"]
+        },
+        "output": {
+            "z": [0.50, 0.23, -0.10, 0.46, -0.37, 0.72, "... (512 total floats)"],
+            "shape": "[512]"
+        }
+    },
+
+    "example_2_compute_checksum": {
+        "function": "sub_401400 (compute_checksum — NO external calls)",
+        "inputs": {
+            "f": [0.71, -0.33, 0.56, 0.12, "... (512 dims — code structure)"],
+            "c": [0.01, -0.02, 0.03, -0.01, "... (512 dims — learned no_context_emb, near-zero)"]
+        },
+        "gate_output": {
+            "average_gate_value": 0.92,
+            "interpretation": "g ≈ 0.92 means model almost entirely trusts code (92%) over external context (8%). The gate learned that when c is the no_context_emb, it should be ignored."
+        },
+        "output": {
+            "z_approx_equals_f": true,
+            "z": [0.65, -0.30, 0.52, 0.11, "... ≈ f since g ≈ 1"],
+            "note": "z ≈ f because g ≈ 1.0 suppresses c"
+        }
+    },
+
+    "gate_analysis_across_test_set": {
+        "description": "Average gate values grouped by number of external calls (for ablation report)",
+        "groups": {
+            "0_external_calls": {"avg_gate": 0.91, "num_functions": 3420, "interpretation": "Almost fully trust code"},
+            "1_to_3_external_calls": {"avg_gate": 0.52, "num_functions": 8230, "interpretation": "Balanced mix"},
+            "4_plus_external_calls": {"avg_gate": 0.28, "num_functions": 2105, "interpretation": "Heavily trust external"}
+        },
+        "note": "This table is a key ablation finding for your report!"
+    }
+}

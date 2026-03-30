@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "realloc",
+  "address": "0x0004f184",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004f184",
+      "tokens": [
+        "CALL_realloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "realloc"
+    },
+    {
+      "id": 1,
+      "label": "000acec8",
+      "tokens": [
+        "CALL_fdopen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fdopen"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

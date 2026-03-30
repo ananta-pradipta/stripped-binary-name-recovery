@@ -1,0 +1,21 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "__sprintf_chk",
+  "address": "0x0004f428",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004f428",
+      "tokens": [
+        "CALL___sprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__sprintf_chk"
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

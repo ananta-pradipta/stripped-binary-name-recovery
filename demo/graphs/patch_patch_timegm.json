@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "timegm",
+  "address": "0x00095f12",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00095f12",
+      "tokens": [
+        "CALL_timegm"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "timegm"
+    },
+    {
+      "id": 1,
+      "label": "000acef8",
+      "tokens": [
+        "CALL_chmod"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "chmod"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "calloc",
+  "address": "0x00019faf",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00019faf",
+      "tokens": [
+        "CALL_calloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "calloc"
+    },
+    {
+      "id": 1,
+      "label": "000251de",
+      "tokens": [
+        "CALL_strcmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strcmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

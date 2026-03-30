@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "memcmp",
+  "address": "0x00025952",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00025952",
+      "tokens": [
+        "CALL_memcmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memcmp"
+    },
+    {
+      "id": 1,
+      "label": "0008cce8",
+      "tokens": [
+        "CALL__setjmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "_setjmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

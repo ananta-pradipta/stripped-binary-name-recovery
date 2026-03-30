@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "free",
+  "address": "0x0000f126",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000f126",
+      "tokens": [
+        "CALL_free"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "free"
+    },
+    {
+      "id": 1,
+      "label": "00035d37",
+      "tokens": [
+        "CALL___mempcpy_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__mempcpy_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

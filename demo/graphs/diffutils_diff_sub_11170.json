@@ -1,0 +1,29 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_11170",
+  "address": "0x11170",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000514a8",
+      "tokens": [
+        "ARG_SETUP",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "CALL_clock_gettime"
+      ],
+      "num_tokens": 9,
+      "has_external_call": true,
+      "external_call_name": "clock_gettime"
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

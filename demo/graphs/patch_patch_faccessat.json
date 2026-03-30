@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "faccessat",
+  "address": "0x0005eb2d",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005eb2d",
+      "tokens": [
+        "CALL_faccessat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "faccessat"
+    },
+    {
+      "id": 1,
+      "label": "000acba4",
+      "tokens": [
+        "CALL_readlink"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "readlink"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

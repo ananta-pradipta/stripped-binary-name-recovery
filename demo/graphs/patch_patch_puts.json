@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "puts",
+  "address": "0x0004b652",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004b652",
+      "tokens": [
+        "CALL_puts"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "puts"
+    },
+    {
+      "id": 1,
+      "label": "000acb68",
+      "tokens": [
+        "CALL_ferror"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "ferror"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

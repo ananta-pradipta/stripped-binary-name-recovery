@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "re_set_syntax",
+  "address": "0x000575cf",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000575cf",
+      "tokens": [
+        "CALL_re_set_syntax"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "re_set_syntax"
+    },
+    {
+      "id": 1,
+      "label": "0008cdb4",
+      "tokens": [
+        "CALL_iswalnum"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswalnum"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

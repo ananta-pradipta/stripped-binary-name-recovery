@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "rawmemchr",
+  "address": "0x000769f6",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000769f6",
+      "tokens": [
+        "CALL_rawmemchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "rawmemchr"
+    },
+    {
+      "id": 1,
+      "label": "0008cd0c",
+      "tokens": [
+        "CALL_calloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "calloc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "fputs",
+  "address": "0x00020830",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020830",
+      "tokens": [
+        "CALL_fputs"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputs"
+    },
+    {
+      "id": 1,
+      "label": "00026499",
+      "tokens": [
+        "CALL_strnlen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strnlen"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

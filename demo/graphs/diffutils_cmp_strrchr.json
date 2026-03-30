@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "strrchr",
+  "address": "0x0001ecc3",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001ecc3",
+      "tokens": [
+        "CALL_strrchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strrchr"
+    },
+    {
+      "id": 1,
+      "label": "00025166",
+      "tokens": [
+        "CALL_lseek"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "lseek"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

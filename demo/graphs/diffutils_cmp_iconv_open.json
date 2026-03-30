@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "iconv_open",
+  "address": "0x000133c6",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000133c6",
+      "tokens": [
+        "CALL_iconv_open"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv_open"
+    },
+    {
+      "id": 1,
+      "label": "0002536a",
+      "tokens": [
+        "CALL___sprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__sprintf_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

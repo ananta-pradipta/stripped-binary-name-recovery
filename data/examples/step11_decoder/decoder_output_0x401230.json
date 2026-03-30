@@ -1,0 +1,134 @@
+{
+    "_meta": {
+        "step": "Step 11: GRU Decoder (Sequence Generation)",
+        "input": "z ∈ ℝ⁵¹² (fused representation from Step 10)",
+        "output": "Predicted function name as sequence of BPE tokens"
+    },
+
+    "initialization": {
+        "description": "Project z into GRU initial hidden state",
+        "h0": "h₀ = W_init · z + b_init",
+        "h0_shape": "[512]"
+    },
+
+    "training_mode_teacher_forcing": {
+        "description": "During training, feed ground-truth tokens at each step (not model predictions)",
+        "ground_truth": ["<SOS>", "sock", "et", "_", "init", "<EOS>"],
+        "ground_truth_ids": [1, 21, 22, 4, 9, 2],
+        "steps": [
+            {
+                "t": 0,
+                "input_token": "<SOS> (id=1)",
+                "gru_hidden_in": "h₀ (from z)",
+                "gru_hidden_out": "h₁",
+                "logits_shape": "[6000]  (one score per BPE vocab token)",
+                "target": "sock (id=21)",
+                "loss": "CrossEntropy(logits, target=21) = 0.42"
+            },
+            {
+                "t": 1,
+                "input_token": "sock (id=21) ← ground truth, NOT model prediction",
+                "gru_hidden_in": "h₁",
+                "gru_hidden_out": "h₂",
+                "target": "et (id=22)",
+                "loss": "CrossEntropy(logits, target=22) = 0.18"
+            },
+            {
+                "t": 2,
+                "input_token": "et (id=22)",
+                "gru_hidden_in": "h₂",
+                "gru_hidden_out": "h₃",
+                "target": "_ (id=4)",
+                "loss": "CrossEntropy(logits, target=4) = 0.31"
+            },
+            {
+                "t": 3,
+                "input_token": "_ (id=4)",
+                "gru_hidden_in": "h₃",
+                "gru_hidden_out": "h₄",
+                "target": "init (id=9)",
+                "loss": "CrossEntropy(logits, target=9) = 0.22"
+            },
+            {
+                "t": 4,
+                "input_token": "init (id=9)",
+                "gru_hidden_in": "h₄",
+                "gru_hidden_out": "h₅",
+                "target": "<EOS> (id=2)",
+                "loss": "CrossEntropy(logits, target=2) = 0.09"
+            }
+        ],
+        "total_loss": "0.42 + 0.18 + 0.31 + 0.22 + 0.09 = 1.22"
+    },
+
+    "inference_mode_beam_search": {
+        "beam_width": 5,
+        "max_length": 15,
+        "steps": [
+            {
+                "t": 0,
+                "input": "<SOS>",
+                "top_5_candidates": [
+                    {"tokens": ["sock"],  "log_prob": -0.20, "cumulative": -0.20},
+                    {"tokens": ["get"],   "log_prob": -1.80, "cumulative": -1.80},
+                    {"tokens": ["set"],   "log_prob": -2.10, "cumulative": -2.10},
+                    {"tokens": ["read"],  "log_prob": -2.30, "cumulative": -2.30},
+                    {"tokens": ["init"],  "log_prob": -2.50, "cumulative": -2.50}
+                ]
+            },
+            {
+                "t": 1,
+                "description": "Expand each of top-5, keep best 5 overall",
+                "top_5_candidates": [
+                    {"tokens": ["sock", "et"],     "log_prob": -0.09, "cumulative": -0.29},
+                    {"tokens": ["sock", "_"],       "log_prob": -0.81, "cumulative": -1.01},
+                    {"tokens": ["sock", "init"],    "log_prob": -1.21, "cumulative": -1.41},
+                    {"tokens": ["get", "_"],         "log_prob": -0.50, "cumulative": -2.30},
+                    {"tokens": ["sock", "er"],       "log_prob": -1.20, "cumulative": -1.40}
+                ]
+            },
+            {
+                "t": 2,
+                "top_5_candidates": [
+                    {"tokens": ["sock", "et", "_"],      "cumulative": -0.55},
+                    {"tokens": ["sock", "et", "init"],    "cumulative": -1.80},
+                    {"tokens": ["sock", "_", "init"],     "cumulative": -1.35},
+                    {"tokens": ["sock", "er", "_"],       "cumulative": -1.72},
+                    {"tokens": ["sock", "et", "<EOS>"],   "cumulative": -2.10}
+                ]
+            },
+            {
+                "t": 3,
+                "top_5_candidates": [
+                    {"tokens": ["sock", "et", "_", "init"],    "cumulative": -0.68},
+                    {"tokens": ["sock", "et", "_", "buf"],     "cumulative": -2.10},
+                    {"tokens": ["sock", "et", "_", "server"],  "cumulative": -2.35},
+                    {"tokens": ["sock", "_", "init", "<EOS>"], "cumulative": -1.55},
+                    {"tokens": ["sock", "et", "_", "set"],     "cumulative": -2.40}
+                ]
+            },
+            {
+                "t": 4,
+                "top_5_candidates": [
+                    {"tokens": ["sock", "et", "_", "init", "<EOS>"],  "cumulative": -0.73, "FINAL": true},
+                    {"tokens": ["sock", "_", "init", "<EOS>"],        "cumulative": -1.55},
+                    {"tokens": ["sock", "et", "_", "buf", "<EOS>"],   "cumulative": -2.25},
+                    {"tokens": ["sock", "et", "_", "init", "_"],      "cumulative": -2.80},
+                    {"tokens": ["sock", "et", "_", "server", "<EOS>"],"cumulative": -2.60}
+                ]
+            }
+        ],
+        "final_output": {
+            "best_beam": ["sock", "et", "_", "init"],
+            "concatenated": "socket_init",
+            "score": -0.73,
+            "top_5_predictions": [
+                "socket_init",
+                "sock_init",
+                "socket_buf",
+                "socket_init_",
+                "socket_server"
+            ]
+        }
+    }
+}

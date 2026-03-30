@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "__ctype_toupper_loc",
+  "address": "0x00022a29",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00022a29",
+      "tokens": [
+        "CALL___ctype_toupper_loc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_toupper_loc"
+    },
+    {
+      "id": 1,
+      "label": "000aca9c",
+      "tokens": [
+        "CALL___uflow"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__uflow"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

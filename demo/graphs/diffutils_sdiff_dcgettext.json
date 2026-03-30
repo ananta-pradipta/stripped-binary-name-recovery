@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "dcgettext",
+  "address": "0x000070eb",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000070eb",
+      "tokens": [
+        "CALL_dcgettext"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dcgettext"
+    },
+    {
+      "id": 1,
+      "label": "000263fd",
+      "tokens": [
+        "CALL___ctype_get_mb_cur_max"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_get_mb_cur_max"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

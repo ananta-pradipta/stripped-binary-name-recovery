@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "iswspace",
+  "address": "0x0004d650",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004d650",
+      "tokens": [
+        "CALL_iswspace"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswspace"
+    },
+    {
+      "id": 1,
+      "label": "0008ce5c",
+      "tokens": [
+        "CALL_strftime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strftime"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

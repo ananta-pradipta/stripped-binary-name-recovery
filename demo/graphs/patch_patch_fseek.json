@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fseek",
+  "address": "0x00068d28",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00068d28",
+      "tokens": [
+        "CALL_fseek"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fseek"
+    },
+    {
+      "id": 1,
+      "label": "000acebc",
+      "tokens": [
+        "CALL_realloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "realloc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

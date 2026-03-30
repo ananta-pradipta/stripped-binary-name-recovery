@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fstatat",
+  "address": "0x00046f61",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00046f61",
+      "tokens": [
+        "CALL_fstatat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fstatat"
+    },
+    {
+      "id": 1,
+      "label": "000ad024",
+      "tokens": [
+        "CALL___ctype_tolower_loc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_tolower_loc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

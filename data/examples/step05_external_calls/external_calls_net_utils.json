@@ -1,0 +1,52 @@
+{
+    "_meta": {
+        "step": "Step 5: Extract External Function Calls",
+        "input": "BAP-IR output, focusing on 'call' instructions targeting PLT stubs",
+        "output": "This file: ordered list of external calls per function",
+        "note": "External function names survive stripping (resolved via PLT/GOT)"
+    },
+    "binary": "net_utils",
+    "external_vocab_size": 847,
+    "functions": [
+        {
+            "function_addr": "0x401230",
+            "recovered_name": "sub_401230",
+            "external_calls": [
+                {"name": "socket", "block_id": 1, "call_order": 0},
+                {"name": "bind",   "block_id": 2, "call_order": 1},
+                {"name": "listen", "block_id": 3, "call_order": 2}
+            ],
+            "num_external_calls": 3,
+            "comment": "Strong semantic signal: socket+bind+listen = server initialization"
+        },
+        {
+            "function_addr": "0x4012a0",
+            "recovered_name": "sub_4012a0",
+            "external_calls": [
+                {"name": "fopen",  "block_id": 0, "call_order": 0},
+                {"name": "fgets",  "block_id": 2, "call_order": 1},
+                {"name": "fclose", "block_id": 3, "call_order": 2}
+            ],
+            "num_external_calls": 3,
+            "comment": "File I/O pattern: fopen+fgets+fclose = file reading/parsing"
+        },
+        {
+            "function_addr": "0x401350",
+            "recovered_name": "sub_401350",
+            "external_calls": [
+                {"name": "read",  "block_id": 1, "call_order": 0},
+                {"name": "write", "block_id": 2, "call_order": 1},
+                {"name": "close", "block_id": 3, "call_order": 2}
+            ],
+            "num_external_calls": 3,
+            "comment": "I/O pattern: read+write+close = client handler"
+        },
+        {
+            "function_addr": "0x401400",
+            "recovered_name": "sub_401400",
+            "external_calls": [],
+            "num_external_calls": 0,
+            "comment": "NO external calls — pure computation. Model must rely entirely on code structure. In Option B, c = learned no_context_emb and gate g → 1.0"
+        }
+    ]
+}

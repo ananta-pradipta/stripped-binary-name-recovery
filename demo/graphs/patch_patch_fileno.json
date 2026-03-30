@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fileno",
+  "address": "0x0006ae76",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0006ae76",
+      "tokens": [
+        "CALL_fileno"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fileno"
+    },
+    {
+      "id": 1,
+      "label": "000ace44",
+      "tokens": [
+        "CALL_readdir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "readdir"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

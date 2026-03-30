@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "utimensat",
+  "address": "0x0002506c",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002506c",
+      "tokens": [
+        "CALL_utimensat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "utimensat"
+    },
+    {
+      "id": 1,
+      "label": "000acae4",
+      "tokens": [
+        "CALL_putchar"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "putchar"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

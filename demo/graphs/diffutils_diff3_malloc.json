@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "malloc",
+  "address": "0x0000f1d6",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000f1d6",
+      "tokens": [
+        "CALL_malloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "malloc"
+    },
+    {
+      "id": 1,
+      "label": "00035f6b",
+      "tokens": [
+        "CALL_nl_langinfo"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "nl_langinfo"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

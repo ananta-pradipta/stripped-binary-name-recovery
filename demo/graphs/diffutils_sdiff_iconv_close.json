@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "iconv_close",
+  "address": "0x0000edee",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000edee",
+      "tokens": [
+        "CALL_iconv_close"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv_close"
+    },
+    {
+      "id": 1,
+      "label": "00026601",
+      "tokens": [
+        "CALL_iswspace"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswspace"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

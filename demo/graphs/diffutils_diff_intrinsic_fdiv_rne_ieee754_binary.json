@@ -1,0 +1,21 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "intrinsic:fdiv_rne_ieee754_binary",
+  "address": "0x00092dea",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00092dea",
+      "tokens": [
+        "ASSIGN"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

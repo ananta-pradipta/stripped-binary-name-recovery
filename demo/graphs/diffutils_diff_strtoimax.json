@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "strtoimax",
+  "address": "0x00077399",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00077399",
+      "tokens": [
+        "CALL_strtoimax"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strtoimax"
+    },
+    {
+      "id": 1,
+      "label": "0008ca78",
+      "tokens": [
+        "CALL_strcasecmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strcasecmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

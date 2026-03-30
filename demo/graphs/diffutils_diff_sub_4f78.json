@@ -1,0 +1,203 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_4f78",
+  "address": "0x4f78",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00017668",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 1,
+      "label": "0001767a",
+      "tokens": [
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 6,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 2,
+      "label": "000176a4",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 3,
+      "label": "000176b6",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 4,
+      "label": "000176c8",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 5,
+      "label": "000176da",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 6,
+      "label": "000176ec",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 7,
+      "label": "000176fe",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 8,
+      "label": "00017710",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 9,
+      "label": "00017722",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 10,
+      "label": "00017734",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 11,
+      "label": "000927e7",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      9,
+      10
+    ],
+    [
+      10,
+      11
+    ]
+  ],
+  "num_blocks": 12,
+  "num_edges": 11,
+  "internal_callees": [
+    "sub_4fb0"
+  ]
+}

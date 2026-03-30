@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "iswprint",
+  "address": "0x00013435",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00013435",
+      "tokens": [
+        "CALL_iswprint"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswprint"
+    },
+    {
+      "id": 1,
+      "label": "0003607f",
+      "tokens": [
+        "CALL_fstat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fstat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

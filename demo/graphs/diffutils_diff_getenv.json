@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "getenv",
+  "address": "0x00018448",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00018448",
+      "tokens": [
+        "CALL_getenv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getenv"
+    },
+    {
+      "id": 1,
+      "label": "0008ca48",
+      "tokens": [
+        "CALL_sigprocmask"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigprocmask"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

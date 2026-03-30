@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "strncmp",
+  "address": "0x000325c3",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000325c3",
+      "tokens": [
+        "CALL_strncmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strncmp"
+    },
+    {
+      "id": 1,
+      "label": "000acb2c",
+      "tokens": [
+        "CALL_localtime_r"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "localtime_r"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

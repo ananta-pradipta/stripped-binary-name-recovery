@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "towlower",
+  "address": "0x00025d96",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00025d96",
+      "tokens": [
+        "CALL_towlower"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "towlower"
+    },
+    {
+      "id": 1,
+      "label": "0008cec8",
+      "tokens": [
+        "CALL_unsetenv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "unsetenv"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

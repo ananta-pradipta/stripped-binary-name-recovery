@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "fputs_unlocked",
+  "address": "0x00024903",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00024903",
+      "tokens": [
+        "CALL_fputs_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputs_unlocked"
+    },
+    {
+      "id": 1,
+      "label": "000251c6",
+      "tokens": [
+        "CALL_rawmemchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "rawmemchr"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

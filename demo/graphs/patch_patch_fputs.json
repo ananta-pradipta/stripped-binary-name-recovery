@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fputs",
+  "address": "0x00083893",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00083893",
+      "tokens": [
+        "CALL_fputs"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputs"
+    },
+    {
+      "id": 1,
+      "label": "000acd18",
+      "tokens": [
+        "CALL_memset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memset"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

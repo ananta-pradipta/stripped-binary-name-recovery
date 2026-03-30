@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "write",
+  "address": "0x0004e4d2",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004e4d2",
+      "tokens": [
+        "CALL_write"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "write"
+    },
+    {
+      "id": 1,
+      "label": "000acbe0",
+      "tokens": [
+        "CALL_getpid"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getpid"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "fclose",
+  "address": "0x0001fe55",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001fe55",
+      "tokens": [
+        "CALL_fclose"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fclose"
+    },
+    {
+      "id": 1,
+      "label": "000250ee",
+      "tokens": [
+        "CALL_bindtextdomain"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "bindtextdomain"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

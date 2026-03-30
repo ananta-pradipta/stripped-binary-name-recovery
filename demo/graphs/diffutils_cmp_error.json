@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "error",
+  "address": "0x00006daf",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00006daf",
+      "tokens": [
+        "CALL_error"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "error"
+    },
+    {
+      "id": 1,
+      "label": "000252ce",
+      "tokens": [
+        "CALL_open"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "open"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

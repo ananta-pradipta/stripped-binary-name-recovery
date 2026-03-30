@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "strcmp",
+  "address": "0x000254ad",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000254ad",
+      "tokens": [
+        "CALL_strcmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strcmp"
+    },
+    {
+      "id": 1,
+      "label": "000acdb4",
+      "tokens": [
+        "CALL_putc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "putc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

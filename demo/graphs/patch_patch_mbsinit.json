@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "mbsinit",
+  "address": "0x00053b14",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00053b14",
+      "tokens": [
+        "CALL_mbsinit"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mbsinit"
+    },
+    {
+      "id": 1,
+      "label": "000acfdc",
+      "tokens": [
+        "CALL_symlinkat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "symlinkat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

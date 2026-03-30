@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "__ctype_tolower_loc",
+  "address": "0x0001eecd",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001eecd",
+      "tokens": [
+        "CALL___ctype_tolower_loc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_tolower_loc"
+    },
+    {
+      "id": 1,
+      "label": "0008cf94",
+      "tokens": [
+        "CALL___ctype_b_loc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_b_loc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

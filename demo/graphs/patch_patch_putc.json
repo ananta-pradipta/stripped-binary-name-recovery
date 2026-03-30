@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "putc",
+  "address": "0x00024a08",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00024a08",
+      "tokens": [
+        "CALL_putc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "putc"
+    },
+    {
+      "id": 1,
+      "label": "000acdc0",
+      "tokens": [
+        "CALL_signal"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "signal"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

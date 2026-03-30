@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "__snprintf_chk",
+  "address": "0x0003073d",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0003073d",
+      "tokens": [
+        "CALL___snprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__snprintf_chk"
+    },
+    {
+      "id": 1,
+      "label": "000acacc",
+      "tokens": [
+        "CALL_raise"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "raise"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

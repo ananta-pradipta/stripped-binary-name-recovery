@@ -1,0 +1,25 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_20540",
+  "address": "0x20540",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000594e3",
+      "tokens": [
+        "ARG_LOAD_ADDR",
+        "ARG_LOAD_ADDR",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 3,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": [
+    "sub_20060"
+  ]
+}

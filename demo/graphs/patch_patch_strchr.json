@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "strchr",
+  "address": "0x000925ce",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000925ce",
+      "tokens": [
+        "CALL_strchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strchr"
+    },
+    {
+      "id": 1,
+      "label": "000acca0",
+      "tokens": [
+        "CALL_symlink"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "symlink"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

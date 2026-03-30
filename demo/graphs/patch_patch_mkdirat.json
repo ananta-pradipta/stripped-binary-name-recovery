@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "mkdirat",
+  "address": "0x0004ab2a",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004ab2a",
+      "tokens": [
+        "CALL_mkdirat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mkdirat"
+    },
+    {
+      "id": 1,
+      "label": "000ace08",
+      "tokens": [
+        "CALL_ftell"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "ftell"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

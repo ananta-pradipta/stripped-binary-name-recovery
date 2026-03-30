@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "unlink",
+  "address": "0x00024bae",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00024bae",
+      "tokens": [
+        "CALL_unlink"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "unlink"
+    },
+    {
+      "id": 1,
+      "label": "000acb20",
+      "tokens": [
+        "CALL_strncmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strncmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

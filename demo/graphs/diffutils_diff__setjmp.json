@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "_setjmp",
+  "address": "0x00079602",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00079602",
+      "tokens": [
+        "CALL__setjmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "_setjmp"
+    },
+    {
+      "id": 1,
+      "label": "0008ccf4",
+      "tokens": [
+        "CALL_fputs_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputs_unlocked"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

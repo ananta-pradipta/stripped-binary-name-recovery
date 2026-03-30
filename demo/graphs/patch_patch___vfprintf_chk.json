@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "__vfprintf_chk",
+  "address": "0x000249e7",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000249e7",
+      "tokens": [
+        "CALL___vfprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__vfprintf_chk"
+    },
+    {
+      "id": 1,
+      "label": "000acafc",
+      "tokens": [
+        "CALL_abort"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "raise",
+  "address": "0x0002c1e6",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002c1e6",
+      "tokens": [
+        "CALL_raise"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "raise"
+    },
+    {
+      "id": 1,
+      "label": "00035d2b",
+      "tokens": [
+        "CALL_free"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "free"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

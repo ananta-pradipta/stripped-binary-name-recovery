@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "strtoimax",
+  "address": "0x00017430",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00017430",
+      "tokens": [
+        "CALL_strtoimax"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strtoimax"
+    },
+    {
+      "id": 1,
+      "label": "0002503a",
+      "tokens": [
+        "CALL___mempcpy_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__mempcpy_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "fputc_unlocked",
+  "address": "0x00020e99",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020e99",
+      "tokens": [
+        "CALL_fputc_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputc_unlocked"
+    },
+    {
+      "id": 1,
+      "label": "00035f23",
+      "tokens": [
+        "CALL_sigemptyset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigemptyset"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

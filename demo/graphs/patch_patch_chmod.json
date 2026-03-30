@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "chmod",
+  "address": "0x00024de0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00024de0",
+      "tokens": [
+        "CALL_chmod"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "chmod"
+    },
+    {
+      "id": 1,
+      "label": "000acf04",
+      "tokens": [
+        "CALL_strftime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strftime"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

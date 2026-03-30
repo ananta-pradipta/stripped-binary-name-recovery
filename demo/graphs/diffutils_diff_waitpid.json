@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "waitpid",
+  "address": "0x0005f384",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005f384",
+      "tokens": [
+        "CALL_waitpid"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "waitpid"
+    },
+    {
+      "id": 1,
+      "label": "0008ce98",
+      "tokens": [
+        "CALL_open"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "open"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

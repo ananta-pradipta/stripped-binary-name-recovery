@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "lseek",
+  "address": "0x0001aa96",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001aa96",
+      "tokens": [
+        "CALL_lseek"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "lseek"
+    },
+    {
+      "id": 1,
+      "label": "00026481",
+      "tokens": [
+        "CALL___assert_fail"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__assert_fail"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "bindtextdomain",
+  "address": "0x0002ab22",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002ab22",
+      "tokens": [
+        "CALL_bindtextdomain"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "bindtextdomain"
+    },
+    {
+      "id": 1,
+      "label": "00035deb",
+      "tokens": [
+        "CALL_dcgettext"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dcgettext"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

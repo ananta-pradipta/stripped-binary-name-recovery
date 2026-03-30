@@ -1,0 +1,30 @@
+# ============================================================
+# Lightweight build (no BAP, demo mode only)
+# Use this if you just want to show pre-computed results
+# or if BAP is already installed on the host.
+# ============================================================
+
+FROM python:3.10-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    file binutils curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+WORKDIR /app
+COPY . /app/
+
+RUN mkdir -p /root/.streamlit && \
+    echo '[server]\nport = 7860\naddress = "0.0.0.0"\nheadless = true\n\n[theme]\nprimaryColor = "#D32F2F"\n' \
+    > /root/.streamlit/config.toml
+
+EXPOSE 7860
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s \
+    CMD curl -f http://localhost:7860/_stcore/health || exit 1
+
+CMD ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]

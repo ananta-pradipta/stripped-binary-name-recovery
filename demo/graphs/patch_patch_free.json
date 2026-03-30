@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "free",
+  "address": "0x000202c7",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000202c7",
+      "tokens": [
+        "CALL_free"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "free"
+    },
+    {
+      "id": 1,
+      "label": "000ad076",
+      "tokens": [
+        "CALL___cxa_finalize"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__cxa_finalize"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

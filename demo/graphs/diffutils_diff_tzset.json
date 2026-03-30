@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "tzset",
+  "address": "0x00017ee9",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00017ee9",
+      "tokens": [
+        "CALL_tzset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "tzset"
+    },
+    {
+      "id": 1,
+      "label": "0008cd78",
+      "tokens": [
+        "CALL_fileno"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fileno"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

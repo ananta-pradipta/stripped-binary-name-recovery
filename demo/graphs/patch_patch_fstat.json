@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fstat",
+  "address": "0x0006595f",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0006595f",
+      "tokens": [
+        "CALL_fstat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fstat"
+    },
+    {
+      "id": 1,
+      "label": "000ad000",
+      "tokens": [
+        "CALL_getc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

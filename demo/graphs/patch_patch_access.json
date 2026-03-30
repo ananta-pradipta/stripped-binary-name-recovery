@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "access",
+  "address": "0x0004cdc1",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004cdc1",
+      "tokens": [
+        "CALL_access"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "access"
+    },
+    {
+      "id": 1,
+      "label": "000acf40",
+      "tokens": [
+        "CALL_popen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "popen"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

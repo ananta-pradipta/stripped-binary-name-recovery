@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "__uflow",
+  "address": "0x0001ec25",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001ec25",
+      "tokens": [
+        "CALL___uflow"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__uflow"
+    },
+    {
+      "id": 1,
+      "label": "000262dd",
+      "tokens": [
+        "CALL_getenv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getenv"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

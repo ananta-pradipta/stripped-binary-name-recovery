@@ -1,0 +1,25 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "sub_aef0",
+  "address": "0xaef0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00009e2f",
+      "tokens": [
+        "ARG_LOAD_ADDR",
+        "ARG_LOAD_ADDR",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 3,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": [
+    "sub_a150"
+  ]
+}

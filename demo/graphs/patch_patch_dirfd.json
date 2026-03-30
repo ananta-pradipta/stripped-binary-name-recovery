@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "dirfd",
+  "address": "0x00060705",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00060705",
+      "tokens": [
+        "CALL_dirfd"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dirfd"
+    },
+    {
+      "id": 1,
+      "label": "000acde4",
+      "tokens": [
+        "CALL_syscall"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "syscall"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

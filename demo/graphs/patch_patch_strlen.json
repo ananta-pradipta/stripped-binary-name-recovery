@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "strlen",
+  "address": "0x00023bed",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00023bed",
+      "tokens": [
+        "CALL_strlen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strlen"
+    },
+    {
+      "id": 1,
+      "label": "000acc34",
+      "tokens": [
+        "CALL_openat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "openat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

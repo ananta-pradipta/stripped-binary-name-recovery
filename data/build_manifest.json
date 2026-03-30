@@ -1,0 +1,13 @@
+{
+    "optimization_levels": "O0 O1 O2 O3",
+    "platforms": "linux",
+    "compiler_linux": "gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "compiler_windows": "",
+    "num_binaries_total": 418,
+    "num_binaries_linux": 418,
+    "num_binaries_windows": 0,
+    "total_functions": 71800,
+    "properly_stripped": 0,
+    "packages_attempted": 43,
+    "packages_failed": 2
+}

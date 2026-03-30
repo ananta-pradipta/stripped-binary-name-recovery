@@ -1,0 +1,197 @@
+{
+    "_meta": {
+        "step": "Step 12: Evaluation",
+        "input": "predictions.json (model outputs) + labels.json (ground truth)",
+        "output": "This file: per-function metrics + aggregated scores + ablation table"
+    },
+
+    "per_function_examples": [
+        {
+            "address": "0x401230",
+            "ground_truth": "socket_init",
+            "truth_subtokens": ["sock", "et", "_", "init"],
+            "predicted": "socket_init",
+            "pred_subtokens": ["sock", "et", "_", "init"],
+            "metrics": {
+                "subtoken_precision": 1.0,
+                "subtoken_recall": 1.0,
+                "subtoken_f1": 1.0,
+                "top1_exact_match": true,
+                "semantic_similarity": 1.0
+            },
+            "comment": "Perfect prediction — external calls gave strong signal"
+        },
+        {
+            "address": "0x4012a0",
+            "ground_truth": "parse_config",
+            "truth_subtokens": ["parse", "_", "config"],
+            "predicted": "read_config",
+            "pred_subtokens": ["read", "_", "config"],
+            "metrics": {
+                "subtoken_precision": 0.67,
+                "subtoken_recall": 0.67,
+                "subtoken_f1": 0.67,
+                "top1_exact_match": false,
+                "top5_exact_match": true,
+                "semantic_similarity": 0.82
+            },
+            "comment": "Partial match — 'config' correct, but predicted 'read' instead of 'parse'. Semantically close (fopen+fgets pattern could be read or parse)."
+        },
+        {
+            "address": "0x401350",
+            "ground_truth": "handle_client",
+            "truth_subtokens": ["handle", "_", "client"],
+            "predicted": "handle_client",
+            "pred_subtokens": ["handle", "_", "client"],
+            "metrics": {
+                "subtoken_precision": 1.0,
+                "subtoken_recall": 1.0,
+                "subtoken_f1": 1.0,
+                "top1_exact_match": true,
+                "semantic_similarity": 1.0
+            },
+            "comment": "Perfect — read+write+close on fd strongly suggests client handling"
+        },
+        {
+            "address": "0x401400",
+            "ground_truth": "compute_checksum",
+            "truth_subtokens": ["com", "put", "e", "_", "check", "sum"],
+            "predicted": "calc_hash",
+            "pred_subtokens": ["calc", "_", "hash"],
+            "metrics": {
+                "subtoken_precision": 0.0,
+                "subtoken_recall": 0.0,
+                "subtoken_f1": 0.0,
+                "top1_exact_match": false,
+                "top5_exact_match": false,
+                "top10_exact_match": false,
+                "semantic_similarity": 0.71
+            },
+            "comment": "No subtoken overlap, but semantically related (calc_hash ≈ compute_checksum). No external calls made this harder — model relied only on code structure (loop + XOR + shift pattern)."
+        },
+        {
+            "address": "0x408820",
+            "ground_truth": "handle_http_request",
+            "truth_subtokens": ["handle", "_", "http", "_", "request"],
+            "predicted": "handle_http",
+            "pred_subtokens": ["handle", "_", "http"],
+            "metrics": {
+                "subtoken_precision": 1.0,
+                "subtoken_recall": 0.6,
+                "subtoken_f1": 0.75,
+                "top1_exact_match": false,
+                "semantic_similarity": 0.88
+            },
+            "comment": "Predicted 3 of 5 subtokens correctly — missed '_request' suffix. Partial credit via F1."
+        }
+    ],
+
+    "aggregated_metrics_test_set": {
+        "num_test_functions": 6097,
+        "primary_metrics": {
+            "subtoken_precision": 0.648,
+            "subtoken_recall": 0.692,
+            "subtoken_f1": 0.669,
+            "top1_exact_match": "32.4%",
+            "top5_exact_match": "48.1%",
+            "top10_exact_match": "54.7%"
+        },
+        "secondary_metrics": {
+            "mean_semantic_similarity": 0.723
+        }
+    },
+
+    "ablation_results": {
+        "description": "Comparison across model variants — key table for the report",
+        "variants": [
+            {
+                "model": "DeBin Baseline (ExtraTrees)",
+                "subtoken_P": 0.312,
+                "subtoken_R": 0.285,
+                "subtoken_F1": 0.298,
+                "top1": "8.2%",
+                "top5": "15.4%",
+                "semantic_sim": 0.421,
+                "delta_vs_base": "-"
+            },
+            {
+                "model": "GCN + Mean Pool (baseline DL)",
+                "subtoken_P": 0.498,
+                "subtoken_R": 0.532,
+                "subtoken_F1": 0.514,
+                "top1": "21.3%",
+                "top5": "35.8%",
+                "semantic_sim": 0.612,
+                "delta_vs_base": "+72.5%"
+            },
+            {
+                "model": "GAT + Attn Pool (delta, no ext)",
+                "subtoken_P": 0.571,
+                "subtoken_R": 0.615,
+                "subtoken_F1": 0.592,
+                "top1": "26.7%",
+                "top5": "41.2%",
+                "semantic_sim": 0.668,
+                "delta_vs_base": "+98.7%"
+            },
+            {
+                "model": "GAT + Option A (node features)",
+                "subtoken_P": 0.602,
+                "subtoken_R": 0.641,
+                "subtoken_F1": 0.621,
+                "top1": "28.9%",
+                "top5": "44.0%",
+                "semantic_sim": 0.695,
+                "delta_vs_base": "+108.4%"
+            },
+            {
+                "model": "★ GAT + Option B (gated fusion)",
+                "subtoken_P": 0.648,
+                "subtoken_R": 0.692,
+                "subtoken_F1": 0.669,
+                "top1": "32.4%",
+                "top5": "48.1%",
+                "semantic_sim": 0.723,
+                "delta_vs_base": "+124.5%",
+                "is_primary": true
+            }
+        ],
+        "key_findings": [
+            "Deep learning (GCN baseline) improves +72.5% F1 over ExtraTrees",
+            "GAT + attention pooling adds +15.2% F1 over GCN + mean pool",
+            "External function info (Option A) adds +4.9% F1",
+            "Gated fusion (Option B) adds +7.7% F1 over no-ext, +4.8% over Option A",
+            "Gate analysis: avg gate value correlates inversely with # external calls (r = -0.73)"
+        ]
+    },
+
+    "error_analysis": {
+        "description": "Worst 50 functions by subtoken F1 — patterns found",
+        "common_failure_patterns": [
+            {
+                "pattern": "Very short names (1 subtoken)",
+                "example": "truth='main', predicted='start'",
+                "count": 12,
+                "explanation": "Single-token names have no partial credit — it's all or nothing"
+            },
+            {
+                "pattern": "Domain-specific rare terms",
+                "example": "truth='nvic_irq_handler', predicted='irq_handler'",
+                "count": 15,
+                "explanation": "Rare domain abbreviations hard even with BPE"
+            },
+            {
+                "pattern": "No external calls + generic code",
+                "example": "truth='compute_checksum', predicted='calc_hash'",
+                "count": 18,
+                "explanation": "Pure computation functions lack the external call signal. Gate analysis confirms g ≈ 0.91 — model correctly trusts code, but code alone isn't enough for exact name"
+            },
+            {
+                "pattern": "Very long names (>6 subtokens)",
+                "example": "truth='initialize_network_socket_pool', predicted='init_socket_pool'",
+                "count": 5,
+                "explanation": "Decoder truncates — beam search favors shorter sequences with higher per-token probability"
+            }
+        ]
+    }
+}

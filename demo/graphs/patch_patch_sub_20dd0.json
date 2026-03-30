@@ -1,0 +1,33 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_20dd0",
+  "address": "0x20dd0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005b516",
+      "tokens": [
+        "ARG_SETUP",
+        "ARG_LOAD_ADDR",
+        "ARG_LOAD_ADDR",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 11,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": [
+    "sub_20060"
+  ]
+}

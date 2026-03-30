@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "__errno_location",
+  "address": "0x0000cade",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000cade",
+      "tokens": [
+        "CALL___errno_location"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__errno_location"
+    },
+    {
+      "id": 1,
+      "label": "0002505e",
+      "tokens": [
+        "CALL_strncmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strncmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

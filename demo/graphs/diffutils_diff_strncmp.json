@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "strncmp",
+  "address": "0x000511d8",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000511d8",
+      "tokens": [
+        "CALL_strncmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strncmp"
+    },
+    {
+      "id": 1,
+      "label": "0008cacc",
+      "tokens": [
+        "CALL__exit"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "_exit"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

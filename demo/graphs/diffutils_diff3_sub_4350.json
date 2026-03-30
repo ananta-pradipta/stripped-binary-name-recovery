@@ -1,0 +1,71 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "sub_4350",
+  "address": "0x4350",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002b0f2",
+      "tokens": [
+        "ASSIGN",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL___errno_location"
+      ],
+      "num_tokens": 7,
+      "has_external_call": true,
+      "external_call_name": "__errno_location"
+    },
+    {
+      "id": 1,
+      "label": "0002b124",
+      "tokens": [
+        "ARG_SETUP",
+        "ARG_SETUP_SMALL",
+        "ARG_SETUP_WORD",
+        "MEM_READ_ARG_32",
+        "RETVAL",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_error"
+      ],
+      "num_tokens": 14,
+      "has_external_call": true,
+      "external_call_name": "error"
+    },
+    {
+      "id": 2,
+      "label": "0002b172",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "num_blocks": 3,
+  "num_edges": 2,
+  "internal_callees": [
+    "sub_4380"
+  ]
+}

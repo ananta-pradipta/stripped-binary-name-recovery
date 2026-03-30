@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "clock_gettime",
+  "address": "0x0003222f",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0003222f",
+      "tokens": [
+        "CALL_clock_gettime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "clock_gettime"
+    },
+    {
+      "id": 1,
+      "label": "000acbc8",
+      "tokens": [
+        "CALL_setenv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "setenv"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

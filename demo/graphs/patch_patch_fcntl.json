@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fcntl",
+  "address": "0x0004843a",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0004843a",
+      "tokens": [
+        "CALL_fcntl"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fcntl"
+    },
+    {
+      "id": 1,
+      "label": "000acbbc",
+      "tokens": [
+        "CALL_clock_gettime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "clock_gettime"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

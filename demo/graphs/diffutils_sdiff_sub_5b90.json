@@ -1,0 +1,24 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "sub_5b90",
+  "address": "0x5b90",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001dbe1",
+      "tokens": [
+        "MEM_READ_RET_64",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 4,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

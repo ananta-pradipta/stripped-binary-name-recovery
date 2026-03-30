@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "__ctype_get_mb_cur_max",
+  "address": "0x00006892",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00006892",
+      "tokens": [
+        "CALL___ctype_get_mb_cur_max"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_get_mb_cur_max"
+    },
+    {
+      "id": 1,
+      "label": "00025112",
+      "tokens": [
+        "CALL_strlen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strlen"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

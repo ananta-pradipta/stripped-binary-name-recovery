@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "strndup",
+  "address": "0x00048268",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00048268",
+      "tokens": [
+        "CALL_strndup"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strndup"
+    },
+    {
+      "id": 1,
+      "label": "000acd90",
+      "tokens": [
+        "CALL_memcmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memcmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "iswspace",
+  "address": "0x0001c1ec",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001c1ec",
+      "tokens": [
+        "CALL_iswspace"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswspace"
+    },
+    {
+      "id": 1,
+      "label": "000252aa",
+      "tokens": [
+        "CALL_mempcpy"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mempcpy"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

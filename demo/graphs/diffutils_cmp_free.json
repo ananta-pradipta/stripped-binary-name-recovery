@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "free",
+  "address": "0x0000724d",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000724d",
+      "tokens": [
+        "CALL_free"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "free"
+    },
+    {
+      "id": 1,
+      "label": "0002502e",
+      "tokens": [
+        "CALL_strtoimax"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strtoimax"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

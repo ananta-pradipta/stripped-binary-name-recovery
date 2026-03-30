@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "memmove",
+  "address": "0x0001bf31",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001bf31",
+      "tokens": [
+        "CALL_memmove"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memmove"
+    },
+    {
+      "id": 1,
+      "label": "000252c2",
+      "tokens": [
+        "CALL_error"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "error"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

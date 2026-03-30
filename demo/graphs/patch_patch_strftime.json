@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "strftime",
+  "address": "0x00022565",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00022565",
+      "tokens": [
+        "CALL_strftime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strftime"
+    },
+    {
+      "id": 1,
+      "label": "000acf10",
+      "tokens": [
+        "CALL_memmove"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memmove"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

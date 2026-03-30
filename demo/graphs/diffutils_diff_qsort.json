@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "qsort",
+  "address": "0x000799a9",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000799a9",
+      "tokens": [
+        "CALL_qsort"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "qsort"
+    },
+    {
+      "id": 1,
+      "label": "0008cb14",
+      "tokens": [
+        "CALL_isatty"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "isatty"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

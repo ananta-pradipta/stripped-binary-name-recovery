@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "fstat",
+  "address": "0x0002e9cf",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002e9cf",
+      "tokens": [
+        "CALL_fstat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fstat"
+    },
+    {
+      "id": 1,
+      "label": "0003608b",
+      "tokens": [
+        "CALL_sigaddset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigaddset"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

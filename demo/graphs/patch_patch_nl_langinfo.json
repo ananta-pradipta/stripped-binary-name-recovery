@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "nl_langinfo",
+  "address": "0x00020131",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020131",
+      "tokens": [
+        "CALL_nl_langinfo"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "nl_langinfo"
+    },
+    {
+      "id": 1,
+      "label": "000ace80",
+      "tokens": [
+        "CALL_ungetc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "ungetc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

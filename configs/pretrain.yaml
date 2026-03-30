@@ -1,0 +1,60 @@
+# Pre-training config for block encoder + graph encoder
+# Uses MLM + contrastive objectives on all available graph data
+#
+# Block/graph encoder settings match optimized_large.yaml so that
+# pre-trained weights load directly into the full FunctionNamer model.
+#
+# Usage:
+#   python3 scripts/build_pretrain_pairs.py  # build contrastive pairs first
+#   python3 -m src.training.pretrain --config configs/pretrain.yaml --seed 42
+
+data:
+  graphs_dir: data/graphs
+  match_index_path: data/match_index.json
+  pretrain_pairs_path: data/pretrain_pairs.json
+  max_blocks_per_function: 30
+  max_tokens_per_block: 20
+
+# Block encoder — must match optimized_large.yaml exactly
+block_encoder:
+  type: transformer
+  token_vocab_size: 3000    # overridden at runtime (actual + MASK token)
+  token_embed_dim: 256
+  num_layers: 4
+  num_heads: 8
+  dropout: 0.15
+  output_dim: 512
+  token_pooling: mean
+  use_block_features: false
+  token_dropout: 0.0
+
+# Graph encoder — must match optimized_large.yaml exactly
+graph_encoder:
+  type: gat
+  hidden_dim: 512
+  num_layers: 3
+  num_heads: 8
+  dropout: 0.15
+  pooling: attention
+  output_dim: 1024
+
+# MLM settings
+mlm:
+  mask_prob: 0.15
+  mask_token_ratio: 0.8    # 80% of masked tokens -> [MASK]
+  random_token_ratio: 0.1  # 10% -> random token, remaining 10% -> keep original
+
+# Contrastive settings
+contrastive:
+  temperature: 0.07
+  projection_dim: 256
+  weight: 0.5              # L = L_mlm + 0.5 * L_contrastive
+
+# Training settings
+training:
+  epochs: 10
+  batch_size: 64
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  warmup_steps: 500
+  output_path: checkpoints/pretrained_encoder.pt

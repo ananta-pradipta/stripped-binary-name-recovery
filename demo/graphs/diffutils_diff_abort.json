@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "abort",
+  "address": "0x000174f3",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000174f3",
+      "tokens": [
+        "CALL_abort"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 1,
+      "label": "0008cab4",
+      "tokens": [
+        "CALL___errno_location"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__errno_location"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

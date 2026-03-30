@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "iswalnum",
+  "address": "0x00050b86",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00050b86",
+      "tokens": [
+        "CALL_iswalnum"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswalnum"
+    },
+    {
+      "id": 1,
+      "label": "0008cdc0",
+      "tokens": [
+        "CALL_malloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "malloc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

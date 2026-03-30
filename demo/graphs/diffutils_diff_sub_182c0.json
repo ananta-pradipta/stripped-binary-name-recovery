@@ -1,0 +1,49 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_182c0",
+  "address": "0x182c0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001a8a2",
+      "tokens": [
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_tzset"
+      ],
+      "num_tokens": 7,
+      "has_external_call": true,
+      "external_call_name": "tzset"
+    },
+    {
+      "id": 1,
+      "label": "0001a8d6",
+      "tokens": [
+        "MEM_READ_ARG_64",
+        "STACK_OP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "ARG_LOAD_ADDR",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 6,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": [
+    "sub_17d10"
+  ]
+}

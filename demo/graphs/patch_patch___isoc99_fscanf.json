@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "__isoc99_fscanf",
+  "address": "0x0009d00b",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0009d00b",
+      "tokens": [
+        "CALL___isoc99_fscanf"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__isoc99_fscanf"
+    },
+    {
+      "id": 1,
+      "label": "000acb44",
+      "tokens": [
+        "CALL_mkdir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mkdir"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

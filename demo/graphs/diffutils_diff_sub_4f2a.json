@@ -1,0 +1,40 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_4f2a",
+  "address": "0x4f2a",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00017512",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 1,
+      "label": "000927cd",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": [
+    "sub_4f2f"
+  ]
+}

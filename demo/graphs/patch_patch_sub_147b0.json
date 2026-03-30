@@ -1,0 +1,30 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_147b0",
+  "address": "0x147b0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00067f0d",
+      "tokens": [
+        "ARG_LOAD_ADDR",
+        "ARG_LOAD_ADDR",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "CALL_sigprocmask"
+      ],
+      "num_tokens": 10,
+      "has_external_call": true,
+      "external_call_name": "sigprocmask"
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

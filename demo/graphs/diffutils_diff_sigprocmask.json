@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sigprocmask",
+  "address": "0x0006526b",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0006526b",
+      "tokens": [
+        "CALL_sigprocmask"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigprocmask"
+    },
+    {
+      "id": 1,
+      "label": "0008ca54",
+      "tokens": [
+        "CALL_raise"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "raise"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

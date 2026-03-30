@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "read",
+  "address": "0x0002b573",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002b573",
+      "tokens": [
+        "CALL_read"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "read"
+    },
+    {
+      "id": 1,
+      "label": "0008ccd0",
+      "tokens": [
+        "CALL_lstat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "lstat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "memcpy",
+  "address": "0x0000bb56",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000bb56",
+      "tokens": [
+        "CALL_memcpy"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memcpy"
+    },
+    {
+      "id": 1,
+      "label": "00035f3b",
+      "tokens": [
+        "CALL_mincore"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mincore"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

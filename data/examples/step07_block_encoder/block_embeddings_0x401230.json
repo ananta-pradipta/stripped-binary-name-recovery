@@ -1,0 +1,71 @@
+{
+    "_meta": {
+        "step": "Step 7: Block Encoder",
+        "input": "Token sequence for one basic block (normalized BAP-IR tokens)",
+        "output": "Fixed-size embedding vector (ℝ²⁵⁶) per block",
+        "model": "Token Embedding (dim=128) → Transformer Encoder (2 layers, 4 heads) → CLS pooling → Linear(128→256)"
+    },
+    "function": "sub_401230",
+    "example_block": {
+        "block_id": 1,
+        "raw_tokens": ["RDI", ":=", "NUM", "RSI", ":=", "NUM", "RDX", ":=", "NUM", "call", "MEM"],
+        "num_tokens": 11,
+        "step_1_token_embedding": {
+            "description": "Each token looked up in learned embedding table",
+            "shape": "[11, 128]",
+            "example_first_token": "RDI → [0.12, -0.34, 0.78, 0.05, -0.22, '... 128 dims ...']"
+        },
+        "step_2_transformer": {
+            "description": "Self-attention captures token ordering and context within the block",
+            "num_layers": 2,
+            "num_heads": 4,
+            "output_shape": "[11, 128]",
+            "note": "Each token now aware of all other tokens in the block"
+        },
+        "step_3_pooling": {
+            "description": "Take CLS token or mean pool → project to 256 dims",
+            "output_shape": "[256]"
+        },
+        "output_embedding": [0.33, 0.67, -0.12, 0.45, -0.28, 0.91, -0.05, 0.72, "... (256 total floats)"]
+    },
+    "all_blocks_output": {
+        "description": "Block encoder applied to ALL blocks in the function",
+        "block_0": {
+            "block_id": 0,
+            "label": "prologue",
+            "num_tokens": 21,
+            "embedding": [0.15, -0.28, 0.42, "... ℝ²⁵⁶"],
+            "note": "Stack setup — generic pattern"
+        },
+        "block_1": {
+            "block_id": 1,
+            "label": "call_socket",
+            "num_tokens": 11,
+            "embedding": [0.33, 0.67, -0.12, "... ℝ²⁵⁶"],
+            "note": "Argument setup + call — semantically rich"
+        },
+        "block_2": {
+            "block_id": 2,
+            "label": "call_bind",
+            "num_tokens": 21,
+            "embedding": [0.45, 0.12, -0.55, "... ℝ²⁵⁶"],
+            "note": "Uses return value from socket, sets up address struct"
+        },
+        "block_3": {
+            "block_id": 3,
+            "label": "call_listen",
+            "num_tokens": 10,
+            "embedding": [0.52, -0.11, 0.38, "... ℝ²⁵⁶"],
+            "note": "Short, focused — pass fd and backlog"
+        },
+        "block_4": {
+            "block_id": 4,
+            "label": "epilogue",
+            "num_tokens": 13,
+            "embedding": [0.08, 0.23, -0.67, "... ℝ²⁵⁶"],
+            "note": "Stack teardown — generic pattern"
+        },
+        "output_shape": "[5, 256]",
+        "output_description": "Matrix of 5 block embeddings, each 256-dimensional"
+    }
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "readlink",
+  "address": "0x0001a95e",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001a95e",
+      "tokens": [
+        "CALL_readlink"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "readlink"
+    },
+    {
+      "id": 1,
+      "label": "0008cb50",
+      "tokens": [
+        "CALL_fcntl"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fcntl"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

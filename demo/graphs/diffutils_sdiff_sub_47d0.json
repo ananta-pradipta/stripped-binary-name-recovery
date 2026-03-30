@@ -1,0 +1,94 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "sub_47d0",
+  "address": "0x47d0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00022fcf",
+      "tokens": [
+        "STACK_OP",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_OP",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "RETVAL",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "STACK_OP",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "ARG_SETUP_WORD",
+        "MEM_READ_64",
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL___libc_start_main"
+      ],
+      "num_tokens": 43,
+      "has_external_call": true,
+      "external_call_name": "__libc_start_main"
+    },
+    {
+      "id": 1,
+      "label": "000230c3",
+      "tokens": [
+        "CALL_intrinsic"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "intrinsic"
+    },
+    {
+      "id": 2,
+      "label": "000230c8",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "num_blocks": 3,
+  "num_edges": 2,
+  "internal_callees": [
+    "sub_4800"
+  ]
+}

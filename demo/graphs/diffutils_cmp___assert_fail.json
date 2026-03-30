@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "__assert_fail",
+  "address": "0x00006b47",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00006b47",
+      "tokens": [
+        "CALL___assert_fail"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__assert_fail"
+    },
+    {
+      "id": 1,
+      "label": "0002517e",
+      "tokens": [
+        "CALL_strnlen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strnlen"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

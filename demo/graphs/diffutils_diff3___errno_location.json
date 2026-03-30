@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "__errno_location",
+  "address": "0x00009f71",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00009f71",
+      "tokens": [
+        "CALL___errno_location"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__errno_location"
+    },
+    {
+      "id": 1,
+      "label": "00035d5b",
+      "tokens": [
+        "CALL_strncmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strncmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

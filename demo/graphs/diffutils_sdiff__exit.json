@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "_exit",
+  "address": "0x00020363",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020363",
+      "tokens": [
+        "CALL__exit"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "_exit"
+    },
+    {
+      "id": 1,
+      "label": "00026355",
+      "tokens": [
+        "CALL_iconv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

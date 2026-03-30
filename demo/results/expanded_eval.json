@@ -1,0 +1,123 @@
+{
+  "overall": {
+    "correct": 68,
+    "total": 5381,
+    "f1": 0.02542506328048049
+  },
+  "per_opt": {
+    "O0": {
+      "correct": 43,
+      "total": 2920,
+      "f1_sum": 83.85649350649349
+    },
+    "O2": {
+      "correct": 25,
+      "total": 2461,
+      "f1_sum": 52.955772005772
+    }
+  },
+  "per_pkg": {
+    "groff": {
+      "correct": 0,
+      "total": 2528,
+      "f1_sum": 7.44920634920635
+    },
+    "datamash": {
+      "correct": 24,
+      "total": 404,
+      "f1_sum": 36.714574314574314
+    },
+    "direvent": {
+      "correct": 0,
+      "total": 910,
+      "f1_sum": 16.13333333333334
+    },
+    "csplit2": {
+      "correct": 24,
+      "total": 654,
+      "f1_sum": 37.40555555555556
+    },
+    "texinfo": {
+      "correct": 4,
+      "total": 708,
+      "f1_sum": 13.125396825396829
+    },
+    "cppi": {
+      "correct": 16,
+      "total": 177,
+      "f1_sum": 25.984199134199137
+    }
+  },
+  "per_binary": {
+    "groff_troff_O0": {
+      "correct": 0,
+      "total": 1000,
+      "f1": 0.003102380952380952
+    },
+    "groff_troff_O2": {
+      "correct": 0,
+      "total": 999,
+      "f1": 0.0035058868392201727
+    },
+    "groff_pic_O0": {
+      "correct": 0,
+      "total": 264,
+      "f1": 0.0008417508417508418
+    },
+    "groff_pic_O2": {
+      "correct": 0,
+      "total": 265,
+      "f1": 0.0023480083857442347
+    },
+    "datamash_datamash_O0": {
+      "correct": 12,
+      "total": 202,
+      "f1": 0.09087765919449088
+    },
+    "datamash_datamash_O2": {
+      "correct": 12,
+      "total": 202,
+      "f1": 0.09087765919449088
+    },
+    "direvent_direvent_O0": {
+      "correct": 0,
+      "total": 559,
+      "f1": 0.014331146889286422
+    },
+    "direvent_direvent_O2": {
+      "correct": 0,
+      "total": 351,
+      "f1": 0.02314023425134536
+    },
+    "csplit2_cflow_O0": {
+      "correct": 18,
+      "total": 414,
+      "f1": 0.06650755310175599
+    },
+    "csplit2_cflow_O2": {
+      "correct": 6,
+      "total": 240,
+      "f1": 0.04113095238095239
+    },
+    "texinfo_ginfo_O0": {
+      "correct": 2,
+      "total": 354,
+      "f1": 0.018538696081068964
+    },
+    "texinfo_ginfo_O2": {
+      "correct": 2,
+      "total": 354,
+      "f1": 0.018538696081068964
+    },
+    "cppi_cppi_O0": {
+      "correct": 11,
+      "total": 127,
+      "f1": 0.15800524934383206
+    },
+    "cppi_cppi_O2": {
+      "correct": 5,
+      "total": 50,
+      "f1": 0.11835064935064935
+    }
+  }
+}

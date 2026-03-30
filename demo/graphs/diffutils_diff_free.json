@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "free",
+  "address": "0x00017df9",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00017df9",
+      "tokens": [
+        "CALL_free"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "free"
+    },
+    {
+      "id": 1,
+      "label": "0008ca6c",
+      "tokens": [
+        "CALL_strtoimax"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strtoimax"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

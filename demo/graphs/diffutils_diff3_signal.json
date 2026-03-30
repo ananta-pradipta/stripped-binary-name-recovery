@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "signal",
+  "address": "0x000286d1",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000286d1",
+      "tokens": [
+        "CALL_signal"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "signal"
+    },
+    {
+      "id": 1,
+      "label": "00035f17",
+      "tokens": [
+        "CALL_fputc_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputc_unlocked"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

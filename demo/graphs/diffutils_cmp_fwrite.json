@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "fwrite",
+  "address": "0x000067ca",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000067ca",
+      "tokens": [
+        "CALL_fwrite"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fwrite"
+    },
+    {
+      "id": 1,
+      "label": "0002530a",
+      "tokens": [
+        "CALL___fprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__fprintf_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "malloc",
+  "address": "0x00020339",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020339",
+      "tokens": [
+        "CALL_malloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "malloc"
+    },
+    {
+      "id": 1,
+      "label": "000ace5c",
+      "tokens": [
+        "CALL_fflush"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fflush"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

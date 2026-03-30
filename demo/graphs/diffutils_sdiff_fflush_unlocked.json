@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "fflush_unlocked",
+  "address": "0x0001faee",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001faee",
+      "tokens": [
+        "CALL_fflush_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fflush_unlocked"
+    },
+    {
+      "id": 1,
+      "label": "000266a9",
+      "tokens": [
+        "CALL_strdup"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strdup"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

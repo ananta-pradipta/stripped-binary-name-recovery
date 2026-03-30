@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "ferror",
+  "address": "0x00053b7c",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00053b7c",
+      "tokens": [
+        "CALL_ferror"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "ferror"
+    },
+    {
+      "id": 1,
+      "label": "0008cb08",
+      "tokens": [
+        "CALL_qsort"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "qsort"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

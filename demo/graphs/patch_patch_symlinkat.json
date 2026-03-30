@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "symlinkat",
+  "address": "0x0005f274",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005f274",
+      "tokens": [
+        "CALL_symlinkat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "symlinkat"
+    },
+    {
+      "id": 1,
+      "label": "000acfe8",
+      "tokens": [
+        "CALL_iswprint"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswprint"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

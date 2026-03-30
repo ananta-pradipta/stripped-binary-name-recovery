@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "strrchr",
+  "address": "0x0009db90",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0009db90",
+      "tokens": [
+        "CALL_strrchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strrchr"
+    },
+    {
+      "id": 1,
+      "label": "000accd0",
+      "tokens": [
+        "CALL_gmtime_r"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "gmtime_r"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

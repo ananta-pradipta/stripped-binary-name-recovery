@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "__printf_chk",
+  "address": "0x000130a4",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000130a4",
+      "tokens": [
+        "CALL___printf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__printf_chk"
+    },
+    {
+      "id": 1,
+      "label": "000265f5",
+      "tokens": [
+        "CALL_iconv_close"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv_close"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "openat",
+  "address": "0x00046e2c",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00046e2c",
+      "tokens": [
+        "CALL_openat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "openat"
+    },
+    {
+      "id": 1,
+      "label": "000acc40",
+      "tokens": [
+        "CALL_chdir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "chdir"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "__memcpy_chk",
+  "address": "0x0002bf84",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002bf84",
+      "tokens": [
+        "CALL___memcpy_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__memcpy_chk"
+    },
+    {
+      "id": 1,
+      "label": "0008cd48",
+      "tokens": [
+        "CALL_sigemptyset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigemptyset"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

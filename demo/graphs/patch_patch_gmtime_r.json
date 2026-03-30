@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "gmtime_r",
+  "address": "0x0002e449",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002e449",
+      "tokens": [
+        "CALL_gmtime_r"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "gmtime_r"
+    },
+    {
+      "id": 1,
+      "label": "000accdc",
+      "tokens": [
+        "CALL_dup"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dup"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

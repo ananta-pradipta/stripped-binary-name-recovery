@@ -1,0 +1,30 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_f910",
+  "address": "0xf910",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005c1c8",
+      "tokens": [
+        "ARG_SETUP_ZERO",
+        "FLAG_AF",
+        "FLAG_ZF",
+        "FLAG_PF",
+        "FLAG_OF",
+        "FLAG_CF",
+        "FLAG_SF",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 8,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": [
+    "sub_f740"
+  ]
+}

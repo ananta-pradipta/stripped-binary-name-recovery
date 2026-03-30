@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "getegid",
+  "address": "0x00064e1d",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00064e1d",
+      "tokens": [
+        "CALL_getegid"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "getegid"
+    },
+    {
+      "id": 1,
+      "label": "000acea4",
+      "tokens": [
+        "CALL_mktime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mktime"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

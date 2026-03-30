@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "system",
+  "address": "0x00067945",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00067945",
+      "tokens": [
+        "CALL_system"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "system"
+    },
+    {
+      "id": 1,
+      "label": "000acc88",
+      "tokens": [
+        "CALL_dup2"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dup2"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

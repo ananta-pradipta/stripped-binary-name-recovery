@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "setlocale",
+  "address": "0x0000ba06",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000ba06",
+      "tokens": [
+        "CALL_setlocale"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "setlocale"
+    },
+    {
+      "id": 1,
+      "label": "00035fa7",
+      "tokens": [
+        "CALL___printf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__printf_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "pipe",
+  "address": "0x00023df9",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00023df9",
+      "tokens": [
+        "CALL_pipe"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "pipe"
+    },
+    {
+      "id": 1,
+      "label": "000264bd",
+      "tokens": [
+        "CALL_memchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memchr"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

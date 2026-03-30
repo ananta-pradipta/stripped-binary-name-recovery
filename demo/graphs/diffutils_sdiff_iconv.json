@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "iconv",
+  "address": "0x0000e57c",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000e57c",
+      "tokens": [
+        "CALL_iconv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv"
+    },
+    {
+      "id": 1,
+      "label": "00026361",
+      "tokens": [
+        "CALL_puts"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "puts"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

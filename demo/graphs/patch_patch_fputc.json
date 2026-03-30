@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fputc",
+  "address": "0x000312d5",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000312d5",
+      "tokens": [
+        "CALL_fputc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputc"
+    },
+    {
+      "id": 1,
+      "label": "000acd60",
+      "tokens": [
+        "CALL_memchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memchr"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

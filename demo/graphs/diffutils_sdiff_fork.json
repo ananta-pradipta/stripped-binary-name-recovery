@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "fork",
+  "address": "0x00020ed9",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020ed9",
+      "tokens": [
+        "CALL_fork"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fork"
+    },
+    {
+      "id": 1,
+      "label": "000266e5",
+      "tokens": [
+        "CALL___ctype_b_loc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__ctype_b_loc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

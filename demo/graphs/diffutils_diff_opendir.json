@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "opendir",
+  "address": "0x0007a5d5",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0007a5d5",
+      "tokens": [
+        "CALL_opendir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "opendir"
+    },
+    {
+      "id": 1,
+      "label": "0008cbb0",
+      "tokens": [
+        "CALL_bindtextdomain"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "bindtextdomain"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

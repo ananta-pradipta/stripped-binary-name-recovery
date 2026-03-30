@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "__printf_chk",
+  "address": "0x00018b9a",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00018b9a",
+      "tokens": [
+        "CALL___printf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__printf_chk"
+    },
+    {
+      "id": 1,
+      "label": "00025292",
+      "tokens": [
+        "CALL_iconv_close"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iconv_close"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

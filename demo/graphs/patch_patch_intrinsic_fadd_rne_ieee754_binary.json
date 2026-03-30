@@ -1,0 +1,21 @@
+{
+  "binary": "patch_patch",
+  "function_name": "intrinsic:fadd_rne_ieee754_binary",
+  "address": "0x000ae0f1",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000ae0f1",
+      "tokens": [
+        "ASSIGN"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

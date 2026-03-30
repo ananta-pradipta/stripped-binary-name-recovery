@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fread",
+  "address": "0x0006c8bc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0006c8bc",
+      "tokens": [
+        "CALL_fread"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fread"
+    },
+    {
+      "id": 1,
+      "label": "000acb98",
+      "tokens": [
+        "CALL_faccessat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "faccessat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

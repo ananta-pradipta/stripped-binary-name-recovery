@@ -1,0 +1,229 @@
+{
+  "checkpoint": "checkpoints/baseline_v1_val0668.pt",
+  "beam_width": 5,
+  "note": "baseline_v1_val0668.pt = val_f1=0.6680, epoch=44. COLLAPSED on test set.",
+  "overall": {
+    "n": 8973,
+    "f1": 0.1148,
+    "em": 0.0515,
+    "ngsim": 0.1116,
+    "edsim": 0.2481,
+    "em_count": 462
+  },
+  "mode_collapse": {
+    "unique_predictions": 985,
+    "total_predictions": 8973,
+    "top_prediction": "bfd_elf_bfd_copy_private_bfd_data_common",
+    "top_count": 4340,
+    "top_pct": 48.4,
+    "collapsed": true
+  },
+  "stratified": {
+    "easy": {
+      "n": 2723,
+      "f1": 0.1774,
+      "em": 0.1102,
+      "ngsim": 0.1743,
+      "edsim": 0.2964,
+      "em_count": 300
+    },
+    "hard_seen": {
+      "n": 5436,
+      "f1": 0.0997,
+      "em": 0.0298,
+      "ngsim": 0.0929,
+      "edsim": 0.2347,
+      "em_count": 162
+    },
+    "hard_unseen": {
+      "n": 814,
+      "f1": 0.006,
+      "em": 0.0,
+      "ngsim": 0.026,
+      "edsim": 0.1763,
+      "em_count": 0
+    }
+  },
+  "deduped": {
+    "overall": {
+      "n": 7290,
+      "f1": 0.1004,
+      "em": 0.0358,
+      "ngsim": 0.0971,
+      "edsim": 0.2377,
+      "em_count": 261
+    },
+    "easy": {
+      "n": 1835,
+      "f1": 0.153,
+      "em": 0.0807,
+      "em_count": 148
+    },
+    "hard_seen": {
+      "n": 4642,
+      "f1": 0.0961,
+      "em": 0.0243,
+      "em_count": 113
+    },
+    "hard_unseen": {
+      "n": 813,
+      "f1": 0.006,
+      "em": 0.0,
+      "em_count": 0
+    }
+  },
+  "per_binary": {
+    "binutils_nm-new": {
+      "package": "binutils",
+      "n": 1234,
+      "f1": 0.1339,
+      "em": 0.0648,
+      "em_count": 80
+    },
+    "binutils_nm-new_O0": {
+      "package": "binutils",
+      "n": 2357,
+      "f1": 0.126,
+      "em": 0.0195,
+      "em_count": 46
+    },
+    "binutils_nm-new_O2": {
+      "package": "binutils",
+      "n": 1234,
+      "f1": 0.138,
+      "em": 0.0681,
+      "em_count": 84
+    },
+    "bison_bison_O0": {
+      "package": "bison",
+      "n": 1568,
+      "f1": 0.0064,
+      "em": 0.0019,
+      "em_count": 3
+    },
+    "bison_bison_O2": {
+      "package": "bison",
+      "n": 857,
+      "f1": 0.1538,
+      "em": 0.077,
+      "em_count": 66
+    },
+    "coreutils2_du": {
+      "package": "coreutils2",
+      "n": 170,
+      "f1": 0.2778,
+      "em": 0.1941,
+      "em_count": 33
+    },
+    "coreutils2_mktemp": {
+      "package": "coreutils2",
+      "n": 49,
+      "f1": 0.2763,
+      "em": 0.2245,
+      "em_count": 11
+    },
+    "coreutils_cat_O0": {
+      "package": "coreutils",
+      "n": 123,
+      "f1": 0.0225,
+      "em": 0.0163,
+      "em_count": 2
+    },
+    "coreutils_join": {
+      "package": "coreutils",
+      "n": 74,
+      "f1": 0.2154,
+      "em": 0.1622,
+      "em_count": 12
+    },
+    "coreutils_join_O2": {
+      "package": "coreutils",
+      "n": 74,
+      "f1": 0.2073,
+      "em": 0.1622,
+      "em_count": 12
+    },
+    "coreutils_ls_O0": {
+      "package": "coreutils",
+      "n": 474,
+      "f1": 0.0146,
+      "em": 0.0127,
+      "em_count": 6
+    },
+    "coreutils_mv": {
+      "package": "coreutils",
+      "n": 193,
+      "f1": 0.2229,
+      "em": 0.1606,
+      "em_count": 31
+    },
+    "coreutils_od_O2": {
+      "package": "coreutils",
+      "n": 97,
+      "f1": 0.2198,
+      "em": 0.1443,
+      "em_count": 14
+    },
+    "findutils_xargs": {
+      "package": "findutils",
+      "n": 102,
+      "f1": 0.2554,
+      "em": 0.2059,
+      "em_count": 21
+    },
+    "inetutils_ping": {
+      "package": "inetutils",
+      "n": 97,
+      "f1": 0.0968,
+      "em": 0.0619,
+      "em_count": 6
+    },
+    "less_lessecho_O0": {
+      "package": "less",
+      "n": 6,
+      "f1": 0.0,
+      "em": 0.0,
+      "em_count": 0
+    },
+    "patch_patch": {
+      "package": "patch",
+      "n": 259,
+      "f1": 0.1999,
+      "em": 0.1274,
+      "em_count": 33
+    },
+    "time_time": {
+      "package": "time",
+      "n": 5,
+      "f1": 0.5,
+      "em": 0.4,
+      "em_count": 2
+    }
+  },
+  "duplicate_analysis": {
+    "duplicated_name_count": 2193,
+    "duplicate_record_count": 6271,
+    "duplicate_record_pct": 69.9
+  },
+  "solvability": {
+    "unique_test_names": 4895,
+    "names_in_training": 4046,
+    "names_never_seen": 838,
+    "theoretical_max_em": 8159,
+    "theoretical_ceiling": 0.9093,
+    "actual_em": 462,
+    "actual_em_rate": 0.0515,
+    "gap_to_ceiling": 0.8578
+  },
+  "binutils_share_pct": 53.8,
+  "train_unique_names": 12655,
+  "key_findings": {
+    "collapse_explanation": "Both baseline_v1_val0668.pt (val F1=0.668) and best_model.pt (val F1=0.619) collapse on fixed test split. The historical 'Test F1=0.4987' was from a different seeded split without split_assignments.json.",
+    "test_set_is_pathological": true,
+    "binutils_nm_new_O0_dominates": "2357 functions (26% of test) from a single binary with 0.8% easy functions",
+    "hard_seen_em_ceiling": "Even if model perfectly recalled all seen names: 5436 hard-seen + 2723 easy = 8159 = 90.9% theoretical ceiling",
+    "hard_unseen_unsolvable": "814 functions (9.1%) are literally unsolvable: 0 ext calls + name never seen in training",
+    "duplicate_inflation": "69.9% of test records have duplicate names across binaries \u2014 metrics are inflated by repetition",
+    "bison_O0_anomaly": "bison_bison_O0: 1568 functions, F1=0.006, EM=0.2% \u2014 nearly ALL are 0-ext and heavily O0-compiled (stripped of structure)"
+  }
+}

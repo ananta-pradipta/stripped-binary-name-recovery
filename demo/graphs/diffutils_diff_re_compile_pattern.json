@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "re_compile_pattern",
+  "address": "0x00057b3d",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00057b3d",
+      "tokens": [
+        "CALL_re_compile_pattern"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "re_compile_pattern"
+    },
+    {
+      "id": 1,
+      "label": "0008cf10",
+      "tokens": [
+        "CALL_fflush_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fflush_unlocked"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

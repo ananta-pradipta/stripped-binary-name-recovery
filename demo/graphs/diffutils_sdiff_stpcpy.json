@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "stpcpy",
+  "address": "0x00020b04",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00020b04",
+      "tokens": [
+        "CALL_stpcpy"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "stpcpy"
+    },
+    {
+      "id": 1,
+      "label": "000263f1",
+      "tokens": [
+        "CALL_dcgettext"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dcgettext"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

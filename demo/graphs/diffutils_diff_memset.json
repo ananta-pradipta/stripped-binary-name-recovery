@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "memset",
+  "address": "0x0001d7fc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001d7fc",
+      "tokens": [
+        "CALL_memset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memset"
+    },
+    {
+      "id": 1,
+      "label": "0008cc7c",
+      "tokens": [
+        "CALL_strnlen"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strnlen"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

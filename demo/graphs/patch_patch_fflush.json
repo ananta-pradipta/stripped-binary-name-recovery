@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fflush",
+  "address": "0x00024a23",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00024a23",
+      "tokens": [
+        "CALL_fflush"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fflush"
+    },
+    {
+      "id": 1,
+      "label": "000ace68",
+      "tokens": [
+        "CALL_fchmodat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fchmodat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

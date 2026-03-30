@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "dup2",
+  "address": "0x00064dcc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00064dcc",
+      "tokens": [
+        "CALL_dup2"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "dup2"
+    },
+    {
+      "id": 1,
+      "label": "0008cc34",
+      "tokens": [
+        "CALL_strchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strchr"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

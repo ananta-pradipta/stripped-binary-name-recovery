@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "strdup",
+  "address": "0x00009afc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00009afc",
+      "tokens": [
+        "CALL_strdup"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strdup"
+    },
+    {
+      "id": 1,
+      "label": "0003605b",
+      "tokens": [
+        "CALL_mbsinit"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mbsinit"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

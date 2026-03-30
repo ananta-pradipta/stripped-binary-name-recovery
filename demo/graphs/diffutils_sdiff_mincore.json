@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "mincore",
+  "address": "0x0001861d",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001861d",
+      "tokens": [
+        "CALL_mincore"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mincore"
+    },
+    {
+      "id": 1,
+      "label": "00026571",
+      "tokens": [
+        "CALL_wcwidth"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "wcwidth"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

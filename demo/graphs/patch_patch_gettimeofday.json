@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "gettimeofday",
+  "address": "0x00032494",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00032494",
+      "tokens": [
+        "CALL_gettimeofday"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "gettimeofday"
+    },
+    {
+      "id": 1,
+      "label": "000acd00",
+      "tokens": [
+        "CALL___assert_fail"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__assert_fail"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

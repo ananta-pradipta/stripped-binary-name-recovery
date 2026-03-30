@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "close",
+  "address": "0x0001d1cf",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001d1cf",
+      "tokens": [
+        "CALL_close"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "close"
+    },
+    {
+      "id": 1,
+      "label": "00035eb7",
+      "tokens": [
+        "CALL_pipe"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "pipe"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

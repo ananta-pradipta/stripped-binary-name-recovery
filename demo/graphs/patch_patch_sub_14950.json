@@ -1,0 +1,24 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_14950",
+  "address": "0x14950",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00068568",
+      "tokens": [
+        "ARG_LOAD_ADDR",
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 2,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": [
+    "sub_181a0"
+  ]
+}

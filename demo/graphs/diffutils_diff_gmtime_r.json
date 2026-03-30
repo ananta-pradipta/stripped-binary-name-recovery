@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "gmtime_r",
+  "address": "0x00018a6c",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00018a6c",
+      "tokens": [
+        "CALL_gmtime_r"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "gmtime_r"
+    },
+    {
+      "id": 1,
+      "label": "0008d002",
+      "tokens": [
+        "CALL___cxa_finalize"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__cxa_finalize"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

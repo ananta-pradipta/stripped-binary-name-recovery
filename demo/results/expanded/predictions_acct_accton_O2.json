@@ -1,0 +1,68 @@
+[
+  {
+    "address": "0x1570",
+    "bap_name": "sub_1570",
+    "predicted_name": "file_open",
+    "score": -0.05356453123104752,
+    "num_blocks": 19,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "fopen",
+      "__stack_chk_fail",
+      "strlen",
+      "perror"
+    ]
+  },
+  {
+    "address": "0x13c0",
+    "bap_name": "sub_13c0",
+    "predicted_name": "lua_c_runtilstate",
+    "score": -0.09845979170059631,
+    "num_blocks": 4,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x1390",
+    "bap_name": "sub_1390",
+    "predicted_name": "writeline",
+    "score": -0.16271901378719197,
+    "num_blocks": 3,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  },
+  {
+    "address": "0x1530",
+    "bap_name": "sub_1530",
+    "predicted_name": "fatal",
+    "score": -0.3631873197832471,
+    "num_blocks": 3,
+    "num_ext_calls": 1,
+    "ext_calls": [
+      "exit"
+    ]
+  },
+  {
+    "address": "0x1574",
+    "bap_name": "sub_1574",
+    "predicted_name": "file_open",
+    "score": -0.40418996112884525,
+    "num_blocks": 19,
+    "num_ext_calls": 4,
+    "ext_calls": [
+      "fopen",
+      "__stack_chk_fail",
+      "strlen",
+      "perror"
+    ]
+  },
+  {
+    "address": "0x14f0",
+    "bap_name": "sub_14f0",
+    "predicted_name": "control_char",
+    "score": -0.7710309691163038,
+    "num_blocks": 2,
+    "num_ext_calls": 0,
+    "ext_calls": []
+  }
+]

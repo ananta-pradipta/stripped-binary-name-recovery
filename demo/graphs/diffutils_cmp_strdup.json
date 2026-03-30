@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_cmp",
+  "function_name": "strdup",
+  "address": "0x00006c67",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00006c67",
+      "tokens": [
+        "CALL_strdup"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strdup"
+    },
+    {
+      "id": 1,
+      "label": "00025322",
+      "tokens": [
+        "CALL_mbsinit"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mbsinit"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sigaction",
+  "address": "0x000929dc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000929dc",
+      "tokens": [
+        "CALL_sigaction"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigaction"
+    },
+    {
+      "id": 1,
+      "label": "000acb8c",
+      "tokens": [
+        "CALL_fread"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fread"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

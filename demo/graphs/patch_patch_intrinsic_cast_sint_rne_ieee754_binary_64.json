@@ -1,0 +1,21 @@
+{
+  "binary": "patch_patch",
+  "function_name": "intrinsic:cast_sint_rne_ieee754_binary_64",
+  "address": "0x000ae0f3",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000ae0f3",
+      "tokens": [
+        "ASSIGN"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

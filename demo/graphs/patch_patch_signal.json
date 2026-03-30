@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "signal",
+  "address": "0x00068016",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00068016",
+      "tokens": [
+        "CALL_signal"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "signal"
+    },
+    {
+      "id": 1,
+      "label": "000acdcc",
+      "tokens": [
+        "CALL_readlinkat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "readlinkat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

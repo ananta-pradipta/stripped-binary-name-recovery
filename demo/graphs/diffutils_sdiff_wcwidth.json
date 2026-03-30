@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "wcwidth",
+  "address": "0x0000f056",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000f056",
+      "tokens": [
+        "CALL_wcwidth"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "wcwidth"
+    },
+    {
+      "id": 1,
+      "label": "0002657d",
+      "tokens": [
+        "CALL_iswalnum"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "iswalnum"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

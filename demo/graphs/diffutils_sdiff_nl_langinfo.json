@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "nl_langinfo",
+  "address": "0x0000ef92",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0000ef92",
+      "tokens": [
+        "CALL_nl_langinfo"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "nl_langinfo"
+    },
+    {
+      "id": 1,
+      "label": "000265a1",
+      "tokens": [
+        "CALL_mkstemp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mkstemp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

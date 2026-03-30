@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "__assert_fail",
+  "address": "0x000099dc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000099dc",
+      "tokens": [
+        "CALL___assert_fail"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__assert_fail"
+    },
+    {
+      "id": 1,
+      "label": "00035e87",
+      "tokens": [
+        "CALL_memset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memset"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

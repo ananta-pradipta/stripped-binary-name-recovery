@@ -1,0 +1,21 @@
+{
+  "binary": "patch_patch",
+  "function_name": "__sprintf_chk",
+  "address": "0x0002da1f",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002da1f",
+      "tokens": [
+        "CALL___sprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__sprintf_chk"
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

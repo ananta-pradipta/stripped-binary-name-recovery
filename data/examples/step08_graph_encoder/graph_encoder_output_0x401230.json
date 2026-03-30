@@ -1,0 +1,62 @@
+{
+    "_meta": {
+        "step": "Step 8: Graph Encoder (GAT + Attention Pooling)",
+        "input": "Block embeddings [5, 256] + CFG edges [[0,1],[1,2],[2,3],[3,4]]",
+        "output": "Single function embedding f ∈ ℝ⁵¹²"
+    },
+    "function": "sub_401230",
+    "input": {
+        "block_embeddings_shape": "[5, 256]",
+        "edges": [[0,1], [1,2], [2,3], [3,4]],
+        "num_nodes": 5,
+        "num_edges": 4
+    },
+    "gat_message_passing": {
+        "layer_1": {
+            "description": "Each node attends to its direct neighbors",
+            "example_block_2": "b'₂ now aware of b'₁ (predecessor) and b'₃ (successor)",
+            "output_shape": "[5, 256]"
+        },
+        "layer_2": {
+            "description": "2-hop context — each node now has information from 2 edges away",
+            "example_block_2": "b'₂ now aware of b'₀, b'₁, b'₃, b'₄ (full chain)",
+            "output_shape": "[5, 256]"
+        },
+        "updated_embeddings": {
+            "b_prime_0": [0.15, -0.28, 0.42, "... ℝ²⁵⁶ (updated, context-aware)"],
+            "b_prime_1": [0.33, 0.67, -0.12, "..."],
+            "b_prime_2": [0.45, 0.12, -0.55, "..."],
+            "b_prime_3": [0.52, -0.11, 0.38, "..."],
+            "b_prime_4": [0.08, 0.23, -0.67, "..."]
+        }
+    },
+    "attention_pooling": {
+        "description": "Learned MLP scores each block, softmax gives weights, weighted sum → f",
+        "scores_before_softmax": {
+            "block_0": -1.2,
+            "block_1": 1.8,
+            "block_2": 1.5,
+            "block_3": 2.1,
+            "block_4": -1.0
+        },
+        "attention_weights_after_softmax": {
+            "block_0_prologue": 0.05,
+            "block_1_call_socket": 0.30,
+            "block_2_call_bind": 0.25,
+            "block_3_call_listen": 0.35,
+            "block_4_epilogue": 0.05,
+            "sum": 1.00
+        },
+        "interpretation": "Blocks with external calls (socket, bind, listen) get ~90% of total attention. Prologue/epilogue blocks are near-zero — they're generic stack setup/teardown."
+    },
+    "output": {
+        "function_embedding_f": [0.38, 0.21, -0.15, 0.67, -0.44, 0.82, "... (512 total floats)"],
+        "shape": "[512]",
+        "description": "Single vector summarizing the entire function's code structure"
+    },
+    "kept_for_option_c": {
+        "individual_block_embeddings": "b'₀ through b'₄ also kept (not discarded after pooling)",
+        "shape": "[5, 256]",
+        "usage": "Option C decoder cross-attends to these individually"
+    }
+}

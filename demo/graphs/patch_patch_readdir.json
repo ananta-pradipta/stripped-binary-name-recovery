@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "readdir",
+  "address": "0x00061724",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00061724",
+      "tokens": [
+        "CALL_readdir"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "readdir"
+    },
+    {
+      "id": 1,
+      "label": "000ace50",
+      "tokens": [
+        "CALL_malloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "malloc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

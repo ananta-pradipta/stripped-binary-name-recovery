@@ -1,0 +1,51 @@
+{
+    "_meta": {
+        "step": "Step 4: Another example — function with NO external calls",
+        "note": "compute_checksum is pure computation, no library calls"
+    },
+    "binary": "net_utils",
+    "address": "0x401400",
+    "num_blocks": 3,
+    "num_edges": 3,
+    "blocks": [
+        {
+            "id": 0,
+            "label": "init",
+            "tokens": [
+                "RAX", ":=", "NUM",
+                "RCX", ":=", "NUM",
+                "when", "RSI", "=", "NUM", "goto",
+                "goto"
+            ],
+            "num_tokens": 12,
+            "has_external_call": false
+        },
+        {
+            "id": 1,
+            "label": "loop_body",
+            "tokens": [
+                "RAX", ":=", "RAX", "+", "pad", "mem", "MEM",
+                "RAX", ":=", "RAX", "<<", "NUM", "|", "RAX", ">>", "NUM",
+                "RAX", ":=", "RAX", "^", "NUM",
+                "RCX", ":=", "RCX", "+", "NUM",
+                "when", "RCX", "<", "RSI", "goto",
+                "goto"
+            ],
+            "num_tokens": 32,
+            "has_external_call": false
+        },
+        {
+            "id": 2,
+            "label": "return",
+            "tokens": ["return"],
+            "num_tokens": 1,
+            "has_external_call": false
+        }
+    ],
+    "edges": [
+        {"from": 0, "to": 1},
+        {"from": 0, "to": 2},
+        {"from": 1, "to": 1},
+        {"from": 1, "to": 2}
+    ]
+}

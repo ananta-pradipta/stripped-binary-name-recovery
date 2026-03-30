@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "fchmodat",
+  "address": "0x0005f0e9",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005f0e9",
+      "tokens": [
+        "CALL_fchmodat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fchmodat"
+    },
+    {
+      "id": 1,
+      "label": "000ace74",
+      "tokens": [
+        "CALL_nl_langinfo"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "nl_langinfo"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

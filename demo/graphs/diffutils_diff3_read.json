@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff3",
+  "function_name": "read",
+  "address": "0x0002032e",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002032e",
+      "tokens": [
+        "CALL_read"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "read"
+    },
+    {
+      "id": 1,
+      "label": "00035edb",
+      "tokens": [
+        "CALL_memcmp"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memcmp"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

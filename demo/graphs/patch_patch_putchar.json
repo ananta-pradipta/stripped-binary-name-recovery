@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "putchar",
+  "address": "0x000933a3",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000933a3",
+      "tokens": [
+        "CALL_putchar"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "putchar"
+    },
+    {
+      "id": 1,
+      "label": "000acaf0",
+      "tokens": [
+        "CALL___vfprintf_chk"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__vfprintf_chk"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

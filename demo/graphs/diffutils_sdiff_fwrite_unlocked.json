@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "fwrite_unlocked",
+  "address": "0x0001e7c1",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001e7c1",
+      "tokens": [
+        "CALL_fwrite_unlocked"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fwrite_unlocked"
+    },
+    {
+      "id": 1,
+      "label": "000265b9",
+      "tokens": [
+        "CALL_realloc"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "realloc"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "perror",
+  "address": "0x0003ce7b",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0003ce7b",
+      "tokens": [
+        "CALL_perror"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "perror"
+    },
+    {
+      "id": 1,
+      "label": "0008cebc",
+      "tokens": [
+        "CALL_towlower"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "towlower"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "__assert_fail",
+  "address": "0x00046a0c",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00046a0c",
+      "tokens": [
+        "CALL___assert_fail"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__assert_fail"
+    },
+    {
+      "id": 1,
+      "label": "000acd0c",
+      "tokens": [
+        "CALL_fputs"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "fputs"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

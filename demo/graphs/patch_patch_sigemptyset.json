@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sigemptyset",
+  "address": "0x00067e10",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00067e10",
+      "tokens": [
+        "CALL_sigemptyset"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigemptyset"
+    },
+    {
+      "id": 1,
+      "label": "000acdfc",
+      "tokens": [
+        "CALL_mkdirat"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mkdirat"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

@@ -1,0 +1,40 @@
+{
+  "binary": "patch_patch",
+  "function_name": "sub_5faa",
+  "address": "0x5faa",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001fb8f",
+      "tokens": [
+        "STACK_OP",
+        "STACK_STORE_64",
+        "CALL_abort"
+      ],
+      "num_tokens": 3,
+      "has_external_call": true,
+      "external_call_name": "abort"
+    },
+    {
+      "id": 1,
+      "label": "000adb22",
+      "tokens": [
+        "CALL_INTERNAL"
+      ],
+      "num_tokens": 1,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": [
+    "sub_5faf"
+  ]
+}

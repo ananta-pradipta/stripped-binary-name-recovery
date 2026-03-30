@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "memchr",
+  "address": "0x00017afc",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "00017afc",
+      "tokens": [
+        "CALL_memchr"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "memchr"
+    },
+    {
+      "id": 1,
+      "label": "0008ccc4",
+      "tokens": [
+        "CALL_read"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "read"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

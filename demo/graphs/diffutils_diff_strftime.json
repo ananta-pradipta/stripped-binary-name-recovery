@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "strftime",
+  "address": "0x0001c9d7",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0001c9d7",
+      "tokens": [
+        "CALL_strftime"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "strftime"
+    },
+    {
+      "id": 1,
+      "label": "0008ce68",
+      "tokens": [
+        "CALL_mempcpy"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mempcpy"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

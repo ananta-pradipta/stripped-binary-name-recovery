@@ -1,0 +1,33 @@
+{
+  "binary": "diffutils_diff",
+  "function_name": "sub_f9d0",
+  "address": "0xf9d0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0005c44c",
+      "tokens": [
+        "ARG_SETUP",
+        "MEM_READ_ARG_64",
+        "ARG_ARITH_ADD",
+        "FLAG_CF",
+        "FLAG_OF",
+        "FLAG_AF",
+        "FLAG_PF",
+        "FLAG_SF",
+        "FLAG_ZF",
+        "ARG_ARITH_ADD",
+        "STACK_LOAD_64",
+        "STACK_OP",
+        "CALL_INDIRECT"
+      ],
+      "num_tokens": 13,
+      "has_external_call": false,
+      "external_call_name": null
+    }
+  ],
+  "edges": [],
+  "num_blocks": 1,
+  "num_edges": 0,
+  "internal_callees": []
+}

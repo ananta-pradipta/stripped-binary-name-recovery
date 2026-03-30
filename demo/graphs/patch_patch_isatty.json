@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "isatty",
+  "address": "0x000933f0",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000933f0",
+      "tokens": [
+        "CALL_isatty"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "isatty"
+    },
+    {
+      "id": 1,
+      "label": "000acb80",
+      "tokens": [
+        "CALL_sigaction"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "sigaction"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

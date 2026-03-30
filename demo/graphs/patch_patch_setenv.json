@@ -1,0 +1,36 @@
+{
+  "binary": "patch_patch",
+  "function_name": "setenv",
+  "address": "0x0002f2f4",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "0002f2f4",
+      "tokens": [
+        "CALL_setenv"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "setenv"
+    },
+    {
+      "id": 1,
+      "label": "000acbd4",
+      "tokens": [
+        "CALL_write"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "write"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}

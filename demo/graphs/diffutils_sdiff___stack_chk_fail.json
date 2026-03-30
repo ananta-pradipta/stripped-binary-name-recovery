@@ -1,0 +1,36 @@
+{
+  "binary": "diffutils_sdiff",
+  "function_name": "__stack_chk_fail",
+  "address": "0x000074a1",
+  "blocks": [
+    {
+      "id": 0,
+      "label": "000074a1",
+      "tokens": [
+        "CALL___stack_chk_fail"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "__stack_chk_fail"
+    },
+    {
+      "id": 1,
+      "label": "00026421",
+      "tokens": [
+        "CALL_mmap"
+      ],
+      "num_tokens": 1,
+      "has_external_call": true,
+      "external_call_name": "mmap"
+    }
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "num_blocks": 2,
+  "num_edges": 1,
+  "internal_callees": []
+}
