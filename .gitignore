@@ -19,8 +19,8 @@ data/labels/*
 data/bir/*
 data/external_calls/*_external.json
 data/string_refs/*_strings.json
-data/match_index*.json
-data/pretrain_pairs.json
+data/match_index_expanded.json
+data/match_index_trainval.json
 build_tmp/
 .archive/
 .claude/
