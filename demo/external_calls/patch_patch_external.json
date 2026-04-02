@@ -1,0 +1,6317 @@
+{
+  "binary": "patch_patch",
+  "functions": [
+    {
+      "function_name": ".fini",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": ".init",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": ".plt",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__assert_fail",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        },
+        {
+          "name": "fputs",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__ctype_b_loc",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__ctype_get_mb_cur_max",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__ctype_tolower_loc",
+      "external_calls": [
+        {
+          "name": "__ctype_tolower_loc",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__ctype_toupper_loc",
+      "external_calls": [
+        {
+          "name": "__ctype_toupper_loc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__cxa_finalize",
+      "external_calls": [
+        {
+          "name": "__cxa_finalize",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__errno_location",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__fprintf_chk",
+      "external_calls": [
+        {
+          "name": "__fprintf_chk",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__isoc99_fscanf",
+      "external_calls": [
+        {
+          "name": "__isoc99_fscanf",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__printf_chk",
+      "external_calls": [
+        {
+          "name": "__printf_chk",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__snprintf_chk",
+      "external_calls": [
+        {
+          "name": "__snprintf_chk",
+          "call_order": 0
+        },
+        {
+          "name": "raise",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__sprintf_chk",
+      "external_calls": [
+        {
+          "name": "__sprintf_chk",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__stack_chk_fail",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        },
+        {
+          "name": "getopt_long",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__uflow",
+      "external_calls": [
+        {
+          "name": "__uflow",
+          "call_order": 0
+        },
+        {
+          "name": "getenv",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__vfprintf_chk",
+      "external_calls": [
+        {
+          "name": "__vfprintf_chk",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "abort",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "access",
+      "external_calls": [
+        {
+          "name": "access",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "calloc",
+      "external_calls": [
+        {
+          "name": "calloc",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "chdir",
+      "external_calls": [
+        {
+          "name": "chdir",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "chmod",
+      "external_calls": [
+        {
+          "name": "chmod",
+          "call_order": 0
+        },
+        {
+          "name": "strftime",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "clock_gettime",
+      "external_calls": [
+        {
+          "name": "clock_gettime",
+          "call_order": 0
+        },
+        {
+          "name": "setenv",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "close",
+      "external_calls": [
+        {
+          "name": "close",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "closedir",
+      "external_calls": [
+        {
+          "name": "closedir",
+          "call_order": 0
+        },
+        {
+          "name": "fputc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "dirfd",
+      "external_calls": [
+        {
+          "name": "dirfd",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "dup",
+      "external_calls": [
+        {
+          "name": "dup",
+          "call_order": 0
+        },
+        {
+          "name": "lseek",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "dup2",
+      "external_calls": [
+        {
+          "name": "dup2",
+          "call_order": 0
+        },
+        {
+          "name": "strchr",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "error",
+      "external_calls": [
+        {
+          "name": "error",
+          "call_order": 0
+        },
+        {
+          "name": "open",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "exit",
+      "external_calls": [
+        {
+          "name": "exit",
+          "call_order": 0
+        },
+        {
+          "name": "fwrite",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "faccessat",
+      "external_calls": [
+        {
+          "name": "faccessat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fchmodat",
+      "external_calls": [
+        {
+          "name": "fchmodat",
+          "call_order": 0
+        },
+        {
+          "name": "nl_langinfo",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fchownat",
+      "external_calls": [
+        {
+          "name": "fchownat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fclose",
+      "external_calls": [
+        {
+          "name": "fclose",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fcntl",
+      "external_calls": [
+        {
+          "name": "fcntl",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fdopen",
+      "external_calls": [
+        {
+          "name": "fdopen",
+          "call_order": 0
+        },
+        {
+          "name": "setlocale",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fdopendir",
+      "external_calls": [
+        {
+          "name": "fdopendir",
+          "call_order": 0
+        },
+        {
+          "name": "unsetenv",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "ferror",
+      "external_calls": [
+        {
+          "name": "ferror",
+          "call_order": 0
+        },
+        {
+          "name": "isatty",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fflush",
+      "external_calls": [
+        {
+          "name": "fflush",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fileno",
+      "external_calls": [
+        {
+          "name": "fileno",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fopen",
+      "external_calls": [
+        {
+          "name": "fopen",
+          "call_order": 0
+        },
+        {
+          "name": "perror",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fputc",
+      "external_calls": [
+        {
+          "name": "fputc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fputs",
+      "external_calls": [
+        {
+          "name": "fputs",
+          "call_order": 0
+        },
+        {
+          "name": "memset",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fread",
+      "external_calls": [
+        {
+          "name": "fread",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "free",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "__cxa_finalize",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fseek",
+      "external_calls": [
+        {
+          "name": "fseek",
+          "call_order": 0
+        },
+        {
+          "name": "realloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fstat",
+      "external_calls": [
+        {
+          "name": "fstat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fstatat",
+      "external_calls": [
+        {
+          "name": "fstatat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "ftell",
+      "external_calls": [
+        {
+          "name": "ftell",
+          "call_order": 0
+        },
+        {
+          "name": "stat",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fwrite",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getc",
+      "external_calls": [
+        {
+          "name": "getc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getegid",
+      "external_calls": [
+        {
+          "name": "getegid",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getenv",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "geteuid",
+      "external_calls": [
+        {
+          "name": "geteuid",
+          "call_order": 0
+        },
+        {
+          "name": "close",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "getopt_long",
+      "external_calls": [
+        {
+          "name": "getopt_long",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getpid",
+      "external_calls": [
+        {
+          "name": "getpid",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getrlimit",
+      "external_calls": [
+        {
+          "name": "getrlimit",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "gettimeofday",
+      "external_calls": [
+        {
+          "name": "gettimeofday",
+          "call_order": 0
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "gmtime_r",
+      "external_calls": [
+        {
+          "name": "gmtime_r",
+          "call_order": 0
+        },
+        {
+          "name": "dup",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "isatty",
+      "external_calls": [
+        {
+          "name": "isatty",
+          "call_order": 0
+        },
+        {
+          "name": "sigaction",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "iswprint",
+      "external_calls": [
+        {
+          "name": "iswprint",
+          "call_order": 0
+        },
+        {
+          "name": "fstat",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "lchown",
+      "external_calls": [
+        {
+          "name": "lchown",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "localtime_r",
+      "external_calls": [
+        {
+          "name": "localtime_r",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "lseek",
+      "external_calls": [
+        {
+          "name": "lseek",
+          "call_order": 0
+        },
+        {
+          "name": "gettimeofday",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "lstat",
+      "external_calls": [
+        {
+          "name": "lstat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "malloc",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "fflush",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "mbrtowc",
+      "external_calls": [
+        {
+          "name": "mbrtowc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "mbsinit",
+      "external_calls": [
+        {
+          "name": "mbsinit",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "memchr",
+      "external_calls": [
+        {
+          "name": "memchr",
+          "call_order": 0
+        },
+        {
+          "name": "read",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "memcmp",
+      "external_calls": [
+        {
+          "name": "memcmp",
+          "call_order": 0
+        },
+        {
+          "name": "calloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "memcpy",
+      "external_calls": [
+        {
+          "name": "memcpy",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "memmove",
+      "external_calls": [
+        {
+          "name": "memmove",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "memset",
+      "external_calls": [
+        {
+          "name": "memset",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "mkdir",
+      "external_calls": [
+        {
+          "name": "mkdir",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "mkdirat",
+      "external_calls": [
+        {
+          "name": "mkdirat",
+          "call_order": 0
+        },
+        {
+          "name": "ftell",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "mktime",
+      "external_calls": [
+        {
+          "name": "mktime",
+          "call_order": 0
+        },
+        {
+          "name": "fseek",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "nl_langinfo",
+      "external_calls": [
+        {
+          "name": "nl_langinfo",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "open",
+      "external_calls": [
+        {
+          "name": "open",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "openat",
+      "external_calls": [
+        {
+          "name": "openat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "opendir",
+      "external_calls": [
+        {
+          "name": "opendir",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "pathconf",
+      "external_calls": [
+        {
+          "name": "pathconf",
+          "call_order": 0
+        },
+        {
+          "name": "fclose",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "pclose",
+      "external_calls": [
+        {
+          "name": "pclose",
+          "call_order": 0
+        },
+        {
+          "name": "snprintf",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "perror",
+      "external_calls": [
+        {
+          "name": "perror",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "popen",
+      "external_calls": [
+        {
+          "name": "popen",
+          "call_order": 0
+        },
+        {
+          "name": "fopen",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "putc",
+      "external_calls": [
+        {
+          "name": "putc",
+          "call_order": 0
+        },
+        {
+          "name": "signal",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "putchar",
+      "external_calls": [
+        {
+          "name": "putchar",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "puts",
+      "external_calls": [
+        {
+          "name": "puts",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "raise",
+      "external_calls": [
+        {
+          "name": "raise",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "read",
+      "external_calls": [
+        {
+          "name": "read",
+          "call_order": 0
+        },
+        {
+          "name": "lstat",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "readdir",
+      "external_calls": [
+        {
+          "name": "readdir",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "readlink",
+      "external_calls": [
+        {
+          "name": "readlink",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "readlinkat",
+      "external_calls": [
+        {
+          "name": "readlinkat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "realloc",
+      "external_calls": [
+        {
+          "name": "realloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "rename",
+      "external_calls": [
+        {
+          "name": "rename",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "renameat",
+      "external_calls": [
+        {
+          "name": "renameat",
+          "call_order": 0
+        },
+        {
+          "name": "exit",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "renameat2",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "renameat2@@Base-0x1ae60",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "rewinddir",
+      "external_calls": [
+        {
+          "name": "rewinddir",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "rmdir",
+      "external_calls": [
+        {
+          "name": "rmdir",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "setbuf",
+      "external_calls": [
+        {
+          "name": "setbuf",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "setenv",
+      "external_calls": [
+        {
+          "name": "setenv",
+          "call_order": 0
+        },
+        {
+          "name": "write",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "setlocale",
+      "external_calls": [
+        {
+          "name": "setlocale",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigaction",
+      "external_calls": [
+        {
+          "name": "sigaction",
+          "call_order": 0
+        },
+        {
+          "name": "fread",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sigaddset",
+      "external_calls": [
+        {
+          "name": "sigaddset",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigemptyset",
+      "external_calls": [
+        {
+          "name": "sigemptyset",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "signal",
+      "external_calls": [
+        {
+          "name": "signal",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigprocmask",
+      "external_calls": [
+        {
+          "name": "sigprocmask",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "snprintf",
+      "external_calls": [
+        {
+          "name": "snprintf",
+          "call_order": 0
+        },
+        {
+          "name": "strrchr",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "stat",
+      "external_calls": [
+        {
+          "name": "stat",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strchr",
+      "external_calls": [
+        {
+          "name": "strchr",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "strcmp",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "putc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strftime",
+      "external_calls": [
+        {
+          "name": "strftime",
+          "call_order": 0
+        },
+        {
+          "name": "memmove",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strlen",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "strncmp",
+      "external_calls": [
+        {
+          "name": "strncmp",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "strndup",
+      "external_calls": [
+        {
+          "name": "strndup",
+          "call_order": 0
+        },
+        {
+          "name": "memcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strrchr",
+      "external_calls": [
+        {
+          "name": "strrchr",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_10380",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_10390",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_103a0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_103b0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_103f0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_10410",
+      "external_calls": [
+        {
+          "name": "fflush",
+          "call_order": 0
+        },
+        {
+          "name": "ftell",
+          "call_order": 1
+        },
+        {
+          "name": "fwrite",
+          "call_order": 2
+        },
+        {
+          "name": "fflush",
+          "call_order": 3
+        },
+        {
+          "name": "fopen",
+          "call_order": 4
+        },
+        {
+          "name": "fclose",
+          "call_order": 5
+        },
+        {
+          "name": "putc",
+          "call_order": 6
+        },
+        {
+          "name": "fwrite",
+          "call_order": 7
+        },
+        {
+          "name": "fwrite",
+          "call_order": 8
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 9
+        }
+      ],
+      "num_external_calls": 10
+    },
+    {
+      "function_name": "sub_10760",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_108d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_10970",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_109b0",
+      "external_calls": [
+        {
+          "name": "close",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_10a50",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_10ba0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 2
+        },
+        {
+          "name": "stat",
+          "call_order": 3
+        },
+        {
+          "name": "stat",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 6
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 7
+        }
+      ],
+      "num_external_calls": 8
+    },
+    {
+      "function_name": "sub_11080",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 4
+        },
+        {
+          "name": "puts",
+          "call_order": 5
+        },
+        {
+          "name": "fflush",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "free",
+          "call_order": 8
+        },
+        {
+          "name": "free",
+          "call_order": 9
+        },
+        {
+          "name": "memcpy",
+          "call_order": 10
+        },
+        {
+          "name": "dup",
+          "call_order": 11
+        },
+        {
+          "name": "free",
+          "call_order": 12
+        },
+        {
+          "name": "free",
+          "call_order": 13
+        },
+        {
+          "name": "puts",
+          "call_order": 14
+        },
+        {
+          "name": "fflush",
+          "call_order": 15
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 16
+        }
+      ],
+      "num_external_calls": 17
+    },
+    {
+      "function_name": "sub_11690",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_11730",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_117d0",
+      "external_calls": [
+        {
+          "name": "open",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_11840",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_119a0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11a10",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_11b00",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11b60",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11bd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11c40",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11cb0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11d30",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11da0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11e60",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_11f40",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_11fa0",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "realloc",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_12120",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "memmove",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_121e0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_12240",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_122a0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "strlen",
+          "call_order": 3
+        },
+        {
+          "name": "strlen",
+          "call_order": 4
+        },
+        {
+          "name": "memcpy",
+          "call_order": 5
+        },
+        {
+          "name": "getenv",
+          "call_order": 6
+        },
+        {
+          "name": "getenv",
+          "call_order": 7
+        },
+        {
+          "name": "getenv",
+          "call_order": 8
+        },
+        {
+          "name": "strlen",
+          "call_order": 9
+        },
+        {
+          "name": "memcpy",
+          "call_order": 10
+        },
+        {
+          "name": "strlen",
+          "call_order": 11
+        },
+        {
+          "name": "strlen",
+          "call_order": 12
+        },
+        {
+          "name": "memcpy",
+          "call_order": 13
+        },
+        {
+          "name": "strlen",
+          "call_order": 14
+        },
+        {
+          "name": "memcpy",
+          "call_order": 15
+        },
+        {
+          "name": "strlen",
+          "call_order": 16
+        },
+        {
+          "name": "strlen",
+          "call_order": 17
+        },
+        {
+          "name": "memcpy",
+          "call_order": 18
+        },
+        {
+          "name": "strlen",
+          "call_order": 19
+        },
+        {
+          "name": "strlen",
+          "call_order": 20
+        },
+        {
+          "name": "memcpy",
+          "call_order": 21
+        },
+        {
+          "name": "strlen",
+          "call_order": 22
+        },
+        {
+          "name": "strlen",
+          "call_order": 23
+        },
+        {
+          "name": "memcpy",
+          "call_order": 24
+        },
+        {
+          "name": "free",
+          "call_order": 25
+        },
+        {
+          "name": "free",
+          "call_order": 26
+        },
+        {
+          "name": "free",
+          "call_order": 27
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 28
+        }
+      ],
+      "num_external_calls": 29
+    },
+    {
+      "function_name": "sub_12970",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_12990",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_12a30",
+      "external_calls": [
+        {
+          "name": "putc",
+          "call_order": 0
+        },
+        {
+          "name": "fflush",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_12b30",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_12b50",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_12b90",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_12c20",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_12ca0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_12d00",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_12d60",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_12df0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "fflush",
+          "call_order": 1
+        },
+        {
+          "name": "perror",
+          "call_order": 2
+        },
+        {
+          "name": "fflush",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_12f00",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_131a0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_13230",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_13250",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_13270",
+      "external_calls": [
+        {
+          "name": "read",
+          "call_order": 0
+        },
+        {
+          "name": "close",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_13310",
+      "external_calls": [
+        {
+          "name": "close",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_13370",
+      "external_calls": [
+        {
+          "name": "fflush",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_13450",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 1
+        },
+        {
+          "name": "fstat",
+          "call_order": 2
+        },
+        {
+          "name": "close",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_13650",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "strlen",
+          "call_order": 3
+        },
+        {
+          "name": "memcpy",
+          "call_order": 4
+        },
+        {
+          "name": "memcpy",
+          "call_order": 5
+        },
+        {
+          "name": "memcpy",
+          "call_order": 6
+        },
+        {
+          "name": "memcpy",
+          "call_order": 7
+        },
+        {
+          "name": "memcpy",
+          "call_order": 8
+        },
+        {
+          "name": "close",
+          "call_order": 9
+        },
+        {
+          "name": "strlen",
+          "call_order": 10
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 11
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 12
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 13
+        },
+        {
+          "name": "free",
+          "call_order": 14
+        }
+      ],
+      "num_external_calls": 15
+    },
+    {
+      "function_name": "sub_13c30",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        },
+        {
+          "name": "read",
+          "call_order": 2
+        },
+        {
+          "name": "close",
+          "call_order": 3
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 6
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 7
+        }
+      ],
+      "num_external_calls": 8
+    },
+    {
+      "function_name": "sub_140b0",
+      "external_calls": [
+        {
+          "name": "fflush",
+          "call_order": 0
+        },
+        {
+          "name": "isatty",
+          "call_order": 1
+        },
+        {
+          "name": "open",
+          "call_order": 2
+        },
+        {
+          "name": "read",
+          "call_order": 3
+        },
+        {
+          "name": "puts",
+          "call_order": 4
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 5
+        },
+        {
+          "name": "error",
+          "call_order": 6
+        },
+        {
+          "name": "close",
+          "call_order": 7
+        },
+        {
+          "name": "realloc",
+          "call_order": 8
+        },
+        {
+          "name": "putchar",
+          "call_order": 9
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 10
+        }
+      ],
+      "num_external_calls": 11
+    },
+    {
+      "function_name": "sub_142f0",
+      "external_calls": [
+        {
+          "name": "fflush",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_14480",
+      "external_calls": [
+        {
+          "name": "fflush",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_146a0",
+      "external_calls": [
+        {
+          "name": "signal",
+          "call_order": 0
+        },
+        {
+          "name": "sigaction",
+          "call_order": 1
+        },
+        {
+          "name": "sigaction",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_147b0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_147d0",
+      "external_calls": [
+        {
+          "name": "signal",
+          "call_order": 0
+        },
+        {
+          "name": "raise",
+          "call_order": 1
+        },
+        {
+          "name": "exit",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_14830",
+      "external_calls": [
+        {
+          "name": "fflush",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_14880",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_14950",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_14960",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        },
+        {
+          "name": "strchr",
+          "call_order": 1
+        },
+        {
+          "name": "strcmp",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        },
+        {
+          "name": "strlen",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "free",
+          "call_order": 8
+        },
+        {
+          "name": "free",
+          "call_order": 9
+        },
+        {
+          "name": "free",
+          "call_order": 10
+        },
+        {
+          "name": "free",
+          "call_order": 11
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 12
+        }
+      ],
+      "num_external_calls": 13
+    },
+    {
+      "function_name": "sub_14cf0",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_14dc0",
+      "external_calls": [
+        {
+          "name": "fseek",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_14df0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "getenv",
+          "call_order": 4
+        },
+        {
+          "name": "getenv",
+          "call_order": 5
+        },
+        {
+          "name": "getenv",
+          "call_order": 6
+        },
+        {
+          "name": "strlen",
+          "call_order": 7
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "sub_14f90",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_14fd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_15060",
+      "external_calls": [
+        {
+          "name": "stat",
+          "call_order": 0
+        },
+        {
+          "name": "stat",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_15100",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_15150",
+      "external_calls": [
+        {
+          "name": "memcmp",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_15210",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_15c70",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        },
+        {
+          "name": "fflush",
+          "call_order": 1
+        },
+        {
+          "name": "fputc",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_15df0",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_16100",
+      "external_calls": [
+        {
+          "name": "memset",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "fputc",
+          "call_order": 2
+        },
+        {
+          "name": "fputc",
+          "call_order": 3
+        },
+        {
+          "name": "fflush",
+          "call_order": 4
+        },
+        {
+          "name": "fwrite",
+          "call_order": 5
+        },
+        {
+          "name": "fflush",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 8
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 9
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 10
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 11
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 12
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 13
+        },
+        {
+          "name": "fputs",
+          "call_order": 14
+        },
+        {
+          "name": "fputs",
+          "call_order": 15
+        },
+        {
+          "name": "fputs",
+          "call_order": 16
+        },
+        {
+          "name": "fputs",
+          "call_order": 17
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 18
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 19
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 20
+        }
+      ],
+      "num_external_calls": 21
+    },
+    {
+      "function_name": "sub_173c0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strncmp",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "memcmp",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_174d0",
+      "external_calls": [
+        {
+          "name": "error",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17530",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        },
+        {
+          "name": "memcmp",
+          "call_order": 1
+        },
+        {
+          "name": "putc",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_17620",
+      "external_calls": [
+        {
+          "name": "error",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_176e0",
+      "external_calls": [
+        {
+          "name": "memcmp",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17740",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17810",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17870",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "getenv",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "malloc",
+          "call_order": 3
+        },
+        {
+          "name": "memcpy",
+          "call_order": 4
+        },
+        {
+          "name": "memcpy",
+          "call_order": 5
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 6
+        },
+        {
+          "name": "strlen",
+          "call_order": 7
+        },
+        {
+          "name": "memcmp",
+          "call_order": 8
+        },
+        {
+          "name": "memcmp",
+          "call_order": 9
+        },
+        {
+          "name": "realloc",
+          "call_order": 10
+        },
+        {
+          "name": "free",
+          "call_order": 11
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 12
+        },
+        {
+          "name": "memcpy",
+          "call_order": 13
+        },
+        {
+          "name": "memcpy",
+          "call_order": 14
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 15
+        },
+        {
+          "name": "free",
+          "call_order": 16
+        }
+      ],
+      "num_external_calls": 17
+    },
+    {
+      "function_name": "sub_17d60",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17d80",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17dd0",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17e60",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "close",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17f00",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17f20",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17f90",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17fd0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        },
+        {
+          "name": "malloc",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_18090",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_180f0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_18120",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_181a0",
+      "external_calls": [
+        {
+          "name": "gettimeofday",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_18240",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_182d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18410",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18520",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_186b0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18790",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_188f0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_189c0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18aa0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18b20",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18b90",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "calloc",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_18c90",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18d40",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_18e30",
+      "external_calls": [
+        {
+          "name": "calloc",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_18fb0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_191d0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19230",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_194c0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_19520",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_19580",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_19640",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_19810",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_198d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_19a80",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_19ad0",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19bb0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19c60",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19ca0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19ce0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19d30",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19d80",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_19e60",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_19ec0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_19f70",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1a040",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1a0d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_1a250",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_1a340",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_1a3b0",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_1a4a0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1a530",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        },
+        {
+          "name": "strcmp",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_1a600",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1a6b0",
+      "external_calls": [
+        {
+          "name": "snprintf",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1a7c0",
+      "external_calls": [
+        {
+          "name": "fputc",
+          "call_order": 0
+        },
+        {
+          "name": "fwrite",
+          "call_order": 1
+        },
+        {
+          "name": "fputc",
+          "call_order": 2
+        },
+        {
+          "name": "fputc",
+          "call_order": 3
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 4
+        },
+        {
+          "name": "fputc",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_1ab60",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_1ac20",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        },
+        {
+          "name": "fputc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_1ae50",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strcmp",
+          "call_order": 2
+        },
+        {
+          "name": "strncmp",
+          "call_order": 3
+        },
+        {
+          "name": "strcmp",
+          "call_order": 4
+        },
+        {
+          "name": "strcmp",
+          "call_order": 5
+        },
+        {
+          "name": "strcmp",
+          "call_order": 6
+        },
+        {
+          "name": "strcmp",
+          "call_order": 7
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "sub_1ce00",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strncmp",
+          "call_order": 1
+        },
+        {
+          "name": "malloc",
+          "call_order": 2
+        },
+        {
+          "name": "strcmp",
+          "call_order": 3
+        },
+        {
+          "name": "fwrite",
+          "call_order": 4
+        },
+        {
+          "name": "fwrite",
+          "call_order": 5
+        },
+        {
+          "name": "fwrite",
+          "call_order": 6
+        },
+        {
+          "name": "strcmp",
+          "call_order": 7
+        },
+        {
+          "name": "fwrite",
+          "call_order": 8
+        },
+        {
+          "name": "fwrite",
+          "call_order": 9
+        },
+        {
+          "name": "fputc",
+          "call_order": 10
+        },
+        {
+          "name": "strcmp",
+          "call_order": 11
+        },
+        {
+          "name": "free",
+          "call_order": 12
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 13
+        }
+      ],
+      "num_external_calls": 14
+    },
+    {
+      "function_name": "sub_1eaa0",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1eb10",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        },
+        {
+          "name": "strrchr",
+          "call_order": 2
+        },
+        {
+          "name": "strncmp",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_1ebc0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_1eca0",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_20060",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "memset",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_20200",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_20260",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_20320",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_203a0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_20540",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_20570",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_205b0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_206d0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 6
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 7
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 8
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 9
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 10
+        }
+      ],
+      "num_external_calls": 11
+    },
+    {
+      "function_name": "sub_20db0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_20dd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_21070",
+      "external_calls": [
+        {
+          "name": "write",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_210e0",
+      "external_calls": [
+        {
+          "name": "lstat",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_21190",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "gettimeofday",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_214b0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_21680",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_216a0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_216c0",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "realloc",
+          "call_order": 1
+        },
+        {
+          "name": "realloc",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_21760",
+      "external_calls": [
+        {
+          "name": "calloc",
+          "call_order": 0
+        },
+        {
+          "name": "calloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_217d0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_21810",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_21850",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_219a0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_219c0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        },
+        {
+          "name": "close",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_21b30",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_21bc0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "setenv",
+          "call_order": 1
+        },
+        {
+          "name": "unsetenv",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_21c50",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "malloc",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_21cf0",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        },
+        {
+          "name": "strlen",
+          "call_order": 4
+        },
+        {
+          "name": "strcmp",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_21e40",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        },
+        {
+          "name": "setenv",
+          "call_order": 2
+        },
+        {
+          "name": "unsetenv",
+          "call_order": 3
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_21f40",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_21f80",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_22030",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_221d0",
+      "external_calls": [
+        {
+          "name": "memcpy",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_22210",
+      "external_calls": [
+        {
+          "name": "setlocale",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_22260",
+      "external_calls": [
+        {
+          "name": "nl_langinfo",
+          "call_order": 0
+        },
+        {
+          "name": "getenv",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "malloc",
+          "call_order": 3
+        },
+        {
+          "name": "memcpy",
+          "call_order": 4
+        },
+        {
+          "name": "malloc",
+          "call_order": 5
+        },
+        {
+          "name": "memcpy",
+          "call_order": 6
+        },
+        {
+          "name": "open",
+          "call_order": 7
+        },
+        {
+          "name": "close",
+          "call_order": 8
+        },
+        {
+          "name": "fclose",
+          "call_order": 9
+        },
+        {
+          "name": "strlen",
+          "call_order": 10
+        },
+        {
+          "name": "strlen",
+          "call_order": 11
+        },
+        {
+          "name": "realloc",
+          "call_order": 12
+        },
+        {
+          "name": "malloc",
+          "call_order": 13
+        },
+        {
+          "name": "free",
+          "call_order": 14
+        },
+        {
+          "name": "strcmp",
+          "call_order": 15
+        },
+        {
+          "name": "strlen",
+          "call_order": 16
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 17
+        },
+        {
+          "name": "free",
+          "call_order": 18
+        },
+        {
+          "name": "fclose",
+          "call_order": 19
+        },
+        {
+          "name": "strlen",
+          "call_order": 20
+        },
+        {
+          "name": "strlen",
+          "call_order": 21
+        }
+      ],
+      "num_external_calls": 22
+    },
+    {
+      "function_name": "sub_22770",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        },
+        {
+          "name": "memset",
+          "call_order": 1
+        },
+        {
+          "name": "memset",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_244a0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_5f95",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5f9a",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_5fa5",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5faa",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5faf",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5fb4",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5fb9",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_5fc4",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5fc9",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        },
+        {
+          "name": "abort",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_5fda",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5fdf",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5fe4",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5fe9",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_5ff4",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5ff9",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_5ffe",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_6003",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_6008",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_600d",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_6012",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_6017",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_601c",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "main",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        },
+        {
+          "name": "getenv",
+          "call_order": 1
+        },
+        {
+          "name": "getenv",
+          "call_order": 2
+        },
+        {
+          "name": "getenv",
+          "call_order": 3
+        },
+        {
+          "name": "getenv",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        },
+        {
+          "name": "getopt_long",
+          "call_order": 6
+        },
+        {
+          "name": "getenv",
+          "call_order": 7
+        },
+        {
+          "name": "setenv",
+          "call_order": 8
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 9
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 10
+        },
+        {
+          "name": "fwrite",
+          "call_order": 11
+        },
+        {
+          "name": "fwrite",
+          "call_order": 12
+        },
+        {
+          "name": "fputc",
+          "call_order": 13
+        },
+        {
+          "name": "fputc",
+          "call_order": 14
+        },
+        {
+          "name": "fputc",
+          "call_order": 15
+        },
+        {
+          "name": "fflush",
+          "call_order": 16
+        },
+        {
+          "name": "fstat",
+          "call_order": 17
+        },
+        {
+          "name": "fclose",
+          "call_order": 18
+        },
+        {
+          "name": "fclose",
+          "call_order": 19
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 20
+        },
+        {
+          "name": "fputs",
+          "call_order": 21
+        },
+        {
+          "name": "fputs",
+          "call_order": 22
+        },
+        {
+          "name": "fputs",
+          "call_order": 23
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 24
+        },
+        {
+          "name": "fputs",
+          "call_order": 25
+        },
+        {
+          "name": "fputs",
+          "call_order": 26
+        },
+        {
+          "name": "putc",
+          "call_order": 27
+        },
+        {
+          "name": "fputs",
+          "call_order": 28
+        },
+        {
+          "name": "strcmp",
+          "call_order": 29
+        },
+        {
+          "name": "dup",
+          "call_order": 30
+        },
+        {
+          "name": "dup2",
+          "call_order": 31
+        },
+        {
+          "name": "fclose",
+          "call_order": 32
+        },
+        {
+          "name": "exit",
+          "call_order": 33
+        },
+        {
+          "name": "fclose",
+          "call_order": 34
+        },
+        {
+          "name": "close",
+          "call_order": 35
+        },
+        {
+          "name": "strcmp",
+          "call_order": 36
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 37
+        },
+        {
+          "name": "fstat",
+          "call_order": 38
+        },
+        {
+          "name": "close",
+          "call_order": 39
+        },
+        {
+          "name": "fstat",
+          "call_order": 40
+        },
+        {
+          "name": "fclose",
+          "call_order": 41
+        },
+        {
+          "name": "strlen",
+          "call_order": 42
+        },
+        {
+          "name": "free",
+          "call_order": 43
+        },
+        {
+          "name": "free",
+          "call_order": 44
+        },
+        {
+          "name": "free",
+          "call_order": 45
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 46
+        },
+        {
+          "name": "strcmp",
+          "call_order": 47
+        },
+        {
+          "name": "strcmp",
+          "call_order": 48
+        },
+        {
+          "name": "fclose",
+          "call_order": 49
+        }
+      ],
+      "num_external_calls": 50
+    },
+    {
+      "function_name": "sub_9150",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_9180",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_9240",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_92e0",
+      "external_calls": [
+        {
+          "name": "close",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_9390",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 2
+        },
+        {
+          "name": "fclose",
+          "call_order": 3
+        },
+        {
+          "name": "write",
+          "call_order": 4
+        },
+        {
+          "name": "write",
+          "call_order": 5
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 6
+        },
+        {
+          "name": "malloc",
+          "call_order": 7
+        },
+        {
+          "name": "read",
+          "call_order": 8
+        },
+        {
+          "name": "close",
+          "call_order": 9
+        },
+        {
+          "name": "free",
+          "call_order": 10
+        },
+        {
+          "name": "close",
+          "call_order": 11
+        },
+        {
+          "name": "malloc",
+          "call_order": 12
+        },
+        {
+          "name": "free",
+          "call_order": 13
+        },
+        {
+          "name": "strlen",
+          "call_order": 14
+        },
+        {
+          "name": "memcmp",
+          "call_order": 15
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 16
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 17
+        }
+      ],
+      "num_external_calls": 18
+    },
+    {
+      "function_name": "sub_9ac0",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_9da0",
+      "external_calls": [
+        {
+          "name": "lseek",
+          "call_order": 0
+        },
+        {
+          "name": "read",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_9f20",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_9ff0",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_a010",
+      "external_calls": [
+        {
+          "name": "fputs",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_a0e0",
+      "external_calls": [
+        {
+          "name": "exit",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_a180",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_a210",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_a350",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_a520",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_a740",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_a7d0",
+      "external_calls": [
+        {
+          "name": "putc",
+          "call_order": 0
+        },
+        {
+          "name": "fwrite",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_a8d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_a9b0",
+      "external_calls": [
+        {
+          "name": "memcmp",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_aad0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_ade0",
+      "external_calls": [
+        {
+          "name": "exit",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_ae10",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_af20",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_af60",
+      "external_calls": [
+        {
+          "name": "strncmp",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b040",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b0b0",
+      "external_calls": [
+        {
+          "name": "ftell",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b120",
+      "external_calls": [
+        {
+          "name": "realloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b330",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_b430",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_b520",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        },
+        {
+          "name": "realloc",
+          "call_order": 1
+        },
+        {
+          "name": "realloc",
+          "call_order": 2
+        },
+        {
+          "name": "realloc",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_b5f0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_b690",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b770",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_b8b0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_b910",
+      "external_calls": [
+        {
+          "name": "fopen",
+          "call_order": 0
+        },
+        {
+          "name": "fstat",
+          "call_order": 1
+        },
+        {
+          "name": "ftell",
+          "call_order": 2
+        },
+        {
+          "name": "fread",
+          "call_order": 3
+        },
+        {
+          "name": "fclose",
+          "call_order": 4
+        },
+        {
+          "name": "fflush",
+          "call_order": 5
+        },
+        {
+          "name": "fseek",
+          "call_order": 6
+        },
+        {
+          "name": "fwrite",
+          "call_order": 7
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "sub_bb80",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 3
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 4
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 5
+        },
+        {
+          "name": "free",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "free",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "sub_bef0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bf10",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bf40",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bf60",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bf80",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bf90",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bfa0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bfb0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bfc0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bfd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bfe0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bff0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_c000",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_c010",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_c020",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_c070",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "ftell",
+          "call_order": 2
+        },
+        {
+          "name": "strncmp",
+          "call_order": 3
+        },
+        {
+          "name": "ftell",
+          "call_order": 4
+        },
+        {
+          "name": "strncmp",
+          "call_order": 5
+        },
+        {
+          "name": "strlen",
+          "call_order": 6
+        },
+        {
+          "name": "strlen",
+          "call_order": 7
+        },
+        {
+          "name": "ftell",
+          "call_order": 8
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 9
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 10
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 11
+        },
+        {
+          "name": "free",
+          "call_order": 12
+        },
+        {
+          "name": "memmove",
+          "call_order": 13
+        },
+        {
+          "name": "memmove",
+          "call_order": 14
+        },
+        {
+          "name": "memmove",
+          "call_order": 15
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 16
+        },
+        {
+          "name": "strlen",
+          "call_order": 17
+        },
+        {
+          "name": "free",
+          "call_order": 18
+        },
+        {
+          "name": "free",
+          "call_order": 19
+        },
+        {
+          "name": "free",
+          "call_order": 20
+        },
+        {
+          "name": "strlen",
+          "call_order": 21
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 22
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 23
+        },
+        {
+          "name": "free",
+          "call_order": 24
+        },
+        {
+          "name": "free",
+          "call_order": 25
+        },
+        {
+          "name": "free",
+          "call_order": 26
+        },
+        {
+          "name": "free",
+          "call_order": 27
+        },
+        {
+          "name": "fputc",
+          "call_order": 28
+        },
+        {
+          "name": "fwrite",
+          "call_order": 29
+        },
+        {
+          "name": "fflush",
+          "call_order": 30
+        }
+      ],
+      "num_external_calls": 31
+    },
+    {
+      "function_name": "sub_e6c0",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        },
+        {
+          "name": "ftell",
+          "call_order": 5
+        },
+        {
+          "name": "strncmp",
+          "call_order": 6
+        },
+        {
+          "name": "strncmp",
+          "call_order": 7
+        },
+        {
+          "name": "strncmp",
+          "call_order": 8
+        },
+        {
+          "name": "strncmp",
+          "call_order": 9
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 10
+        },
+        {
+          "name": "strncmp",
+          "call_order": 11
+        },
+        {
+          "name": "free",
+          "call_order": 12
+        },
+        {
+          "name": "free",
+          "call_order": 13
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 14
+        },
+        {
+          "name": "free",
+          "call_order": 15
+        },
+        {
+          "name": "free",
+          "call_order": 16
+        },
+        {
+          "name": "strncmp",
+          "call_order": 17
+        },
+        {
+          "name": "strncmp",
+          "call_order": 18
+        },
+        {
+          "name": "strncmp",
+          "call_order": 19
+        },
+        {
+          "name": "strncmp",
+          "call_order": 20
+        },
+        {
+          "name": "strncmp",
+          "call_order": 21
+        },
+        {
+          "name": "strncmp",
+          "call_order": 22
+        },
+        {
+          "name": "strncmp",
+          "call_order": 23
+        },
+        {
+          "name": "strncmp",
+          "call_order": 24
+        },
+        {
+          "name": "strncmp",
+          "call_order": 25
+        },
+        {
+          "name": "strncmp",
+          "call_order": 26
+        },
+        {
+          "name": "strncmp",
+          "call_order": 27
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 28
+        },
+        {
+          "name": "memcpy",
+          "call_order": 29
+        },
+        {
+          "name": "memcpy",
+          "call_order": 30
+        },
+        {
+          "name": "strncmp",
+          "call_order": 31
+        },
+        {
+          "name": "strncmp",
+          "call_order": 32
+        },
+        {
+          "name": "strncmp",
+          "call_order": 33
+        },
+        {
+          "name": "free",
+          "call_order": 34
+        },
+        {
+          "name": "strcmp",
+          "call_order": 35
+        },
+        {
+          "name": "strcmp",
+          "call_order": 36
+        },
+        {
+          "name": "strcmp",
+          "call_order": 37
+        },
+        {
+          "name": "free",
+          "call_order": 38
+        },
+        {
+          "name": "free",
+          "call_order": 39
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 40
+        }
+      ],
+      "num_external_calls": 41
+    },
+    {
+      "function_name": "sub_fe40",
+      "external_calls": [
+        {
+          "name": "ftell",
+          "call_order": 0
+        },
+        {
+          "name": "putc",
+          "call_order": 1
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 2
+        },
+        {
+          "name": "strlen",
+          "call_order": 3
+        },
+        {
+          "name": "perror",
+          "call_order": 4
+        },
+        {
+          "name": "fflush",
+          "call_order": 5
+        },
+        {
+          "name": "free",
+          "call_order": 6
+        },
+        {
+          "name": "putc",
+          "call_order": 7
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "symlink",
+      "external_calls": [
+        {
+          "name": "symlink",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "symlinkat",
+      "external_calls": [
+        {
+          "name": "symlinkat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "syscall",
+      "external_calls": [
+        {
+          "name": "syscall",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "system",
+      "external_calls": [
+        {
+          "name": "system",
+          "call_order": 0
+        },
+        {
+          "name": "dup2",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "timegm",
+      "external_calls": [
+        {
+          "name": "timegm",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "tzset",
+      "external_calls": [
+        {
+          "name": "tzset",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "ungetc",
+      "external_calls": [
+        {
+          "name": "ungetc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "unlink",
+      "external_calls": [
+        {
+          "name": "unlink",
+          "call_order": 0
+        },
+        {
+          "name": "strncmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "unlinkat",
+      "external_calls": [
+        {
+          "name": "unlinkat",
+          "call_order": 0
+        },
+        {
+          "name": "puts",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "unsetenv",
+      "external_calls": [
+        {
+          "name": "unsetenv",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "utimensat",
+      "external_calls": [
+        {
+          "name": "utimensat",
+          "call_order": 0
+        },
+        {
+          "name": "putchar",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "write",
+      "external_calls": [
+        {
+          "name": "write",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "intrinsic:cast_sfloat_rne_ieee754_binary_64",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fadd_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fdiv_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:cast_sint_rne_ieee754_binary_64",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fmul_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fsub_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__libc_start_main",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:hlt",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_toupper_loc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__uflow:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getenv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigprocmask:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__snprintf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "raise:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "utimensat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "putchar:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__vfprintf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "abort:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__errno_location:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "unlink:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strncmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "localtime_r:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__isoc99_fscanf:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mkdir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "unlinkat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "puts:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "ferror:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "isatty:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigaction:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fread:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "faccessat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "readlink:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fcntl:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "clock_gettime:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "setenv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "write:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getpid:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "pathconf:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fclose:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "opendir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "rmdir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_get_mb_cur_max:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strlen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "openat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "chdir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__stack_chk_fail:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getopt_long:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "setbuf:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mbrtowc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "system:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "dup2:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strchr:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "symlink:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "pclose:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "snprintf:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strrchr:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "gmtime_r:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "dup:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "lseek:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "gettimeofday:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__assert_fail:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fputs:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "geteuid:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "close:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "rewinddir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "closedir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fputc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memchr:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "read:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "lstat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strndup:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memcmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "calloc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strcmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "putc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "signal:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "readlinkat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "dirfd:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "syscall:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigemptyset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mkdirat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "ftell:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "stat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memcpy:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "tzset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fileno:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "readdir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "malloc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fflush:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fchmodat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "nl_langinfo:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "ungetc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "lchown:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getegid:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mktime:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fseek:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "realloc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fdopen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "setlocale:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__printf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "timegm:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "chmod:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strftime:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memmove:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "error:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "open:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "access:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "popen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fopen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "perror:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "rename:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fdopendir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "unsetenv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fchownat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "renameat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "exit:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fwrite:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__fprintf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getrlimit:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mbsinit:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "symlinkat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iswprint:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fstat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigaddset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fstatat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_tolower_loc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_b_loc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__sprintf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "interrupt:#0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "interrupt:#13",
+      "external_calls": [],
+      "num_external_calls": 0
+    }
+  ]
+}

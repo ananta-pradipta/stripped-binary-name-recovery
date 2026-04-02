@@ -1,0 +1,5684 @@
+{
+  "binary": "diffutils_diff",
+  "functions": [
+    {
+      "function_name": ".fini",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": ".init",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": ".plt",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": ".text",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__assert_fail",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        },
+        {
+          "name": "memset",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__ctype_b_loc",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        },
+        {
+          "name": "iconv_open",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__ctype_get_mb_cur_max",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__ctype_tolower_loc",
+      "external_calls": [
+        {
+          "name": "__ctype_tolower_loc",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__ctype_toupper_loc",
+      "external_calls": [
+        {
+          "name": "__ctype_toupper_loc",
+          "call_order": 0
+        },
+        {
+          "name": "getenv",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__cxa_finalize",
+      "external_calls": [
+        {
+          "name": "__cxa_finalize",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__errno_location",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "strncmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__fprintf_chk",
+      "external_calls": [
+        {
+          "name": "__fprintf_chk",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__memcpy_chk",
+      "external_calls": [
+        {
+          "name": "__memcpy_chk",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__mempcpy_chk",
+      "external_calls": [
+        {
+          "name": "__mempcpy_chk",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__open_2",
+      "external_calls": [
+        {
+          "name": "__open_2",
+          "call_order": 0
+        },
+        {
+          "name": "fclose",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__overflow",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "strrchr",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__printf_chk",
+      "external_calls": [
+        {
+          "name": "__printf_chk",
+          "call_order": 0
+        },
+        {
+          "name": "iconv_close",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__sprintf_chk",
+      "external_calls": [
+        {
+          "name": "__sprintf_chk",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "__stack_chk_fail",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        },
+        {
+          "name": "mmap",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "__vfprintf_chk",
+      "external_calls": [
+        {
+          "name": "__vfprintf_chk",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "_exit",
+      "external_calls": [
+        {
+          "name": "_exit",
+          "call_order": 0
+        },
+        {
+          "name": "strcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "_setjmp",
+      "external_calls": [
+        {
+          "name": "_setjmp",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "abort",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "bindtextdomain",
+      "external_calls": [
+        {
+          "name": "bindtextdomain",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "calloc",
+      "external_calls": [
+        {
+          "name": "calloc",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "clock_gettime",
+      "external_calls": [
+        {
+          "name": "clock_gettime",
+          "call_order": 0
+        },
+        {
+          "name": "setenv",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "close",
+      "external_calls": [
+        {
+          "name": "close",
+          "call_order": 0
+        },
+        {
+          "name": "pipe",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "closedir",
+      "external_calls": [
+        {
+          "name": "closedir",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "dcgettext",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "dup2",
+      "external_calls": [
+        {
+          "name": "dup2",
+          "call_order": 0
+        },
+        {
+          "name": "strchr",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "error",
+      "external_calls": [
+        {
+          "name": "error",
+          "call_order": 0
+        },
+        {
+          "name": "waitpid",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "execv",
+      "external_calls": [
+        {
+          "name": "execv",
+          "call_order": 0
+        },
+        {
+          "name": "fork",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fclose",
+      "external_calls": [
+        {
+          "name": "fclose",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fcntl",
+      "external_calls": [
+        {
+          "name": "fcntl",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fdopen",
+      "external_calls": [
+        {
+          "name": "fdopen",
+          "call_order": 0
+        },
+        {
+          "name": "munmap",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "ferror",
+      "external_calls": [
+        {
+          "name": "ferror",
+          "call_order": 0
+        },
+        {
+          "name": "qsort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fflush_unlocked",
+      "external_calls": [
+        {
+          "name": "fflush_unlocked",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fileno",
+      "external_calls": [
+        {
+          "name": "fileno",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fopen",
+      "external_calls": [
+        {
+          "name": "fopen",
+          "call_order": 0
+        },
+        {
+          "name": "perror",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "fork",
+      "external_calls": [
+        {
+          "name": "fork",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fputc_unlocked",
+      "external_calls": [
+        {
+          "name": "fputc_unlocked",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fputs_unlocked",
+      "external_calls": [
+        {
+          "name": "fputs_unlocked",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "free",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fstat",
+      "external_calls": [
+        {
+          "name": "fstat",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fwrite",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "fwrite_unlocked",
+      "external_calls": [
+        {
+          "name": "fwrite_unlocked",
+          "call_order": 0
+        },
+        {
+          "name": "realloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "getc",
+      "external_calls": [
+        {
+          "name": "getc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getenv",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getopt_long",
+      "external_calls": [
+        {
+          "name": "getopt_long",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "getpagesize",
+      "external_calls": [
+        {
+          "name": "getpagesize",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "gmtime_r",
+      "external_calls": [
+        {
+          "name": "__cxa_finalize",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "iconv",
+      "external_calls": [
+        {
+          "name": "iconv",
+          "call_order": 0
+        },
+        {
+          "name": "puts",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "iconv_close",
+      "external_calls": [
+        {
+          "name": "iconv_close",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "iconv_open",
+      "external_calls": [
+        {
+          "name": "iconv_open",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "isatty",
+      "external_calls": [
+        {
+          "name": "isatty",
+          "call_order": 0
+        },
+        {
+          "name": "sigaction",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "iswalnum",
+      "external_calls": [
+        {
+          "name": "iswalnum",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "iswcntrl",
+      "external_calls": [
+        {
+          "name": "iswcntrl",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "iswprint",
+      "external_calls": [
+        {
+          "name": "iswprint",
+          "call_order": 0
+        },
+        {
+          "name": "fstat",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "iswspace",
+      "external_calls": [
+        {
+          "name": "iswspace",
+          "call_order": 0
+        },
+        {
+          "name": "strftime",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "localtime",
+      "external_calls": [
+        {
+          "name": "localtime",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "localtime_r",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "lseek",
+      "external_calls": [
+        {
+          "name": "lseek",
+          "call_order": 0
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "lstat",
+      "external_calls": [
+        {
+          "name": "lstat",
+          "call_order": 0
+        },
+        {
+          "name": "memcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "malloc",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "nl_langinfo",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "mbrtowc",
+      "external_calls": [
+        {
+          "name": "mbrtowc",
+          "call_order": 0
+        },
+        {
+          "name": "dup2",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "mbsinit",
+      "external_calls": [
+        {
+          "name": "mbsinit",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "memchr",
+      "external_calls": [
+        {
+          "name": "memchr",
+          "call_order": 0
+        },
+        {
+          "name": "read",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "memcmp",
+      "external_calls": [
+        {
+          "name": "memcmp",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "memcpy",
+      "external_calls": [
+        {
+          "name": "memcpy",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "memmove",
+      "external_calls": [
+        {
+          "name": "memmove",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "mempcpy",
+      "external_calls": [
+        {
+          "name": "mempcpy",
+          "call_order": 0
+        },
+        {
+          "name": "memmove",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "memset",
+      "external_calls": [
+        {
+          "name": "memset",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "mincore",
+      "external_calls": [
+        {
+          "name": "mincore",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "mmap",
+      "external_calls": [
+        {
+          "name": "mmap",
+          "call_order": 0
+        },
+        {
+          "name": "getopt_long",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "munmap",
+      "external_calls": [
+        {
+          "name": "munmap",
+          "call_order": 0
+        },
+        {
+          "name": "setlocale",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "nl_langinfo",
+      "external_calls": [
+        {
+          "name": "nl_langinfo",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "open",
+      "external_calls": [
+        {
+          "name": "open",
+          "call_order": 0
+        },
+        {
+          "name": "fopen",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "opendir",
+      "external_calls": [
+        {
+          "name": "opendir",
+          "call_order": 0
+        },
+        {
+          "name": "bindtextdomain",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "perror",
+      "external_calls": [
+        {
+          "name": "perror",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "pipe",
+      "external_calls": [
+        {
+          "name": "pipe",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "puts",
+      "external_calls": [
+        {
+          "name": "puts",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "qsort",
+      "external_calls": [
+        {
+          "name": "qsort",
+          "call_order": 0
+        },
+        {
+          "name": "isatty",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "raise",
+      "external_calls": [
+        {
+          "name": "raise",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "rawmemchr",
+      "external_calls": [
+        {
+          "name": "rawmemchr",
+          "call_order": 0
+        },
+        {
+          "name": "calloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "re_compile_pattern",
+      "external_calls": [
+        {
+          "name": "re_compile_pattern",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "re_search",
+      "external_calls": [
+        {
+          "name": "re_search",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "re_set_syntax",
+      "external_calls": [
+        {
+          "name": "re_set_syntax",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "read",
+      "external_calls": [
+        {
+          "name": "read",
+          "call_order": 0
+        },
+        {
+          "name": "lstat",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "readdir",
+      "external_calls": [
+        {
+          "name": "readdir",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "readlink",
+      "external_calls": [
+        {
+          "name": "readlink",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "realloc",
+      "external_calls": [
+        {
+          "name": "realloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "reallocarray",
+      "external_calls": [
+        {
+          "name": "reallocarray",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "regcomp",
+      "external_calls": [
+        {
+          "name": "regcomp",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "regexec",
+      "external_calls": [
+        {
+          "name": "regexec",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "regfree",
+      "external_calls": [
+        {
+          "name": "regfree",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "setenv",
+      "external_calls": [
+        {
+          "name": "setenv",
+          "call_order": 0
+        },
+        {
+          "name": "write",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "setlocale",
+      "external_calls": [
+        {
+          "name": "setlocale",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigaction",
+      "external_calls": [
+        {
+          "name": "sigaction",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigaddset",
+      "external_calls": [
+        {
+          "name": "sigaddset",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigaltstack",
+      "external_calls": [
+        {
+          "name": "sigaltstack",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigemptyset",
+      "external_calls": [
+        {
+          "name": "sigemptyset",
+          "call_order": 0
+        },
+        {
+          "name": "stat",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sigismember",
+      "external_calls": [
+        {
+          "name": "sigismember",
+          "call_order": 0
+        },
+        {
+          "name": "fwrite",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "signal",
+      "external_calls": [
+        {
+          "name": "signal",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sigprocmask",
+      "external_calls": [
+        {
+          "name": "sigprocmask",
+          "call_order": 0
+        },
+        {
+          "name": "raise",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "stat",
+      "external_calls": [
+        {
+          "name": "stat",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "stpcpy",
+      "external_calls": [
+        {
+          "name": "stpcpy",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strcasecmp",
+      "external_calls": [
+        {
+          "name": "strcasecmp",
+          "call_order": 0
+        },
+        {
+          "name": "localtime",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strchr",
+      "external_calls": [
+        {
+          "name": "strchr",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strcmp",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "signal",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strcoll",
+      "external_calls": [
+        {
+          "name": "strcoll",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "strcpy",
+      "external_calls": [
+        {
+          "name": "strcpy",
+          "call_order": 0
+        },
+        {
+          "name": "iconv",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strdup",
+      "external_calls": [
+        {
+          "name": "strdup",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "strftime",
+      "external_calls": [
+        {
+          "name": "strftime",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "strlen",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strncmp",
+      "external_calls": [
+        {
+          "name": "strncmp",
+          "call_order": 0
+        },
+        {
+          "name": "_exit",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strnlen",
+      "external_calls": [
+        {
+          "name": "strnlen",
+          "call_order": 0
+        },
+        {
+          "name": "close",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strrchr",
+      "external_calls": [
+        {
+          "name": "strrchr",
+          "call_order": 0
+        },
+        {
+          "name": "lseek",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "strtoimax",
+      "external_calls": [
+        {
+          "name": "strtoimax",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_10040",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_10160",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "strchr",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "strlen",
+          "call_order": 3
+        },
+        {
+          "name": "strncmp",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_10250",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 3
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_104d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_10500",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_105d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_105e0",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_106d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_10790",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strcpy",
+          "call_order": 1
+        },
+        {
+          "name": "strrchr",
+          "call_order": 2
+        },
+        {
+          "name": "strchr",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_10940",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_10c70",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_10e80",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "fclose",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_10f50",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 2
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 3
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 4
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 5
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 6
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 7
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "sub_11040",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11060",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_11160",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11170",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_111d0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_11280",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11310",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11450",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11560",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_117d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11930",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11a00",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11ae0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11bd0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "calloc",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_11cd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_11d80",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_11e70",
+      "external_calls": [
+        {
+          "name": "calloc",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_11ff0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_12210",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_12270",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_12410",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_12460",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_12490",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_124c0",
+      "external_calls": [
+        {
+          "name": "memcpy",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_12540",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_125d0",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 2
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 3
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_12740",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        },
+        {
+          "name": "memcmp",
+          "call_order": 2
+        },
+        {
+          "name": "memcmp",
+          "call_order": 3
+        },
+        {
+          "name": "memcmp",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_129c0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "memset",
+          "call_order": 1
+        },
+        {
+          "name": "memset",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        },
+        {
+          "name": "memset",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        },
+        {
+          "name": "memset",
+          "call_order": 6
+        },
+        {
+          "name": "memset",
+          "call_order": 7
+        },
+        {
+          "name": "memset",
+          "call_order": 8
+        },
+        {
+          "name": "memcpy",
+          "call_order": 9
+        },
+        {
+          "name": "strftime",
+          "call_order": 10
+        },
+        {
+          "name": "memset",
+          "call_order": 11
+        },
+        {
+          "name": "memset",
+          "call_order": 12
+        },
+        {
+          "name": "memcpy",
+          "call_order": 13
+        }
+      ],
+      "num_external_calls": 14
+    },
+    {
+      "function_name": "sub_14530",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_14550",
+      "external_calls": [
+        {
+          "name": "fwrite",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        },
+        {
+          "name": "strrchr",
+          "call_order": 2
+        },
+        {
+          "name": "strncmp",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_14600",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 2
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 3
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_14770",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 2
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_149f0",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_14a80",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "strchr",
+          "call_order": 4
+        },
+        {
+          "name": "strcmp",
+          "call_order": 5
+        },
+        {
+          "name": "free",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "strcmp",
+          "call_order": 8
+        },
+        {
+          "name": "strcmp",
+          "call_order": 9
+        },
+        {
+          "name": "strcmp",
+          "call_order": 10
+        },
+        {
+          "name": "strlen",
+          "call_order": 11
+        },
+        {
+          "name": "strlen",
+          "call_order": 12
+        },
+        {
+          "name": "free",
+          "call_order": 13
+        },
+        {
+          "name": "free",
+          "call_order": 14
+        },
+        {
+          "name": "free",
+          "call_order": 15
+        }
+      ],
+      "num_external_calls": 16
+    },
+    {
+      "function_name": "sub_14d90",
+      "external_calls": [
+        {
+          "name": "setlocale",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_14e50",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_14ec0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_14f30",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_14fa0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_150e0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        },
+        {
+          "name": "signal",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_15270",
+      "external_calls": [
+        {
+          "name": "sigaction",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_153f0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_15470",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        },
+        {
+          "name": "signal",
+          "call_order": 1
+        },
+        {
+          "name": "perror",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_15600",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_15690",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_157d0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_158b0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_159b0",
+      "external_calls": [
+        {
+          "name": "open",
+          "call_order": 0
+        },
+        {
+          "name": "read",
+          "call_order": 1
+        },
+        {
+          "name": "read",
+          "call_order": 2
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 3
+        },
+        {
+          "name": "close",
+          "call_order": 4
+        },
+        {
+          "name": "close",
+          "call_order": 5
+        },
+        {
+          "name": "munmap",
+          "call_order": 6
+        },
+        {
+          "name": "mmap",
+          "call_order": 7
+        },
+        {
+          "name": "close",
+          "call_order": 8
+        },
+        {
+          "name": "lseek",
+          "call_order": 9
+        },
+        {
+          "name": "close",
+          "call_order": 10
+        },
+        {
+          "name": "open",
+          "call_order": 11
+        },
+        {
+          "name": "munmap",
+          "call_order": 12
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 13
+        },
+        {
+          "name": "munmap",
+          "call_order": 14
+        }
+      ],
+      "num_external_calls": 15
+    },
+    {
+      "function_name": "sub_15dd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_15e10",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "setenv",
+          "call_order": 1
+        },
+        {
+          "name": "unsetenv",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_15ea0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "malloc",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_15f40",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        },
+        {
+          "name": "strlen",
+          "call_order": 3
+        },
+        {
+          "name": "strcmp",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_16070",
+      "external_calls": [
+        {
+          "name": "getenv",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        },
+        {
+          "name": "setenv",
+          "call_order": 2
+        },
+        {
+          "name": "unsetenv",
+          "call_order": 3
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_161b0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_16260",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_163d0",
+      "external_calls": [
+        {
+          "name": "__assert_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_16400",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "memmove",
+          "call_order": 3
+        },
+        {
+          "name": "strlen",
+          "call_order": 4
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 5
+        },
+        {
+          "name": "strlen",
+          "call_order": 6
+        },
+        {
+          "name": "strlen",
+          "call_order": 7
+        },
+        {
+          "name": "memmove",
+          "call_order": 8
+        },
+        {
+          "name": "strlen",
+          "call_order": 9
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 10
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 11
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 12
+        }
+      ],
+      "num_external_calls": 13
+    },
+    {
+      "function_name": "sub_168e0",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_16e10",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_16ef0",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_16f90",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_16fd0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_16ff0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17010",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17030",
+      "external_calls": [
+        {
+          "name": "realloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17060",
+      "external_calls": [
+        {
+          "name": "realloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17090",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17110",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17190",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17220",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_172b0",
+      "external_calls": [
+        {
+          "name": "realloc",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_173b0",
+      "external_calls": [
+        {
+          "name": "calloc",
+          "call_order": 0
+        },
+        {
+          "name": "calloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17410",
+      "external_calls": [
+        {
+          "name": "calloc",
+          "call_order": 0
+        },
+        {
+          "name": "calloc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17450",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17490",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_174d0",
+      "external_calls": [
+        {
+          "name": "malloc",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17510",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_17550",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        },
+        {
+          "name": "abort",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_17590",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_175b0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_175e0",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17620",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17650",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_17680",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_176b0",
+      "external_calls": [
+        {
+          "name": "read",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17760",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_177d0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "open",
+          "call_order": 1
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 2
+        },
+        {
+          "name": "close",
+          "call_order": 3
+        },
+        {
+          "name": "fopen",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_17a10",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_17b10",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_17d10",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_182c0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18310",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_18330",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_183a0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "memcpy",
+          "call_order": 1
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 2
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 3
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_18570",
+      "external_calls": [
+        {
+          "name": "nl_langinfo",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_185b0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_18740",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 2
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 3
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_188b0",
+      "external_calls": [
+        {
+          "name": "memcpy",
+          "call_order": 0
+        },
+        {
+          "name": "memcmp",
+          "call_order": 1
+        },
+        {
+          "name": "memcmp",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_18dc0",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "memcmp",
+          "call_order": 1
+        },
+        {
+          "name": "memcmp",
+          "call_order": 2
+        },
+        {
+          "name": "strlen",
+          "call_order": 3
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_19490",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_19570",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1a990",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "memset",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_1ab80",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1abe0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_1aca0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1ad20",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_1b770",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "close",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_1b820",
+      "external_calls": [
+        {
+          "name": "iconv",
+          "call_order": 0
+        },
+        {
+          "name": "iconv",
+          "call_order": 1
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 2
+        },
+        {
+          "name": "iconv",
+          "call_order": 3
+        },
+        {
+          "name": "malloc",
+          "call_order": 4
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 5
+        },
+        {
+          "name": "iconv",
+          "call_order": 6
+        },
+        {
+          "name": "iconv",
+          "call_order": 7
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 8
+        },
+        {
+          "name": "iconv",
+          "call_order": 9
+        },
+        {
+          "name": "free",
+          "call_order": 10
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 11
+        }
+      ],
+      "num_external_calls": 12
+    },
+    {
+      "function_name": "sub_1baa0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "malloc",
+          "call_order": 1
+        },
+        {
+          "name": "iconv",
+          "call_order": 2
+        },
+        {
+          "name": "iconv",
+          "call_order": 3
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 4
+        },
+        {
+          "name": "iconv",
+          "call_order": 5
+        },
+        {
+          "name": "realloc",
+          "call_order": 6
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 7
+        },
+        {
+          "name": "realloc",
+          "call_order": 8
+        },
+        {
+          "name": "realloc",
+          "call_order": 9
+        },
+        {
+          "name": "free",
+          "call_order": 10
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 11
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 12
+        }
+      ],
+      "num_external_calls": 13
+    },
+    {
+      "function_name": "sub_1bcf0",
+      "external_calls": [
+        {
+          "name": "iconv_open",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        },
+        {
+          "name": "iconv_close",
+          "call_order": 2
+        },
+        {
+          "name": "iconv_close",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_1bdb0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 1
+        },
+        {
+          "name": "close",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_1c020",
+      "external_calls": [
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 0
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 1
+        },
+        {
+          "name": "__ctype_get_mb_cur_max",
+          "call_order": 2
+        },
+        {
+          "name": "strlen",
+          "call_order": 3
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 4
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 5
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 6
+        },
+        {
+          "name": "strlen",
+          "call_order": 7
+        }
+      ],
+      "num_external_calls": 8
+    },
+    {
+      "function_name": "sub_4f25",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f2a",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f2f",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f34",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f39",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f3e",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_4f49",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f4e",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f53",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f58",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f5e",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_4f69",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f6e",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f73",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_4f78",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        },
+        {
+          "name": "abort",
+          "call_order": 1
+        },
+        {
+          "name": "abort",
+          "call_order": 2
+        },
+        {
+          "name": "abort",
+          "call_order": 3
+        },
+        {
+          "name": "abort",
+          "call_order": 4
+        },
+        {
+          "name": "abort",
+          "call_order": 5
+        },
+        {
+          "name": "abort",
+          "call_order": 6
+        },
+        {
+          "name": "abort",
+          "call_order": 7
+        },
+        {
+          "name": "abort",
+          "call_order": 8
+        },
+        {
+          "name": "abort",
+          "call_order": 9
+        },
+        {
+          "name": "abort",
+          "call_order": 10
+        }
+      ],
+      "num_external_calls": 11
+    },
+    {
+      "function_name": "sub_4fb0",
+      "external_calls": [
+        {
+          "name": "abort",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "main",
+      "external_calls": [
+        {
+          "name": "setlocale",
+          "call_order": 0
+        },
+        {
+          "name": "bindtextdomain",
+          "call_order": 1
+        },
+        {
+          "name": "textdomain",
+          "call_order": 2
+        },
+        {
+          "name": "getopt_long",
+          "call_order": 3
+        },
+        {
+          "name": "getenv",
+          "call_order": 4
+        },
+        {
+          "name": "strcmp",
+          "call_order": 5
+        },
+        {
+          "name": "strlen",
+          "call_order": 6
+        },
+        {
+          "name": "strlen",
+          "call_order": 7
+        },
+        {
+          "name": "strcpy",
+          "call_order": 8
+        },
+        {
+          "name": "strcmp",
+          "call_order": 9
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 10
+        }
+      ],
+      "num_external_calls": 11
+    },
+    {
+      "function_name": "sub_62c0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_62f0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_63b0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_6de0",
+      "external_calls": [
+        {
+          "name": "free",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "memcmp",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        },
+        {
+          "name": "free",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "free",
+          "call_order": 8
+        },
+        {
+          "name": "free",
+          "call_order": 9
+        },
+        {
+          "name": "free",
+          "call_order": 10
+        },
+        {
+          "name": "free",
+          "call_order": 11
+        },
+        {
+          "name": "free",
+          "call_order": 12
+        },
+        {
+          "name": "free",
+          "call_order": 13
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 14
+        },
+        {
+          "name": "error",
+          "call_order": 15
+        }
+      ],
+      "num_external_calls": 16
+    },
+    {
+      "function_name": "sub_7d40",
+      "external_calls": [
+        {
+          "name": "localtime",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_7ea0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_7f50",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_8030",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_80c0",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        },
+        {
+          "name": "__overflow",
+          "call_order": 2
+        },
+        {
+          "name": "__overflow",
+          "call_order": 3
+        },
+        {
+          "name": "__overflow",
+          "call_order": 4
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_8580",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_8620",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        },
+        {
+          "name": "__overflow",
+          "call_order": 2
+        },
+        {
+          "name": "__overflow",
+          "call_order": 3
+        },
+        {
+          "name": "__overflow",
+          "call_order": 4
+        },
+        {
+          "name": "__overflow",
+          "call_order": 5
+        },
+        {
+          "name": "__overflow",
+          "call_order": 6
+        },
+        {
+          "name": "__overflow",
+          "call_order": 7
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "sub_8c50",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_8ce0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_8e30",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        },
+        {
+          "name": "memcpy",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_8f00",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 2
+        },
+        {
+          "name": "error",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_8f60",
+      "external_calls": [
+        {
+          "name": "error",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_8fc0",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        },
+        {
+          "name": "error",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_9020",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_9050",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "isatty",
+          "call_order": 1
+        },
+        {
+          "name": "fstat",
+          "call_order": 2
+        },
+        {
+          "name": "lseek",
+          "call_order": 3
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 4
+        },
+        {
+          "name": "stat",
+          "call_order": 5
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 6
+        },
+        {
+          "name": "lstat",
+          "call_order": 7
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 8
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 9
+        },
+        {
+          "name": "stat",
+          "call_order": 10
+        },
+        {
+          "name": "lstat",
+          "call_order": 11
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 12
+        },
+        {
+          "name": "__assert_fail",
+          "call_order": 13
+        },
+        {
+          "name": "strcmp",
+          "call_order": 14
+        },
+        {
+          "name": "free",
+          "call_order": 15
+        },
+        {
+          "name": "free",
+          "call_order": 16
+        },
+        {
+          "name": "free",
+          "call_order": 17
+        },
+        {
+          "name": "free",
+          "call_order": 18
+        },
+        {
+          "name": "open",
+          "call_order": 19
+        },
+        {
+          "name": "open",
+          "call_order": 20
+        },
+        {
+          "name": "close",
+          "call_order": 21
+        },
+        {
+          "name": "close",
+          "call_order": 22
+        },
+        {
+          "name": "close",
+          "call_order": 23
+        },
+        {
+          "name": "free",
+          "call_order": 24
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 25
+        },
+        {
+          "name": "free",
+          "call_order": 26
+        },
+        {
+          "name": "free",
+          "call_order": 27
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 28
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 29
+        }
+      ],
+      "num_external_calls": 30
+    },
+    {
+      "function_name": "sub_9ed0",
+      "external_calls": [
+        {
+          "name": "fclose",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_9f30",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_a000",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_a080",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "memcpy",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_a2a0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_a310",
+      "external_calls": [
+        {
+          "name": "qsort",
+          "call_order": 0
+        },
+        {
+          "name": "qsort",
+          "call_order": 1
+        },
+        {
+          "name": "strcmp",
+          "call_order": 2
+        },
+        {
+          "name": "strcmp",
+          "call_order": 3
+        },
+        {
+          "name": "memmove",
+          "call_order": 4
+        },
+        {
+          "name": "free",
+          "call_order": 5
+        },
+        {
+          "name": "free",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "free",
+          "call_order": 8
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 9
+        },
+        {
+          "name": "error",
+          "call_order": 10
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 11
+        }
+      ],
+      "num_external_calls": 12
+    },
+    {
+      "function_name": "sub_a740",
+      "external_calls": [
+        {
+          "name": "strcmp",
+          "call_order": 0
+        },
+        {
+          "name": "free",
+          "call_order": 1
+        },
+        {
+          "name": "free",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_a8a0",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_aa60",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_abb0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_ad20",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ad40",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ad60",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ad80",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ae70",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_b150",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b380",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_b640",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b7a0",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_b890",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_b980",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ba00",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bac0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_bca0",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        },
+        {
+          "name": "memcmp",
+          "call_order": 2
+        },
+        {
+          "name": "free",
+          "call_order": 3
+        },
+        {
+          "name": "free",
+          "call_order": 4
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_cdd0",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        },
+        {
+          "name": "__overflow",
+          "call_order": 2
+        },
+        {
+          "name": "__overflow",
+          "call_order": 3
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 4
+        }
+      ],
+      "num_external_calls": 5
+    },
+    {
+      "function_name": "sub_d090",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_d0b0",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_d170",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_d5a0",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__overflow",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_d7a0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_d900",
+      "external_calls": [
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_daf0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_db60",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ddd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_de10",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_dfc0",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_dff0",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_e2c0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 3
+        },
+        {
+          "name": "strlen",
+          "call_order": 4
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 5
+        },
+        {
+          "name": "free",
+          "call_order": 6
+        }
+      ],
+      "num_external_calls": 7
+    },
+    {
+      "function_name": "sub_e400",
+      "external_calls": [
+        {
+          "name": "__errno_location",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_e440",
+      "external_calls": [
+        {
+          "name": "sigaction",
+          "call_order": 0
+        },
+        {
+          "name": "sigaction",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_e610",
+      "external_calls": [
+        {
+          "name": "isatty",
+          "call_order": 0
+        },
+        {
+          "name": "strcmp",
+          "call_order": 1
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 2
+        },
+        {
+          "name": "error",
+          "call_order": 3
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 4
+        },
+        {
+          "name": "error",
+          "call_order": 5
+        },
+        {
+          "name": "free",
+          "call_order": 6
+        },
+        {
+          "name": "free",
+          "call_order": 7
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "sub_e960",
+      "external_calls": [
+        {
+          "name": "signal",
+          "call_order": 0
+        },
+        {
+          "name": "raise",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_eae0",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        },
+        {
+          "name": "error",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_eb20",
+      "external_calls": [
+        {
+          "name": "signal",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_ebc0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ebd0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_ec00",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "strlen",
+          "call_order": 2
+        },
+        {
+          "name": "strcpy",
+          "call_order": 3
+        },
+        {
+          "name": "pipe",
+          "call_order": 4
+        },
+        {
+          "name": "fork",
+          "call_order": 5
+        },
+        {
+          "name": "close",
+          "call_order": 6
+        },
+        {
+          "name": "close",
+          "call_order": 7
+        },
+        {
+          "name": "dup2",
+          "call_order": 8
+        },
+        {
+          "name": "close",
+          "call_order": 9
+        },
+        {
+          "name": "__errno_location",
+          "call_order": 10
+        },
+        {
+          "name": "_exit",
+          "call_order": 11
+        },
+        {
+          "name": "puts",
+          "call_order": 12
+        },
+        {
+          "name": "free",
+          "call_order": 13
+        },
+        {
+          "name": "free",
+          "call_order": 14
+        },
+        {
+          "name": "free",
+          "call_order": 15
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 16
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 17
+        }
+      ],
+      "num_external_calls": 18
+    },
+    {
+      "function_name": "sub_eee0",
+      "external_calls": [
+        {
+          "name": "fclose",
+          "call_order": 0
+        },
+        {
+          "name": "waitpid",
+          "call_order": 1
+        },
+        {
+          "name": "__stack_chk_fail",
+          "call_order": 2
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 3
+        },
+        {
+          "name": "dcgettext",
+          "call_order": 4
+        },
+        {
+          "name": "error",
+          "call_order": 5
+        }
+      ],
+      "num_external_calls": 6
+    },
+    {
+      "function_name": "sub_f010",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 2
+        }
+      ],
+      "num_external_calls": 3
+    },
+    {
+      "function_name": "sub_f470",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_f490",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_f4f0",
+      "external_calls": [
+        {
+          "name": "__overflow",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        },
+        {
+          "name": "__overflow",
+          "call_order": 2
+        },
+        {
+          "name": "__overflow",
+          "call_order": 3
+        }
+      ],
+      "num_external_calls": 4
+    },
+    {
+      "function_name": "sub_f740",
+      "external_calls": [
+        {
+          "name": "dcgettext",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_f910",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_f920",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_f9d0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_f9e0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_fa10",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_fa70",
+      "external_calls": [
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 0
+        },
+        {
+          "name": "__ctype_b_loc",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "sub_fe30",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sub_fe90",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "sub_fed0",
+      "external_calls": [
+        {
+          "name": "strlen",
+          "call_order": 0
+        },
+        {
+          "name": "strlen",
+          "call_order": 1
+        },
+        {
+          "name": "write",
+          "call_order": 2
+        },
+        {
+          "name": "write",
+          "call_order": 3
+        },
+        {
+          "name": "write",
+          "call_order": 4
+        },
+        {
+          "name": "write",
+          "call_order": 5
+        },
+        {
+          "name": "raise",
+          "call_order": 6
+        },
+        {
+          "name": "abort",
+          "call_order": 7
+        },
+        {
+          "name": "_exit",
+          "call_order": 8
+        }
+      ],
+      "num_external_calls": 9
+    },
+    {
+      "function_name": "textdomain",
+      "external_calls": [
+        {
+          "name": "textdomain",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "towlower",
+      "external_calls": [
+        {
+          "name": "towlower",
+          "call_order": 0
+        },
+        {
+          "name": "unsetenv",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "tzset",
+      "external_calls": [
+        {
+          "name": "tzset",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "unsetenv",
+      "external_calls": [
+        {
+          "name": "unsetenv",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "waitpid",
+      "external_calls": [
+        {
+          "name": "waitpid",
+          "call_order": 0
+        },
+        {
+          "name": "open",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "wcwidth",
+      "external_calls": [
+        {
+          "name": "wcwidth",
+          "call_order": 0
+        }
+      ],
+      "num_external_calls": 1
+    },
+    {
+      "function_name": "write",
+      "external_calls": [
+        {
+          "name": "write",
+          "call_order": 0
+        },
+        {
+          "name": "textdomain",
+          "call_order": 1
+        }
+      ],
+      "num_external_calls": 2
+    },
+    {
+      "function_name": "intrinsic:cast_sfloat_rne_ieee754_binary_64",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fadd_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fdiv_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:cast_sint_rne_ieee754_binary_64",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fmul_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:fsub_rne_ieee754_binary",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__libc_start_main",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "intrinsic:hlt",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_toupper_loc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getenv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigprocmask:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "raise:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "free:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strtoimax:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strcasecmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "localtime:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__vfprintf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__mempcpy_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "abort:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__errno_location:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strncmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "_exit:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strcpy:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iconv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "puts:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "ferror:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "qsort:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "isatty:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigaction:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iswcntrl:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "reallocarray:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "readlink:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fcntl:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "clock_gettime:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "setenv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "write:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "textdomain:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__open_2:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fclose:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "opendir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "bindtextdomain:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "stpcpy:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "dcgettext:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "regfree:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_get_mb_cur_max:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strlen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__stack_chk_fail:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mmap:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getopt_long:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mbrtowc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "dup2:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strchr:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__overflow:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strrchr:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "lseek:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__assert_fail:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strnlen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "close:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "pipe:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "closedir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "regcomp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memchr:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "read:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "lstat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memcmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "_setjmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fputs_unlocked:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "rawmemchr:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "calloc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strcmp:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "signal:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fputc_unlocked:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__memcpy_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigemptyset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "stat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memcpy:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "tzset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fileno:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "readdir:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mincore:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "wcwidth:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "re_set_syntax:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iswalnum:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "malloc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "nl_langinfo:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "regexec:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strcoll:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "re_search:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fwrite_unlocked:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "realloc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fdopen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "munmap:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "setlocale:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__printf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iconv_close:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iswspace:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strftime:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mempcpy:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "memmove:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "error:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "waitpid:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "open:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fopen:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "perror:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "towlower:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "unsetenv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getpagesize:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigismember:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fwrite:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__fprintf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "re_compile_pattern:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fflush_unlocked:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "strdup:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "mbsinit:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigaltstack:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iswprint:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fstat:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "getc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "sigaddset:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "execv:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "fork:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_tolower_loc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__ctype_b_loc:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "iconv_open:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "__sprintf_chk:external",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "interrupt:#0",
+      "external_calls": [],
+      "num_external_calls": 0
+    },
+    {
+      "function_name": "interrupt:#13",
+      "external_calls": [],
+      "num_external_calls": 0
+    }
+  ]
+}
