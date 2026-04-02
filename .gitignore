@@ -26,6 +26,7 @@ build_tmp/
 .claude/
 CLAUDE.md
 docs/project_context_for_claude_web.md
+paper/
 results/wulver_logs/
 results/exp*
 !data/raw/.gitkeep
