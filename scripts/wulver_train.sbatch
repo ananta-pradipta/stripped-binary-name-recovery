@@ -8,7 +8,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
-#SBATCH --gres=gpu:a100_10g:1
+#SBATCH --gres=gpu:a100:1
 
 # Navigate to project directory
 cd /course/2026/spring/cs/785/hz79/adp232/cs785
