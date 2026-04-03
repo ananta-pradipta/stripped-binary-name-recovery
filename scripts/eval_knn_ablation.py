@@ -323,25 +323,22 @@ def evaluate_decoder_only(preds):
 # Demo support (same as eval_knn_hybrid.py)
 # ---------------------------------------------------------------------------
 DEMO_PACKAGES = [
+    # Truly unseen cross-project packages (not in training)
     ("diffutils", "diff", [""]),
     ("diffutils", "cmp", [""]),
     ("diffutils", "sdiff", [""]),
     ("diffutils", "diff3", [""]),
-    ("datamash", "datamash", ["O0", "O2"]),
-    ("direvent", "direvent", ["O0", "O2"]),
+    ("curl", "curl", ["O0", "O2"]),
+    ("nginx", "nginx", ["O0", "O2"]),
     ("csplit2", "cflow", ["O0", "O2"]),
-    ("texinfo", "ginfo", ["O0", "O2"]),
+    ("datamash", "datamash", ["O0", "O2"]),
+    ("rcs", "rcs", ["O0", "O2"]),
     ("cppi", "cppi", ["O0", "O2"]),
     ("hello", "hello", ["O0", "O2"]),
-    ("acct", "ac", ["O0", "O2"]),
-    ("acct", "last", ["O0", "O2"]),
-    ("acct", "lastcomm", ["O0", "O2"]),
-    ("acct", "sa", ["O0", "O2"]),
-    ("acct", "dump-utmp", ["O0", "O2"]),
-    ("acct", "accton", ["O0", "O2"]),
-    ("rush", "rush", ["O0", "O2"]),
-    ("htop", "htop", ["O0", "O2"]),
-    ("strace", "strace", ["O0", "O2"]),
+    ("tree", "tree", ["O0", "O2"]),
+    ("dos2unix", "dos2unix", ["O0", "O2"]),
+    ("dos2unix", "unix2dos", ["O0", "O2"]),
+    ("bzip2", "bzip2", ["O0", "O2"]),
 ]
 
 

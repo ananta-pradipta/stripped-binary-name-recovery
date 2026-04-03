@@ -1,178 +1,144 @@
 #!/bin/bash
-# Compile new demo packages for expanded evaluation
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+# Compile DEMO packages for cross-project evaluation
+# These are skipped by 02_compile_dataset.sh because they have [DEMO] tags
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
-DATA_RAW="$HOME/cs785-project/data/raw"
-DATA_STRIPPED="$HOME/cs785-project/data/stripped"
-mkdir -p "$BUILD_DIR" "$DATA_RAW" "$DATA_STRIPPED"
+set -euo pipefail
+cd "$(dirname "$0")/.."
 
+BUILD_DIR="build_tmp"
+RAW_DIR="data/raw"
+STRIPPED_DIR="data/stripped"
 OPT_LEVELS="O0 O2"
 
+mkdir -p "$BUILD_DIR" "$RAW_DIR" "$STRIPPED_DIR"
+
 compile_package() {
-    local pkg_name="$1"
+    local name="$1"
     local url="$2"
     local tarball="$3"
     local src_dir="$4"
     shift 4
     local bins=("$@")
 
-    echo ""
-    echo "════════════════════════════════════════"
-    echo " Compiling: $pkg_name"
-    echo "════════════════════════════════════════"
+    echo "══════════════════════════════════════════"
+    echo "  Package: $name"
+    echo "══════════════════════════════════════════"
 
     # Download if needed
     if [ ! -f "$BUILD_DIR/$tarball" ]; then
         echo "  Downloading $tarball..."
-        wget --timeout=60 -O "$BUILD_DIR/$tarball" "$url" || {
-            echo "  ✗ Download failed for $pkg_name"
-            return 1
-        }
+        wget -q -O "$BUILD_DIR/$tarball" "$url" || { echo "  FAILED to download"; return 1; }
     fi
 
     # Extract if needed
     if [ ! -d "$BUILD_DIR/$src_dir" ]; then
         echo "  Extracting..."
         cd "$BUILD_DIR"
-        case "$tarball" in
-            *.tar.xz) tar xf "$tarball" ;;
-            *.tar.gz) tar xzf "$tarball" ;;
-            *.tar.bz2) tar xjf "$tarball" ;;
-            *.tar.lz) tar --lzip -xf "$tarball" 2>/dev/null || {
-                echo "  ✗ lzip not available, installing..."
-                sudo apt-get install -y lzip && tar --lzip -xf "$tarball"
-            } ;;
-        esac
-        cd ~/cs785-project
+        tar xf "$tarball" 2>/dev/null || { echo "  FAILED to extract"; cd ..; return 1; }
+        cd ..
     fi
 
+    # Compile at each optimization level
     for opt in $OPT_LEVELS; do
-        echo "  ── $opt ──"
+        local opt_flag="-${opt}"
+        local build_marker="$BUILD_DIR/.built_${name}_${opt}"
 
-        # Check if already compiled
-        local already_done=true
-        for bin_path in "${bins[@]}"; do
-            local bin_base=$(basename "$bin_path")
-            if [ ! -f "$DATA_STRIPPED/${pkg_name}_${bin_base}_${opt}_stripped" ]; then
-                already_done=false
-                break
-            fi
-        done
-        if $already_done; then
-            echo "    Already compiled, skipping"
-            continue
-        fi
+        if [ -f "$build_marker" ]; then
+            echo "  [$opt] Already built (cached)"
+        else
+            echo "  [$opt] Compiling with CFLAGS=$opt_flag..."
+            cd "$BUILD_DIR/$src_dir"
 
-        # Clean and configure
-        cd "$BUILD_DIR/$src_dir"
-        make clean 2>/dev/null || true
-        make distclean 2>/dev/null || true
+            # Clean previous build
+            make clean 2>/dev/null || true
+            make distclean 2>/dev/null || true
 
-        if [ -f configure ]; then
-            CFLAGS="-g -$opt" ./configure --quiet 2>&1 | tail -3 || {
-                echo "    ✗ Configure failed"
-                cd ~/cs785-project
-                continue
-            }
-        fi
-
-        # Build
-        make -j$(nproc) CFLAGS="-g -$opt" 2>&1 | tail -5 || {
-            echo "    ✗ Build failed"
-            cd ~/cs785-project
-            continue
-        }
-
-        # Copy and strip binaries
-        for bin_path in "${bins[@]}"; do
-            local bin_base=$(basename "$bin_path")
-            local full_path="$BUILD_DIR/$src_dir/$bin_path"
-
-            if [ -f "$full_path" ]; then
-                # Debug (with symbols) → raw
-                cp "$full_path" "$DATA_RAW/${pkg_name}_${bin_base}_${opt}_sym"
-                # Stripped → stripped
-                cp "$full_path" "$DATA_STRIPPED/${pkg_name}_${bin_base}_${opt}_stripped"
-                strip -s "$DATA_STRIPPED/${pkg_name}_${bin_base}_${opt}_stripped"
-                echo "    ✓ ${pkg_name}_${bin_base}_${opt}"
+            # Configure and build
+            local project_root="$(cd ../.. && pwd)"
+            if [ -f configure ]; then
+                CFLAGS="-g $opt_flag" ./configure --quiet 2>/dev/null || { echo "  FAILED configure"; cd "$project_root"; continue; }
+                make -j$(nproc) 2>/dev/null || { echo "  FAILED make"; cd "$project_root"; continue; }
+            elif [ -f Makefile ]; then
+                make -j$(nproc) CFLAGS="-g $opt_flag" 2>/dev/null || { echo "  FAILED make"; cd "$project_root"; continue; }
             else
-                echo "    ✗ Binary not found: $full_path"
-                # Try to find it
-                local found=$(find "$BUILD_DIR/$src_dir" -name "$bin_base" -type f -executable 2>/dev/null | head -1)
-                if [ -n "$found" ]; then
-                    echo "      Found at: $found"
-                    cp "$found" "$DATA_RAW/${pkg_name}_${bin_base}_${opt}_sym"
-                    cp "$found" "$DATA_STRIPPED/${pkg_name}_${bin_base}_${opt}_stripped"
-                    strip -s "$DATA_STRIPPED/${pkg_name}_${bin_base}_${opt}_stripped"
-                    echo "    ✓ ${pkg_name}_${bin_base}_${opt} (auto-found)"
-                fi
+                echo "  No configure or Makefile found"
+                cd "$project_root"
+                continue
+            fi
+
+            cd "$project_root"
+            touch "$build_marker"
+        fi
+
+        # Copy binaries
+        local count=0
+        for bin in "${bins[@]}"; do
+            local bin_path="$BUILD_DIR/$src_dir/$bin"
+            local bin_name=$(basename "$bin")
+
+            if [ -f "$bin_path" ] && file "$bin_path" | grep -q "ELF"; then
+                local suffix="${opt}"
+                local raw_name="${name}_${bin_name}_${suffix}_sym"
+                local stripped_name="${name}_${bin_name}_${suffix}"
+
+                cp "$bin_path" "$RAW_DIR/$raw_name"
+                cp "$bin_path" "$STRIPPED_DIR/$stripped_name"
+                strip --strip-all "$STRIPPED_DIR/$stripped_name"
+                count=$((count + 1))
             fi
         done
-        cd ~/cs785-project
+        echo "  [$opt] $count binaries copied"
     done
+    echo ""
 }
 
-echo "Compiling new demo packages..."
-echo "Opt levels: $OPT_LEVELS"
+echo "Compiling demo packages for cross-project evaluation"
+echo "Optimization levels: $OPT_LEVELS"
 echo ""
 
-# Tier 1: High gnulib overlap
-compile_package "idutils" \
-    "https://mirrors.kernel.org/gnu/idutils/idutils-4.6.tar.xz" \
-    "idutils-4.6.tar.xz" "idutils-4.6" \
-    "src/mkid" "src/lid" "src/fid" "src/fnid" "src/xtokid"
+# ── Existing [DEMO] packages ──
+# idutils-4.6 skipped: fails to compile on modern GCC (gnulib incompatibility)
 
-# rcs requires lzip to extract — skip if not available
-if command -v lzip &>/dev/null; then
 compile_package "rcs" \
-    "https://mirrors.kernel.org/gnu/rcs/rcs-5.10.1.tar.lz" \
+    "https://ftp.gnu.org/gnu/rcs/rcs-5.10.1.tar.lz" \
     "rcs-5.10.1.tar.lz" "rcs-5.10.1" \
     "src/ci" "src/co" "src/rcs" "src/rlog" "src/rcsdiff" "src/rcsmerge"
-else
-echo "  ⚠ Skipping rcs (lzip not installed)"
-fi
 
-compile_package "acct" \
-    "https://mirrors.kernel.org/gnu/acct/acct-6.6.4.tar.bz2" \
-    "acct-6.6.4.tar.bz2" "acct-6.6.4" \
-    "ac" "last" "lastcomm" "sa" "dump-utmp" "accton"
+compile_package "tree" \
+    "https://github.com/Old-Man-Programmer/tree/archive/refs/tags/2.1.3.tar.gz" \
+    "tree-2.1.3.tar.gz" "tree-2.1.3" \
+    "tree"
 
-compile_package "rush" \
-    "https://mirrors.kernel.org/gnu/rush/rush-2.3.tar.xz" \
-    "rush-2.3.tar.xz" "rush-2.3" \
-    "src/rush"
+compile_package "dos2unix" \
+    "https://waterlan.home.xs4all.nl/dos2unix/dos2unix-7.5.2.tar.gz" \
+    "dos2unix-7.5.2.tar.gz" "dos2unix-7.5.2" \
+    "dos2unix" "unix2dos"
 
-# Tier 2: Non-gnulib controls
-compile_package "htop" \
-    "https://github.com/htop-dev/htop/releases/download/3.3.0/htop-3.3.0.tar.xz" \
-    "htop-3.3.0.tar.xz" "htop-3.3.0" \
-    "htop"
+# ── New packages ──
+compile_package "curl" \
+    "https://curl.se/download/curl-8.6.0.tar.xz" \
+    "curl-8.6.0.tar.xz" "curl-8.6.0" \
+    "src/curl"
 
-compile_package "strace" \
-    "https://github.com/strace/strace/releases/download/v6.7/strace-6.7.tar.xz" \
-    "strace-6.7.tar.xz" "strace-6.7" \
-    "src/strace"
+compile_package "bzip2" \
+    "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz" \
+    "bzip2-1.0.8.tar.gz" "bzip2-1.0.8" \
+    "bzip2"
 
-# Tier 3: Already in packages.conf, just need demo compilation
-compile_package "sharutils_demo" \
-    "https://mirrors.kernel.org/gnu/sharutils/sharutils-4.15.2.tar.xz" \
-    "sharutils-4.15.2.tar.xz" "sharutils-4.15.2" \
-    "src/shar" "src/unshar"
-
-compile_package "dico" \
-    "https://mirrors.kernel.org/gnu/dico/dico-2.11.tar.xz" \
-    "dico-2.11.tar.xz" "dico-2.11" \
-    "dico/dico"
+compile_package "nginx" \
+    "https://nginx.org/download/nginx-1.24.0.tar.gz" \
+    "nginx-1.24.0.tar.gz" "nginx-1.24.0" \
+    "objs/nginx"
 
 echo ""
-echo "════════════════════════════════════════"
-echo " Compilation complete!"
-echo "════════════════════════════════════════"
+echo "══════════════════════════════════════════"
+echo "  Done! Summary:"
+for pkg in idutils rcs tree dos2unix curl bzip2 nginx; do
+    raw=$(ls data/raw/${pkg}_* 2>/dev/null | wc -l)
+    stripped=$(ls data/stripped/${pkg}_* 2>/dev/null | wc -l)
+    echo "  $pkg: $raw raw, $stripped stripped"
+done
+echo "══════════════════════════════════════════"
 echo ""
-echo "New binaries in $DATA_RAW and $DATA_STRIPPED:"
-ls -la "$DATA_RAW" | grep -E "idutils|rcs_|acct|rush|htop|strace|sharutils_demo|dico" | wc -l
-echo " new sym binaries"
-ls -la "$DATA_STRIPPED" | grep -E "idutils|rcs_|acct|rush|htop|strace|sharutils_demo|dico" | wc -l
-echo " new stripped binaries"
+echo "Next step: Run BAP preprocessing"
+echo "  bash scripts/03_preprocess.sh"
