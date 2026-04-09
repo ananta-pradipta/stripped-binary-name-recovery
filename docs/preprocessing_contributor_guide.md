@@ -278,7 +278,7 @@ rsync -az data/external_calls/newpkg_*.json "$REMOTE/data/external_calls/"
 ### SSH requirement
 You must have an active SSH connection to Wulver first:
 ```bash
-ssh wulver   # Authenticates with Duo 2FA, persists 24h via multiplexing
+ssh wulver  
 ```
 
 ---
@@ -397,7 +397,7 @@ The eval script expects this exact format:
 2. **Compile with `-no-pie`** to avoid address mismatch between nm and BAP.
 3. **Label `functions` must be `name → addr`.** The eval script breaks otherwise.
 4. **Use deterministic sort `(-count, name)` for vocab building.** Non-deterministic sort caused 1,232 token mismatches.
-5. **Cross-project packages (tengine, angie, nginx118, recutils) must NOT be in training.**
+5. **Cross-project packages must NOT be in training.**
 6. **`match_index.json` is regenerated, not hand-edited.**
 7. **NEVER overwrite `external_vocab.json` during inference.** The vocab is saved in checkpoints.
 8. **Coordinate with Ananta before changing `match_index.json` or `split_assignments.json`** — training depends on these.
