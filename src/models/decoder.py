@@ -173,3 +173,99 @@ class GRUDecoder(nn.Module):
             return result, best_score
         else:
             return [], float('-inf')
+
+    def sample(self, z, sos_id, eos_id, temperature=1.0):
+        """
+        Sample a sequence from the decoder for SCST (Phase 4 RL fine-tuning).
+
+        Instead of argmax (greedy) or beam search, samples from the softmax
+        distribution at each step. Returns both the sampled token IDs and the
+        accumulated log-probability for REINFORCE gradient computation.
+
+        Args:
+            z: [B, hidden_dim] — fused function embeddings (batched)
+            sos_id: start-of-sequence token ID
+            eos_id: end-of-sequence token ID
+            temperature: softmax temperature (1.0 = standard, <1 = sharper)
+
+        Returns:
+            sampled_ids: [B, T] — sampled token IDs (padded with 0 after EOS)
+            log_probs: [B] — sum of log-probabilities along each sampled path
+        """
+        B = z.shape[0]
+        device = z.device
+        hidden = self.init_hidden(z)
+
+        sampled_ids = []
+        total_log_probs = torch.zeros(B, device=device)
+        active = torch.ones(B, dtype=torch.bool, device=device)
+
+        input_token = torch.full((B, 1), sos_id, dtype=torch.long, device=device)
+
+        for t in range(self.max_length):
+            emb = self.embedding(input_token)
+            emb = self.dropout(emb)
+            output, hidden = self.gru(emb, hidden)
+            logit = self.output_proj(output.squeeze(1))  # [B, vocab_size]
+
+            # Apply temperature
+            probs = F.softmax(logit / temperature, dim=-1)
+            dist = torch.distributions.Categorical(probs)
+            token = dist.sample()  # [B]
+            log_p = dist.log_prob(token)  # [B]
+
+            # Only accumulate log-probs for active (non-EOS) sequences
+            total_log_probs = total_log_probs + log_p * active.float()
+
+            sampled_ids.append(token)
+
+            # Mark sequences that hit EOS as inactive
+            active = active & (token != eos_id)
+
+            # Next input = sampled token
+            input_token = token.unsqueeze(1)
+
+            # Early stop if all sequences finished
+            if not active.any():
+                break
+
+        sampled_ids = torch.stack(sampled_ids, dim=1)  # [B, T]
+        return sampled_ids, total_log_probs
+
+    def greedy_decode(self, z, sos_id, eos_id):
+        """
+        Greedy decode (argmax) for SCST baseline computation.
+
+        Returns token IDs only (no log-probs needed for the baseline).
+
+        Args:
+            z: [B, hidden_dim]
+            sos_id, eos_id: special token IDs
+
+        Returns:
+            greedy_ids: [B, T] — greedily decoded token IDs
+        """
+        B = z.shape[0]
+        device = z.device
+        hidden = self.init_hidden(z)
+
+        greedy_ids = []
+        active = torch.ones(B, dtype=torch.bool, device=device)
+        input_token = torch.full((B, 1), sos_id, dtype=torch.long, device=device)
+
+        for t in range(self.max_length):
+            emb = self.embedding(input_token)
+            output, hidden = self.gru(emb, hidden)
+            logit = self.output_proj(output.squeeze(1))
+
+            token = logit.argmax(dim=-1)  # [B]
+            greedy_ids.append(token)
+
+            active = active & (token != eos_id)
+            input_token = token.unsqueeze(1)
+
+            if not active.any():
+                break
+
+        greedy_ids = torch.stack(greedy_ids, dim=1)  # [B, T]
+        return greedy_ids

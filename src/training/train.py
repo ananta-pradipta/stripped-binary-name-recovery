@@ -178,7 +178,7 @@ def compute_contrastive_loss(z, names, temperature=0.1):
 
 def train_epoch(model, loader, optimizer, criterion, device, tf_ratio=1.0,
                 aux_loss_weight=0.0, ul_weight=0.0, contrastive_weight=0.0,
-                ml_weight=0.0, scaler=None):
+                ml_weight=0.0, scaler=None, scst_weight=0.0, sp_model=None):
     model.train()
     total_loss = 0
     total_ul_loss = 0
@@ -264,6 +264,36 @@ def train_epoch(model, loader, optimizer, criterion, device, tf_ratio=1.0,
                 aux_targets = bucket_num_blocks(num_blocks, device)
                 aux_loss = nn.functional.cross_entropy(aux_logits, aux_targets)
                 loss = loss + aux_loss_weight * aux_loss
+
+            # SCST (Phase 4): Self-Critical Sequence Training with F1 reward
+            if scst_weight > 0 and sp_model is not None:
+                from src.evaluation.metrics import compute_scst_reward
+                sos_id = sp_model.bos_id() if hasattr(sp_model, 'bos_id') else 1
+                eos_id = sp_model.eos_id() if hasattr(sp_model, 'eos_id') else 2
+                with torch.no_grad():
+                    greedy_ids = model.decoder.greedy_decode(z_enc, sos_id, eos_id)
+                sampled_ids, log_probs = model.decoder.sample(z_enc, sos_id, eos_id)
+
+                # Decode token IDs → name strings for reward computation
+                names_gt = batch['name']  # ground truth name strings
+                rewards_sample = []
+                rewards_greedy = []
+                for i in range(B):
+                    # Decode sampled
+                    s_ids = [t.item() for t in sampled_ids[i] if t.item() not in (0, sos_id, eos_id)]
+                    s_name = sp_model.decode(s_ids) if s_ids else ''
+                    # Decode greedy
+                    g_ids = [t.item() for t in greedy_ids[i] if t.item() not in (0, sos_id, eos_id)]
+                    g_name = sp_model.decode(g_ids) if g_ids else ''
+                    rewards_sample.append(compute_scst_reward(s_name, names_gt[i]))
+                    rewards_greedy.append(compute_scst_reward(g_name, names_gt[i]))
+
+                r_sample = torch.tensor(rewards_sample, device=device, dtype=torch.float32)
+                r_greedy = torch.tensor(rewards_greedy, device=device, dtype=torch.float32)
+                advantage = r_sample - r_greedy  # [B]
+
+                scst_loss = -(advantage * log_probs).mean()
+                loss = loss + scst_weight * scst_loss
 
         if use_amp:
             scaler.scale(loss).backward()
@@ -378,6 +408,8 @@ def main():
                         help='Resume training from checkpoint path')
     parser.add_argument('--ul-weight', type=float, default=0.0,
                         help='Unlikelihood loss weight (0=disabled, try 0.5-2.0)')
+    parser.add_argument('--scst-weight', type=float, default=0.0,
+                        help='SCST (Phase 4 RL) loss weight. Uses REINFORCE with F1 reward.')
     parser.add_argument('--contrastive-weight', type=float, default=0.0,
                         help='Contrastive loss weight (0=disabled, try 0.1-1.0)')
     parser.add_argument('--ml-weight', type=float, default=0.0,
@@ -392,6 +424,10 @@ def main():
                         help='Number of data loading workers (0=main thread, try 4 on HPC)')
     parser.add_argument('--batch-size', type=int, default=None,
                         help='Override batch size from config (e.g. 64 or 128 on A100 40GB)')
+    parser.add_argument('--save-name', type=str, default='best_model.pt',
+                        help='Filename for saved checkpoint')
+    parser.add_argument('--save-every-epoch', action='store_true',
+                        help='Save latest checkpoint every epoch (for RL fine-tune where Val F1 may drop)')
     args = parser.parse_args()
 
     with open(args.config) as f:
@@ -617,6 +653,8 @@ def main():
     ml_weight = args.ml_weight
     if ml_weight > 0:
         print(f"Multi-label loss weight: {ml_weight}")
+    if args.scst_weight > 0:
+        print(f"SCST (Phase 4 RL) weight: {args.scst_weight}")
     print()
 
     import time as _time
@@ -632,7 +670,8 @@ def main():
         train_loss = train_epoch(model, train_loader, optimizer, criterion, device, tf_ratio,
                                  aux_loss_weight=aux_weight, ul_weight=ul_weight,
                                  contrastive_weight=cl_weight, ml_weight=ml_weight,
-                                 scaler=scaler)
+                                 scaler=scaler, scst_weight=args.scst_weight,
+                                 sp_model=sp_model)
         dataset.training_mode = False  # Disable enrichment for validation
         val_loss, val_f1 = validate(model, val_loader, criterion, device, sp_model,
                                     use_amp=args.amp)
@@ -653,6 +692,22 @@ def main():
         if val_f1 > best_f1:
             best_f1 = val_f1
             patience_counter = 0
+            _ckpt = {
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'val_f1': val_f1,
+                'config': cfg,
+                'token_vocab': dataset.token_vocab,
+                'ext_vocab': dataset.ext_vocab,
+            }
+            torch.save(_ckpt, os.path.join(ckpt_dir, args.save_name))
+            print(f" ★ New best!")
+        else:
+            patience_counter += 1
+            print(f" (patience: {patience_counter}/{patience})")
+        if args.save_every_epoch:
+            _latest_name = args.save_name.replace('.pt', '_latest.pt')
             torch.save({
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
@@ -661,18 +716,14 @@ def main():
                 'config': cfg,
                 'token_vocab': dataset.token_vocab,
                 'ext_vocab': dataset.ext_vocab,
-            }, os.path.join(ckpt_dir, 'best_model.pt'))
-            print(f" ★ New best!")
-        else:
-            patience_counter += 1
-            print(f" (patience: {patience_counter}/{patience})")
-            if patience_counter >= patience:
-                print(f"\nEarly stopping at epoch {epoch+1}")
-                break
+            }, os.path.join(ckpt_dir, _latest_name))
+        if not args.save_every_epoch and patience_counter >= patience:
+            print(f"\nEarly stopping at epoch {epoch+1}")
+            break
 
     print(f"\n{'='*60}")
     print(f"Training complete. Best Val F1: {best_f1:.4f}")
-    print(f"Checkpoint: {os.path.join(ckpt_dir, 'best_model.pt')}")
+    print(f"Checkpoint: {os.path.join(ckpt_dir, args.save_name)}")
     print(f"{'='*60}")
 
 

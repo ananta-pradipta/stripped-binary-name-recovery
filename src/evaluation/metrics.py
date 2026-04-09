@@ -6,6 +6,7 @@ Includes:
   - Exact match
   - Character n-gram similarity (Dice coefficient)
   - Edit distance similarity (normalized Levenshtein)
+  - SCST composite reward (Phase 4 RL)
   - Unified compute_all_metrics() function
 """
 import re
@@ -179,6 +180,36 @@ def compute_all_metrics(predicted: str, ground_truth: str) -> dict:
         'char_ngram_sim': ngram_sim,
         'edit_sim': edit_sim,
     }
+
+
+def compute_scst_reward(predicted: str, ground_truth: str) -> float:
+    """
+    Composite reward for SCST (Phase 4 RL fine-tuning).
+
+    Combines sub-token F1, n-gram similarity, exact match bonus,
+    and a length conciseness term. Returns a scalar reward in [0, 1].
+
+    Reward = 0.6 * subtoken_F1
+           + 0.2 * char_ngram_similarity
+           + 0.1 * exact_match_bonus
+           + 0.1 * length_conciseness
+
+    Args:
+        predicted: predicted function name (e.g., 'hash_table_lookup')
+        ground_truth: ground truth function name
+
+    Returns:
+        float: composite reward in approximately [0, 1]
+    """
+    f1 = compute_subtoken_f1(predicted, ground_truth)
+    ngsim = compute_char_ngram_similarity(predicted, ground_truth)
+    em = 1.0 if predicted == ground_truth else 0.0
+
+    # Length conciseness: slight penalty for very long predictions
+    pred_subtokens = len(re.split(r'[_\W]+', predicted))
+    length_term = max(0.0, 1.0 - 0.02 * max(pred_subtokens - 10, 0))
+
+    return 0.6 * f1 + 0.2 * ngsim + 0.1 * em + 0.1 * length_term
 
 
 if __name__ == '__main__':
