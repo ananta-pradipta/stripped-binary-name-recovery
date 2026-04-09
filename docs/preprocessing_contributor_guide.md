@@ -6,21 +6,6 @@
 
 ---
 
-## Team Responsibilities
-
-| Person | Responsibility | Where |
-|--------|---------------|-------|
-| **Robert** | Dataset compilation, BAP extraction, preprocessing, data quality | **Local machine** (BAP required) |
-| **Ananta** | Model architecture, training, evaluation, paper writing | **Wulver HPC** (GPU required) |
-| **Zhihao** | NLP metrics, semantic similarity analysis | Local/Wulver |
-
-### Clear boundaries:
-- **Robert owns:** `configs/packages.conf`, `scripts/02_compile_dataset.sh`, `scripts/03_preprocess.sh`, all `data/` preprocessing, label extraction, BAP lifting
-- **Ananta owns:** `src/models/`, `src/training/`, `configs/optimized*.yaml`, `scripts/eval_*.py`, checkpoints
-- **Shared:** `data/match_index.json`, `data/votes_vocab.json`, `data/split_assignments.json` (coordinate changes)
-
----
-
 ## Current Dataset State (2026-04-09)
 
 ```
@@ -32,25 +17,11 @@ Votes vocab: 7,004 tokens | Ext vocab: 2,237 tokens
 ### Cross-project packages (DO NOT add to training):
 - `tengine`, `angie`, `nginx118`, `recutils`
 
-### What's been done:
-- [x] 77 packages compiled at O0-O3 where possible
-- [x] Ghidra data dropped (was low quality — 77 vs 325 token types)
-- [x] BAP-only pipeline: all data uses BAP V3 instruction-type tokenization
-- [x] PIE binary issue fixed for busybox (compiled with `-no-pie`)
-
-### Known issues:
-- PIE binaries cause address mismatch between nm labels and BAP graphs
-  - Fix: compile with `CFLAGS="-g -O2 -no-pie" LDFLAGS="-no-pie"`
-  - Or: use non-PIE linker flags
-- Label format must have `functions` as `{name: addr}` dict (NOT `{addr: name}`)
-- BAP OOMs on binaries >5MB (openssl, gdb). Skip these.
-- Some autotools packages produce libtool wrapper scripts instead of ELF binaries. Real binary is in `.libs/` subdirectory.
-
 ---
 
 ## Pipeline Overview
 
-### Local Machine (Robert)
+### Local Machine (preprocessing contributor)
 
 ```
 Step 1: Compile packages
@@ -77,7 +48,7 @@ Step 7: Build vocabularies
     data/external_calls/ → data/external_calls/external_vocab.json
 ```
 
-### Wulver HPC (Ananta)
+### Wulver HPC: /project/hz79/_shared/cs785/
 
 ```
 Step 8: Sync data to Wulver
@@ -286,7 +257,7 @@ bash scripts/wulver_sync.sh
 
 ### Manual data sync
 ```bash
-REMOTE="wulver:/course/2026/spring/cs/785/hz79/adp232/cs785"
+REMOTE="wulver:/project/hz79/_shared/cs785"
 
 # Essential files (always sync these)
 rsync -avz data/match_index.json "$REMOTE/data/"
@@ -317,8 +288,8 @@ ssh wulver   # Authenticates with Duo 2FA, persists 24h via multiplexing
 ### Access
 - **Host:** wulver.njit.edu (or use SSH config alias `wulver`)
 - **Account:** `hz79` (research account — full A100-80GB GPU access)
-- **Project dir:** `/course/2026/spring/cs/785/hz79/adp232/cs785`
-- **Python env:** `/course/2026/spring/cs/785/hz79/adp232/cs785-env`
+- **Project dir:** `/project/hz79/_shared/cs785`
+- **Python env:** `/project/hz79/_shared/cs785-env`
 
 ### Submitting a training job
 
@@ -336,8 +307,8 @@ ssh wulver   # Authenticates with Duo 2FA, persists 24h via multiplexing
 
 module load bright
 module load python3
-source /course/2026/spring/cs/785/hz79/adp232/cs785-env/bin/activate
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
+source /project/hz79/_shared/cs785-env/bin/activate
+cd /project/hz79/_shared/cs785
 
 python3 -m src.training.train \
     --config configs/optimized_large.yaml \
@@ -457,10 +428,10 @@ for p, c in pkgs.most_common(10):
 
 # Sync to Wulver
 bash scripts/wulver_sync.sh
-rsync -avz data/match_index.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/
-rsync -avz data/votes_vocab.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/
-rsync -az data/graphs/newpkg_*.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/graphs/
-rsync -az data/labels/newpkg_*_labels.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/labels/
+rsync -avz data/match_index.json wulver:/project/hz79/_shared/cs785/data/
+rsync -avz data/votes_vocab.json wulver:/project/hz79/_shared/cs785/data/
+rsync -az data/graphs/newpkg_*.json wulver:/project/hz79/_shared/cs785/data/graphs/
+rsync -az data/labels/newpkg_*_labels.json wulver:/project/hz79/_shared/cs785/data/labels/
 ```
 
 ---
