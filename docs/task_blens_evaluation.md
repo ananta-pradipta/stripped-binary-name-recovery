@@ -1,9 +1,7 @@
 # Task: BLens Baseline Evaluation
 
-**For:** Robert Blacha
 **Project:** CS785 Binary Function Name Recovery
 **Date:** 2026-04-09
-**Deadline:** April 22, 2026
 **Estimated time:** 1-2 days
 **Where:** Wulver HPC (GPU required)
 
@@ -156,35 +154,293 @@ Key questions to answer:
 - Do they expect pre-computed embeddings or raw binaries?
 - Can they process stripped ELF binaries directly?
 
-### Step 6: Run BLens on our cross-project data
+### Step 6: Run BLens on our data
+
+Two options — **do Option A first** (faster, inference only). Option B is bonus if time permits.
+
+---
+
+#### Option A: Run their pretrained model on our cross-project data (PRIORITY)
+
+Tests BLens' generalization to our unseen packages. No retraining.
 
 **Our cross-project packages:** tengine, angie, nginx118, recutils
 **Our stripped binaries:** `/project/hz79/_shared/cs785/data/stripped/`
 
-**Option A: Use their preprocessing pipeline**
-- Feed our stripped binaries through their embedding extraction
-- Then run their inference/evaluation
-- This is the most accurate approach
+##### A.1: Understand BLens' input format
 
-**Option B: Use SymLM data compatibility**
-- BLens has `--symlm-subdataset` flag
-- Our SymLM preprocessed data: `/project/hz79/_shared/cs785/baselines/SymLM/`
-- May work without additional preprocessing
+```bash
+cd /project/hz79/_shared/cs785/baselines/BLens
 
-**Option C: Convert our data to their format**
-- Study their data format from Step 5
-- Write a conversion script
-- Run their evaluation on converted data
+# Examine their test data structure
+find data/ -name "*test*" -type f | head -10
+find data/ -name "*test*" -type d | head -10
+
+# Check file formats
+python3 -c "
+import os
+for root, dirs, fnames in os.walk('data'):
+    for f in fnames[:3]:
+        path = os.path.join(root, f)
+        print(f'{path} ({os.path.getsize(path)} bytes)')
+    if fnames: break
+"
+```
+
+##### A.2: Prepare our binaries
+
+```bash
+# Copy our cross-project stripped binaries into BLens workspace
+mkdir -p data/our_xproj/stripped/ data/our_xproj/labels/
+
+for pkg in angie nginx118 tengine recutils; do
+    cp /project/hz79/_shared/cs785/data/stripped/${pkg}_*_stripped data/our_xproj/stripped/
+    cp /project/hz79/_shared/cs785/data/labels/${pkg}_*_labels.json data/our_xproj/labels/
+done
+
+echo "Copied $(ls data/our_xproj/stripped/ | wc -l) binaries"
+```
+
+##### A.3: Run BLens preprocessing on our binaries
+
+BLens needs embeddings from 4 upstream models. Find their preprocessing scripts:
+```bash
+# Find embedding extraction scripts
+find . -name "*.py" | xargs grep -l "embed\|preprocess\|extract" | head -10
+ls scripts/ preprocessing/ 2>/dev/null
+cat PRETRAINED.md
+```
+
+Run their embedding extraction (adapt based on what you find):
+```bash
+cat > /tmp/blens_preprocess_xproj.sbatch << 'EOF'
+#!/bin/bash
+#SBATCH --job-name=cs785-blens-prep
+#SBATCH --account=hz79
+#SBATCH --partition=gpu
+#SBATCH --qos=standard
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=06:00:00
+#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-blens-prep.%j.out
+
+module load bright
+module load python3
+source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
+cd /project/hz79/_shared/cs785/baselines/BLens
+
+echo "=== BLens Preprocessing on our xproj data ==="
+# ADAPT THIS: Run their embedding extraction on our binaries
+# Example (find the actual script name):
+# python3 preprocessing/extract_embeddings.py --input data/our_xproj/stripped/ --output data/our_xproj/embeddings/
+EOF
+
+sbatch /tmp/blens_preprocess_xproj.sbatch
+```
+
+##### A.4: Run inference with pretrained model
+
+```bash
+cat > /tmp/blens_infer_xproj.sbatch << 'EOF'
+#!/bin/bash
+#SBATCH --job-name=cs785-eval-blens-xproj
+#SBATCH --account=hz79
+#SBATCH --partition=gpu
+#SBATCH --qos=standard
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-eval-blens-xproj.%j.out
+
+module load bright
+module load python3
+source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
+cd /project/hz79/_shared/cs785/baselines/BLens
+
+echo "=== BLens Inference on our cross-project ==="
+nvidia-smi -L
+
+# ADAPT: Use their inference command with pretrained weights
+# Key flags to look for: -data-dir, -d=test, --cross-binary, -inferBest, -inferT0
+CUDA_VISIBLE_DEVICES=0 python3 RunExp.py \
+    -data-dir=data/our_xproj/ \
+    -d=test \
+    --cross-binary \
+    -inferBest
+EOF
+
+sbatch /tmp/blens_infer_xproj.sbatch
+```
+
+##### A.5: Compute metrics
+
+```bash
+# After BLens produces predictions, compute F1
+# Adapt based on their output format
+python3 -c "
+import json, os
+
+# Load predictions (find the output file from BLens)
+# pred_file = 'results/predictions.json'  # adapt path
+
+# Load our ground truth
+gt = {}
+for lf in os.listdir('data/our_xproj/labels/'):
+    with open(f'data/our_xproj/labels/{lf}') as f:
+        d = json.load(f)
+    binary = d['binary']
+    for name, addr in d.get('functions', {}).items():
+        gt[f'{binary}_{addr}'] = name
+
+# Compare and compute sub-token F1
+# ... (adapt to BLens output format)
+"
+```
+
+---
+
+#### Option B: Train BLens end-to-end on our dataset (BONUS)
+
+Retrains BLens on our 300K training data, then evaluates on our cross-project set. Fairest comparison but takes longer (~1-2 days).
+
+##### B.1: Prepare our full training data
+
+```bash
+cd /project/hz79/_shared/cs785/baselines/BLens
+
+# Our training set: ~242K functions (300K minus val/test/cross-project)
+# Need: stripped binaries + ground truth for all training binaries
+
+mkdir -p data/our_train/stripped/ data/our_train/labels/
+
+# Copy training binaries (exclude cross-project)
+python3 -c "
+import json, shutil, os
+with open('/project/hz79/_shared/cs785/data/match_index.json') as f:
+    mi = json.load(f)
+xproj = {'tengine', 'angie', 'nginx118', 'recutils'}
+bins = set()
+for v in mi.values():
+    pkg = v['binary'].split('_')[0]
+    if pkg not in xproj:
+        bins.add(v['binary'])
+print(f'Training binaries: {len(bins)}')
+
+src = '/project/hz79/_shared/cs785/data/stripped/'
+dst = 'data/our_train/stripped/'
+os.makedirs(dst, exist_ok=True)
+copied = 0
+for b in bins:
+    s = os.path.join(src, b + '_stripped')
+    if os.path.exists(s):
+        shutil.copy2(s, os.path.join(dst, b + '_stripped'))
+        copied += 1
+print(f'Copied: {copied}')
+"
+
+# Copy labels
+cp /project/hz79/_shared/cs785/data/labels/*_labels.json data/our_train/labels/
+```
+
+##### B.2: Run BLens preprocessing on training data
+
+```bash
+cat > /tmp/blens_preprocess_train.sbatch << 'EOF'
+#!/bin/bash
+#SBATCH --job-name=cs785-blens-prep-train
+#SBATCH --account=hz79
+#SBATCH --partition=gpu
+#SBATCH --qos=standard
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=24:00:00
+#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-blens-prep-train.%j.out
+
+module load bright
+module load python3
+source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
+cd /project/hz79/_shared/cs785/baselines/BLens
+
+echo "=== BLens Preprocessing (full training set) ==="
+# ADAPT: Extract embeddings for all training binaries
+# This will take many hours (700+ binaries × 4 embedding models)
+EOF
+
+sbatch /tmp/blens_preprocess_train.sbatch
+```
+
+##### B.3: Train BLens
+
+```bash
+cat > /tmp/blens_train.sbatch << 'EOF'
+#!/bin/bash
+#SBATCH --job-name=cs785-train-blens
+#SBATCH --account=hz79
+#SBATCH --partition=gpu
+#SBATCH --qos=standard
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=24:00:00
+#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-train-blens.%j.out
+
+module load bright
+module load python3
+source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
+cd /project/hz79/_shared/cs785/baselines/BLens
+
+echo "=== BLens Training on our data ==="
+nvidia-smi -L
+
+# ADAPT: Their training command
+# From their README: -pretrain -train -inferBest
+CUDA_VISIBLE_DEVICES=0 python3 RunExp.py \
+    -data-dir=data/our_train/ \
+    -d=test \
+    --cross-binary \
+    -pretrain -train -inferBest
+EOF
+
+sbatch /tmp/blens_train.sbatch
+```
+
+##### B.4: Evaluate on cross-project
+
+After training, evaluate on our held-out cross-project set:
+```bash
+# Same as Option A Step A.4, but using newly trained model
+CUDA_VISIBLE_DEVICES=0 python3 RunExp.py \
+    -data-dir=data/our_xproj/ \
+    -d=test \
+    --cross-binary \
+    -inferBest
+```
+
+---
 
 ### What to report
 
-After running BLens, record:
-- **F1 score, precision, recall** on our cross-project set
-- **Per-package breakdown** (angie, nginx118, tengine, recutils)
-- **Runtime** (how long inference took)
-- **Any issues or limitations** encountered
+For **each option** completed, fill in this table:
 
-Save results to: `/project/hz79/_shared/cs785/baselines/BLens/results/`
+| Metric | Option A (pretrained) | Option B (retrained) |
+|--------|----------------------|---------------------|
+| Overall F1 | | |
+| Overall Precision | | |
+| Overall Recall | | |
+| angie F1 | | |
+| nginx118 F1 | | |
+| tengine F1 | | |
+| recutils F1 | | |
+| Inference time | | |
+| GPU memory used | | |
+
+Save all results to: `/project/hz79/_shared/cs785/baselines/BLens/results/`
+
+**Option A results** = "BLens (pretrained) on our data"
+**Option B results** = "BLens (retrained on our data)"
 
 ---
 
@@ -209,7 +465,3 @@ tail -f /project/hz79/_shared/cs785/slurm_logs/cs785-eval-blens.JOBID.out
 | **SymLM** | 0.021 | ~100M | Vocab mismatch |
 
 ---
-
-## Questions?
-
-Ask Ananta on Discord.
