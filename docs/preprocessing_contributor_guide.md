@@ -2,605 +2,484 @@
 
 **For:** Robert Blacha (dataset compilation, BAP extraction, data preprocessing)
 **Project:** CS785 Binary Function Name Recovery
-**Last updated:** 2026-04-02
+**Last updated:** 2026-04-09
 
 ---
 
-## Table of Contents
+## Team Responsibilities
 
-1. [Environment Setup](#1-environment-setup)
-2. [Pipeline Overview](#2-pipeline-overview)
-3. [Adding New Packages](#3-adding-new-packages)
-4. [Running the Preprocessing Pipeline](#4-running-the-preprocessing-pipeline)
-5. [Data Directory Structure](#5-data-directory-structure)
-6. [Key File Formats](#6-key-file-formats)
-7. [How Each Stage Works](#7-how-each-stage-works)
-8. [Common Tasks](#8-common-tasks)
-9. [Debugging & Troubleshooting](#9-debugging--troubleshooting)
-10. [Critical Rules (Do Not Break)](#10-critical-rules)
+| Person | Responsibility | Where |
+|--------|---------------|-------|
+| **Robert** | Dataset compilation, BAP extraction, preprocessing, data quality | **Local machine** (BAP required) |
+| **Ananta** | Model architecture, training, evaluation, paper writing | **Wulver HPC** (GPU required) |
+| **Zhihao** | NLP metrics, semantic similarity analysis | Local/Wulver |
 
----
-
-## 1. Environment Setup
-
-### First-time setup
-
-```bash
-# Clone the repo (if not already)
-cd ~
-git clone <repo-url> cs785-project
-cd cs785-project
-
-# Run the full environment setup (~30 min)
-bash scripts/01_setup_environment.sh
-```
-
-This installs:
-- Python 3.10+ venv with PyTorch, PyTorch Geometric, sentencepiece, networkx
-- BAP 2.5.0 (Binary Analysis Platform) via OPAM/OCaml
-- System tools: gcc, binutils, elfutils, autotools, build-essential
-
-### Before each session
-
-```bash
-source ~/cs785-project/activate.sh
-```
-
-This activates the Python venv, sets up OCaml/BAP, and exports `PROJECT_ROOT`. Verify with:
-```bash
-python3 --version      # Should be 3.10+
-bap --version          # Should be 2.5.0
-```
-
-### BAP is required locally
-
-BAP cannot run on the Wulver HPC cluster. All BAP-related preprocessing (lifting binaries to IR) must be done on a local machine with BAP installed. Training and evaluation can run on Wulver without BAP.
+### Clear boundaries:
+- **Robert owns:** `configs/packages.conf`, `scripts/02_compile_dataset.sh`, `scripts/03_preprocess.sh`, all `data/` preprocessing, label extraction, BAP lifting
+- **Ananta owns:** `src/models/`, `src/training/`, `configs/optimized*.yaml`, `scripts/eval_*.py`, checkpoints
+- **Shared:** `data/match_index.json`, `data/votes_vocab.json`, `data/split_assignments.json` (coordinate changes)
 
 ---
 
-## 2. Pipeline Overview
+## Current Dataset State (2026-04-09)
 
 ```
-Source packages (GNU FTP)
-    |
-    v  [02_compile_dataset.sh]
-Debug binaries (.sym) + Stripped binaries (.stripped)
-    |
-    v  [03_preprocess.sh]
-    |--- Step 3.1: Extract ground truth labels (nm) --> data/labels/
-    |--- Step 3.2: Lift stripped binaries with BAP  --> data/bir/
-    |--- Step 3.3: Parse BAP-IR into CFG graphs     --> data/graphs/
-    |--- Step 3.4: Extract external calls            --> data/external_calls/
-    |--- Step 3.5: Match addresses (labels <-> graphs) --> data/match_index.json
-    |--- Step 3.6: Build BPE vocabulary              --> data/bpe_model/
-    |--- Step 3.7: Build external call vocabulary    --> data/external_calls/external_vocab.json
-    v
-Training-ready dataset (loaded by src/preprocessing/build_dataset.py)
+300,013 matched functions | 77 packages | 851 binaries
+Opt: O0=47% | O1=16% | O2=16% | O3=15% | default=6%
+Votes vocab: 7,004 tokens | Ext vocab: 2,237 tokens
 ```
 
-### What each stage produces
+### Cross-project packages (DO NOT add to training):
+- `tengine`, `angie`, `nginx118`, `recutils`
 
-| Stage | Input | Output | ~Time |
-|-------|-------|--------|-------|
-| 02_compile | Source tarballs | `data/raw/`, `data/stripped/` | 30-60 min |
-| 3.1 Labels | Debug binaries | `data/labels/*_labels.json` | 2-5 min |
-| 3.2 BAP lift | Stripped binaries | `data/bir/*.bir` | 1-4 hours (slowest) |
-| 3.3 Parse | `.bir` files | `data/graphs/*.json` | 10-30 min |
-| 3.4 Ext calls | `.bir` files | `data/external_calls/*_external.json` | 5-10 min |
-| 3.5 Matching | Labels + graphs | `data/match_index.json` | 2-5 min |
-| 3.6 BPE | Function names | `data/bpe_model/` | 1 min |
-| 3.7 Ext vocab | Ext call files | `data/external_calls/external_vocab.json` | 1 min |
+### What's been done:
+- [x] 77 packages compiled at O0-O3 where possible
+- [x] Ghidra data dropped (was low quality — 77 vs 325 token types)
+- [x] BAP-only pipeline: all data uses BAP V3 instruction-type tokenization
+- [x] PIE binary issue fixed for busybox (compiled with `-no-pie`)
+
+### Known issues:
+- PIE binaries cause address mismatch between nm labels and BAP graphs
+  - Fix: compile with `CFLAGS="-g -O2 -no-pie" LDFLAGS="-no-pie"`
+  - Or: use non-PIE linker flags
+- Label format must have `functions` as `{name: addr}` dict (NOT `{addr: name}`)
+- BAP OOMs on binaries >5MB (openssl, gdb). Skip these.
+- Some autotools packages produce libtool wrapper scripts instead of ELF binaries. Real binary is in `.libs/` subdirectory.
 
 ---
 
-## 3. Adding New Packages
+## Pipeline Overview
 
-### Step 1: Edit `configs/packages.conf`
+### Local Machine (Robert)
 
-Each line follows this format:
+```
+Step 1: Compile packages
+    configs/packages.conf → scripts/02_compile_dataset.sh
+    Output: data/raw/*_sym (debug) + data/stripped/*_stripped
+
+Step 2: Extract ground truth labels
+    data/raw/*_sym → nm → data/labels/*_labels.json
+
+Step 3: BAP lift stripped binaries
+    data/stripped/*_stripped → bap → data/bir/*.bir
+
+Step 4: Parse BAP-IR into graphs
+    data/bir/*.bir → parse_bap.py → data/graphs/*.json
+
+Step 5: Extract external calls
+    data/bir/*.bir → extract_external.py → data/external_calls/*_external.json
+
+Step 6: Address matching
+    data/labels/ + data/graphs/ → data/match_index.json
+
+Step 7: Build vocabularies
+    data/match_index.json → data/votes_vocab.json
+    data/external_calls/ → data/external_calls/external_vocab.json
+```
+
+### Wulver HPC (Ananta)
+
+```
+Step 8: Sync data to Wulver
+    bash scripts/wulver_sync.sh  (syncs code)
+    rsync data files manually    (match_index, vocabs, graphs, labels, ext_calls)
+
+Step 9: Train model
+    python3 -m src.training.train --config configs/optimized_large.yaml \
+        --seed 42 --batch-size 256 --amp --num-workers 4
+
+Step 10: Evaluate
+    python3 scripts/eval_cross_project.py checkpoints/best_model.pt \
+        --config configs/optimized_large.yaml --amp
+```
+
+---
+
+## Step-by-Step: Adding New Packages
+
+### 1. Edit `configs/packages.conf`
+
 ```
 name | download_url | tarball_name | source_directory | binary1 binary2 ...
 ```
 
 Example:
 ```
-diffutils | https://ftp.gnu.org/gnu/diffutils/diffutils-3.10.tar.xz | diffutils-3.10.tar.xz | diffutils-3.10 | diff diff3 sdiff cmp
+diffutils | https://ftp.gnu.org/gnu/diffutils/diffutils-3.10.tar.xz | diffutils-3.10.tar.xz | diffutils-3.10 | src/diff src/diff3 src/sdiff src/cmp
 ```
 
-Fields:
-- **name**: Package identifier (used in all file naming)
-- **download_url**: Direct URL to the source tarball
-- **tarball_name**: Filename of the downloaded archive
-- **source_directory**: Top-level directory inside the tarball after extraction
-- **binary names**: Space-separated list of binaries to extract after `make`
+**Important:** For autotools packages, binary paths may need `.libs/` prefix (e.g., `src/.libs/diff` instead of `src/diff`).
 
-### Step 2: Test compilation
-
-```bash
-# Compile just the new package (the script is idempotent, skips already-built)
-bash scripts/02_compile_dataset.sh
-```
-
-The script compiles at optimization levels O0, O1, O2, O3 by default. It produces:
-- `data/raw/{name}_{binary}_O{level}_sym` (debug binary)
-- `data/stripped/{name}_{binary}_O{level}_stripped` (stripped binary)
-
-### Step 3: Verify the binaries
-
-```bash
-# Check that debug symbols exist
-nm --defined-only data/raw/diffutils_diff_O2_sym | head
-
-# Check that stripped binary has no symbols
-nm data/stripped/diffutils_diff_O2_stripped 2>&1 | head
-# Should say "no symbols"
-
-# Check file type
-file data/stripped/diffutils_diff_O2_stripped
-# Should say "ELF 64-bit LSB executable, x86-64, ..."
-```
-
-### Step 4: Run preprocessing on the new package
-
-```bash
-bash scripts/03_preprocess.sh
-```
-
-This is incremental -- it will process new binaries and skip existing ones.
-
-### Step 5: Update split assignments
-
-New binaries default to the training set. If you want to assign them to val/test/demo, edit `data/split_assignments.json`:
-
-```json
-{
-  "train": ["existing_binary_1", "new_package_binary_O0", "new_package_binary_O2", ...],
-  "val": [...],
-  "test": [...]
-}
-```
-
-### Important considerations when adding packages
-
-- **GNU packages work best** -- they share gnulib utility functions with existing training data
-- **Non-GNU packages** (sqlite, lua, strace) can cause cross-contamination if the model is too small. See experiment log for Exp 34 analysis.
-- **Large packages** (gdb, firefox) produce 10K+ functions and can dominate training. Consider capping or weighting.
-- **O0 binaries** have ENDBR64 indirect jump wrapper issues where BAP lifts `endbr64; jmp addr` as separate tiny wrapper functions. `build_dataset.py` resolves these for training.
-
----
-
-## 4. Running the Preprocessing Pipeline
-
-### Full pipeline (all packages)
+### 2. Compile
 
 ```bash
 source ~/cs785-project/activate.sh
-bash scripts/02_compile_dataset.sh    # Compile all packages
-bash scripts/03_preprocess.sh          # Full preprocessing
+bash scripts/02_compile_dataset.sh
 ```
 
-### Individual stages (for debugging or re-running)
+Or compile manually for non-autotools packages (Makefile-based like bzip2, tree):
+```bash
+cd build_tmp/package-dir
+make clean && make -j$(nproc) CFLAGS="-g -O2 -no-pie" LDFLAGS="-no-pie"
+cp binary ~/cs785-project/data/raw/pkg_binary_O2_sym
+strip -s binary -o ~/cs785-project/data/stripped/pkg_binary_O2_stripped
+```
+
+### 3. Verify binaries
 
 ```bash
-# Step 3.1: Extract labels only
-for sym in data/raw/*_sym; do
-    name=$(basename "$sym" _sym)
-    python3 -m src.preprocessing.align_labels "$sym" "data/labels/${name}_labels.json"
+# Must be ELF executable (NOT "pie executable" for reliable address matching)
+file data/stripped/pkg_binary_O2_stripped
+# Expected: ELF 64-bit LSB executable, x86-64, ...
+
+# Must have debug symbols in raw version
+nm --defined-only data/raw/pkg_binary_O2_sym | grep ' [tT] ' | wc -l
+# Expected: >0 functions
+```
+
+### 4. Extract labels
+
+```bash
+for f in data/raw/pkg_*_sym; do
+    name=$(basename "$f" _sym)
+    nm --defined-only "$f" | awk '$2 ~ /[tT]/ {printf "{\"0x%s\": \"%s\"}\n", $1, $3}' | python3 -c "
+import sys, json
+binary = '$name'
+labels = {}
+for line in sys.stdin:
+    try: d = json.loads(line.strip()); labels.update(d)
+    except: pass
+# IMPORTANT: functions must be name->addr format
+name_to_addr = {v: k for k, v in labels.items()}
+output = {
+    'binary': binary,
+    'num_functions': len(labels),
+    'functions': name_to_addr,
+    'addr_to_name': labels,
+    'name_to_addr': name_to_addr
+}
+with open('data/labels/${name}_labels.json', 'w') as f:
+    json.dump(output, f, indent=2)
+print(f'{len(labels)} labels')
+"
 done
+```
 
-# Step 3.2: Lift with BAP only
-for stripped in data/stripped/*_stripped; do
-    name=$(basename "$stripped" _stripped)
-    bap "$stripped" --dump=bir:"data/bir/${name}.bir"
+**Critical:** The `functions` field must be `{name: addr}` format, NOT `{addr: name}`. The eval script reads `functions` as `name → addr`.
+
+### 5. BAP lift
+
+```bash
+for f in data/stripped/pkg_*_stripped; do
+    name=$(basename "$f" _stripped)
+    bir="data/bir/${name}.bir"
+    [ -f "$bir" ] && continue  # Skip existing
+    echo -n "$name... "
+    timeout 600 bap "$f" --dump=bir:"$bir" 2>/dev/null && echo "OK" || \
+    timeout 600 bap "$f" --no-byteweight --dump=bir:"$bir" 2>/dev/null && echo "OK (fallback)" || \
+    echo "FAILED"
 done
+```
 
-# Step 3.3: Parse BAP-IR into graphs
-python3 -m src.preprocessing.parse_bap --input-dir data/bir/ --output-dir data/graphs/
+### 6. Parse graphs + extract external calls
 
-# Step 3.4: Extract external calls
-python3 -m src.preprocessing.extract_external --bir-dir data/bir/ --output-dir data/external_calls/
+```bash
+for bir in data/bir/pkg_*.bir; do
+    name=$(basename "$bir" .bir)
+    # Skip if graphs already exist
+    [ -f "data/graphs/${name}_sub_0.json" ] && continue
+    python3 -m src.preprocessing.parse_bap --bir "$bir" --binary-name "$name" --output-dir data/graphs
+    python3 -m src.preprocessing.extract_external --bir "$bir" --binary-name "$name" --output-dir data/external_calls
+done
+```
 
-# Step 3.5: Match addresses
-python3 -m src.preprocessing.build_dataset --build-index \
-    --labels-dir data/labels/ --graphs-dir data/graphs/ \
-    --output data/match_index.json
+### 7. Update match_index (incremental)
 
-# Step 3.7: Build external vocab
-python3 -m src.preprocessing.extract_external --build-vocab \
-    --input-dir data/external_calls/ \
-    --output data/external_calls/external_vocab.json
+```bash
+bash scripts/expand_bap_pipeline.sh
+# This runs: labels → BAP → parse → ext calls → incremental match
+# Only processes NEW binaries (skips existing)
+```
+
+Or run matching standalone:
+```bash
+python3 -c "
+import json, glob, os
+
+with open('data/match_index.json') as f:
+    mi = json.load(f)
+existing = set(mi.keys())
+
+# Load labels
+labels_by_binary = {}
+for lf in glob.glob('data/labels/*_labels.json'):
+    with open(lf) as f:
+        d = json.load(f)
+    binary = d.get('binary', '')
+    atn = d.get('addr_to_name', {})
+    int_to_name = {}
+    for addr_str, name in atn.items():
+        try: int_to_name[int(addr_str, 16)] = name
+        except: pass
+    if int_to_name:
+        labels_by_binary[binary] = int_to_name
+
+# Match new graphs
+new = 0
+for gf in glob.glob('data/graphs/*.json'):
+    if gf in existing: continue
+    with open(gf) as f:
+        g = json.load(f)
+    binary = g.get('binary', '')
+    try: addr = int(g.get('address', ''), 16)
+    except: continue
+    name = labels_by_binary.get(binary, {}).get(addr)
+    if name:
+        mi[gf] = {'binary': binary, 'address': g['address'],
+                   'address_int': addr, 'bap_name': g.get('function_name',''),
+                   'real_name': name}
+        new += 1
+
+with open('data/match_index.json', 'w') as f:
+    json.dump(mi, f, indent=2)
+print(f'New: {new}, Total: {len(mi)}')
+"
+```
+
+### 8. Rebuild vocabularies
+
+```bash
+# Votes (name tokenizer)
+python3 -m src.preprocessing.build_votes --match-index data/match_index.json \
+    --output data/votes_vocab.json --min-count 2
+
+# External call vocabulary
+python3 -c "
+import json, glob
+all_ext = set()
+for f in glob.glob('data/external_calls/*_external.json'):
+    with open(f) as fp:
+        d = json.load(fp)
+    for func in d.get('functions', []):
+        for call in func.get('external_calls', []):
+            name = call.get('name', '')
+            if name: all_ext.add(name)
+vocab = {'<NO_EXT>': 0}
+for name in sorted(all_ext):
+    vocab[name] = len(vocab)
+with open('data/external_calls/external_vocab.json', 'w') as f:
+    json.dump({'vocab_size': len(vocab), 'vocabulary': vocab}, f, indent=2)
+print(f'External vocab: {len(vocab)} tokens')
+"
 ```
 
 ---
 
-## 5. Data Directory Structure
+## Syncing to Wulver
+
+After preprocessing locally, sync data to Wulver for training/eval:
+
+### Quick code sync (excludes data/)
+```bash
+bash scripts/wulver_sync.sh
+```
+
+### Manual data sync
+```bash
+REMOTE="wulver:/course/2026/spring/cs/785/hz79/adp232/cs785"
+
+# Essential files (always sync these)
+rsync -avz data/match_index.json "$REMOTE/data/"
+rsync -avz data/votes_vocab.json "$REMOTE/data/"
+rsync -avz data/external_calls/external_vocab.json "$REMOTE/data/external_calls/"
+rsync -avz data/split_assignments.json "$REMOTE/data/"
+
+# New graphs (for new packages only)
+rsync -az data/graphs/newpkg_*.json "$REMOTE/data/graphs/"
+
+# New labels
+rsync -az data/labels/newpkg_*_labels.json "$REMOTE/data/labels/"
+
+# New external calls
+rsync -az data/external_calls/newpkg_*.json "$REMOTE/data/external_calls/"
+```
+
+### SSH requirement
+You must have an active SSH connection to Wulver first:
+```bash
+ssh wulver   # Authenticates with Duo 2FA, persists 24h via multiplexing
+```
+
+---
+
+## Wulver HPC Guide
+
+### Access
+- **Host:** wulver.njit.edu (or use SSH config alias `wulver`)
+- **Account:** `hz79` (research account — full A100-80GB GPU access)
+- **Project dir:** `/course/2026/spring/cs/785/hz79/adp232/cs785`
+- **Python env:** `/course/2026/spring/cs/785/hz79/adp232/cs785-env`
+
+### Submitting a training job
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=cs785-train
+#SBATCH --account=hz79
+#SBATCH --partition=gpu
+#SBATCH --qos=standard
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=24:00:00
+#SBATCH --output=slurm_logs/cs785-train.%j.out
+
+module load bright
+module load python3
+source /course/2026/spring/cs/785/hz79/adp232/cs785-env/bin/activate
+cd /course/2026/spring/cs/785/hz79/adp232/cs785
+
+python3 -m src.training.train \
+    --config configs/optimized_large.yaml \
+    --seed 42 \
+    --batch-size 256 \
+    --amp \
+    --num-workers 4
+```
+
+### Monitoring jobs
+```bash
+squeue -u adp232                    # List running jobs
+sacct -j JOBID --format=State,Elapsed  # Check completed job
+tail -f slurm_logs/cs785-train.JOBID.out  # Watch output
+seff JOBID                           # Resource usage after completion
+```
+
+### Job naming convention
+```
+cs785-train          — model training
+cs785-train-cl       — contrastive learning fine-tuning
+cs785-eval-test      — test evaluation
+cs785-eval-xproj     — cross-project evaluation
+cs785-eval-symgen    — SYMGEN baseline
+cs785-prep-symgen    — Ghidra decompilation for SYMGEN
+```
+
+---
+
+## Data Directory Structure
 
 ```
 data/
-├── raw/                         # Debug binaries with symbols
+├── raw/                         # Debug binaries with symbols (LOCAL ONLY)
 │   └── {pkg}_{bin}_O{level}_sym
-│
-├── stripped/                    # Stripped binaries (input to BAP)
+├── stripped/                    # Stripped binaries (LOCAL ONLY)
 │   └── {pkg}_{bin}_O{level}_stripped
-│
-├── bir/                         # BAP Intermediate Representation
+├── debug/                       # Copy of debug binaries (LOCAL ONLY)
+│   └── {pkg}_{bin}_O{level}
+├── bir/                         # BAP-IR files (LOCAL ONLY, not on Wulver)
 │   └── {pkg}_{bin}_O{level}.bir
-│
-├── graphs/                      # Per-function CFG graphs (JSON)
-│   └── {pkg}_{bin}_O{level}_{func_name}.json
-│   # ~241K files, ~14GB total
-│
-├── labels/                      # Ground truth from debug symbols
+├── graphs/                      # Per-function CFG graphs (SYNCED TO WULVER)
+│   └── {pkg}_{bin}_O{level}_sub_{addr}.json
+├── labels/                      # Ground truth labels (SYNCED TO WULVER)
 │   └── {pkg}_{bin}_O{level}_labels.json
-│
-├── external_calls/              # External function calls per binary
+├── external_calls/              # External calls (SYNCED TO WULVER)
 │   ├── {pkg}_{bin}_O{level}_external.json
-│   └── external_vocab.json      # Global ext call vocabulary
-│
-├── bpe_model/                   # BPE tokenizer (legacy, Votes used now)
-│   ├── bpe.model
-│   └── bpe.vocab
-│
-├── match_index.json             # CENTRAL: maps graph files -> ground truth names
-├── split_assignments.json       # Train/val/test binary assignments
-└── votes_vocab.json             # Votes sub-token vocabulary (current tokenizer)
+│   └── external_vocab.json
+├── match_index.json             # Central mapping (SYNCED TO WULVER)
+├── split_assignments.json       # Train/val/test splits (SYNCED TO WULVER)
+└── votes_vocab.json             # Name tokenizer vocab (SYNCED TO WULVER)
 ```
 
 ---
 
-## 6. Key File Formats
+## Label File Format (CRITICAL)
 
-### match_index.json (the central data source)
-
-This is the single most important file. It maps each graph JSON to its ground truth label:
+The eval script expects this exact format:
 
 ```json
 {
-  "data/graphs/bash_bash_O0_sub_31d09.json": {
-    "binary": "bash_bash_O0",
-    "address": "0x31d09",
-    "address_int": 204041,
-    "bap_name": "sub_31d09",
-    "real_name": "main"
-  },
-  ...
-}
-```
-
-### Graph JSON (per-function CFG)
-
-```json
-{
-  "binary": "coreutils_ls_O2",
-  "function_name": "sub_4a30",
-  "address": "0x00004a30",
-  "blocks": [
-    {
-      "id": 0,
-      "label": "00004a30",
-      "tokens": ["ARG_SETUP", "STACK_STORE_64", "CALL_malloc", "RETVAL"],
-      "num_tokens": 4,
-      "has_external_call": true,
-      "external_call_name": "malloc"
-    },
-    {
-      "id": 1,
-      "label": "00004a58",
-      "tokens": ["MEM_READ_64", "COMPARE", "COND_BRANCH_ZF"],
-      "num_tokens": 3
-    }
-  ],
-  "edges": [[0, 1], [1, 2], [1, 3]],
-  "num_blocks": 4,
-  "num_edges": 3,
-  "internal_callees": ["sub_3f20", "sub_5100"]
-}
-```
-
-### Labels JSON (per-binary ground truth)
-
-```json
-{
-  "binary": "coreutils_ls_O2",
+  "binary": "pkg_bin_O2",
   "num_functions": 347,
   "functions": {
-    "main": "0x0000000000005c40",
-    "usage": "0x0000000000004a30",
-    ...
+    "main": "0x5c40",
+    "usage": "0x4a30"
   },
   "addr_to_name": {
     "0x0000000000005c40": "main",
-    "0x0000000000004a30": "usage",
-    ...
+    "0x0000000000004a30": "usage"
+  },
+  "name_to_addr": {
+    "main": "0x5c40",
+    "usage": "0x4a30"
   }
 }
 ```
 
-### External calls JSON (per-binary)
-
-```json
-{
-  "binary": "coreutils_ls_O2",
-  "functions": [
-    {
-      "function_name": "sub_4a30",
-      "external_calls": [
-        {"name": "malloc", "call_order": 0},
-        {"name": "fprintf", "call_order": 1}
-      ],
-      "num_external_calls": 2
-    }
-  ]
-}
-```
+**The `functions` field MUST be `name → addr` (NOT `addr → name`).** The eval's `load_ground_truth()` iterates `functions.items()` as `(name, addr)` pairs.
 
 ---
 
-## 7. How Each Stage Works
+## Critical Rules
 
-### Stage 3.1: Label Extraction
-
-Uses `nm --defined-only -n` on debug binaries. Filters out:
-- Libc internals (`__libc_*`, `__cxa_*`)
-- Runtime stubs (`_start`, `frame_dummy`, `register_tm_clones`)
-- PLT/GOT entries (`.plt`, `.init`, `.fini`)
-- Stack protection (`__stack_chk_fail`)
-
-### Stage 3.2: BAP Lifting
-
-BAP translates x86-64 machine code to BAP-IR (BIR), a human-readable intermediate representation:
-
-```
-0000168e:                              # block label (hex address)
-0000178d: #12582911 := RSP             # register assignment
-00001791: RSP := RSP - 8               # stack pointer update
-000017a1: call @malloc:external        # external function call
-000017fe: return #12582905             # function return
-```
-
-BAP names functions as `sub_XXXX` (hex address). This is why address matching (step 3.5) is needed.
-
-### Stage 3.3: Instruction-Type Tokenization (V3)
-
-The key innovation. Raw BAP-IR instructions are classified into ~1,510 semantic types:
-
-| Category | Examples | What it captures |
-|----------|----------|-----------------|
-| Calls | `CALL_malloc`, `CALL_INTERNAL`, `CALL_INDIRECT` | Function call behavior |
-| Memory | `MEM_READ_32`, `MEM_WRITE_ARG_64` | Memory access patterns |
-| Stack | `STACK_LOAD_64`, `STACK_STORE_32` | Stack frame operations |
-| Flags | `FLAG_CF`, `FLAG_ZF`, `COND_BRANCH_ZF` | Conditional logic |
-| Registers | `ARG_SETUP`, `RETVAL`, `ARG_LOAD_ADDR` | Calling convention |
-| Arithmetic | `ARITH_ADD`, `ARITH_SHIFT`, `ARITH_XOR` | Computation type |
-| Constants | `ASSIGN_ZERO`, `ASSIGN_POW2`, `ASSIGN_ADDR` | Immediate values |
-| Control | `BRANCH`, `RETURN`, `COMPARE` | Control flow |
-
-This reduces 32K+ raw BAP tokens to ~1,510 types -- a +1,750% F1 improvement over raw tokens.
-
-Implementation: `src/preprocessing/parse_bap.py` function `classify_instruction()`.
-
-### Stage 3.4: External Call Extraction
-
-Identifies external/library calls from BAP-IR patterns:
-- Explicit: `call @malloc:external`
-- Implicit: matches against 56 known library functions
-
-### Stage 3.5: Address Matching
-
-The trickiest step. Aligns two address formats:
-- **Labels (nm):** `0x0000000000031d09` (16-digit padded hex)
-- **BAP graphs:** `sub_31d09` stored as `0x31d09` (variable length)
-
-Both are converted to integer addresses for matching. Unmatched functions are discarded.
-
----
-
-## 8. Common Tasks
-
-### Task: Add a new GNU package to the dataset
-
-```bash
-# 1. Edit configs/packages.conf -- add the package line
-# 2. Compile
-bash scripts/02_compile_dataset.sh
-# 3. Preprocess
-bash scripts/03_preprocess.sh
-# 4. Verify
-python3 -c "
-import json
-with open('data/match_index.json') as f:
-    idx = json.load(f)
-pkg_funcs = {k:v for k,v in idx.items() if 'newpkg' in k}
-print(f'Matched {len(pkg_funcs)} functions from newpkg')
-"
-```
-
-### Task: Check data quality for a specific binary
-
-```bash
-# How many functions were extracted by nm?
-python3 -c "
-import json
-with open('data/labels/coreutils_ls_O2_labels.json') as f:
-    labels = json.load(f)
-print(f'Functions: {labels[\"num_functions\"]}')
-"
-
-# How many graphs were created?
-ls data/graphs/coreutils_ls_O2_*.json | wc -l
-
-# How many were matched?
-python3 -c "
-import json
-with open('data/match_index.json') as f:
-    idx = json.load(f)
-matched = [k for k in idx if 'coreutils_ls_O2' in k]
-print(f'Matched: {len(matched)}')
-"
-```
-
-### Task: Inspect a specific function's graph
-
-```bash
-python3 -c "
-import json
-with open('data/graphs/coreutils_ls_O2_sub_4a30.json') as f:
-    g = json.load(f)
-print(f'Blocks: {g[\"num_blocks\"]}, Edges: {g[\"num_edges\"]}')
-for b in g['blocks'][:3]:
-    print(f'  Block {b[\"id\"]}: {b[\"tokens\"][:5]}...')
-"
-```
-
-### Task: Re-run BAP on a single binary
-
-```bash
-bap data/stripped/coreutils_ls_O2_stripped --dump=bir:"data/bir/coreutils_ls_O2.bir"
-```
-
-### Task: Re-run graph parsing on a single .bir file
-
-```bash
-python3 -m src.preprocessing.parse_bap \
-    --input data/bir/coreutils_ls_O2.bir \
-    --output-dir data/graphs/
-```
-
-### Task: Check dataset split balance
-
-```bash
-python3 -c "
-import json
-with open('data/split_assignments.json') as f:
-    splits = json.load(f)
-for split, bins in splits.items():
-    print(f'{split}: {len(bins)} binaries')
-"
-```
-
----
-
-## 9. Debugging & Troubleshooting
-
-### BAP fails on a binary
-
-```bash
-# Try with --no-byteweight flag
-bap data/stripped/problematic_stripped --no-byteweight --dump=bir:"output.bir"
-
-# Check if the binary is valid ELF
-file data/stripped/problematic_stripped
-readelf -h data/stripped/problematic_stripped
-```
-
-Common BAP failures:
-- **Out of memory**: Large binaries (gdb, firefox). Try increasing ulimit.
-- **Unsupported instructions**: Some SSE/AVX may not lift. BAP skips them.
-- **Non-ELF binaries**: BAP only supports ELF. Windows PE requires cross-compilation pipeline.
-
-### Address matching failures (low match rate)
-
-```bash
-# Check a specific binary
-python3 -c "
-import json
-with open('data/labels/pkg_bin_O2_labels.json') as f:
-    labels = json.load(f)
-
-import glob
-graphs = glob.glob('data/graphs/pkg_bin_O2_*.json')
-print(f'Labels: {labels[\"num_functions\"]}, Graphs: {len(graphs)}')
-
-# Check address format
-sample_label_addr = list(labels['addr_to_name'].keys())[0]
-with open(graphs[0]) as f:
-    g = json.load(f)
-sample_graph_addr = g['address']
-print(f'Label addr format: {sample_label_addr}')
-print(f'Graph addr format: {sample_graph_addr}')
-"
-```
-
-Common match issues:
-- **Leading zeros**: nm gives 16-digit hex, BAP gives variable length
-- **Address offset**: Some compilers add offsets. Check with `readelf -S` for .text section base address
-- **O0 indirect jump wrappers**: BAP lifts `endbr64; jmp addr+4` as separate functions, creating tiny 2-block wrapper stubs. These have wrong addresses. `build_dataset.py` resolves them for training.
-
-### Tokenization produces unexpected tokens
-
-```bash
-# Test tokenization on a specific BAP-IR line
-python3 -c "
-from src.preprocessing.parse_bap import classify_instruction
-result = classify_instruction('00001791: RSP := RSP - 8')
-print(result)  # Should print something like 'STACK_OP'
-"
-```
-
----
-
-## 10. Critical Rules
-
-1. **NEVER overwrite `data/external_calls/external_vocab.json` during inference/evaluation.** The vocab is saved inside the model checkpoint. Only regenerate during preprocessing.
-
-2. **Use deterministic sort `(-count, name)` for token vocab building.** Non-deterministic sort caused 1,232 token ID mismatches (bug found 2026-03-23). Always sort by count descending, then name ascending.
-
-3. **`data/split_assignments.json` is the source of truth for splits.** New binaries default to train. Do not randomly reassign existing binaries.
-
-4. **Do not modify `match_index.json` by hand.** Always regenerate via the pipeline.
-
-5. **BAP lifting is the bottleneck** (~1-4 hours for the full dataset). Plan accordingly and avoid unnecessary re-runs.
-
-6. **O0 binaries have the ENDBR64 indirect jump wrapper problem.** ~96% of O0 functions from BAP are tiny wrapper stubs (compiler-inserted `endbr64; jmp target` sequences). `build_dataset.py` resolves these by following the wrapper to its real callee. If you see O0 functions with only 1-2 blocks, this is expected before resolution.
-
-7. **Keep packages.conf entries stable.** Changing a package name or binary list invalidates all downstream data for that package.
-
-8. **Large packages need careful handling.** sqlite3 (10K+ functions), binutils (multiple large binaries), and gdb can dominate the dataset. Consider per-package function caps or weighted sampling.
+1. **BAP is LOCAL ONLY.** BAP is not installed on Wulver. All BAP lifting must be done locally.
+2. **Compile with `-no-pie`** to avoid address mismatch between nm and BAP.
+3. **Label `functions` must be `name → addr`.** The eval script breaks otherwise.
+4. **Use deterministic sort `(-count, name)` for vocab building.** Non-deterministic sort caused 1,232 token mismatches.
+5. **Cross-project packages (tengine, angie, nginx118, recutils) must NOT be in training.**
+6. **`match_index.json` is regenerated, not hand-edited.**
+7. **NEVER overwrite `external_vocab.json` during inference.** The vocab is saved in checkpoints.
+8. **Coordinate with Ananta before changing `match_index.json` or `split_assignments.json`** — training depends on these.
 
 ---
 
 ## Quick Reference
 
 ```bash
-# Full pipeline from scratch
+# Full local pipeline
 source ~/cs785-project/activate.sh
-bash scripts/02_compile_dataset.sh
-bash scripts/03_preprocess.sh
+bash scripts/02_compile_dataset.sh       # Compile
+bash scripts/03_preprocess.sh             # Full preprocess
+# OR incrementally:
+bash scripts/expand_bap_pipeline.sh       # Process only new binaries
 
-# Check dataset stats
+# Check dataset
 python3 -c "
 import json
 with open('data/match_index.json') as f:
     idx = json.load(f)
-print(f'Total matched functions: {len(idx)}')
-
-# Count per package
+print(f'Total: {len(idx)} functions')
 from collections import Counter
-pkgs = Counter()
-for v in idx.values():
-    pkg = v['binary'].rsplit('_', 1)[0].split('_')[0]
-    pkgs[pkg] += 1
-for pkg, count in pkgs.most_common(10):
-    print(f'  {pkg}: {count}')
+pkgs = Counter(v['binary'].split('_')[0] for v in idx.values())
+for p, c in pkgs.most_common(10):
+    print(f'  {p}: {c}')
 "
 
-# Train the model (after preprocessing)
-python3 -m src.training.train --config configs/optimized.yaml --seed 42
+# Sync to Wulver
+bash scripts/wulver_sync.sh
+rsync -avz data/match_index.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/
+rsync -avz data/votes_vocab.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/
+rsync -az data/graphs/newpkg_*.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/graphs/
+rsync -az data/labels/newpkg_*_labels.json wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/data/labels/
 ```
 
 ---
 
-## Files You'll Work With Most
+## Key Files
 
-| File | Purpose |
-|------|---------|
-| `configs/packages.conf` | Package list for compilation |
-| `scripts/02_compile_dataset.sh` | Compilation pipeline |
-| `scripts/03_preprocess.sh` | Full preprocessing orchestration |
-| `src/preprocessing/parse_bap.py` | BAP-IR parser + V3 tokenization |
-| `src/preprocessing/extract_external.py` | External call extractor |
-| `src/preprocessing/align_labels.py` | Ground truth label extraction |
-| `src/preprocessing/build_dataset.py` | Dataset loader (PyTorch) |
-| `src/preprocessing/build_votes.py` | Votes name tokenizer |
-| `data/match_index.json` | Central: graph -> label mapping |
-| `data/split_assignments.json` | Train/val/test splits |
+| File | Owner | Purpose |
+|------|-------|---------|
+| `configs/packages.conf` | Robert | Package list for compilation |
+| `scripts/02_compile_dataset.sh` | Robert | Compilation pipeline |
+| `scripts/03_preprocess.sh` | Robert | Full preprocessing |
+| `scripts/expand_bap_pipeline.sh` | Robert | Incremental preprocessing for new binaries |
+| `src/preprocessing/parse_bap.py` | Shared | BAP-IR parser + V3 tokenization |
+| `src/preprocessing/extract_external.py` | Shared | External call extractor |
+| `src/preprocessing/build_votes.py` | Shared | Votes name tokenizer |
+| `src/preprocessing/build_dataset.py` | Ananta | Dataset loader (PyTorch) |
+| `data/match_index.json` | Shared | Central graph→label mapping |
+| `data/split_assignments.json` | Shared | Train/val/test splits |
+| `configs/optimized_large.yaml` | Ananta | Model config (25M+ params) |
+| `src/training/train.py` | Ananta | Training loop |
+| `scripts/eval_cross_project.py` | Ananta | Cross-project evaluation |
+| `scripts/wulver_sync.sh` | Shared | Code sync to Wulver |
