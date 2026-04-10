@@ -1,0 +1,20 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+    node distance=0.4cm and 0.5cm,
+    box/.style={rectangle, draw, rounded corners=2pt, minimum height=0.65cm, minimum width=1.5cm, align=center, font=\small},
+    phase/.style={rectangle, draw, rounded corners=4pt, thick, dashed, inner sep=6pt},
+    stage/.style={box, fill=blue!12},
+    context/.style={box, fill=orange!15},
+    gate/.style={box, fill=green!12, minimum width=1.1cm},
+    output/.style={box, fill=red!10},
+    input/.style={box, fill=gray!15},
+    arr/.style={-{Stealth[length=2.5mm]}, thick},
+    bypass/.style={-{Stealth[length=2.5mm]}, thick, dashed, gray},
+    lbl/.style={font=\scriptsize\itshape, text=gray},
+]
+$(sed -n '/% === Phase 1/,/end{tikzpicture}/p' paper_workshop.tex | head -n -1)
+\end{tikzpicture}
+\end{document}
