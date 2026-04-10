@@ -1,6 +1,6 @@
 # Data Collection & Preprocessing Contributor Guide
 
-**For:** Robert Blacha (dataset compilation, BAP extraction, data preprocessing)
+**For:** Preprocessing Contributor (dataset compilation, BAP extraction, data preprocessing)
 **Project:** CS785 Binary Function Name Recovery
 **Last updated:** 2026-04-09
 
