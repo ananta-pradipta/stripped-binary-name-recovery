@@ -108,7 +108,7 @@ def classify_instruction(raw_line: str) -> List[str]:
     ext_match = CALL_EXT_RE.search(line)
     if ext_match:
         call_name = ext_match.group(1)
-        if not call_name.startswith('sub_'):
+        if not call_name.startswith('sub_') and hextester(call_name.split('sub_')):
             return [f'CALL_{call_name}']
         else:
             # Count arg setup registers used before this call
@@ -217,16 +217,25 @@ SKIP_PATTERNS = [
 SKIP_RE = [re.compile(p) for p in SKIP_PATTERNS]
 
 
+def hextester(s):
+    if len(s) < 2:
+        return False
+    try:
+        int(s[1], 16)
+        return True
+    except:
+        return False
+
 def should_skip_function(name):
     if not name:
         return True
-    if name.startswith('sub_'):
+    if name.startswith('sub_') and hextester(name.split('sub_')):
         return False
     return any(r.search(name) for r in SKIP_RE)
 
 
 def get_function_address(func_name, line_hex):
-    if func_name.startswith('sub_'):
+    if func_name.startswith('sub_') and hextester(func_name.split('sub_')):
         return '0x' + func_name[4:]
     return '0x' + line_hex
 
@@ -286,7 +295,7 @@ def parse_bir_file(bir_path: str) -> Dict[str, dict]:
                     resolved_edges.append(edge)
 
             address = get_function_address(current_func_name, current_func)
-            if not current_func_name.startswith('sub_') and current_first_block_hex:
+            if not current_func_name.startswith('sub_') and hextester(current_func_name.split('sub_')) and current_first_block_hex:
                 address = '0x' + current_first_block_hex
 
             functions[current_func_name] = {
@@ -351,7 +360,7 @@ def parse_bir_file(bir_path: str) -> Dict[str, dict]:
                 ext_match = CALL_EXT_RE.search(instr_text)
                 if ext_match:
                     call_name = ext_match.group(1)
-                    if not call_name.startswith('sub_'):
+                    if not call_name.startswith('sub_') and hextester(call_name.split('sub_')):
                         current_ext_call = call_name
 
                 # Track internal callees
