@@ -217,17 +217,44 @@ SKIP_PATTERNS = [
 SKIP_RE = [re.compile(p) for p in SKIP_PATTERNS]
 
 
+def _is_bap_placeholder(name):
+    """
+    True iff `name` is a BAP-generated placeholder of the form `sub_HEXADDR`
+    (e.g. `sub_4a30`), NOT a user-defined function that happens to begin
+    with `sub_` (e.g. `sub_append_string`, `sub_byte_reverse`).
+
+    Reported by Robert: real functions named `sub_*` were being mangled
+    because the parser assumed any `sub_`-prefixed name was a BAP placeholder
+    and tried to parse the suffix as a hex address, producing garbage like
+    `0xappend_string`.
+    """
+    if not name or not name.startswith('sub_'):
+        return False
+    suffix = name[4:]
+    if not suffix:
+        return False
+    try:
+        int(suffix, 16)
+        return True
+    except ValueError:
+        return False
+
+
 def should_skip_function(name):
     if not name:
         return True
-    if name.startswith('sub_'):
-        return False
+    if _is_bap_placeholder(name):
+        return False  # BAP placeholder — keep it, address will be parsed from suffix
+    # User-defined function (including user-defined `sub_*`): skip iff it
+    # matches a compiler-boilerplate pattern.
     return any(r.search(name) for r in SKIP_RE)
 
 
 def get_function_address(func_name, line_hex):
-    if func_name.startswith('sub_'):
+    if _is_bap_placeholder(func_name):
         return '0x' + func_name[4:]
+    # User-defined function — use the BAP line offset (same as the
+    # `not startswith('sub_')` override in save_current_function).
     return '0x' + line_hex
 
 
@@ -286,7 +313,10 @@ def parse_bir_file(bir_path: str) -> Dict[str, dict]:
                     resolved_edges.append(edge)
 
             address = get_function_address(current_func_name, current_func)
-            if not current_func_name.startswith('sub_') and current_first_block_hex:
+            # For non-placeholder functions (including user-defined `sub_*`
+            # names), prefer the first basic-block address, which is the
+            # actual entry point that nm reports.
+            if not _is_bap_placeholder(current_func_name) and current_first_block_hex:
                 address = '0x' + current_first_block_hex
 
             functions[current_func_name] = {
