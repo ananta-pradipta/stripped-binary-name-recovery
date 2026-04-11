@@ -39,6 +39,16 @@ DEMO_BINARIES = [
 ]
 
 
+def hextester(s):
+    """True iff s is a valid hex integer. Used to distinguish BAP placeholder
+    names (sub_HEX) from user-defined sub_* names (e.g. sub_append_string)."""
+    try:
+        int(s, 16)
+        return True
+    except ValueError:
+        return False
+
+
 def load_functions_from_graphs(bin_name, graphs_dirs):
     functions = {}
     for gdir in graphs_dirs:
@@ -140,7 +150,7 @@ def predict_binary(functions, ext_by_func, model, token_vocab, ext_vocab,
         sigs = []
         for name in target_names[:max_ctx]:
             graph = functions.get(name)
-            if graph is None and name.startswith('sub_'):
+            if graph is None and name.startswith('sub_') and hextester(name[4:]):
                 addr = '0x' + name[4:]
                 graph = func_by_addr.get(addr)
             if graph is None:

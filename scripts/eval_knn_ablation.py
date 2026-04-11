@@ -41,6 +41,16 @@ from src.evaluation.metrics import (
 # ---------------------------------------------------------------------------
 # Collate (same as eval_knn_hybrid.py)
 # ---------------------------------------------------------------------------
+def hextester(s):
+    """True iff s is a valid hex integer. Used to distinguish BAP placeholder
+    names (sub_HEX) from user-defined sub_* names (e.g. sub_append_string)."""
+    try:
+        int(s, 16)
+        return True
+    except ValueError:
+        return False
+
+
 def collate_fn(batch):
     """Custom collate for variable-length sequences."""
     keys = batch[0].keys()
@@ -444,7 +454,7 @@ def predict_binary_with_embeddings(functions, ext_by_func, model, token_vocab, e
         sigs = []
         for name in target_names[:max_ctx]:
             graph = functions.get(name)
-            if graph is None and name.startswith('sub_'):
+            if graph is None and name.startswith('sub_') and hextester(name[4:]):
                 addr = '0x' + name[4:]
                 graph = func_by_addr.get(addr)
             if graph is None:

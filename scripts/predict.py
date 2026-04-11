@@ -17,6 +17,17 @@ from src.models.function_namer import FunctionNamer
 from src.preprocessing.build_dataset import compute_block_features, compute_block_degrees, NUM_BLOCK_FEATURES
 
 
+def hextester(s):
+    """True iff s is a valid hex integer. Used to distinguish BAP placeholder
+    names (sub_HEX, e.g. sub_4a30) from user-defined sub_* names
+    (e.g. sub_append_string)."""
+    try:
+        int(s, 16)
+        return True
+    except ValueError:
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--binary', required=True, help='Stripped binary path')
@@ -118,7 +129,7 @@ def main():
         for callee_name in func_data.get('internal_callees', [])[:max_callees]:
             # Look up callee in all functions
             callee_graph = functions.get(callee_name)
-            if callee_graph is None and callee_name.startswith('sub_'):
+            if callee_graph is None and callee_name.startswith('sub_') and hextester(callee_name[4:]):
                 addr = '0x' + callee_name[4:]
                 callee_graph = func_by_addr.get(addr)
             if callee_graph is None:
@@ -150,7 +161,7 @@ def main():
         caller_sigs = []
         for caller_name in callers_of.get(func_name, [])[:max_callers]:
             caller_graph = functions.get(caller_name)
-            if caller_graph is None and caller_name.startswith('sub_'):
+            if caller_graph is None and caller_name.startswith('sub_') and hextester(caller_name[4:]):
                 addr = '0x' + caller_name[4:]
                 caller_graph = func_by_addr.get(addr)
             if caller_graph is None:

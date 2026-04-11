@@ -48,6 +48,16 @@ DEMO_PACKAGES = [
 ]
 
 
+def hextester(s):
+    """True iff s is a valid hex integer. Used to distinguish BAP placeholder
+    names (sub_HEX) from user-defined sub_* names (e.g. sub_append_string)."""
+    try:
+        int(s, 16)
+        return True
+    except ValueError:
+        return False
+
+
 def load_functions_from_graphs(bin_name, graphs_dirs):
     """Load all per-function graph JSONs for a binary."""
     functions = {}
@@ -161,7 +171,7 @@ def predict_binary(functions, ext_by_func, model, token_vocab, ext_vocab,
         callee_sigs = []
         for callee_name in func_data.get('internal_callees', [])[:max_callees]:
             callee_graph = functions.get(callee_name)
-            if callee_graph is None and callee_name.startswith('sub_'):
+            if callee_graph is None and callee_name.startswith('sub_') and hextester(callee_name[4:]):
                 addr = '0x' + callee_name[4:]
                 callee_graph = func_by_addr.get(addr)
             if callee_graph is None:
@@ -184,7 +194,7 @@ def predict_binary(functions, ext_by_func, model, token_vocab, ext_vocab,
         caller_sigs = []
         for caller_name in callers_of.get(func_name, [])[:max_callers]:
             caller_graph = functions.get(caller_name)
-            if caller_graph is None and caller_name.startswith('sub_'):
+            if caller_graph is None and caller_name.startswith('sub_') and hextester(caller_name[4:]):
                 addr = '0x' + caller_name[4:]
                 caller_graph = func_by_addr.get(addr)
             if caller_graph is None:

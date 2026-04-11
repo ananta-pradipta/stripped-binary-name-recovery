@@ -47,6 +47,16 @@ KNN_THRESHOLD = -0.02  # Forward hybrid: decoder when beam score > threshold, k-
 # Helpers
 # ═══════════════════════════════════════
 
+def hextester(s):
+    """True iff s is a valid hex integer. Used to distinguish BAP placeholder
+    names (sub_HEX) from user-defined sub_* names (e.g. sub_append_string)."""
+    try:
+        int(s, 16)
+        return True
+    except ValueError:
+        return False
+
+
 def collate_fn(batch):
     keys = batch[0].keys()
     result = {}
@@ -414,7 +424,7 @@ def evaluate_demo_with_embeddings(model, cfg, token_vocab, ext_vocab, sp, device
                 sigs = []
                 for name in names[:max_ctx]:
                     g = functions.get(name)
-                    if g is None and name.startswith('sub_'):
+                    if g is None and name.startswith('sub_') and hextester(name[4:]):
                         g = func_by_addr.get('0x' + name[4:])
                     if g is None:
                         sigs.append([0]*max_sig); continue
