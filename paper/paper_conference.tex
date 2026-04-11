@@ -975,6 +975,15 @@ The trend in binary analysis is toward ever-larger language models: SYMGEN~\cite
 
 We do not argue that \sysname{} is universally superior to LLM approaches; LLMs may excel at compositional naming and have access to broader world knowledge. However, for the specific task of cross-project function name recovery, a well-designed encoder with retrieval-based inference provides a strong, efficient alternative.
 
+\subsection{Structure-Aware vs.\ Source-Code LLM Paradigms}
+\label{sec:paradigms}
+
+The recent literature on binary function name recovery has bifurcated into two complementary paradigms. Large-scale \emph{source-code LLM} approaches~\cite{symgen,prorec,beyondclass} leverage textual and stylistic priors learned from source-code pretraining corpora: they map decompiled pseudo-code to names by exploiting patterns their billion-parameter backbones absorbed from GitHub-scale corpora. In contrast, \emph{structure-aware} approaches---including our work as well as BLens~\cite{blens}, XFL~\cite{xfl}, SymLM~\cite{symlm}, TYGR~\cite{tygr}, CALLEE~\cite{callee}, and CFG2VEC~\cite{cfg2vec}---directly encode binary-intrinsic features (control-flow graph structure, call graphs, instruction-level semantics, inter-procedural signatures) using small-to-medium models trained on binary representations rather than source text. Both paradigms have produced strong published results at top-tier venues in the 2022--2025 window; they are not competing claims for a single ``correct'' approach but complementary views of the problem.
+
+\sysname{} is deliberately in the structure-aware camp. Beyond the efficiency and deployability arguments already discussed, this design choice has a more subtle implication: a model that learns a $\text{CFG structure} \rightarrow \text{name}$ mapping is \emph{invariant} to shifts in how humans (or language models) verbalize that structure in source code. The control-flow graph of a hash-table insertion function is the same whether the source labels it \texttt{hash\_insert}, \texttt{ht\_put}, or \texttt{insertIntoTable}; only the label distribution shifts. Source-code LLM approaches that learn from textual patterns are, by construction, sensitive to the text distribution---if naming conventions drift, the model's learned text-to-name mapping drifts with them.
+
+This robustness-to-text-distribution-shift has an increasingly salient forward-looking dimension. AI-assisted coding tools (GitHub Copilot, Cursor, and similar LLM-driven assistants) have become mainstream in new software development, and there is growing informal evidence that their suggestions homogenize naming styles across codebases by aggregating over human conventions observed during pretraining. Over time, the textual distribution of function names in real-world code will likely become a mixture of human idioms and LLM-generated conventions, shifting away from the distribution that today's source-code LLMs were pretrained on. Structure-aware models that tie predictions to computational invariants (how the function behaves) rather than to surface lexical patterns (how it is written) should, in principle, degrade more gracefully under such shifts. We emphasize that this is a hypothesis, not a demonstrated result---empirical validation would require longitudinal studies of function naming in AI-assisted codebases, which we leave to future work. But it motivates continued investment in structure-aware approaches alongside the current LLM-based momentum in the field.
+
 % ============================================================================
 \section{Limitations}
 \label{sec:limitations}
@@ -1055,6 +1064,9 @@ Z.~Su, X.~Xu, Z.~Huang, K.~Zhang, and X.~Zhang, ``Source code foundation models 
 
 \bibitem{epitome}
 X.~Xu, S.~Feng, Y.~Ye, H.~Shen, Z.~Su, S.~Cheng, G.~Tao, Q.~Shi, Z.~Zhang, and X.~Zhang, ``Enhancing function name prediction using votes-based name tokenization and multi-task learning,'' in \emph{Proc.\ ACM FSE (PACMSE)}, 2024.
+
+\bibitem{cfg2vec}
+S.-Y.~Yu, Y.~G.~Achamyeleh, C.~Wang, A.~Kocheturov, P.~Eisen, and M.~A.~Al~Faruque, ``CFG2VEC: Hierarchical graph neural network for cross-architectural software reverse engineering,'' in \emph{Proc.\ IEEE/ACM ICSE SEIP}, 2023.
 
 \bibitem{beyondclass}
 L.~Jiang, X.~Jin, and Z.~Lin, ``Beyond classification: Inferring function names in stripped binaries via domain adapted LLMs,'' in \emph{Proc.\ NDSS}, 2025.
