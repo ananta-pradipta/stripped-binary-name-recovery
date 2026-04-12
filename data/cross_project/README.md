@@ -1,0 +1,57 @@
+# Cross-Project Evaluation Dataset
+
+Stripped x86-64 ELF binaries for cross-project evaluation. These packages are **completely absent from training data**.
+
+## Packages
+
+| Package | Description | Binaries | Opt Levels | GT Available |
+|---------|-------------|----------|------------|--------------|
+| tengine | Nginx fork (Alibaba) | 1 (nginx) | O0, O2 | Yes |
+| angie | Nginx fork (Russian) | 1 (angie) | O0, O1, O2, O3 | No (stripped only) |
+| recutils | GNU record utilities | 9 tools | O0, O1, O2, O3 | Yes |
+| nginx118 | Nginx 1.18 LTS | — | — | Missing locally |
+
+## Directory Structure
+
+```
+stripped/          # Stripped binaries (no symbols)
+  tengine_nginx_O0
+  tengine_nginx_O2
+  angie_angie_O0_stripped
+  angie_angie_O1_stripped
+  ...
+  recutils_csv2rec_O0_stripped
+  recutils_recsel_O3_stripped
+  ...
+
+ground_truth/      # Function address -> name mappings (from debug binaries via nm)
+  ground_truth.json
+```
+
+## Ground Truth Format
+
+`ground_truth.json` maps binary name -> metadata:
+
+```json
+{
+  "tengine_nginx_O0": {
+    "package": "tengine",
+    "binary": "nginx_O0",
+    "num_functions": 1753,
+    "functions": {
+      "0000000000403ac0": "ngx_cpuinfo",
+      "0000000000403b30": "ngx_os_init",
+      ...
+    }
+  }
+}
+```
+
+Total: 38 binaries with ground truth, 8,293 functions (tengine: 3,184, recutils: 5,109).
+
+## Notes
+
+- **angie**: Has stripped binaries but no debug binaries locally (no ground truth yet)
+- **nginx118**: Not compiled locally yet — needs to be added
+- Addresses are hex strings from `nm` (T/t symbols = text/code section)
+- For StarCoder comparison: disassemble stripped binaries, predict function names, compare against ground_truth.json
