@@ -7,7 +7,7 @@ Stripped x86-64 ELF binaries for cross-project evaluation. These packages are **
 | Package | Description | Binaries | Opt Levels | GT Available |
 |---------|-------------|----------|------------|--------------|
 | tengine | Nginx fork (Alibaba) | 1 (nginx) | O0, O2 | Yes |
-| angie | Nginx fork (Russian) | 1 (angie) | O0, O1, O2, O3 | No (stripped only) |
+| angie | Nginx fork (Russian) | 1 (angie) | O0, O1, O2, O3 | Yes |
 | recutils | GNU record utilities | 9 tools | O0, O1, O2, O3 | Yes |
 | nginx118 | Nginx 1.18 LTS | 1 (nginx118) | O0, O1, O2, O3 | Yes |
 
@@ -47,11 +47,10 @@ ground_truth/      # Function address -> name mappings (from debug binaries via 
 }
 ```
 
-Total: 42 binaries with ground truth, 13,158 functions (tengine: 3,184, recutils: 5,109, nginx118: 4,865).
+Total: 46 binaries with ground truth, 18,595 functions (tengine: 3,184, recutils: 5,109, nginx118: 4,865, angie: 5,437).
 
 ## Notes
 
-- **angie**: Has stripped binaries but no debug binaries available (no ground truth)
-- **nginx118**: Debug binaries recovered from SymLM dataset_generation; stripped via `strip -s` and ground truth extracted via `nm --defined-only` (T/t/W/w symbols).
+- **angie / nginx118**: Debug binaries recovered from the SymLM `dataset_generation/xproj_debug` directory; matched to existing stripped binaries by BuildID. Ground truth extracted via `nm --defined-only` (T/t/W/w symbols).
 - Addresses are hex strings from `nm` (T/t symbols = text/code section)
 - For StarCoder comparison: disassemble stripped binaries, predict function names, compare against ground_truth.json
