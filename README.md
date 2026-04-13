@@ -56,7 +56,6 @@ Stage 3b: k-NN Retrieval (alternative to decoder)
 | Innovation | Impact |
 |---|---|
 | Instruction-Type Tokenization (1,510 types) | +1,750% F1 over raw tokens |
-| Mean pooling over semantically typed tokens (attention pooling tested, no improvement) | Simple, effective token aggregation |
 | Inter-procedural context (ext calls + callee + caller) | +8.7% Val F1; ext-call paradox: ext calls alone hurt cross-project EM, callee/caller context required for disambiguation |
 | k-NN retrieval over encoder embeddings | +4.7pp cross-project EM over decoder |
 | Votes sub-token tokenizer (3-model voting) | 95% less OOV vs BPE |
@@ -215,13 +214,13 @@ The ablation below was run on the earlier 87K-function dataset with a 5-package 
 
 ### Cross-Project Results (4 unseen packages, 9,492 functions)
 
-| Package | N | EM | F1 |
-|---|---|---|---|
-| nginx118 | 3,470 | 53.1% | **0.813** |
-| tengine | 554 | 62.3% | **0.761** |
-| angie | 3,893 | 45.1% | **0.739** |
-| recutils | 1,575 | 28.6% | 0.357 |
-| **Overall** | **9,492** | **46.3%** | **0.704** |
+| Package | EM | F1 |
+|---|---|---|
+| nginx118 | 53.1% | **0.813** |
+| tengine | 62.3% | **0.761** |
+| angie | 45.1% | **0.739** |
+| recutils | 28.6% | 0.357 |
+| **Overall** | **46.3%** | **0.704** |
 
 Cross-project packages are held out entirely from training.
 
