@@ -2,26 +2,26 @@
 FuncR (ours) -- CROSS-PROJECT EVAL SUMMARY
 ======================================================================
 
-Predictions file : results/cross_project_predictions.json
-Configuration    : best_model.pt (25M contrastive) + k-NN retrieval
-                   k_retrieve=20, binary_sim_threshold=0.5
-                   Mode reported: P2_binfilter_only (binary-fingerprint
-                                  filtered 1-NN; no decoder, no rerank)
-Eval set         : 4-package cross-project held-out set
-                   tengine, angie, nginx118, recutils (O0/O1/O2/O3)
-Total functions  : 10,467
+REPORTED CONFIGURATION  (what the README headline uses)
+----------------------------------------------------------------------
+  Checkpoint        : checkpoints/best_model.pt  (25M contrastive)
+  Inference mode    : P2_binfilter_only  (binary-fingerprint filtered 1-NN)
+  k_retrieve        : 20
+  binary_sim_threshold : 0.5
+  Clean predictions : results/cross_project_predictions.json
+                       (10,467 entries; {pkg, true_name, predicted} only)
+
+Eval set           : 4 unseen packages (tengine, angie, nginx118, recutils)
+Total functions    : 10,467
 
 ----------------------------------------------------------------------
-OVERALL (by inference mode, for transparency)
+OVERALL (P2_binfilter_only -- reported)
 ----------------------------------------------------------------------
-  Mode                            F1       EM
-  baseline_top1               0.6727   54.55%
-  P1_rerank_only              0.5787   46.09%
-  P2_binfilter_only           0.7181   57.04%
-  P1+P2_both                  0.7007   54.75%
+  Sub-token F1       : 0.7181
+  Exact Match (top-1): 57.04%
 
 ----------------------------------------------------------------------
-PER-PACKAGE (P2_binfilter_only -- reported mode)
+PER-PACKAGE (P2_binfilter_only)
 ----------------------------------------------------------------------
   Package          N       F1       EM
   angie        3,893   0.8137   63.19%
@@ -29,15 +29,29 @@ PER-PACKAGE (P2_binfilter_only -- reported mode)
   recutils     2,550   0.3435   23.96%
   tengine        554   0.7385   66.79%
 
+======================================================================
+DIAGNOSTIC: ALL INFERENCE MODES
+======================================================================
+Full predictions for all four modes (baseline decoder, P1 rerank, P2, P1+P2)
+live in results/cross_project_predictions_all_modes.json for deep-dive
+analysis. The clean prediction file above only keeps the best (P2) mode.
+
+  Mode                            F1       EM  Description
+  -------------------------  -------  -------  --------------------------------------
+  baseline_top1               0.6727   54.55%  GRU decoder greedy top-1 (no k-NN)
+  P1_rerank_only              0.5787   46.09%  k-NN top-20 re-ranked by ext-call Jaccard
+  P2_binfilter_only           0.7181   57.04%  k-NN top-1, binary-fingerprint filtered  <-- reported
+  P1+P2_both                  0.7007   54.75%  Both P1 rerank and P2 filter applied
+
 ----------------------------------------------------------------------
 REPRODUCIBILITY
 ----------------------------------------------------------------------
-  Checkpoint      : checkpoints/best_model.pt (25M contrastive, val_f1 0.4978)
-  Eval script     : scripts/rag_xproj_rerank.py
-  Command         : python3 scripts/rag_xproj_rerank.py checkpoints/best_model.pt \
-                       --config configs/optimized_large.yaml \
-                       --text-dataset data/text_dataset_v2.json \
-                       --k-retrieve 20 --binary-sim-threshold 0.5 \
-                       --amp --samples-per-package 100000 \
-                       --save results/cross_project_predictions.json
-  Sweep slurm log : results/sweep_logs/knn_sweep2_914407.log (run 914407)
+  Command:
+    python3 scripts/rag_xproj_rerank.py checkpoints/best_model.pt \
+        --config configs/optimized_large.yaml \
+        --text-dataset data/text_dataset_v2.json \
+        --k-retrieve 20 --binary-sim-threshold 0.5 \
+        --amp --samples-per-package 100000 \
+        --save results/cross_project_predictions_all_modes.json
+
+  Sweep slurm log: results/sweep_logs/knn_sweep2_914407.log (job 914407)
