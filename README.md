@@ -234,7 +234,23 @@ Cross-project packages are held out entirely from training. Raw predictions arch
 | LLM Zero-Shot (StarCoder-3B) | - | 3B | 0.654 |
 | **FuncR (ours)** | - | **25M** | **0.710** |
 
-Our 25M from-scratch model beats SymGen+LoRA (34B) by **+0.011 F1** and the released SymGen checkpoint by **+0.260 F1**, at 1000× fewer parameters and without the source-code pretraining that risks LLM-contamination on open-source eval packages.
+Each row is the system's F1 on its own evaluation sample — BAP vs. Ghidra pipelines extract different subsets of ground-truth-named functions per binary, so the total function counts differ across systems (SymGen 15,983; FuncR 10,467; StarCoder 12,391).
+
+### Head-to-head with SymGen (matched 8,062 functions)
+
+For a strict apples-to-apples comparison against our strongest baseline (SymGen + LoRA), we restrict both systems to **the same function set**: for every `(package, ground-truth-name)` key that appears in both evaluation runs, we take `min(count_FuncR, count_SymGen)` predictions from each side. This removes the sample-size artifact without discarding information.
+
+**Matched subset: 8,062 functions** (3,428 unique `(package, name)` keys across angie / nginx118 / tengine / recutils).
+
+| Package | N | FuncR F1 | FuncR EM | SymGen F1 | SymGen EM | Δ F1 |
+|---|---|---|---|---|---|---|
+| nginx118 | 2,815 | **0.880** | 72.0% | 0.700 | 33.9% | **+0.181** |
+| angie | 3,159 | **0.812** | 62.6% | 0.693 | 31.8% | **+0.120** |
+| tengine | 554 | **0.812** | 70.8% | 0.770 | 51.8% | +0.042 |
+| recutils | 1,534 | 0.321 | 26.6% | **0.639** | 40.4% | −0.318 |
+| **Overall** | **8,062** | **0.742** | **59.6%** | 0.690 | 35.5% | **+0.052** |
+
+On the matched set, FuncR (25M, from scratch) leads SymGen + LoRA (34B) by **+0.052 F1** and **+24.1 pp EM**. Recutils is the only package where SymGen wins — consistent with CodeLlama-34B's source-code pretraining having already seen recutils on GitHub, an advantage not available to our BAP-IR-only model.
 
 ---
 
