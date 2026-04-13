@@ -223,7 +223,7 @@ The ablation below was run on the earlier 87K-function dataset with a 5-package 
 | recutils | 1,575 | 28.6% | 0.357 |
 | **Overall** | **9,492** | **46.3%** | **0.704** |
 
-Cross-project packages are held out entirely from training. Recutils drags the overall F1 down because its `rec_*` / `recutl_*` function names were never seen in training and share no sub-token vocabulary with the training distribution — exposing the model's pure-recognizer limitation.
+Cross-project packages are held out entirely from training.
 
 ### Comparison with Published Systems (same 4-pkg cross-project set)
 
@@ -232,6 +232,7 @@ Cross-project packages are held out entirely from training. Recutils drags the o
 | SYMGEN (released ckpt) | NDSS'25 | 34B (CodeLlama-34B + LoRA) | 0.450 |
 | SYMGEN + LoRA | NDSS'25 | 34B | 0.699 |
 | BLens (reported) | USENIX Sec'25 | ~200M | 0.46 |
+| LLM Zero-Shot (StarCoder-3B) | - | 3B | 0.654 |
 | **FuncR (ours)** | - | **25M** | **0.704** |
 
 Our 25M from-scratch model beats SymGen+LoRA (34B) by **+0.005 F1** and the released SymGen checkpoint by **+0.254 F1**, at 1000× fewer parameters and without the source-code pretraining that risks LLM-contamination on open-source eval packages.
