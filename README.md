@@ -14,7 +14,7 @@ We present a deep learning pipeline that recovers function names from stripped b
 
 **Key Results (300K training set, `best_model.pt`):**
 - **Test Set:** 70.8% Exact Match, 0.770 F1 (13,559 functions)
-- **Cross-Project:** 56.9% Exact Match, **0.710 F1** (10,467 functions from 4 unseen packages: tengine, angie, nginx118, recutils)
+- **Cross-Project:** 57.0% Exact Match, **0.718 F1** (10,467 functions from 4 unseen packages: tengine, angie, nginx118, recutils)
 - **25M parameters**, trained from scratch on BAP-IR (no source-code pretraining)
 
 ---
@@ -217,10 +217,10 @@ The ablation below was run on the earlier 87K-function dataset with a 5-package 
 | Package | EM | F1 |
 |---|---|---|
 | nginx118 | 72.9% | **0.883** |
-| tengine | 70.8% | **0.812** |
-| angie | 63.1% | **0.812** |
-| recutils | 22.5% | 0.297 |
-| **Overall** | **56.9%** | **0.710** |
+| tengine | 66.8% | 0.738 |
+| angie | 63.2% | **0.814** |
+| recutils | 24.0% | 0.343 |
+| **Overall** | **57.0%** | **0.718** |
 
 Cross-project packages are held out entirely from training. Raw predictions archived in `results/cross_project_predictions.json`.
 
@@ -229,12 +229,12 @@ Cross-project packages are held out entirely from training. Raw predictions arch
 | System | Venue | Params | Cross-Project F1 |
 |---|---|---|---|
 | SYMGEN (released ckpt) | NDSS'25 | 34B (CodeLlama-34B + LoRA) | 0.450 |
-| SYMGEN + LoRA | NDSS'25 | 34B | 0.699 |
+| SYMGEN + LoRA | NDSS'25 | 34B | 0.663 |
 | BLens (reported) | USENIX Sec'25 | ~200M | 0.46 |
 | LLM Zero-Shot (StarCoder-3B) | - | 3B | 0.654 |
-| **FuncR (ours)** | - | **25M** | **0.710** |
+| **FuncR (ours)** | - | **25M** | **0.718** |
 
-Each row is the system's F1 on its own evaluation sample — BAP vs. Ghidra pipelines extract different subsets of ground-truth-named functions per binary, so the total function counts differ across systems (SymGen 15,983; FuncR 10,467; StarCoder 12,391).
+Each row is the system's F1 on its own evaluation sample — BAP vs. Ghidra pipelines extract different subsets of ground-truth-named functions per binary, so the total function counts differ across systems (SymGen 15,983; FuncR 10,467; StarCoder 12,391). SymGen + LoRA here is fine-tuned on the full 300K training set; raw predictions archived under `baselines/symgen/`.
 
 ### Head-to-head with SymGen (matched 8,062 functions)
 
@@ -244,13 +244,13 @@ For a strict apples-to-apples comparison against our strongest baseline (SymGen 
 
 | Package | N | FuncR F1 | FuncR EM | SymGen F1 | SymGen EM | Δ F1 |
 |---|---|---|---|---|---|---|
-| nginx118 | 2,815 | **0.880** | 72.0% | 0.700 | 33.9% | **+0.181** |
-| angie | 3,159 | **0.812** | 62.6% | 0.693 | 31.8% | **+0.120** |
-| tengine | 554 | **0.812** | 70.8% | 0.770 | 51.8% | +0.042 |
-| recutils | 1,534 | 0.321 | 26.6% | **0.639** | 40.4% | −0.318 |
-| **Overall** | **8,062** | **0.742** | **59.6%** | 0.690 | 35.5% | **+0.052** |
+| nginx118 | 2,815 | **0.880** | 71.9% | 0.642 | 30.9% | **+0.238** |
+| angie | 3,159 | **0.814** | 62.6% | 0.643 | 29.7% | **+0.171** |
+| tengine | 554 | **0.739** | 66.8% | 0.701 | 45.8% | +0.038 |
+| recutils | 1,534 | 0.359 | 27.5% | **0.636** | 39.8% | −0.277 |
+| **Overall** | **8,062** | **0.745** | **59.5%** | 0.645 | 33.2% | **+0.100** |
 
-On the matched set, FuncR (25M, from scratch) leads SymGen + LoRA (34B) by **+0.052 F1** and **+24.1 pp EM**. Recutils is the only package where SymGen wins — consistent with CodeLlama-34B's source-code pretraining having already seen recutils on GitHub, an advantage not available to our BAP-IR-only model.
+On the matched set, FuncR (25M, from scratch) leads SymGen + LoRA (34B) by **+0.100 F1** and **+26.3 pp EM**. Recutils is the only package where SymGen wins — consistent with CodeLlama-34B's source-code pretraining having already seen recutils on GitHub, an advantage not available to our BAP-IR-only model.
 
 ---
 
