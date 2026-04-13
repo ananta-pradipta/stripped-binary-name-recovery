@@ -13,8 +13,8 @@
 We present a deep learning pipeline that recovers function names from stripped binaries. Our approach combines graph attention networks over control flow graphs with inter-procedural context (external calls, callee/caller signatures) via a cascaded gated fusion mechanism, and generates sub-token names using a GRU decoder with Votes tokenization.
 
 **Key Results (300K training set, `best_model.pt`):**
-- **Test Set:** 70.8% Exact Match, 0.770 F1 (13,559 functions, k-NN + P2 binary filter)
-- **Cross-Project:** 46.3% Exact Match, **0.704 F1** (9,492 functions from 4 unseen packages: tengine, angie, nginx118, recutils)
+- **Test Set:** 70.8% Exact Match, 0.770 F1 (13,559 functions)
+- **Cross-Project:** 56.9% Exact Match, **0.710 F1** (10,467 functions from 4 unseen packages: tengine, angie, nginx118, recutils)
 - **25M parameters**, trained from scratch on BAP-IR (no source-code pretraining)
 
 ---
@@ -212,17 +212,17 @@ The ablation below was run on the earlier 87K-function dataset with a 5-package 
 - Stage 3→4 (+Callee/Caller): cross-project EM +12.8pp — multi-context gated fusion is required to disambiguate similar library call patterns.
 - Stage 4→5 (+Pretrain+Scale): cross-project EM +15.9pp — SSL pretraining + capacity scaling gives the best cross-project transfer.
 
-### Cross-Project Results (4 unseen packages, 9,492 functions)
+### Cross-Project Results (4 unseen packages, 10,467 functions)
 
 | Package | EM | F1 |
 |---|---|---|
-| nginx118 | 53.1% | **0.813** |
-| tengine | 62.3% | **0.761** |
-| angie | 45.1% | **0.739** |
-| recutils | 28.6% | 0.357 |
-| **Overall** | **46.3%** | **0.704** |
+| nginx118 | 72.9% | **0.883** |
+| tengine | 70.8% | **0.812** |
+| angie | 63.1% | **0.812** |
+| recutils | 22.5% | 0.297 |
+| **Overall** | **56.9%** | **0.710** |
 
-Cross-project packages are held out entirely from training.
+Cross-project packages are held out entirely from training. Raw predictions archived in `results/cross_project_predictions.json`.
 
 ### Comparison with Published Systems (same 4-pkg cross-project set)
 
@@ -232,9 +232,9 @@ Cross-project packages are held out entirely from training.
 | SYMGEN + LoRA | NDSS'25 | 34B | 0.699 |
 | BLens (reported) | USENIX Sec'25 | ~200M | 0.46 |
 | LLM Zero-Shot (StarCoder-3B) | - | 3B | 0.654 |
-| **FuncR (ours)** | - | **25M** | **0.704** |
+| **FuncR (ours)** | - | **25M** | **0.710** |
 
-Our 25M from-scratch model beats SymGen+LoRA (34B) by **+0.005 F1** and the released SymGen checkpoint by **+0.254 F1**, at 1000× fewer parameters and without the source-code pretraining that risks LLM-contamination on open-source eval packages.
+Our 25M from-scratch model beats SymGen+LoRA (34B) by **+0.011 F1** and the released SymGen checkpoint by **+0.260 F1**, at 1000× fewer parameters and without the source-code pretraining that risks LLM-contamination on open-source eval packages.
 
 ---
 
