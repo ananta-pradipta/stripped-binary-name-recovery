@@ -1,0 +1,43 @@
+======================================================================
+FuncR (ours) -- CROSS-PROJECT EVAL SUMMARY
+======================================================================
+
+Predictions file : results/cross_project_predictions.json
+Configuration    : best_model.pt (25M contrastive) + k-NN retrieval
+                   k_retrieve=20, binary_sim_threshold=0.5
+                   Mode reported: P2_binfilter_only (binary-fingerprint
+                                  filtered 1-NN; no decoder, no rerank)
+Eval set         : 4-package cross-project held-out set
+                   tengine, angie, nginx118, recutils (O0/O1/O2/O3)
+Total functions  : 10,467
+
+----------------------------------------------------------------------
+OVERALL (by inference mode, for transparency)
+----------------------------------------------------------------------
+  Mode                            F1       EM
+  baseline_top1               0.6727   54.55%
+  P1_rerank_only              0.5787   46.09%
+  P2_binfilter_only           0.7181   57.04%
+  P1+P2_both                  0.7007   54.75%
+
+----------------------------------------------------------------------
+PER-PACKAGE (P2_binfilter_only -- reported mode)
+----------------------------------------------------------------------
+  Package          N       F1       EM
+  angie        3,893   0.8137   63.19%
+  nginx118     3,470   0.8828   72.88%
+  recutils     2,550   0.3435   23.96%
+  tengine        554   0.7385   66.79%
+
+----------------------------------------------------------------------
+REPRODUCIBILITY
+----------------------------------------------------------------------
+  Checkpoint      : checkpoints/best_model.pt (25M contrastive, val_f1 0.4978)
+  Eval script     : scripts/rag_xproj_rerank.py
+  Command         : python3 scripts/rag_xproj_rerank.py checkpoints/best_model.pt \
+                       --config configs/optimized_large.yaml \
+                       --text-dataset data/text_dataset_v2.json \
+                       --k-retrieve 20 --binary-sim-threshold 0.5 \
+                       --amp --samples-per-package 100000 \
+                       --save results/cross_project_predictions.json
+  Sweep slurm log : results/sweep_logs/knn_sweep2_914407.log (run 914407)
