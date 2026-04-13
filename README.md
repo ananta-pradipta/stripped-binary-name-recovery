@@ -236,7 +236,7 @@ Cross-project packages are held out entirely from training. Raw predictions arch
 
 Each row is the system's F1 on its own evaluation sample — BAP vs. Ghidra pipelines extract different subsets of ground-truth-named functions per binary, so the total function counts differ across systems (SymGen 15,983; FuncR 10,467; StarCoder 12,391). SymGen + LoRA here is fine-tuned on the full 300K training set; raw predictions archived under `baselines/symgen/`.
 
-### Head-to-head with SymGen (matched 8,062 functions)
+### Head-to-head with SymGen (matched functions)
 
 For a strict apples-to-apples comparison against our strongest baseline (SymGen + LoRA), we restrict both systems to **the same function set**: for every `(package, ground-truth-name)` key that appears in both evaluation runs, we take `min(count_FuncR, count_SymGen)` predictions from each side. This removes the sample-size artifact without discarding information.
 
