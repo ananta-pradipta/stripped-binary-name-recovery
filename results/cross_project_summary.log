@@ -5,8 +5,11 @@ FuncR (ours) -- CROSS-PROJECT EVAL SUMMARY
 REPORTED CONFIGURATION  (what the README headline uses)
 ----------------------------------------------------------------------
   Checkpoint        : checkpoints/best_model.pt  (25M contrastive)
-  Inference mode    : P2_binfilter_only  (binary-fingerprint filtered 1-NN)
-  k_retrieve        : 20
+  Inference mode    : P2_binfilter_only
+                        retrieve top-20 neighbors by cosine sim,
+                        drop those from training binaries with Jaccard(query, train) < 0.5,
+                        take top-1 cosine from survivors.
+  k_retrieve        : 20  (pool size + safety: if <20 survive filter, fall back to unfiltered)
   binary_sim_threshold : 0.5
   Clean predictions : results/cross_project_predictions.json
                        (10,467 entries; {pkg, true_name, predicted} only)
@@ -40,7 +43,9 @@ analysis. The clean prediction file above only keeps the best (P2) mode.
   -------------------------  -------  -------  --------------------------------------
   baseline_top1               0.6727   54.55%  GRU decoder greedy top-1 (no k-NN)
   P1_rerank_only              0.5787   46.09%  k-NN top-20 re-ranked by ext-call Jaccard
-  P2_binfilter_only           0.7181   57.04%  k-NN top-1, binary-fingerprint filtered  <-- reported
+  P2_binfilter_only           0.7181   57.04%  retrieve top-20, keep training fns whose parent
+                                                 binary has Jaccard >= 0.5 with query, take top-1
+                                                 cosine from survivors  <-- reported
   P1+P2_both                  0.7007   54.75%  Both P1 rerank and P2 filter applied
 
 ----------------------------------------------------------------------
