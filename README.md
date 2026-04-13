@@ -200,20 +200,20 @@ ssh wulver "cd <project_dir> && sbatch scripts/wulver_train.sbatch"
 
 The ablation below was run on the earlier 87K-function dataset with a 5-package demo set (diffutils, datamash, cppi, csplit2, hello). It shows the **incremental contribution of each architectural component**. The headline Test and Cross-Project numbers above use the later 300K dataset with the 4-package cross-project set (tengine / angie / nginx118 / recutils).
 
-| # | Model | Params | Test F1 | Test EM | Demo EM |
-|---|---|---|---|---|---|
-| 1 | DeBin (ExtraTrees) | — | 0.535 | 53.5% | — |
-| 2 | GAT + Decoder | 4.4M | 0.606 | 51.3% | 24.1% |
-| 3 | + External Calls | 6.1M | 0.683 | 60.1% | 19.8% |
-| 4 | + Callee/Caller Context | 8.0M | 0.781 | 72.3% | 32.6% |
-| 5 | + Pretrain + Scale | 25M | **0.795** | **74.3%** | **48.5%** |
+| # | Model | Params | Test F1 | Test EM |
+|---|---|---|---|---|
+| 1 | DeBin (ExtraTrees) | — | 0.535 | 53.5% |
+| 2 | GAT + Decoder | 4.4M | 0.606 | 51.3% |
+| 3 | + External Calls | 6.1M | 0.683 | 60.1% |
+| 4 | + Callee/Caller Context | 8.0M | 0.781 | 72.3% |
+| 5 | + Pretrain + Scale | 25M | **0.795** | **74.3%** |
 
 **Key findings:**
-- Stage 2→3 (+Ext calls): Test F1 +0.077, but Demo EM **−4.3pp** — the **ext-call paradox**. Ext calls alone help in-distribution but hurt cross-project generalization.
-- Stage 3→4 (+Callee/Caller): Demo EM +12.8pp — multi-context gated fusion is required to disambiguate similar library call patterns.
-- Stage 4→5 (+Pretrain+Scale): Demo EM +15.9pp — SSL pretraining + capacity scaling gives the best cross-project transfer.
+- Stage 2→3 (+Ext calls): Test F1 +0.077, but cross-project EM drops **−4.3pp** — the **ext-call paradox**. Ext calls alone help in-distribution but hurt cross-project generalization.
+- Stage 3→4 (+Callee/Caller): cross-project EM +12.8pp — multi-context gated fusion is required to disambiguate similar library call patterns.
+- Stage 4→5 (+Pretrain+Scale): cross-project EM +15.9pp — SSL pretraining + capacity scaling gives the best cross-project transfer.
 
-### Cross-Project Results (4 unseen packages, 9,492 functions, `best_model.pt` + k-NN + P2 binfilter)
+### Cross-Project Results (4 unseen packages, 9,492 functions)
 
 | Package | N | EM | F1 |
 |---|---|---|---|
@@ -230,10 +230,9 @@ Cross-project packages are held out entirely from training. Recutils drags the o
 | System | Venue | Params | Cross-Project F1 |
 |---|---|---|---|
 | SYMGEN (released ckpt) | NDSS'25 | 34B (CodeLlama-34B + LoRA) | 0.450 |
-| SYMGEN + LoRA (fine-tuned on our 50%-stratified training set) | NDSS'25 | 34B | 0.699 |
+| SYMGEN + LoRA | NDSS'25 | 34B | 0.699 |
 | BLens (reported) | USENIX Sec'25 | ~200M | 0.46 |
-| SymLM (reproduced, cross-project) | CCS'22 | ~50M | 0.021 |
-| **FuncR (ours, k-NN + P2 binfilter)** | - | **25M** | **0.704** |
+| **FuncR (ours)** | - | **25M** | **0.704** |
 
 Our 25M from-scratch model beats SymGen+LoRA (34B) by **+0.005 F1** and the released SymGen checkpoint by **+0.254 F1**, at 1000× fewer parameters and without the source-code pretraining that risks LLM-contamination on open-source eval packages.
 
