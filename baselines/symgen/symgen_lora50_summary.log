@@ -1,0 +1,76 @@
+======================================================================
+SymGen + LoRA (50% stratified, 300K training data) — EVAL SUMMARY
+======================================================================
+
+Predictions file: /home/apradipta/cs785-project/baselines/symgen/symgen_lora50_predictions.json
+Metadata: xproj_metadata_v2.json (from Wulver SymGen/dataset)
+Evaluation set: 4-package cross-project held-out set
+  Packages: tengine, angie, nginx118, recutils
+  Optimization levels: O0, O1, O2, O3 (tengine O0/O2 only)
+Total predictions: 15,983
+
+──────────────────────────────────────────────────────────────────────
+OVERALL (15,983 functions, all 4 packages)
+──────────────────────────────────────────────────────────────────────
+  Sub-token F1         : 0.6985
+  Exact Match (top-1)  : 37.67%  (6,021/15,983)
+  Prompt-regurg fails  :  8.37%  (1,338/15,983)
+
+──────────────────────────────────────────────────────────────────────
+PER-PACKAGE
+──────────────────────────────────────────────────────────────────────
+  Package          N       F1       EM
+  angie        5,297   0.6916   33.25%
+  nginx118     4,734   0.6993   35.78%
+  recutils     2,885   0.6939   49.81%
+  tengine      3,067   0.7135   36.81%
+
+──────────────────────────────────────────────────────────────────────
+PER-BINARY (sorted by package, opt)
+──────────────────────────────────────────────────────────────────────
+  Binary                                         N       F1       EM
+  angie_angie_O0                             1,506   0.7544   40.77%
+  angie_angie_O1                             1,288   0.6824   31.13%
+  angie_angie_O2                             1,269   0.6727   30.58%
+  angie_angie_O3                             1,234   0.6441   29.01%
+  nginx118_nginx118_O0                       1,339   0.7586   43.39%
+  nginx118_nginx118_O1                       1,154   0.6934   34.06%
+  nginx118_nginx118_O2                       1,137   0.6801   33.07%
+  nginx118_nginx118_O3                       1,104   0.6535   31.16%
+  recutils_recdel_O0                           146   0.7396   52.74%
+  recutils_recdel_O1                           119   0.6804   49.58%
+  recutils_recdel_O2                           118   0.6765   49.15%
+  recutils_recdel_O3                           116   0.6822   48.28%
+  recutils_recfix_O0                           149   0.7307   51.01%
+  recutils_recfix_O1                             5   0.7410   20.00%
+  recutils_recfix_O2                           117   0.6903   49.57%
+  recutils_recfix_O3                           115   0.6724   46.96%
+  recutils_recfmt_O0                           148   0.7314   53.38%
+  recutils_recfmt_O1                           121   0.6713   47.93%
+  recutils_recfmt_O2                           120   0.6768   48.33%
+  recutils_recfmt_O3                           118   0.6691   48.31%
+  recutils_recinf_O0                           145   0.7353   53.10%
+  recutils_recinf_O1                           118   0.6674   48.31%
+  recutils_recinf_O2                           117   0.6775   49.57%
+  recutils_recinf_O3                           115   0.6724   47.83%
+  recutils_recins_O0                           146   0.7300   52.05%
+  recutils_recins_O1                           119   0.6727   48.74%
+  recutils_recins_O2                           118   0.6774   50.00%
+  recutils_recins_O3                           116   0.6622   46.55%
+  recutils_recsel_O0                           146   0.7396   53.42%
+  recutils_recsel_O1                           119   0.6784   48.74%
+  recutils_recsel_O2                           118   0.6905   50.85%
+  recutils_recsel_O3                           116   0.6728   48.28%
+  tengine_nginx_O0                           1,663   0.7515   41.31%
+  tengine_nginx_O2                           1,404   0.6686   31.48%
+
+──────────────────────────────────────────────────────────────────────
+REPRODUCIBILITY
+──────────────────────────────────────────────────────────────────────
+  Base model          : codellama/CodeLlama-34b-Instruct-hf
+  LoRA adapter        : baselines/SymGen/lora_weights_ours_50pct_strat (Wulver)
+  Training data       : our_training_set_50pct_stratified.json (116,588 examples)
+  Training job        : cs785-symgen-ft-strat.909693 (20h 14m, 2x A100-80GB DDP)
+  Inference job       : cs785-eval-symgen-strat.911802 (1x A100-80GB, ~10h)
+  Eval script         : baselines/SymGen/scripts/model_training/predict.py
+  Scoring             : baselines/symgen/symgen_lora50_summary.log (this file)
