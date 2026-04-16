@@ -18,7 +18,7 @@
     ]
     % === Phase 1: Preprocessing ===
     \node[input] (src) {Source\\Packages};
-    \node[input, right=of src] (compile) {Compile\\{\scriptsize O0, O2}};
+    \node[input, right=of src] (compile) {Compile\\{\scriptsize O0, O1, O2, O3}};
     \node[input, right=of compile] (bap) {BAP 2.5\\{\scriptsize IR Lifting}};
     \node[input, right=of bap] (tokens) {V3 Tokenize\\{\scriptsize 1,510 types}};
     \node[input, right=of tokens] (cfg) {CFG + Labels\\{\scriptsize nm matching}};
@@ -60,7 +60,7 @@
 
     % === Phase 3: Inference & Evaluation ===
     \node[output, right=1.0cm of fuse3, yshift=0.5cm] (decoder) {GRU Decoder\\{\scriptsize beam $k{=}5$}};
-    \node[output, right=1.0cm of fuse3, yshift=-0.5cm] (knn) {$k$-NN Retrieval\\{\scriptsize $k{=}1$, cosine}};
+    \node[output, right=1.0cm of fuse3, yshift=-0.5cm] (knn) {$k$-NN + BinFilter\\{\scriptsize $k{=}20$, $\tau{=}0.5$}};
     \node[input, right=0.7cm of $(decoder)!0.5!(knn)$] (name) {Predicted\\Name};
     \node[input, right=0.6cm of name] (metrics) {Metrics\\{\scriptsize F1, EM}\\{\scriptsize EdSim, NgSim}};
 
