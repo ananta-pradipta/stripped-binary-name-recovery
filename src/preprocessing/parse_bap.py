@@ -108,7 +108,7 @@ def classify_instruction(raw_line: str) -> List[str]:
     ext_match = CALL_EXT_RE.search(line)
     if ext_match:
         call_name = ext_match.group(1)
-        if not call_name.startswith('sub_') and hextester(call_name.split('sub_')):
+        if not (call_name.startswith('sub_') and hextester(call_name.split('sub_'))):
             return [f'CALL_{call_name}']
         else:
             # Count arg setup registers used before this call
@@ -212,7 +212,7 @@ SKIP_PATTERNS = [
     r'^\._', r'^_start$', r'^_init$', r'^_fini$',
     r'^register_tm_clones$', r'^deregister_tm_clones$',
     r'^frame_dummy$', r'^__do_global_',
-    r'^__libc_csu_', r'^_dl_',
+    r'^__libc_csu_', r'^_dl_', 
 ]
 SKIP_RE = [re.compile(p) for p in SKIP_PATTERNS]
 
@@ -295,7 +295,7 @@ def parse_bir_file(bir_path: str) -> Dict[str, dict]:
                     resolved_edges.append(edge)
 
             address = get_function_address(current_func_name, current_func)
-            if not current_func_name.startswith('sub_') and hextester(current_func_name.split('sub_')) and current_first_block_hex:
+            if not (current_func_name.startswith('sub_') and hextester(current_func_name.split('sub_'))) and current_first_block_hex:
                 address = '0x' + current_first_block_hex
 
             functions[current_func_name] = {
@@ -360,7 +360,7 @@ def parse_bir_file(bir_path: str) -> Dict[str, dict]:
                 ext_match = CALL_EXT_RE.search(instr_text)
                 if ext_match:
                     call_name = ext_match.group(1)
-                    if not call_name.startswith('sub_') and hextester(call_name.split('sub_')):
+                    if not (call_name.startswith('sub_') and hextester(call_name.split('sub_'))):
                         current_ext_call = call_name
 
                 # Track internal callees

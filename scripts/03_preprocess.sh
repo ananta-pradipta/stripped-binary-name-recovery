@@ -70,6 +70,7 @@ for stripped_bin in "$DATA_STRIPPED"/*_stripped; do
             else
                 echo "✗ FAILED"
                 BAP_FAIL=$((BAP_FAIL + 1))
+		exit
             fi
         fi
     fi
@@ -121,139 +122,7 @@ echo "✓ External calls extracted"
 echo ""
 echo "══ 3.5 Matching functions by address ══"
 echo ""
-
-python3 << 'PYEOF'
-import json, glob, os
-
-# ── Load labels: build int_address → name mapping per binary ──
-labels_by_binary = {}
-for lf in sorted(glob.glob('data/labels/*_labels.json')):
-    with open(lf) as f:
-        data = json.load(f)
-    binary = data['binary']
-
-    # Build mapping: integer address → function name
-    int_to_name = {}
-    funcs = data.get('functions', {})
-    addr_to_name = data.get('addr_to_name', {})
-
-    # Try addr_to_name first
-    if addr_to_name:
-        for addr_str, name in addr_to_name.items():
-            try:
-                addr_int = int(addr_str, 16)
-                int_to_name[addr_int] = name
-            except ValueError:
-                pass
-
-    # Also try functions dict (could be name→addr or addr→name)
-    if funcs and not int_to_name:
-        first_key = next(iter(funcs), '')
-        if first_key.startswith('0x'):
-            # addr → name
-            for addr_str, name in funcs.items():
-                try:
-                    addr_int = int(addr_str, 16)
-                    int_to_name[addr_int] = name
-                except ValueError:
-                    pass
-        else:
-            # name → addr
-            for name, addr_str in funcs.items():
-                try:
-                    addr_int = int(addr_str, 16)
-                    int_to_name[addr_int] = name
-                except ValueError:
-                    pass
-
-    labels_by_binary[binary] = int_to_name
-
-total_labels = sum(len(v) for v in labels_by_binary.values())
-print(f"  Loaded {total_labels} labels across {len(labels_by_binary)} binaries")
-
-# Debug: show sample label addresses for first binary
-first_binary = next(iter(labels_by_binary), None)
-if first_binary:
-    sample_addrs = list(labels_by_binary[first_binary].items())[:5]
-    print(f"  Sample labels from {first_binary}:")
-    for addr_int, name in sample_addrs:
-        print(f"    0x{addr_int:x} ({addr_int}) → {name}")
-
-# ── Load graphs and match by integer address ──
-matched = 0
-unmatched = 0
-match_index = {}
-
-graph_files = sorted(glob.glob('data/graphs/*.json'))
-print(f"\n  Processing {len(graph_files)} graph files...")
-
-# Debug: show sample graph addresses
-if graph_files:
-    with open(graph_files[0]) as f:
-        sample_graph = json.load(f)
-    print(f"  Sample graph: {sample_graph['function_name']} @ {sample_graph['address']} (binary: {sample_graph['binary']})")
-
-for gf in graph_files:
-    with open(gf) as f:
-        graph = json.load(f)
-
-    binary = graph['binary']
-    address_str = graph.get('address', '')
-    func_name = graph.get('function_name', '')
-
-    # Convert graph address to integer
-    try:
-        addr_int = int(address_str, 16)
-    except (ValueError, TypeError):
-        unmatched += 1
-        continue
-
-    # Look up in labels
-    label_map = labels_by_binary.get(binary, {})
-    real_name = label_map.get(addr_int)
-
-    if real_name:
-        match_index[gf] = {
-            'binary': binary,
-            'address': address_str,
-            'address_int': addr_int,
-            'bap_name': func_name,
-            'real_name': real_name,
-        }
-        matched += 1
-    else:
-        unmatched += 1
-
-# Save
-with open('data/match_index.json', 'w') as f:
-    json.dump(match_index, f, indent=2)
-
-print(f"\n  ════════════════════════════════")
-print(f"  Matched:   {matched}")
-print(f"  Unmatched: {unmatched}")
-print(f"  Rate:      {100*matched/max(matched+unmatched,1):.1f}%")
-print(f"  ════════════════════════════════")
-
-# Show sample matches
-if match_index:
-    print(f"\n  Sample matches:")
-    for gf, info in list(match_index.items())[:10]:
-        print(f"    {info['bap_name']:25s} → {info['real_name']:30s} @ {info['address']}")
-else:
-    # Debug: show what addresses exist in each
-    print(f"\n  ⚠ ZERO matches. Debugging address formats:")
-    if labels_by_binary:
-        first_bin = next(iter(labels_by_binary))
-        label_addrs = sorted(labels_by_binary[first_bin].keys())[:5]
-        print(f"    Label addresses ({first_bin}): {[hex(a) for a in label_addrs]}")
-
-    sub_graphs = [gf for gf in graph_files if 'sub_' in os.path.basename(gf)]
-    if sub_graphs:
-        with open(sub_graphs[0]) as f:
-            g = json.load(f)
-        print(f"    Graph address: {g['address']} = {int(g['address'], 16)}")
-PYEOF
-
+python3 -m src.preprocessing.match
 echo ""
 echo "✓ Address matching complete"
 
