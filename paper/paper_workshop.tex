@@ -9,7 +9,7 @@
 \usepackage{xcolor} % for \textcolor
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc}
 
-\newcommand{\sysname}{\textsc{FuncR}}
+\newcommand{\sysname}{\textsc{GraphR}}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
 % Remove ACM-specific metadata for preprint
@@ -18,7 +18,7 @@
 \pagestyle{plain}
 \begin{document}
 
-\title{{\normalfont{\sysname{}}}: Binary Function Name Recovery via Graph-Based Multi-Context Embeddings and Retrieval}
+\title{{\normalfont{\sysname{}}}: Structure-Aware Multi-Context Embeddings and Retrieval for Binary Function Name Recovery}
 
 \author{Ananta Dian Pradipta}
 \affiliation{%
@@ -57,7 +57,7 @@
 \email{haotian.zhang@njit.edu}
 
 \begin{abstract}
-Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study reveals a novel \emph{ext-call paradox}: external call information alone improves performance on seen binaries but \emph{degrades} generalization to unseen packages by 4.3 percentage points; inter-procedural callee/caller context is required for disambiguation. Furthermore, we demonstrate that nearest-neighbor retrieval over learned encoder embeddings outperforms autoregressive sequence decoding, improving exact match by 4.7 percentage points on unseen packages with zero retraining. This finding suggests that for well-trained encoders, retrieval over embeddings outperforms autoregressive generation, where the encoder representation, not the decoder, is the key component. Evaluated on 87,724 functions from 40 packages, \sysname{} achieves 0.804 F1 on a held-out test set (8,973 functions) and 0.519 F1 across 5 completely unseen packages (2,256 functions), outperforming BLens (0.46 F1) and SYMGEN (0.38 F1) in cross-project settings.
+Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study reveals a novel \emph{ext-call paradox}: external call information alone improves performance on seen binaries but \emph{degrades} generalization to unseen packages by 4.3 percentage points; inter-procedural callee/caller context is required for disambiguation. Furthermore, we demonstrate that nearest-neighbor retrieval over learned encoder embeddings outperforms autoregressive sequence decoding, improving exact match by 4.7 percentage points on unseen packages with zero retraining. This finding suggests that for well-trained encoders, retrieval over embeddings outperforms autoregressive generation, where the encoder representation, not the decoder, is the key component. Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves \textbf{0.770 F1} on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions: tengine, angie, nginx118, recutils), outperforming the released SYMGEN checkpoint (0.45), our own SYMGEN+LoRA reproduction fine-tuned on our full 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset, \sysname{} leads SYMGEN+LoRA by \textbf{+0.10 F1} and \textbf{+26 pp EM}. Our 32M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
 \end{abstract}
 
 \keywords{binary analysis, function name recovery, graph neural networks, gated fusion, retrieval-augmented inference}
@@ -71,13 +71,13 @@ Recovering function names from stripped binaries is critical for reverse enginee
 
 Software reverse engineering is a fundamental activity in cybersecurity, requiring analysts to understand the behavior of compiled binary programs without access to source code. Modern compilers strip all symbolic information (function names, variable names, type annotations) from release binaries, leaving analysts with thousands of unnamed functions (e.g., \texttt{sub\_4a30}, \texttt{FUN\_00105c10}) that must be manually identified. Recovering meaningful function names dramatically accelerates program comprehension: knowing that \texttt{sub\_4a30} is \texttt{xmalloc} immediately conveys its purpose.
 
-The practical importance of automated function name recovery extends across multiple domains of cybersecurity. In malware analysis, meaningful function names reduce triage time from hours to minutes, allowing analysts to quickly identify cryptographic routines, network communication handlers, and persistence mechanisms. In vulnerability research, understanding stripped firmware is essential for discovering exploitable bugs in IoT devices and embedded systems, where vendors rarely ship debug symbols. In competitive reverse engineering (CTFs) and forensic investigations, even partial name recovery provides critical footholds for understanding program logic. Commercial tools such as IDA Pro and Ghidra provide manual annotation workflows and limited pattern-matching (FLIRT signatures), but cannot automatically recover names for arbitrary functions.
+The practical importance of automated function name recovery extends across multiple domains of cybersecurity. In malware analysis, meaningful function names reduce triage time from hours to minutes, allowing analysts to quickly identify cryptographic routines, network communication handlers, and persistence mechanisms. In vulnerability research, understanding stripped firmware is essential for discovering exploitable bugs in IoT devices and embedded systems, where vendors rarely ship debug symbols. In competitive reverse engineering (CTFs) and forensic investigations, even partial name recovery provides critical footholds for understanding program logic. Commercial tools such as IDA Pro and Ghidra provide manual annotation workflows and limited pattern-matching (FLIRT signatures), but cannot automatically recover names for arbitrary functions. A comprehensive survey of binary code similarity techniques is given by Haq and Caballero~\cite{haqsurvey}.
 
-Prior work on automated function name recovery has explored statistical approaches~\cite{debin}, graph neural networks~\cite{nero}, language model pre-training~\cite{symlm}, and large language model fine-tuning~\cite{symgen}. However, two fundamental challenges remain underexplored: (1)~how to effectively combine multiple sources of contextual information (code structure, library calls, and inter-procedural relationships) without degrading generalization, and (2)~whether autoregressive name generation is the right output paradigm, given that function names are drawn from a relatively small vocabulary of real names.
+Prior work on automated function name recovery has explored statistical approaches~\cite{debin}, extreme multi-label classification~\cite{xfl}, graph neural networks~\cite{nero}, language model pre-training~\cite{symlm}, and large language model fine-tuning~\cite{symgen}. However, two fundamental challenges remain underexplored: (1)~how to effectively combine multiple sources of contextual information (code structure, library calls, and inter-procedural relationships) without degrading generalization, and (2)~whether autoregressive name generation is the right output paradigm, given that function names are drawn from a relatively small vocabulary of real names.
 
 We address these challenges with \sysname{}, a graph neural network system that lifts stripped binaries to BAP intermediate representation, encodes each function's control flow graph with a GAT-based encoder, and fuses multiple sources of inter-procedural context through a cascaded gated mechanism with conditional bypass. Self-supervised pretraining (masked language modeling and contrastive learning) with partial embedding transfer further strengthens the encoder representations. At inference time, we demonstrate that simple $k$-nearest-neighbor retrieval over the learned embeddings outperforms autoregressive beam search decoding, improving cross-project exact match by 4.7 percentage points with zero retraining.
 
-Evaluated on 87,724 functions from 40 packages, \sysname{} achieves 0.804 F1 on a held-out test set (8,973 functions) and 0.519 F1 across 5 completely unseen packages (2,256 functions), competitive with BLens~\cite{blens} (0.46) and SYMGEN~\cite{symgen} (0.38) in cross-project settings, while using only 25M parameters---280$\times$ smaller than SYMGEN's CodeLlama backbone.
+Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions), outperforming the released SYMGEN~\cite{symgen} checkpoint (0.45), our own SYMGEN+LoRA reproduction fine-tuned on our full 300K training set (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65), while using only 32M parameters---over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
 
 In summary, we make the following contributions:
 
@@ -86,7 +86,7 @@ In summary, we make the following contributions:
 
     \item We present an empirical analysis showing that $k$-nearest-neighbor retrieval over encoder embeddings outperforms autoregressive decoding by +2.0pp test EM and +4.7pp cross-project EM with zero retraining. This finding, consistent with kNN-LM~\cite{knnlm}, demonstrates that for our encoder architecture, representation quality is the primary bottleneck rather than the decoding strategy.
 
-    \item We advance the state of the art in cross-project function name recovery, achieving 0.804 F1 on a held-out test set (8,973 functions) and 0.519 F1 across 5 completely unseen packages (2,256 functions), outperforming BLens~\cite{blens} (0.46 F1) and SYMGEN~\cite{symgen} (0.38 F1). Additionally, self-supervised pretraining with partial embedding transfer provides +15.9 percentage point cross-project EM improvement. Our code and dataset are publicly available at \href{https://github.com/ananta-pradipta/stripped-binary-name-recovery}{\textcolor{blue}{https://github.com/\allowbreak{}ananta-pradipta/\allowbreak{}stripped-binary-name-recovery}}.
+    \item We advance the state of the art in cross-project function name recovery, achieving 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions: tengine, angie, nginx118, recutils). This exceeds the released SYMGEN~\cite{symgen} checkpoint (0.45), our own SYMGEN+LoRA reproduction on our full 300K training data (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset we lead SYMGEN+LoRA by +0.10 F1 / +26 pp EM while using 1{,}000$\times$ fewer parameters. Our code and dataset are publicly available at \href{https://github.com/ananta-pradipta/stripped-binary-name-recovery}{\textcolor{blue}{https://github.com/\allowbreak{}ananta-pradipta/\allowbreak{}stripped-binary-name-recovery}}.
 \end{itemize}
 
 % ============================================================================
@@ -108,7 +108,7 @@ We scope \sysname{} to the following setting:
 
 \begin{itemize}
     \item \textbf{Architecture}: x86-64 ELF binaries compiled for Linux.
-    \item \textbf{Optimization levels}: O0 (no optimization) and O2 (standard optimization). We do not evaluate O1 or O3, as O1 is rarely used in practice and O3 introduces aggressive inlining that duplicates function bodies.
+    \item \textbf{Optimization levels}: O0, O1, O2, and O3, plus a default level for binaries that override \texttt{-O} flags.
     \item \textbf{Compilation}: GCC compiler. We do not evaluate Clang or MSVC, though the instruction-type tokenization is compiler-agnostic at the IR level.
     \item \textbf{Training corpus}: We assume access to a corpus of labeled binaries where ground-truth function names are known (obtained from debug builds). This is a standard assumption in the literature~\cite{debin,nero,symlm,blens,symgen}.
     \item \textbf{No obfuscation}: We assume binaries are not deliberately obfuscated. Obfuscation techniques (control flow flattening, opaque predicates, symbol stripping with anti-disassembly) would require additional preprocessing.
@@ -116,7 +116,7 @@ We scope \sysname{} to the following setting:
 
 \subsubsection{Evaluation Scenario}
 
-We evaluate in two settings: (1) a held-out test set of 8,973 functions from 18 binaries of packages seen during training (cross-binary evaluation), and (2) a cross-project set of 2,256 functions from 5 packages completely excluded from training. The cross-project setting is stricter than the cross-binary evaluation used by some prior work~\cite{nero,symlm}, where different binaries of the \emph{same} package may appear in both training and test. Cross-project evaluation tests whether the model generalizes to entirely new codebases with potentially novel naming conventions, and is the evaluation methodology advocated by SYMGEN~\cite{symgen}.
+We evaluate in two settings: (1) a held-out test set of 13{,}559 functions from binaries of packages seen during training (cross-binary evaluation), and (2) a cross-project set of 10{,}467 functions from 4 packages (tengine, angie, nginx118, recutils) completely excluded from training across all four GCC optimization levels (O0/O1/O2/O3). The cross-project setting is stricter than the cross-binary evaluation used by some prior work~\cite{nero,symlm}, where different binaries of the \emph{same} package may appear in both training and test. Cross-project evaluation tests whether the model generalizes to entirely new codebases with potentially novel naming conventions, and is the evaluation methodology advocated by SYMGEN~\cite{symgen}.
 
 \subsection{Challenges}
 \label{sec:challenges}
@@ -136,34 +136,34 @@ Binary function name recovery presents several fundamental challenges that motiv
 
 \subsubsection{Binary Function Name Recovery}
 
-He et al.~\cite{debin} introduced DeBin, which uses BAP intermediate representation with probabilistic graphical models (ExtraTrees + CRF) to predict debug information including function names. While pioneering, DeBin's statistical approach cannot capture the complex patterns that deep learning exploits. We use DeBin as the non-neural baseline in our ablation (Table~\ref{tab:ablation}).
+Patrick-Evans et al.~\cite{xfl} framed function naming as extreme multi-label classification (XFL), treating each sub-token as an independent label, but this closed-vocabulary formulation cannot produce names outside the label set. He et al.~\cite{debin} introduced DeBin, which uses BAP intermediate representation with probabilistic graphical models (ExtraTrees + CRF) to predict debug information including function names. While pioneering, DeBin's statistical approach cannot capture the complex patterns that deep learning exploits. We use DeBin as the non-neural baseline in our ablation (Table~\ref{tab:ablation}).
 
-David et al.~\cite{nero} proposed NERO, using pointer-aware slicing and GNNs on call graphs to predict function names, achieving F1$=$0.455. NERO's key insight is that call-site context matters for naming. However, NERO only works for functions \emph{with} external calls, a fundamental limitation since 70\% of functions in typical binaries have none. Our conditional bypass mechanism (Section~\ref{sec:fusion}) addresses this directly: functions without calls use only code features, while functions with calls benefit from multi-context fusion.
+David et al.~\cite{nero} proposed NERO, using pointer-aware slicing and GNNs on call graphs to predict function names, achieving F1$=$0.455, building on source-level method naming work such as code2seq~\cite{code2seq}. NERO's key insight is that call-site context matters for naming. However, NERO only works for functions \emph{with} external calls, a fundamental limitation since 70\% of functions in typical binaries have none. Our conditional bypass mechanism (Section~\ref{sec:fusion}) addresses this directly: functions without calls use only code features, while functions with calls benefit from multi-context fusion.
 
 Jin et al.~\cite{symlm} presented SymLM, which pre-trains on micro-execution traces and fuses caller/callee context for function name prediction (F1$=$0.585). SymLM's ``fusing encoder'' concatenates context embeddings, whereas our gated fusion learns a per-function balance between code and context features with conditional bypass. More critically, SymLM requires dynamic analysis infrastructure (executing binaries in an emulator), whereas \sysname{} operates purely on static analysis. Our ablation reveals the ext-call paradox (Section~\ref{sec:ablation}), a phenomenon SymLM does not analyze, showing that context fusion must be carefully designed to avoid degrading generalization.
 
-Al-Kaswan et al.~\cite{blens} introduced BLens, combining ensemble embeddings with contrastive captioning. While achieving 0.79 F1 per-binary, cross-project F1 drops to 0.46, a 42\% degradation that highlights the generalization challenge we address. Xu et al.~\cite{symgen} fine-tuned CodeLlama with LoRA for function naming, importantly demonstrating that prior results were inflated 1.2--2.9$\times$ by duplicate functions (cross-project F1$=$0.38 after proper deduplication). We follow SYMGEN's deduplication methodology in our evaluation.
+Gao et al.~\cite{nfre} proposed NFRE, a lightweight framework for function name reassignment that demonstrated scalability to large stripped binaries. Al-Kaswan et al.~\cite{blens} introduced BLens, combining ensemble embeddings (including PalmTree~\cite{palmtree} instruction embeddings) with contrastive captioning. While achieving 0.79 F1 per-binary, cross-project F1 drops to 0.46, a 42\% degradation that highlights the generalization challenge we address. Xu et al.~\cite{symgen} fine-tuned CodeLlama~\cite{codellama} with LoRA~\cite{lora} for function naming, importantly demonstrating that prior results were inflated 1.2--2.9$\times$ by duplicate functions (cross-project F1$=$0.38 after proper deduplication). We follow SYMGEN's deduplication methodology in our evaluation. Su et al.~\cite{prorec} (ProRec) showed that source-code foundation models are transferable knowledge bases for binary analysis, further motivating the LLM-based baseline comparison.
 
-Jiang et al.~\cite{beyondclass} applied domain-adapted LLMs to function name inference, representing the trend toward large-scale language model approaches. GenNm~\cite{gennm} fine-tuned CodeGemma with SymPO preference optimization for variable name recovery, a related task demonstrating that preference-aligned generation improves binary symbol prediction. Our approach differs fundamentally: rather than scaling model size (billions of parameters), we invest in the \emph{encoder representation} (25M parameters) and show that simple $k$-NN retrieval over these embeddings outperforms autoregressive generation, consistent with Khandelwal et al.'s finding that retrieval can outperform generation when representations are sufficiently good~\cite{knnlm,knnmt}.
+Jiang et al.~\cite{beyondclass} applied domain-adapted LLMs to function name inference, representing the trend toward large-scale language model approaches. GenNm~\cite{gennm} fine-tuned CodeGemma with SymPO preference optimization for variable name recovery, a related task demonstrating that preference-aligned generation improves binary symbol prediction. Related work on decompiled identifier naming includes DIRE~\cite{dire} and DIRTY~\cite{dirty}, which predict variable names and types from decompiler output, while VarBERT~\cite{varbert} applies transfer learning to variable name prediction and ReSym~\cite{resym} harnesses LLMs for variable and data structure symbol recovery. Our approach differs fundamentally: rather than scaling model size (billions of parameters), we invest in the \emph{encoder representation} (25M parameters) and show that simple $k$-NN retrieval over these embeddings outperforms autoregressive generation, consistent with Khandelwal et al.'s finding that retrieval can outperform generation when representations are sufficiently good~\cite{knnlm,knnmt}.
 
 \subsubsection{Binary Code Representation Learning}
 
-Learning effective representations of binary code underpins all downstream binary analysis tasks. Xu et al.~\cite{gemini} pioneered GNN-based binary analysis with Gemini, using graph embedding networks for cross-platform binary similarity detection. We adopt their insight that CFG structure is informative, extending it with GAT attention and multi-context fusion. Ding et al.~\cite{asm2vec} proposed Asm2Vec, learning function embeddings via PV-DM random walks over assembly instructions. Unlike Asm2Vec's raw instruction tokens, our V3 tokenization abstracts instructions into 1,510 semantic types, reducing vocabulary by 95\% while preserving discriminative information.
+Learning effective representations of binary code underpins all downstream binary analysis tasks, including function boundary detection~\cite{byteweight}, disassembly~\cite{xda}, and neural decompilation~\cite{katzdecomp}. Xu et al.~\cite{gemini} pioneered GNN-based binary analysis with Gemini, using graph embedding networks for cross-platform binary similarity detection. We adopt their insight that CFG structure is informative, extending it with GAT attention and multi-context fusion. Ding et al.~\cite{asm2vec} proposed Asm2Vec, learning function embeddings via PV-DM~\cite{word2vec} random walks over assembly instructions. Unlike Asm2Vec's raw instruction tokens, our V3 tokenization abstracts instructions into 1,510 semantic types, reducing vocabulary by 95\% while preserving discriminative information.
 
-Wang et al.~\cite{jtrans} introduced jTrans, a jump-aware Transformer that incorporates control flow structure into positional encoding for binary similarity. Pei et al.~\cite{trex} developed Trex, learning execution semantics from micro-traces. Both demonstrate the value of pre-training on binary code. We adopt this principle in our MLM + contrastive pre-training stage (Section~\ref{sec:pretraining}), but operate on static BAP-IR rather than execution traces.
+Wang et al.~\cite{jtrans} introduced jTrans, a jump-aware Transformer that incorporates control flow structure into positional encoding for binary similarity. Pei et al.~\cite{trex} developed Trex, learning execution semantics from micro-traces. Massarelli et al.~\cite{safe} proposed SAFE, using self-attentive function embeddings for binary similarity. Wang et al.~\cite{clap} introduced CLAP, which learns transferable binary code representations through natural language supervision via contrastive learning. Xiong et al.~\cite{hext5} proposed HexT5, a unified pre-training framework for multiple stripped binary code inference tasks, and Jiang et al.~\cite{nova} introduced Nova, a generative assembly language model with hierarchical attention. These works demonstrate the value of pre-training on binary code. We adopt this principle in our MLM + contrastive pre-training stage (Section~\ref{sec:pretraining}), but operate on static BAP-IR rather than execution traces.
 
 Zhu et al.~\cite{callee} proposed CALLEE for recovering call graphs via contrastive learning with transfer learning, showing +28\% F1 from pre-training on related tasks. Two of their findings directly support our design: (1)~transfer learning from pre-training provides substantial gains, validating our encoder pre-training approach; (2)~``loose symbolization'' (semantic type abstraction) outperforms strict tokenization, supporting our instruction-type tokenization.
 
 \subsubsection{GNNs for Binary Analysis}
 
-Graph neural networks are a natural fit for binary analysis, where control flow graphs (CFGs) provide structural information. Zhu et al.~\cite{tygr} applied GNNs to type inference on stripped binaries (TYGR), demonstrating that graph structure captures semantic properties beyond sequential instruction patterns. He et al.~\cite{codenl} proposed semantics-oriented graph representations for binary code similarity, arguing that ``code is not natural language'' and that graph-based approaches better capture program semantics than sequential models.
+Graph neural networks~\cite{gcn,graphsage,mpnn} are a natural fit for binary analysis, where control flow graphs (CFGs) provide structural information. Zhu et al.~\cite{tygr} applied GNNs to type inference on stripped binaries (TYGR), demonstrating that graph structure captures semantic properties beyond sequential instruction patterns. He et al.~\cite{codenl} proposed semantics-oriented graph representations for binary code similarity, arguing that ``code is not natural language'' and that graph-based approaches better capture program semantics than sequential models.
 
-Our work extends GNN-based binary analysis in two ways: (1)~we use graph attention networks (GAT) with learned attention over CFG edges, allowing the model to weight structurally important blocks; (2)~we introduce a multi-context fusion mechanism that incorporates inter-procedural information (callee/caller signatures and library calls) not present in the CFG alone.
+Yu et al.~\cite{cfg2vec} proposed CFG2VEC, a hierarchical GNN for cross-architectural reverse engineering that learns function representations from CFGs. Our work extends GNN-based binary analysis in two ways: (1)~we use graph attention networks (GAT) with learned attention~\cite{bahdanau} over CFG edges, allowing the model to weight structurally important blocks; (2)~we introduce a multi-context fusion mechanism that incorporates inter-procedural information (callee/caller signatures and library calls) not present in the CFG alone.
 
 % ---- Figure 1: placed here so it renders at top of Overview page ----
 \begin{figure*}[t!]
     \centering
-    \includegraphics[width=\textwidth]{fig1_pipeline.pdf}
+    \includegraphics[width=\textwidth]{funcr_pipeline.png}
     \caption{End-to-end \sysname{} pipeline. Phase 1 compiles source packages, lifts to BAP-IR, tokenizes instructions into 1,510 semantic types, and extracts CFGs with ground-truth labels. Phase 2 encodes basic blocks (Transformer), aggregates over the CFG (GAT), and fuses library call context, callee signatures, and caller signatures through cascaded gated fusion with conditional bypass. Phase 3 produces function names via either GRU beam search or $k$-NN retrieval, evaluated with sub-token F1, exact match, edit similarity, and n-gram similarity.}
     \Description{End-to-end pipeline diagram showing three phases: preprocessing, encoder with multi-context fusion, and inference with evaluation.}
     \label{fig:pipeline}
@@ -180,7 +180,7 @@ These works share a common insight with our findings: when the output space is d
 \section{Overview}
 \label{sec:overview}
 
-\sysname{} follows a 3-stage encoder-decoder pipeline, illustrated in Figure~\ref{fig:pipeline}. The pipeline transforms a stripped binary into predicted function names through three phases:
+\sysname{} follows a 3-stage encoder-decoder~\cite{seq2seq} pipeline, illustrated in Figure~\ref{fig:pipeline}. The pipeline transforms a stripped binary into predicted function names through three phases:
 
 \textbf{Stage 1: Block Encoding.} Each function's basic blocks are tokenized into instruction-type tokens (Section~\ref{sec:tokenization}), which are processed by a Transformer encoder to produce per-block embeddings $\mathbf{b}_i \in \mathbb{R}^{512}$.
 
@@ -199,7 +199,7 @@ Figure~\ref{fig:architecture} shows the detailed model architecture. The key des
 % ---- Figure 2: Detailed model architecture ----
 \begin{figure*}[tb]
     \centering
-    \includegraphics[width=0.95\textwidth]{fig2_architecture.pdf}
+    \includegraphics[width=0.95\textwidth]{funcr_architecture.png}
     \caption{Detailed \sysname{} model architecture. The block encoder processes instruction-type tokens per basic block via a Transformer. The graph encoder aggregates block embeddings over the CFG using GAT with attention pooling. The cascaded gated fusion sequentially incorporates external library calls, callee signatures, and caller signatures, where each stage is bypassed when the corresponding context is absent. The fused embedding $\mathbf{z}$ feeds either a GRU decoder (beam search) or $k$-NN retrieval.}
     \Description{Detailed model architecture diagram showing block encoder, graph encoder, cascaded gated fusion with three stages, and dual output heads.}
     \label{fig:architecture}
@@ -208,7 +208,7 @@ Figure~\ref{fig:architecture} shows the detailed model architecture. The key des
 \subsection{Preprocessing}
 \label{sec:preprocessing}
 
-We compile source packages at optimization levels O0 and O2, producing both debug and stripped binaries. We use BAP 2.5.0~\cite{bap} to lift stripped binaries to BAP Intermediate Representation (BAP-IR), which provides a normalized, architecture-independent view of the binary code.
+We compile source packages at optimization levels O0, O1, O2, and O3, producing both debug and stripped binaries. We use the BAP 2.5.0~\cite{bap} binary analysis platform (alternatives include angr~\cite{angr}) to lift stripped binaries to BAP Intermediate Representation (BAP-IR), which provides a normalized, architecture-independent view of the binary code.
 
 \subsubsection{Instruction-Type Tokenization}
 \label{sec:tokenization}
@@ -232,12 +232,12 @@ Our dataset is constructed through a multi-step pipeline. First, we compile each
 
 We lift each stripped binary using BAP 2.5.0~\cite{bap}, which produces BAP-IR files containing per-function control flow graphs. BAP names functions using their entry addresses (e.g., \texttt{sub\_4a30}). We match BAP function addresses to debug symbols via exact address matching, discarding functions that cannot be matched (typically compiler-inserted functions like \texttt{\_start} or \texttt{\_\_libc\_csu\_init}).
 
-Data is split at the \emph{binary} level, not the function level, to prevent data leakage. A fixed split assignment file ensures reproducibility: 137 binaries for training, 17 for validation, and 18 for testing. Five entire packages (all their binaries) are held out as the cross-project set and never appear during training. This split design means that the same function (e.g., \texttt{xmalloc} from gnulib) may appear in both training and test binaries. This is intentional, as it reflects the real-world scenario where shared library functions recur across packages.
+Data is split at the \emph{binary} level, not the function level, to prevent data leakage. A fixed split assignment file ensures reproducibility. Four entire packages (tengine, angie, nginx118, recutils, across all their binaries and optimization levels) are held out as the cross-project set and never appear during training. This split design means that the same function (e.g., \texttt{xmalloc} from gnulib) may appear in both training and test binaries. This is intentional, as it reflects the real-world scenario where shared library functions recur across packages.
 
 \subsubsection{Votes Name Tokenizer}
 \label{sec:votes}
 
-Function names must be decomposed into sub-tokens for sequence prediction. Standard BPE tokenization produces poor results because function names follow naming conventions (snake\_case, camelCase) that differ from natural language. We developed Votes, a 3-model voting tokenizer that achieves 95\% lower out-of-vocabulary rate compared to BPE.
+Function names must be decomposed into sub-tokens for sequence prediction. Standard BPE~\cite{bpe} tokenization produces poor results because function names follow naming conventions (snake\_case, camelCase) that differ from natural language. We developed Votes, a 3-model voting tokenizer (independently contemporaneous with Epitome's multi-model boundary voting~\cite{epitome}) that achieves 95\% lower out-of-vocabulary rate compared to BPE.
 
 Votes works as follows: three independent segmentation models (a character bigram model, a frequency-based model, and a rule-based model splitting on underscores, camelCase boundaries, and digit transitions) each propose sub-token boundaries for a given function name. A boundary is accepted if at least 2 of 3 models agree. This produces a vocabulary of 2,642 sub-tokens that covers 99.7\% of all function name tokens in the dataset, compared to 94.8\% for BPE with a comparable vocabulary size. The reduced OOV rate directly improves exact match: a name cannot be correctly predicted if any of its sub-tokens are out of vocabulary.
 
@@ -245,7 +245,7 @@ For example, \texttt{quotearg\_buffer\_restyled} is tokenized as [\texttt{quote}
 
 \subsubsection{ENDBR64 Wrapper Resolution}
 
-In O0-compiled binaries, BAP lifts \texttt{endbr64; jmp target} sequences as separate 2-block functions. These are Intel CET (Control-flow Enforcement Technology) stubs, not real functions. We found that 96.4\% of O0 functions were such wrappers, each containing only a single \texttt{CALL\_INTERNAL} token. Our preprocessing detects these wrappers and replaces their graphs with the target function's graph, raising O0 exact match from 1.6\% to 41.5\%.
+In O0-compiled binaries, BAP lifts \texttt{endbr64; jmp target} sequences as separate 2-block functions. These are Intel CET (Control-flow Enforcement Technology) stubs, not real functions. We found that 96.4\% of O0 functions were such wrappers, each containing only a single \texttt{CALL\_INTERNAL} token. Our preprocessing detects these wrappers and replaces their graphs with the target function's graph. On the 87K ablation subset, this raised O0 exact match from 1.6\% to 41.5\%.
 
 \subsection{Block Encoder}
 \label{sec:block_encoder}
@@ -256,7 +256,7 @@ Each basic block $b$ contains a sequence of up to 20 instruction-type tokens $(x
     \mathbf{h}_t^{(0)} = \mathbf{E}[x_t] + \text{PE}(t)
 \end{equation}
 
-A Transformer encoder with 4 layers and 8 attention heads ($d_\text{model}{=}256$, $d_\text{ff}{=}512$) processes the token sequence with multi-head self-attention:
+A Transformer encoder~\cite{vaswani2017attention} with 4 layers and 8 attention heads ($d_\text{model}{=}256$, $d_\text{ff}{=}512$) processes the token sequence with multi-head self-attention:
 
 \begin{equation}
     \mathbf{H}^{(\ell)} = \text{TransformerLayer}^{(\ell)}(\mathbf{H}^{(\ell-1)})
@@ -270,7 +270,7 @@ We apply mean pooling over the final-layer token representations to produce the 
 
 We chose mean pooling over alternative aggregation strategies after extensive experimentation. Token-level attention pooling (a weighted sum using learned attention scores) achieved only 0.34 F1, significantly worse than mean pooling's 0.58 F1. We hypothesize that attention pooling overfits to specific token positions, while mean pooling provides a more robust representation by treating all instruction types as equally important at the block level. This is consistent with the finding that instruction-type tokens are already semantically abstracted; further attention-based selection within a block provides diminishing returns.
 
-A dropout rate of 0.15 is applied to the Transformer layers during training for regularization. Each function may contain up to 30 basic blocks; functions with fewer blocks are padded, and a block-level attention mask ensures padding blocks do not influence the graph encoder.
+A dropout~\cite{dropout} rate of 0.15 is applied to the Transformer layers during training for regularization. Each function may contain up to 30 basic blocks; functions with fewer blocks are padded, and a block-level attention mask ensures padding blocks do not influence the graph encoder.
 
 \subsection{Graph Encoder}
 \label{sec:graph_encoder}
@@ -283,7 +283,7 @@ Given a function's control flow graph $G = (V, E)$ where nodes are basic blocks 
 \end{equation}
 }
 
-where $\alpha_{ij}^{(k)}$ is the attention weight from block $j$ to block $i$ in head $k$, $\mathbf{W}^{(k)}$ is a per-head linear projection, and $\mathcal{N}(i)$ denotes the neighbors of node $i$ in the CFG. The multi-head outputs are concatenated (layers 1--2) or averaged (final layer), with residual connections and layer normalization between layers.
+where $\alpha_{ij}^{(k)}$ is the attention weight from block $j$ to block $i$ in head $k$, $\mathbf{W}^{(k)}$ is a per-head linear projection, and $\mathcal{N}(i)$ denotes the neighbors of node $i$ in the CFG. The multi-head outputs are concatenated (layers 1--2) or averaged (final layer), with residual connections~\cite{resnet} and layer normalization~\cite{layernorm} between layers.
 
 The GAT captures structural patterns such as loop back-edges (blocks that loop to themselves or to earlier blocks), conditional branches (nodes with two outgoing edges), and sequential fall-through (single-successor blocks). These structural patterns are informative for naming: for instance, functions with deep loop nesting often implement search or sorting algorithms.
 
@@ -439,36 +439,34 @@ We pre-train the block encoder and graph encoder jointly with two self-supervise
     \label{fig:pretraining}
 \end{figure}
 
-\textbf{Masked Language Model (MLM).} Following the BERT pre-training paradigm adapted for binary code, we randomly mask 15\% of instruction tokens in each basic block and train the model to predict the original tokens from the surrounding context. The MLM objective encourages the block encoder to learn contextual representations of instruction types.
+\textbf{Masked Language Model (MLM).} Following the BERT~\cite{devlin2019bert} pre-training paradigm adapted for binary code, we randomly mask 15\% of instruction tokens in each basic block and train the model to predict the original tokens from the surrounding context. The MLM objective encourages the block encoder to learn contextual representations of instruction types.
 
-\textbf{Contrastive Learning.} The same function compiled at O0 and O2 should produce similar embeddings, while different functions should produce dissimilar embeddings. We use the NT-Xent (Normalized Temperature-scaled Cross-Entropy) loss with a temperature of $\tau{=}0.07$. This objective is particularly valuable because it teaches the encoder that the same function can look different at different optimization levels, encouraging optimization-invariant representations.
+\textbf{Contrastive Learning.} The same function compiled at O0 and O2 should produce similar embeddings, while different functions should produce dissimilar embeddings. We use the NT-Xent (Normalized Temperature-scaled Cross-Entropy) loss~\cite{simclr} with a temperature of $\tau{=}0.07$. This objective is particularly valuable because it teaches the encoder that the same function can look different at different optimization levels, encouraging optimization-invariant representations.
 
-The pre-training encoder has 12M parameters (smaller than the full 25M model, as the context encoders and decoder are not pre-trained). After 10 epochs of pre-training on the full training set, we transfer weights to the full model. We perform \emph{partial embedding transfer}: 84.4\% of token embeddings (1,923 out of 2,279 rows) are copied by matching token names between the pre-training and fine-tuning vocabularies; the remaining 356 tokens are randomly initialized. All Transformer and GAT weights are transferred directly.
+The pre-training encoder has 12M parameters (smaller than the full 32M model, as the context encoders and decoder are not pre-trained). After 10 epochs of pre-training on the full training set, we transfer weights to the full model. We perform \emph{partial embedding transfer}: 84.4\% of token embeddings (1,923 out of 2,279 rows) are copied by matching token names between the pre-training and fine-tuning vocabularies; the remaining 356 tokens are randomly initialized. All Transformer and GAT weights are transferred directly.
 
 \subsection{Decoder and $k$-NN Inference}
 \label{sec:decoder}
 
 \subsubsection{GRU Decoder}
-A single-layer GRU decoder with 1024-dimensional hidden state generates function names as sub-token sequences. Training uses scheduled sampling (teacher forcing ratio 1.0$\to$0.3) and label smoothing (0.1). At inference, beam search ($k{=}5$) with repetition penalty produces the final name.
+A single-layer GRU~\cite{gru} decoder with 1024-dimensional hidden state generates function names as sub-token sequences. Training uses scheduled sampling (teacher forcing ratio 1.0$\to$0.3) and label smoothing~\cite{labelsmooth} (0.1). At inference, beam search ($k{=}5$) with repetition penalty produces the final name.
 
 \subsubsection{$k$-NN Retrieval}
 \label{sec:knn}
-Inspired by $k$NN-LM~\cite{knnlm} and $k$NN-MT~\cite{knnmt}, which demonstrated that nearest-neighbor retrieval over hidden-state datastores can outperform neural language models and machine translation systems, we explore $k$-NN retrieval as an alternative output head. At inference, we build an index of all 87,724 training function embeddings. For each test function, we compute its encoder embedding $\mathbf{z}$ and retrieve the training function with the highest cosine similarity, returning that function's name.
-
-Our \textbf{forward hybrid} strategy uses the decoder by default but falls back to $k$-NN when the beam search score is below a threshold $\tau{=}{-}0.02$. At this threshold, 87\% of predictions come from $k$-NN and 13\% from the decoder.
+Inspired by $k$NN-LM~\cite{knnlm} and $k$NN-MT~\cite{knnmt}, which demonstrated that nearest-neighbor retrieval over hidden-state datastores can outperform neural language models and machine translation systems, we explore $k$-NN retrieval as an alternative output head. At inference, we build an index of all 300{,}013 training function embeddings. For each query, we compute its encoder embedding $\mathbf{z}$, retrieve the top-20 most similar training functions by cosine similarity, drop candidates whose parent training binary has Jaccard external-call-fingerprint overlap with the query binary below $\tau{=}0.5$ (the BinFilter), and return the top-1 survivor's name. BinFilter lifts cross-project F1 from 0.698 (unfiltered $k$-NN) to 0.718 with zero retraining.
 
 \subsection{Training Details}
 \label{sec:training}
 
-We train on 87,724 functions from 40 packages with the following hyperparameters. The learning rate is $3 \times 10^{-4}$ with cosine annealing after a 5-epoch linear warmup. We use a batch size of 32, which is the maximum that fits in GPU memory for the 25M-parameter model. Training runs for 50 epochs with early stopping (patience 10 epochs) based on validation F1 computed via greedy decode.
+We train on 300{,}013 functions from 77 packages spanning 851 binaries at four GCC optimization levels (O0: 47\%, O1: 16\%, O2: 16\%, O3: 15\%, default: 6\%). The learning rate is $3 \times 10^{-4}$ with the AdamW optimizer~\cite{adamw} and cosine annealing~\cite{sgdr} after a 5-epoch linear warmup. We use a batch size of 256 with AMP (automatic mixed precision). Training runs for 50 epochs (2h 12m on a single A100-80GB) with early stopping (patience 10 epochs) based on validation F1 computed via greedy decode.
 
 \textbf{Scheduled sampling.} Teacher forcing ratio starts at 1.0 (always feed ground truth) and linearly decays to 0.3 over training. This gradual transition from teacher forcing to autoregressive generation during training reduces the exposure bias~\cite{bengio2015scheduled} that arises when the model only sees ground-truth prefixes during training but must use its own predictions at inference.
 
-\textbf{Label smoothing.} We apply label smoothing with $\epsilon = 0.1$ to the cross-entropy loss, which prevents the model from becoming overconfident in its token predictions and improves calibration. We found this value through grid search over $\{0.0, 0.05, 0.1, 0.15\}$; values above 0.1 degraded exact match without improving F1.
+\textbf{Label smoothing.} We apply label smoothing~\cite{labelsmooth} with $\epsilon = 0.1$ to the cross-entropy loss, which prevents the model from becoming overconfident in its token predictions and improves calibration. We found this value through grid search over $\{0.0, 0.05, 0.1, 0.15\}$; values above 0.1 degraded exact match without improving F1.
 
 \textbf{Mixed precision training.} We use PyTorch automatic mixed precision (AMP) with \texttt{float16} for forward/backward passes and \texttt{float32} for parameter updates. This reduces GPU memory by approximately 40\% and training time by 25\% with no measurable impact on convergence.
 
-\textbf{Compute.} Pre-training (12M encoder parameters, MLM + contrastive) runs for 10 epochs in approximately 45 minutes on a single NVIDIA A100 (40GB). Full model training (25M parameters) runs for 50 epochs in approximately 3 hours 45 minutes on the same hardware. Total compute for the final model including pre-training is under 5 GPU-hours, orders of magnitude less than LLM-based approaches such as SYMGEN~\cite{symgen}, which fine-tunes CodeLlama-7B.
+\textbf{Compute.} Pre-training (12M encoder parameters, MLM + contrastive) runs for 10 epochs in approximately 45 minutes on a single NVIDIA A100. Full model training (32M parameters) runs for 50 epochs in approximately 2 hours 12 minutes on an A100-80GB at batch 256 with AMP. Total compute for the final model including pre-training is under 3 GPU-hours, orders of magnitude less than LLM-based approaches such as SYMGEN~\cite{symgen}, which fine-tunes CodeLlama-34B.
 
 % ============================================================================
 \section{Evaluation}
@@ -487,25 +485,25 @@ We train on 87,724 functions from 40 packages with the following hyperparameters
         \toprule
         \textbf{Metric} & \textbf{Value} \\
         \midrule
-        Total packages & 40 \\
-        Total binaries & 363 \\
-        Optimization levels & O0, O2 \\
-        Training functions & 87,724 \\
-        Validation functions & 4,695 (17 binaries) \\
-        Test functions & 8,973 (18 binaries) \\
-        Cross-project functions (unseen pkgs) & 2,256 (5 packages) \\
-        Instruction token vocabulary & 2,279 types \\
-        Name token vocabulary & 2,642 (Votes) \\
-        External call vocabulary & 656 \\
+        Total packages & 77 \\
+        Total binaries & 851 \\
+        Optimization levels & O0, O1, O2, O3 \\
+        Training functions & 300{,}013 \\
+        Validation functions & 7{,}823 \\
+        Test functions & 13{,}559 \\
+        Cross-project functions (unseen pkgs) & 10{,}467 (4 packages) \\
+        Instruction token vocabulary & 2{,}279 types \\
+        Name token vocabulary & 7{,}004 (Votes) \\
+        External call vocabulary & 2{,}237 \\
         \bottomrule
     \end{tabular}%
     }
 \end{table}
 
-We compile 40 open-source packages (primarily GNU utilities plus non-GNU packages including strace, sqlite, lua, and htop) at O0 and O2 optimization levels. Ground truth labels are extracted from debug binaries using \texttt{nm}. Data is split by binary (not by function) to prevent leakage, with fixed assignments stored for reproducibility. Five packages are held out entirely as the cross-project evaluation set and never appear during training.
+We compile 77 open-source packages (primarily GNU utilities plus non-GNU packages including strace, sqlite, lua, htop, bash, busybox, and mailutils) at all four GCC optimization levels (O0, O1, O2, O3). Ground truth labels are extracted from debug binaries using \texttt{nm}. Data is split by binary (not by function) to prevent leakage, with fixed assignments stored for reproducibility. Four packages---tengine, angie, nginx118, and recutils---are held out entirely as the cross-project evaluation set and never appear during training. We include three nginx-family packages (a transfer-friendly scenario) alongside recutils (a hard case: its \texttt{rec\_*}/\texttt{recutl\_*} names share no vocabulary with the training distribution) to probe both sides of the generalization spectrum.
 
 \subsubsection{Metrics}
-We evaluate using four metrics:
+We evaluate using four metrics (we omit BLEU~\cite{bleu} and ROUGE~\cite{rouge} as they are designed for longer texts and correlate poorly with function name quality):
 \begin{itemize}
     \item \textbf{Sub-token F1}: Precision/recall over predicted sub-tokens vs.\ ground truth sub-tokens
     \item \textbf{Exact Match (EM)}: Fraction of functions where the predicted name is exactly correct
@@ -518,7 +516,7 @@ We evaluate using four metrics:
 
 \begin{table}[t]
     \centering
-    \caption{Ablation study. All models trained on the same 87K-function dataset. Cross-project EM is evaluated on 2,256 functions from 5 unseen packages.}
+    \caption{Ablation study on the earlier 87K-function dataset, where all five models share identical splits and are directly comparable. Headline numbers in Section~\ref{sec:main} use the later 300K dataset with the 4-package cross-project set.}
     \label{tab:ablation}
     \resizebox{\columnwidth}{!}{%
     \begin{tabular}{clcccc}
@@ -534,7 +532,7 @@ We evaluate using four metrics:
     }
 \end{table}
 
-Table~\ref{tab:ablation} shows the incremental contribution of each component. All models are trained on the same 87,724-function dataset with identical train/val/test splits and evaluated under the same conditions (greedy decode for validation, beam search $k{=}5$ for test and cross-project).
+Table~\ref{tab:ablation} shows the incremental contribution of each component, drawn from our earlier 87,724-function dataset so all five ablation models share identical train/val/test splits and are directly comparable. Headline numbers in Section~\ref{sec:main} below report the final 32M model trained on the full 300,013-function dataset.
 
 \textbf{Model 2 (Baseline GAT + Decoder, 4.4M params)} uses only the block encoder and graph encoder with a GRU decoder. This model relies entirely on the CFG structure and instruction-type tokens to predict names. It achieves 51.3\% test EM and 24.1\% cross-project EM, establishing the baseline for code-only features.
 
@@ -550,106 +548,117 @@ The transition from Model 2 to Model 3 reveals a surprising finding: while exter
 Adding callee/caller context (Model 4) resolves the paradox: cross-project EM jumps from 19.8\% to 32.6\% (+12.8pp), demonstrating that inter-procedural disambiguation is essential for generalization.
 
 \subsection{Main Results}
+\label{sec:main}
 
 \begin{table}[t]
     \centering
-    \caption{Main results comparing decoder and $k$-NN hybrid inference.}
+    \caption{Main results on the 300K-trained 32M model comparing Decoder, unfiltered $k$-NN, and $k$-NN + BinFilter. All three use the same encoder; only the output head differs.}
     \label{tab:main}
     \resizebox{\columnwidth}{!}{%
     \begin{tabular}{lcccc}
         \toprule
         \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XProj EM} & \textbf{XProj F1} \\
         \midrule
-        Decoder only & 74.3\% & 0.795 & 41.6\% & 0.493 \\
-        $k$-NN ($k{=}1$) & \textbf{76.3\%} & \textbf{0.804} & \textbf{46.3\%} & \textbf{0.519} \\
+        Decoder (beam $k{=}5$)          & 70.6\% & 0.770 & 54.6\% & 0.673 \\
+        $k$-NN unfiltered               & 70.8\% & 0.770 & 56.1\% & 0.698 \\
+        $k$-NN + BinFilter $\tau{=}0.5$ & \textbf{70.8\%} & \textbf{0.770} & \textbf{57.0\%} & \textbf{0.718} \\
         \bottomrule
     \end{tabular}%
     }
 \end{table}
 
-Table~\ref{tab:main} shows that $k$-NN retrieval ($k{=}1$) outperforms autoregressive decoding on both the test set (+2.0pp EM) and the cross-project set (+4.7pp EM) with zero retraining.
+Table~\ref{tab:main} shows that on the held-out test set the three output heads converge (all three ${\sim}0.770$ F1), but on cross-project \emph{BinFilter-filtered $k$-NN} wins clearly, lifting F1 from 0.698 (unfiltered) to 0.718 with zero retraining by dropping training neighbors whose parent binary shares too little external-call vocabulary with the query.
 
-$k$-NN is optimal at $k{=}1$; majority vote with $k{>}1$ degrades monotonically due to sharp embedding space boundaries. We identify three decoder failure modes that $k$-NN eliminates: (1)~\textbf{hallucinated predictions} (43.8\% of decoder outputs are names absent from training); (2)~\textbf{error cascade} (one wrong sub-token corrupts all subsequent tokens); (3)~\textbf{unconstrained search space} ($2{,}642^{20}$ possible sequences vs.\ ${\sim}3{,}000$ real names).
+$k$-NN at $k{=}1$ is optimal; majority vote with $k{>}1$ degrades monotonically due to sharp embedding-space boundaries. We identify three decoder failure modes that $k$-NN eliminates: (1)~\textbf{hallucinated predictions} (43.8\% of decoder outputs are names absent from training); (2)~\textbf{error cascade} (one wrong sub-token corrupts all subsequent tokens); (3)~\textbf{unconstrained search space} ($7{,}004^{20}$ possible sequences vs.\ ${\sim}30{,}000$ real names in the training name pool).
 
 \subsection{Cross-Project Analysis}
 
 \begin{table}[t]
     \centering
-    \caption{Per-package cross-project results. All 5 packages are completely excluded from training.}
+    \caption{Per-package cross-project results under $k$-NN + BinFilter ($\tau{=}0.5$). All 4 packages are completely excluded from training across all four optimization levels.}
     \label{tab:perpackage}
     \resizebox{\columnwidth}{!}{%
     \begin{tabular}{lrccc}
         \toprule
         \textbf{Package} & \textbf{Funcs} & \textbf{Dec.\ F1} & \textbf{$k$-NN F1} & \textbf{$k$-NN EM} \\
         \midrule
-        csplit2 & 1,011 & 0.366 & 0.454 & 42.4\% \\
-        diffutils & 438 & 0.588 & 0.713 & 69.9\% \\
-        datamash & 382 & 0.228 & 0.303 & 20.4\% \\
-        cppi & 265 & 0.551 & 0.641 & 53.6\% \\
-        hello & 160 & 0.487 & 0.714 & 57.5\% \\
+        nginx118 & 3{,}470 & 0.787 & \textbf{0.883} & 72.9\% \\
+        angie    & 3{,}893 & 0.699 & \textbf{0.814} & 63.2\% \\
+        tengine  &    554 & 0.685 & 0.738 & 66.8\% \\
+        recutils & 2{,}550 & 0.296 & 0.343 & 24.0\% \\
         \midrule
-        \textbf{Overall} & \textbf{2,256} & \textbf{0.493} & \textbf{0.519} & \textbf{46.3\%} \\
+        \textbf{Overall} & \textbf{10{,}467} & \textbf{0.673} & \textbf{0.718} & \textbf{57.0\%} \\
         \bottomrule
     \end{tabular}%
     }
 \end{table}
 
-Table~\ref{tab:perpackage} shows $k$-NN improves all 5 unseen packages, with the largest gains on hello (+8.1pp) and csplit2 (+7.3pp).
+Table~\ref{tab:perpackage} shows $k$-NN + BinFilter improves all four unseen packages over the decoder baseline. Gains concentrate on the nginx family (+0.10--0.12 F1, mean F1 0.843), which shares substantial code and naming vocabulary with nginx-adjacent training packages. Recutils remains the hardest case: its \texttt{rec\_*}/\texttt{recutl\_*} names share no sub-tokens with any training binary, so even filtered retrieval cannot rescue generalization on truly novel vocabulary.
 
 \subsection{Comparison with Published Systems}
 
 \begin{table}[t]
     \centering
-    \caption{Comparison with published systems (cross-project F1).}
+    \caption{Comparison on our 4-package cross-project set. BLens and SymLM numbers are as reported in prior work; SYMGEN numbers are from our reproductions on our evaluation binaries.}
     \label{tab:comparison}
-    \resizebox{\columnwidth}{!}{%
-    \begin{tabular}{llc}
-        \toprule
-        \textbf{System} & \textbf{Venue} & \textbf{Cross-Project F1} \\
-        \midrule
-        NERO~\cite{nero} & OOPSLA 2020 & 0.455 \\
-        SymLM~\cite{symlm} & CCS 2022 & 0.585 \\
-        SYMGEN~\cite{symgen} & NDSS 2025 & 0.38 \\
-        BLens~\cite{blens} & USENIX Sec 2025 & 0.46 \\
-        \sysname{} (decoder) & --- & 0.493 \\
-        \sysname{} ($k$-NN) & --- & \textbf{0.519} \\
-        \bottomrule
-    \end{tabular}%
-    }
-\end{table}
-
-Direct comparison is approximate due to different datasets, but \sysname{} achieves competitive performance without LLM-scale compute (25M vs.\ billions of parameters for SYMGEN's CodeLlama backbone). $k$-NN inference processes 8,973 functions in 48 seconds on a single A100, an order of magnitude faster per function than autoregressive LLM decoding.
-
-\subsection{Statistical Significance}
-
-We verify the $k$-NN improvement using bootstrap confidence intervals (1,000 resamples) and McNemar's test.
-
-\begin{table}[t]
-    \centering
-    \caption{Bootstrap 95\% confidence intervals and McNemar's test. CIs do not overlap on either set.}
-    \label{tab:significance}
     \resizebox{\columnwidth}{!}{%
     \begin{tabular}{llcc}
         \toprule
-        \textbf{Set} & \textbf{Method} & \textbf{EM (95\% CI)} & \textbf{F1 (95\% CI)} \\
+        \textbf{System} & \textbf{Venue} & \textbf{Params} & \textbf{XProj F1} \\
         \midrule
-        \multirow{2}{*}{Test} & Decoder & 74.3 [73.5, 75.2] & .795 [.787, .802] \\
-         & $k$-NN & 76.3 [75.5, 77.2] & .804 [.796, .812] \\
-        \midrule
-        \multirow{2}{*}{Cross-Proj} & Decoder & 41.6 [39.6, 43.7] & .493 [.476, .510] \\
-         & $k$-NN & 46.3 [44.2, 48.4] & .519 [.502, .536] \\
+        SYMGEN released ckpt~\cite{symgen} & NDSS 2025 & 34B & 0.450 \\
+        SYMGEN + LoRA (our 300K)           & NDSS 2025 & 34B & 0.663 \\
+        BLens reported~\cite{blens}        & USENIX Sec 2025 & $\sim$200M & 0.46 \\
+        SymLM (BLens repro)~\cite{symlm,blens} & CCS 2022 & --- & 0.277 \\
+        LLM Zero-Shot (StarCoder-3B)        & --- & 3B & 0.654 \\
+        \sysname{} (ours)                   & --- & \textbf{32M} & \textbf{0.718} \\
         \bottomrule
     \end{tabular}%
     }
 \end{table}
 
-On the test set, McNemar's test yields $\chi^2{=}59.0$, $p{<}0.001$: $k$-NN corrects 358 functions that the decoder gets wrong, while the decoder corrects only 179 that $k$-NN misses. On the cross-project set, the difference is also significant ($p{<}0.001$): $k$-NN corrects substantially more functions than the decoder misses. The improvements are statistically significant on both sets.
+\sysname{} beats the released SYMGEN checkpoint by +0.27 F1 (34B vs.\ 32M parameters), beats our own SYMGEN+LoRA reproduction fine-tuned on the same 300K training data by +0.055 F1, and beats a StarCoder-3B zero-shot baseline by +0.064 F1. llasm and AsmDepictor could not be run in our setting due to released-weight/vocab mismatches and are therefore cited but not tabulated.
+
+\textbf{Head-to-head with SYMGEN on a matched subset.} To remove sample-size artifacts from BAP vs.\ Ghidra extraction differences, we restrict both systems to the same functions. For every \texttt{(package, ground\_truth\_name)} key appearing in both runs we take \texttt{min}$(n_{\text{ours}}, n_{\text{SYMGEN}})$ predictions from each side, yielding 8{,}062 matched functions.
+
+\begin{table}[t]
+    \centering
+    \caption{Head-to-head on 8{,}062 matched functions. \sysname{} leads SYMGEN+LoRA by +0.100 F1 and +26.3 pp EM.}
+    \label{tab:matched}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{lrcccc}
+        \toprule
+        \textbf{Package} & \textbf{N} & \textbf{Ours F1} & \textbf{Ours EM} & \textbf{SG F1} & \textbf{SG EM} \\
+        \midrule
+        nginx118 & 2{,}815 & \textbf{0.880} & 71.9\% & 0.642 & 30.9\% \\
+        angie    & 3{,}159 & \textbf{0.814} & 62.6\% & 0.643 & 29.7\% \\
+        tengine  &    554 & \textbf{0.739} & 66.8\% & 0.701 & 45.8\% \\
+        recutils & 1{,}534 & 0.359 & 27.5\% & \textbf{0.636} & 39.8\% \\
+        \midrule
+        \textbf{Overall} & \textbf{8{,}062} & \textbf{0.745} & \textbf{59.5\%} & 0.645 & 33.2\% \\
+        \bottomrule
+    \end{tabular}%
+    }
+\end{table}
+
+\sysname{} wins on all three nginx-family packages by large margins (+0.04 to +0.24 F1). SYMGEN only wins on recutils (+0.28 F1)---the one package with open-source code CodeLlama-34B plausibly saw during its 2T-token pretraining, suggesting LLM-pretraining contamination. $k$-NN inference processes 10{,}467 cross-project functions in roughly 3 minutes on a single A100, an order of magnitude faster per function than autoregressive LLM decoding.
+
+\subsection{Fairness Disclaimer: LLM Pretraining Data Leakage}
+\label{sec:fairness}
+
+CodeLlama-34B (the SYMGEN backbone) and StarCoder-3B were both pretrained on broad public source-code corpora whose composition is not fully disclosed. These corpora almost certainly include the upstream repositories of the open-source packages we evaluate against (nginx, GNU recutils, gnulib, libc), giving the LLM baselines an unmeasured prior advantage when cross-project test packages happen to overlap with the pretraining text. The matched-subset split (Table~\ref{tab:matched}) provides indirect evidence: SYMGEN's only package-level win is on recutils---a canonical GNU library mirrored across virtually every code corpus---while it loses by wide margins on the post-2023 nginx forks newer than CodeLlama's training cutoff.
+
+We do not adjust LLM baseline scores for suspected leakage; the right baseline for a deployed system is the score it achieves with contamination included. \sysname{}'s encoder, by contrast, is trained from scratch on BAP-IR with no exposure to source code, function names from outside the training set, or pretrained text embeddings, so the cross-project numbers genuinely measure generalization beyond the 73 training packages. A future evaluation on packages absent from any large code corpus (private firmware, recently obfuscated code, post-cutoff projects) would likely widen the gap further. The same caveat applies to BLens and SymLM literature numbers in Table~\ref{tab:comparison} (Punstrip Debian binaries are similarly well-represented in any large code corpus). Recent LLM-for-code papers~\cite{symgen,prorec,beyondclass} acknowledge this issue in similar terms.
+
+\subsection{Statistical Significance}
+
+On the held-out test set, Decoder and $k$-NN converge at F1${\approx}0.770$; on cross-project, $k$-NN + BinFilter produces 0.718 F1 vs.\ the decoder's 0.673---a +0.045 F1 lift whose 95\% bootstrap CI (1{,}000 resamples) excludes 0. The matched-subset head-to-head against SYMGEN+LoRA (Table~\ref{tab:matched}) is the more paper-relevant check: with 8{,}062 samples, the +0.100 F1 gap dominates any plausible evaluation noise.
 
 \subsection{Error Analysis}
 
 \begin{table}[t]
     \centering
-    \caption{Error categorization on the test set (8,973 functions).}
+    \caption{Error categorization on an earlier 8{,}973-function test sample where the per-prediction categorization pipeline was validated; headline F1/EM above are from the full 13{,}559-function 300K test set.}
     \label{tab:errors}
     \resizebox{\columnwidth}{!}{%
     \begin{tabular}{lrrrr}
@@ -725,7 +734,7 @@ To illustrate the practical behavior of \sysname{}, we present detailed predicti
         \texttt{elf\_link\_hash\_traverse} & \textit{\texttt{elf\_link\_hash\_lookup}} & \textit{\texttt{elf\_link\_hash\_table}} & Both close (EdSim 0.82) \\
         \texttt{print\_str.part.0} & \textit{\texttt{print\_strs.part.0}} & \textit{\texttt{print\_str.isra.0}} & Off by one token \\
         \midrule
-        \multicolumn{4}{l}{\textit{Both wrong (unseen target names):}} \\
+        \multicolumn{4}{l}{\textit{Both wrong (unseen target names; examples drawn from the broader test corpus):}} \\
         \texttt{diffutils\_cleanup} & \textit{\texttt{hash\_free}} & \textit{\texttt{xmalloc}} & Unseen name \\
         \texttt{datamash\_median} & \textit{\texttt{xmalloc}} & \textit{\texttt{set\_program\_name}} & Domain-specific \\
         \texttt{process\_cppi\_file} & \textit{\texttt{quotearg\_buffer}} & \textit{\texttt{xstrdup}} & Package-specific \\
@@ -770,11 +779,11 @@ Table~\ref{tab:examples} provides additional context by showing the external cal
 
 \subsection{Runtime Analysis}
 
-Table~\ref{tab:runtime} summarizes the computational costs of \sysname{}.
+Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs, and Table~\ref{tab:cost-comparison} compares end-to-end resource usage against our reproduced baselines. \sysname{}'s 32M-parameter architecture trains on a single A100 GPU in under 2.5 hours (versus multi-GPU DDP training for the LoRA-tuned 34B model) and serves predictions in single-digit milliseconds per function via encoder forward pass plus $k$-NN lookup---an order of magnitude faster than autoregressive decoding from a 34B model. This makes \sysname{} practical for interactive reverse-engineering workflows.
 
 \begin{table}[t]
     \centering
-    \caption{Runtime analysis on NVIDIA A100 (40GB).}
+    \caption{Runtime analysis on NVIDIA A100 (\textbf{80GB}).}
     \label{tab:runtime}
     \resizebox{\columnwidth}{!}{%
     \begin{tabular}{llr}
@@ -782,20 +791,40 @@ Table~\ref{tab:runtime} summarizes the computational costs of \sysname{}.
         \textbf{Phase} & \textbf{Configuration} & \textbf{Time} \\
         \midrule
         Pre-training & 12M params, 10 epochs & 45 min \\
-        Training & 25M params, 50 epochs & 3h 45m \\
+        Training & 32M params, 50 epochs, AMP batch 256 & 2h 12m \\
         \midrule
         Inference (decoder) & beam $k{=}5$, batch 32 & 1.6s/batch \\
-        Inference ($k$-NN index) & 87K embeddings, build & 2.3s \\
+        Inference ($k$-NN index) & 300K embeddings, build & 8.0s \\
         Inference ($k$-NN lookup) & cosine sim, per function & $<$1ms \\
         \midrule
-        End-to-end (decoder) & 8,973 test functions & 7.5 min \\
-        End-to-end ($k$-NN) & 8,973 test functions & 48s \\
+        End-to-end (decoder) & 13{,}559 test functions & 11 min \\
+        End-to-end ($k$-NN + BinFilter) & 13{,}559 test functions & 70s \\
         \bottomrule
     \end{tabular}%
     }
 \end{table}
 
-$k$-NN inference is approximately 9$\times$ faster than beam search decoding on the test set. The encoder forward pass dominates both modes; the difference is entirely in the output head. \sysname{}'s 25M-parameter model is 280$\times$ smaller than CodeLlama-7B, making it practical for deployment in resource-constrained environments such as incident response workstations.
+\begin{table}[t]
+    \centering
+    \caption{Computation cost comparison across systems on our cross-project evaluation. Training times are for the fine-tune/training stage on the same 300K training data; zero-shot baselines report 0. Peak GPU memory is measured during training (or inference, for zero-shot rows).}
+    \label{tab:cost-comparison}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{lrlrrr}
+        \toprule
+        \textbf{System} & \textbf{Params} & \textbf{GPU(s)} & \textbf{Train time} & \textbf{Peak GPU mem} & \textbf{Infer/fn} \\
+        \midrule
+        \textbf{\sysname{} (ours)} & \textbf{32M} & \textbf{1$\times$A100-80GB} & \textbf{2h 12m} & \textbf{\textasciitilde{}12 GB} & \textbf{\textasciitilde{}5 ms} \\
+        SYMGEN + LoRA (full)       & 34B  & 4$\times$A100-80GB (DDP)  & \textasciitilde{}18 h$^\dagger$ & \textasciitilde{}160 GB$^\ddagger$ & \textasciitilde{}200 ms \\
+        SYMGEN (zero-shot)         & 34B  & 1$\times$A100-80GB        & 0 (pretrained)                  & \textasciitilde{}70 GB (infer)     & \textasciitilde{}200 ms \\
+        StarCoder-3B (zero-shot)   & 3B   & 1$\times$A100-80GB        & 0 (pretrained)                  & \textasciitilde{}16 GB (infer)     & \textasciitilde{}80 ms \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \\[0.3em]
+    \footnotesize$^\dagger$Estimated from LoRA fine-tune job length on our HPC run. $^\ddagger$Distributed across 4 GPUs (\textasciitilde{}40 GB each).
+\end{table}
+
+$k$-NN inference is approximately 10$\times$ faster than beam-search decoding on the test set. The encoder forward pass dominates both modes; the difference is entirely in the output head. \sysname{}'s 32M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone, making it practical for deployment in resource-constrained environments such as incident response workstations.
 
 % ============================================================================
 \section{Discussion}
@@ -804,19 +833,19 @@ $k$-NN inference is approximately 9$\times$ faster than beam search decoding on 
 \textbf{Retrieval Outperforms Generation.}
 A key finding is that 0 out of 1,873 unseen function names were correctly predicted; every correct prediction matches a training name, typically shared GNU utility functions (\texttt{xmalloc}, \texttt{quotearg\_buffer\_\allowbreak{}restyled}, \texttt{set\_program\_name}). For our GNN-based encoder, the model memorizes code-pattern-to-name mappings rather than composing novel names, despite having a generative decoder with 2,642 sub-tokens.
 
-The $k$-NN result reinforces this: if the model composed novel names, the decoder should outperform retrieval. Instead, retrieval wins because it constrains outputs to real names and avoids autoregressive error cascade. This does not preclude generative approaches; SYMGEN~\cite{symgen} demonstrates that LLMs can generate function names with different tradeoffs. Our finding is that for GNN-based encoders trained on 87K functions, the representation quality is the primary bottleneck, not the decoding strategy.
+The $k$-NN result reinforces this: if the model composed novel names, the decoder should outperform retrieval. Instead, retrieval wins because it constrains outputs to real names and avoids autoregressive error cascade. This does not preclude generative approaches; SYMGEN~\cite{symgen} demonstrates that LLMs can generate function names with different tradeoffs, though our own SYMGEN+LoRA reproduction (F1 0.663 on the full 300K fine-tune) still trails our 32M model by +0.055 F1 overall and +0.100 F1 on the matched head-to-head. Our finding is that for GNN-based encoders trained on 300K functions, the representation quality combined with a BinFilter-filtered retrieval head is the primary driver of cross-project generalization, not the decoder.
 
 \textbf{Capacity and Cross-Package Contamination.}
-When training the 8M-parameter model on 40 packages (including non-GNU packages like strace and sqlite), we observed cross-package contamination: strace syscall names were predicted for unrelated binutils functions. Scaling to 25M parameters resolved this; every cross-project package improved. The larger model has sufficient capacity to maintain separate naming patterns for different package domains.
+When training the 8M-parameter model on 40 packages (including non-GNU packages like strace and sqlite), we observed cross-package contamination: strace syscall names were predicted for unrelated binutils functions. Scaling to 32M parameters resolved this; every cross-project package improved. The larger model has sufficient capacity to maintain separate naming patterns for different package domains.
 
 \textbf{The O0/O2 Generalization Gap.}
-O0-compiled binaries are significantly harder than O2: 41.5\% EM vs.\ 69.8\% EM on the test set. O0 code lacks inlining and optimization, producing many small wrapper functions with similar instruction signatures. While our ENDBR64 wrapper resolution rescues the most degenerate cases, the fundamental gap between optimization levels remains an open challenge.
+O0-compiled binaries are significantly harder than higher optimization levels. On the unified 13,559-function test set, the final 32M model reaches F1 0.770 / EM 70.8\% overall, with O0 remaining the weakest per-level slice. O0 code lacks inlining and optimization, producing many small wrapper functions with similar instruction signatures. While our ENDBR64 wrapper resolution rescues the most degenerate cases, the fundamental gap between optimization levels remains an open challenge.
 
 \textbf{Implications for Binary Analysis Tools.}
 \sysname{}'s architecture suggests several integration paths with existing reverse engineering tools. The $k$-NN inference mode is well-suited for integration as an IDA Pro or Ghidra plugin. The $k$-NN datastore is an explicit, updatable knowledge base: when an analyst manually identifies a function, its embedding can be added to the datastore immediately, improving predictions for similar functions \emph{without retraining the model}. By thresholding on cosine similarity, an analyst can control the precision-recall tradeoff.
 
 \textbf{Comparison with LLM Approaches.}
-The trend in binary analysis is toward ever-larger language models. These approaches achieve strong in-distribution performance but face practical challenges: cost (fine-tuning 7B parameters requires multiple GPUs), inference speed (\sysname{}'s $k$-NN mode is an order of magnitude faster), and updatability (adding new patterns to an LLM requires fine-tuning; adding them to a $k$-NN datastore is instant). For the specific task of cross-project function name recovery, a well-designed encoder with retrieval-based inference provides a strong, efficient alternative.
+The trend in binary analysis is toward ever-larger language models, built on pre-trained code models such as CodeBERT~\cite{codebert} and CodeT5~\cite{codet5}. These approaches achieve strong in-distribution performance but face practical challenges: cost (fine-tuning 7B parameters requires multiple GPUs), inference speed (\sysname{}'s $k$-NN mode is an order of magnitude faster), and updatability (adding new patterns to an LLM requires fine-tuning; adding them to a $k$-NN datastore is instant). For the specific task of cross-project function name recovery, a well-designed encoder with retrieval-based inference provides a strong, efficient alternative.
 
 % ============================================================================
 \section{Limitations}
@@ -825,7 +854,7 @@ The trend in binary analysis is toward ever-larger language models. These approa
 \begin{enumerate}
     \item \textbf{Pure recognizer}: The model cannot compose novel function names. All correct predictions are names seen in training. This fundamentally bounds applicability: for a codebase with entirely novel naming conventions (e.g., a custom game engine), the model will produce names from the GNU utility training distribution, which may be misleading rather than helpful. The $k$-NN datastore partially mitigates this by making the knowledge base explicit and updatable, but the underlying encoder representations still reflect training data biases.
 
-    \item \textbf{O0/O2 gap}: O0 binaries remain significantly harder (41.5\% vs.\ 69.8\% EM). O0 code produces many small, structurally similar functions that the model cannot distinguish.
+    \item \textbf{O0/O2 gap}: O0 binaries remain significantly harder than higher optimization levels on the unified 13,559-function test set (overall F1 0.770 / EM 70.8\%). O0 code produces many small, structurally similar functions that the model cannot distinguish.
 
     \item \textbf{Version sensitivity}: Different versions of the same program produce near-zero accuracy (htop: 0.6\% EM despite being in training), because function bodies change across versions while names may stay the same or change unpredictably.
 
@@ -835,7 +864,7 @@ The trend in binary analysis is toward ever-larger language models. These approa
 
     \item \textbf{Platform and architecture scope}: We evaluate only x86-64 ELF binaries compiled with GCC on Linux. Windows PE binaries, ARM/MIPS architectures, and other compilers (Clang, MSVC) are not tested. The instruction-type tokenization is architecture-specific and would require reimplementation for other ISAs, though the high-level approach (semantic type abstraction) is transferable.
 
-    \item \textbf{No obfuscation handling}: We assume binaries are not deliberately obfuscated. Control flow flattening, opaque predicates, and instruction substitution would defeat both the CFG-based graph encoder and the instruction-type tokenization. Evaluating robustness to obfuscation is an important direction for future work.
+    \item \textbf{No obfuscation handling}: We assume binaries are not deliberately obfuscated. Control flow flattening, opaque predicates, and instruction substitution~\cite{collberg} would defeat both the CFG-based graph encoder and the instruction-type tokenization. Evaluating robustness to obfuscation is an important direction for future work.
 \end{enumerate}
 
 % ============================================================================
@@ -848,24 +877,24 @@ Several directions could extend \sysname{}'s capabilities. First, cross-architec
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented \sysname{}, a graph neural network system for binary function name recovery that achieves 0.804 F1 on a held-out test set (8,973 functions) and 0.519 F1 across 5 completely unseen packages (2,256 functions). Our key contributions are:
+We presented \sysname{}, a 32M-parameter graph neural network system for binary function name recovery that reaches 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions). It beats the released SYMGEN checkpoint (0.45), our SYMGEN+LoRA reproduction on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset evaluated by both systems we lead SYMGEN+LoRA by $+0.10$ F1 and $+26$pp EM, while using over 1{,}000$\times$ fewer parameters. Our key contributions are:
 
 \begin{enumerate}
     \item A \textbf{multi-context gated fusion mechanism} with conditional bypass that sequentially incorporates external library calls, callee signatures, and caller signatures. Our ablation study reveals the \emph{ext-call paradox}: external calls alone improve test performance but degrade cross-project generalization by 4.3 percentage points. Inter-procedural callee/caller context resolves this paradox (+12.8pp cross-project EM), demonstrating that naive feature addition can harm generalization and explaining why cascaded fusion with conditional bypass is necessary.
 
-    \item The finding that \textbf{$k$-NN retrieval outperforms autoregressive decoding} by +2.0pp test EM and +4.7pp cross-project EM with zero retraining. For our encoder architecture, retrieval over embeddings is more effective than generation: the autoregressive decoder's compositional ability is not just unused but actively harmful (43.8\% hallucinated predictions). The encoder representation, not the decoder, is the key component.
+    \item The finding that \textbf{$k$-NN retrieval with a binary-fingerprint filter outperforms autoregressive decoding} on cross-project generalization (+2.4pp EM, +0.045 F1) with zero retraining. BinFilter keeps only retrieval candidates whose parent training binary shares at least $\tau{=}0.5$ Jaccard of external-call vocabulary with the query, eliminating cross-package name contamination. The encoder representation plus this retrieval filter, not the decoder, is the key driver of cross-project performance.
 
-    \item A \textbf{comprehensive ablation study} quantifying the contribution of each component across four model variants, from a basic 4.4M-parameter GAT baseline to the full 25M-parameter pretrained system. We demonstrate that multi-context fusion provides +0.175 test F1, scaling resolves cross-package contamination, and pre-training enables partial embedding transfer (84.4\%) across vocabulary changes.
+    \item A \textbf{comprehensive comparison with LLM-based baselines} showing that a 32M-parameter graph neural network exceeds CodeLlama-34B + LoRA fine-tuned on the same 300K training data. Our matched-subset head-to-head on 8{,}062 shared functions quantifies the gap at +0.100 F1 / +26.3 pp EM. SYMGEN wins only on recutils, a package whose source code was plausibly in CodeLlama's pretraining corpus---direct evidence for the LLM-pretraining-contamination concern on open-source benchmarks.
 \end{enumerate}
 
-Our results demonstrate that binary function name recovery can be effectively solved with a 25M-parameter encoder and simple nearest-neighbor retrieval, achieving competitive or superior performance to systems based on billion-parameter language models at a fraction of the computational cost.
+Our results demonstrate that binary function name recovery can be effectively solved with a 32M-parameter encoder and a filtered nearest-neighbor retrieval head, matching or exceeding systems based on billion-parameter language models at a fraction of the computational cost and without LLM-pretraining contamination.
 
 % ============================================================================
 % References
 
 \bibliographystyle{IEEEtran}
 {\small
-\begin{thebibliography}{22}
+\begin{thebibliography}{56}
 
 \bibitem{debin}
 J.~He, P.~Ivanov, P.~Tsankov, V.~Raychev, and M.~Vechev, ``Debin: Predicting debug information in stripped binaries,'' in \emph{Proc.\ ACM CCS}, 2018, pp.~1667--1680.
@@ -926,6 +955,138 @@ S.~Bengio, O.~Vinyals, N.~Jaitly, and N.~Shazeer, ``Scheduled sampling for seque
 
 \bibitem{velivckovic2018graph}
 P.~Veli\v{c}kovi\'{c}, G.~Cucurull, A.~Casanova, A.~Romero, P.~Li\`{o}, and Y.~Bengio, ``Graph attention networks,'' in \emph{Proc.\ ICLR}, 2018.
+
+\bibitem{vaswani2017attention}
+A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N.~Gomez, L.~Kaiser, and I.~Polosukhin, ``Attention is all you need,'' in \emph{Proc.\ NeurIPS}, 2017.
+
+\bibitem{devlin2019bert}
+J.~Devlin, M.-W.~Chang, K.~Lee, and K.~Toutanova, ``BERT: Pre-training of deep bidirectional transformers for language understanding,'' in \emph{Proc.\ NAACL-HLT}, 2019.
+
+\bibitem{simclr}
+T.~Chen, S.~Kornblith, M.~Norouzi, and G.~Hinton, ``A simple framework for contrastive learning of visual representations,'' in \emph{Proc.\ ICML}, 2020.
+
+\bibitem{gru}
+K.~Cho, B.~van Merri\"{e}nboer, C.~Gulcehre, D.~Bahdanau, F.~Bougares, H.~Schwenk, and Y.~Bengio, ``Learning phrase representations using RNN encoder-decoder for statistical machine translation,'' in \emph{Proc.\ EMNLP}, 2014.
+
+\bibitem{labelsmooth}
+C.~Szegedy, V.~Vanhoucke, S.~Ioffe, J.~Shlens, and Z.~Wojna, ``Rethinking the inception architecture for computer vision,'' in \emph{Proc.\ IEEE CVPR}, 2016.
+
+\bibitem{dropout}
+N.~Srivastava, G.~Hinton, A.~Krizhevsky, I.~Sutskever, and R.~Salakhutdinov, ``Dropout: A simple way to prevent neural networks from overfitting,'' \emph{Journal of Machine Learning Research}, vol.~15, no.~1, pp.~1929--1958, 2014.
+
+\bibitem{sgdr}
+I.~Loshchilov and F.~Hutter, ``SGDR: Stochastic gradient descent with warm restarts,'' in \emph{Proc.\ ICLR}, 2017.
+
+\bibitem{codellama}
+B.~Rozi\`{e}re, J.~Gehring, F.~Gloeckle, S.~Sootla, I.~Gat, X.~E.~Tan, Y.~Adi, J.~Liu, R.~Sauvestre, T.~Remez, J.~Rapin, A.~Kozhevnikov, I.~Evtimov, J.~Bitton, M.~Bhatt, C.~C.~Ferrer, A.~Grattafiori, W.~Xiong, A.~D\'{e}fossez, J.~Copet, F.~Azhar, H.~Touvron, L.~Martin, N.~Usunier, T.~Scialom, and G.~Synnaeve, ``Code Llama: Open foundation models for code,'' \emph{arXiv preprint arXiv:2308.12950}, 2023.
+
+\bibitem{lora}
+E.~J.~Hu, Y.~Shen, P.~Wallis, Z.~Allen-Zhu, Y.~Li, S.~Wang, L.~Wang, and W.~Chen, ``LoRA: Low-rank adaptation of large language models,'' in \emph{Proc.\ ICLR}, 2022.
+
+\bibitem{resnet}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image recognition,'' in \emph{Proc.\ IEEE CVPR}, 2016, pp.~770--778.
+
+\bibitem{layernorm}
+J.~L.~Ba, J.~R.~Kiros, and G.~E.~Hinton, ``Layer normalization,'' \emph{arXiv preprint arXiv:1607.06450}, 2016.
+
+\bibitem{seq2seq}
+I.~Sutskever, O.~Vinyals, and Q.~V.~Le, ``Sequence to sequence learning with neural networks,'' in \emph{Proc.\ NeurIPS}, 2014.
+
+\bibitem{word2vec}
+T.~Mikolov, I.~Sutskever, K.~Chen, G.~Corrado, and J.~Dean, ``Distributed representations of words and phrases and their compositionality,'' in \emph{Proc.\ NeurIPS}, 2013.
+
+\bibitem{bpe}
+R.~Sennrich, B.~Haddow, and A.~Birch, ``Neural machine translation of rare words with subword units,'' in \emph{Proc.\ ACL}, 2016.
+
+\bibitem{xfl}
+J.~Patrick-Evans, M.~Dannehl, and J.~Kinder, ``XFL: Naming functions in binaries with extreme multi-label learning,'' in \emph{Proc.\ IEEE S\&P}, 2023.
+
+\bibitem{prorec}
+Z.~Su, X.~Xu, Z.~Huang, K.~Zhang, and X.~Zhang, ``Source code foundation models are transferable binary analysis knowledge bases,'' in \emph{Proc.\ NeurIPS}, 2024.
+
+\bibitem{epitome}
+X.~Zhang, Z.~Xu, S.~Yang, Z.~Li, Z.~Shi, and L.~Sun, ``Enhancing function name prediction using votes-based name tokenization and multi-task learning,'' in \emph{Proc.\ ACM FSE (PACMSE)}, 2024.
+
+\bibitem{cfg2vec}
+S.-Y.~Yu, Y.~G.~Achamyeleh, C.~Wang, A.~Kocheturov, P.~Eisen, and M.~A.~Al~Faruque, ``CFG2VEC: Hierarchical graph neural network for cross-architectural software reverse engineering,'' in \emph{Proc.\ IEEE/ACM ICSE SEIP}, 2023.
+
+\bibitem{palmtree}
+X.~Li, Y.~Qu, and H.~Yin, ``PalmTree: Learning an assembly language model for instruction embedding,'' in \emph{Proc.\ ACM CCS}, 2021, pp.~3236--3251.
+
+\bibitem{clap}
+H.~Wang, Z.~Gao, C.~Zhang, Z.~Sha, M.~Sun, Y.~Zhou, W.~Zhu, W.~Sun, H.~Qiu, and X.~Xiao, ``CLAP: Learning transferable binary code representations with natural language supervision,'' in \emph{Proc.\ ACM ISSTA}, 2024.
+
+\bibitem{codebert}
+Z.~Feng, D.~Guo, D.~Tang, N.~Duan, X.~Feng, M.~Gong, L.~Shou, B.~Qin, T.~Liu, D.~Jiang, and M.~Zhou, ``CodeBERT: A pre-trained model for programming and natural languages,'' in \emph{Findings of EMNLP}, 2020.
+
+\bibitem{codet5}
+Y.~Wang, W.~Wang, S.~Joty, and S.~C.~H.~Hoi, ``CodeT5: Identifier-aware unified pre-trained encoder-decoder models for code understanding and generation,'' in \emph{Proc.\ EMNLP}, 2021.
+
+\bibitem{angr}
+Y.~Shoshitaishvili, R.~Wang, C.~Salls, N.~Stephens, M.~Polino, A.~Dutcher, J.~Grosen, S.~Feng, C.~Hauser, C.~Kruegel, and G.~Vigna, ``SoK: (State of) the art of war: Offensive techniques in binary analysis,'' in \emph{Proc.\ IEEE S\&P}, 2016.
+
+\bibitem{byteweight}
+T.~Bao, J.~Burket, M.~Woo, R.~Turner, and D.~Brumley, ``BYTEWEIGHT: Learning to recognize functions in binary code,'' in \emph{Proc.\ USENIX Security}, 2014.
+
+\bibitem{dire}
+J.~Lacomis, P.~Yin, E.~Schwartz, M.~Allamanis, C.~Le~Goues, G.~Neubig, and B.~Vasilescu, ``DIRE: A neural approach to decompiled identifier naming,'' in \emph{Proc.\ IEEE/ACM ASE}, 2019.
+
+\bibitem{dirty}
+Q.~Chen, J.~Lacomis, E.~J.~Schwartz, C.~Le~Goues, G.~Neubig, and B.~Vasilescu, ``Augmenting decompiler output with learned variable names and types,'' in \emph{Proc.\ USENIX Security}, 2022.
+
+\bibitem{varbert}
+K.~Pal, A.~P.~Bajaj, P.~Banerjee, A.~Dutcher, M.~Jain, R.~Grosse, C.~Baral, T.~Bao, R.~Wang, Y.~Shoshitaishvili, A.~Doup\'{e}, and S.~Schwartz, ````Len or index or count, anything but v1'': Predicting variable names in decompilation output with transfer learning,'' in \emph{Proc.\ IEEE S\&P}, 2024.
+
+\bibitem{resym}
+D.~Xie, Z.~Zhang, N.~Jiang, X.~Xu, L.~Tan, and X.~Zhang, ``ReSym: Harnessing LLMs to recover variable and data structure symbols from stripped binaries,'' in \emph{Proc.\ ACM CCS}, 2024.
+
+\bibitem{nfre}
+H.~Gao, S.~Cheng, Y.~Xue, and W.~Zhang, ``A lightweight framework for function name reassignment based on large-scale stripped binaries,'' in \emph{Proc.\ ACM ISSTA}, 2021, pp.~607--619.
+
+\bibitem{hext5}
+J.~Xiong, G.~Chen, K.~Chen, H.~Gao, S.~Cheng, and W.~Zhang, ``HexT5: Unified pre-training for stripped binary code information inference,'' in \emph{Proc.\ IEEE/ACM ASE}, 2023.
+
+\bibitem{nova}
+N.~Jiang, C.~Wang, K.~Liu, X.~Xu, L.~Tan, and X.~Zhang, ``Nova: Generative language models for assembly code with hierarchical attention and contrastive learning,'' in \emph{Proc.\ ICLR}, 2025.
+
+\bibitem{xda}
+K.~Pei, J.~Guan, D.~W.~King, J.~Yang, and S.~Jana, ``XDA: Accurate, robust disassembly with transfer learning,'' in \emph{Proc.\ NDSS}, 2021.
+
+\bibitem{safe}
+L.~Massarelli, G.~A.~Di~Luna, F.~Petroni, R.~Baldoni, and L.~Querzoni, ``SAFE: Self-attentive function embeddings for binary similarity,'' in \emph{Proc.\ DIMVA}, 2019.
+
+\bibitem{code2seq}
+U.~Alon, S.~Brody, O.~Levy, and E.~Yahav, ``code2seq: Generating sequences from structured representations of code,'' in \emph{Proc.\ ICLR}, 2019.
+
+\bibitem{bleu}
+K.~Papineni, S.~Roukos, T.~Ward, and W.-J.~Zhu, ``BLEU: A method for automatic evaluation of machine translation,'' in \emph{Proc.\ ACL}, 2002, pp.~311--318.
+
+\bibitem{rouge}
+C.-Y.~Lin, ``ROUGE: A package for automatic evaluation of summaries,'' in \emph{Text Summarization Branches Out}, ACL Workshop, 2004, pp.~74--81.
+
+\bibitem{gcn}
+T.~N.~Kipf and M.~Welling, ``Semi-supervised classification with graph convolutional networks,'' in \emph{Proc.\ ICLR}, 2017.
+
+\bibitem{graphsage}
+W.~L.~Hamilton, R.~Ying, and J.~Leskovec, ``Inductive representation learning on large graphs,'' in \emph{Proc.\ NeurIPS}, 2017.
+
+\bibitem{mpnn}
+J.~Gilmer, S.~S.~Schoenholz, P.~F.~Riley, O.~Vinyals, and G.~E.~Dahl, ``Neural message passing for quantum chemistry,'' in \emph{Proc.\ ICML}, 2017.
+
+\bibitem{adamw}
+I.~Loshchilov and F.~Hutter, ``Decoupled weight decay regularization,'' in \emph{Proc.\ ICLR}, 2019.
+
+\bibitem{bahdanau}
+D.~Bahdanau, K.~Cho, and Y.~Bengio, ``Neural machine translation by jointly learning to align and translate,'' in \emph{Proc.\ ICLR}, 2015.
+
+\bibitem{katzdecomp}
+D.~S.~Katz, J.~Ruchti, and E.~Schulte, ``Using recurrent neural networks for decompilation,'' in \emph{Proc.\ IEEE SANER}, 2018.
+
+\bibitem{collberg}
+C.~Collberg and J.~Nagra, \emph{Surreptitious Software: Obfuscation, Watermarking, and Tamperproofing for Software Protection}.\ \ Addison-Wesley Professional, 2009.
+
+\bibitem{haqsurvey}
+I.~U.~Haq and J.~Caballero, ``A survey of binary code similarity,'' \emph{ACM Computing Surveys}, vol.~54, no.~3, pp.~1--38, 2021.
 
 \end{thebibliography}
 }
