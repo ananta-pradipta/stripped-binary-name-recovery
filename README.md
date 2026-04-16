@@ -1,4 +1,4 @@
-# FuncR: Binary Function Name Recovery via Graph-Based Multi-Context Embeddings and Retrieval
+# GraphR: Structure-Aware Multi-Context Embeddings and Retrieval for Binary Function Name Recovery
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.5](https://img.shields.io/badge/pytorch-2.5+-ee4c2c.svg)](https://pytorch.org/)
@@ -232,17 +232,17 @@ Cross-project packages are held out entirely from training. Raw predictions arch
 | SYMGEN + LoRA | NDSS'25 | 34B | 0.663 |
 | BLens (reported) | USENIX Sec'25 | ~200M | 0.46 |
 | LLM Zero-Shot (StarCoder-3B) | - | 3B | 0.654 |
-| **FuncR (ours)** | - | **25M** | **0.718** |
+| **GraphR (ours)** | - | **25M** | **0.718** |
 
-Each row is the system's F1 on its own evaluation sample — BAP vs. Ghidra pipelines extract different subsets of ground-truth-named functions per binary, so the total function counts differ across systems (SymGen 15,983; FuncR 10,467; StarCoder 12,391). SymGen + LoRA here is fine-tuned on the full 300K training set; raw predictions archived under `baselines/symgen/`.
+Each row is the system's F1 on its own evaluation sample — BAP vs. Ghidra pipelines extract different subsets of ground-truth-named functions per binary, so the total function counts differ across systems (SymGen 15,983; GraphR 10,467; StarCoder 12,391). SymGen + LoRA here is fine-tuned on the full 300K training set; raw predictions archived under `baselines/symgen/`.
 
 ### Head-to-head with SymGen (matched functions)
 
-For a strict apples-to-apples comparison against our strongest baseline (SymGen + LoRA), we restrict both systems to **the same function set**: for every `(package, ground-truth-name)` key that appears in both evaluation runs, we take `min(count_FuncR, count_SymGen)` predictions from each side. This removes the sample-size artifact without discarding information.
+For a strict apples-to-apples comparison against our strongest baseline (SymGen + LoRA), we restrict both systems to **the same function set**: for every `(package, ground-truth-name)` key that appears in both evaluation runs, we take `min(count_GraphR, count_SymGen)` predictions from each side. This removes the sample-size artifact without discarding information.
 
 **Matched subset: 8,062 functions** (3,428 unique `(package, name)` keys across angie / nginx118 / tengine / recutils).
 
-| Package | N | FuncR F1 | FuncR EM | SymGen F1 | SymGen EM | Δ F1 |
+| Package | N | GraphR F1 | GraphR EM | SymGen F1 | SymGen EM | Δ F1 |
 |---|---|---|---|---|---|---|
 | nginx118 | 2,815 | **0.880** | 71.9% | 0.642 | 30.9% | **+0.238** |
 | angie | 3,159 | **0.814** | 62.6% | 0.643 | 29.7% | **+0.171** |
@@ -250,7 +250,7 @@ For a strict apples-to-apples comparison against our strongest baseline (SymGen 
 | recutils | 1,534 | 0.359 | 27.5% | **0.636** | 39.8% | −0.277 |
 | **Overall** | **8,062** | **0.745** | **59.5%** | 0.645 | 33.2% | **+0.100** |
 
-On the matched set, FuncR (25M, from scratch) leads SymGen + LoRA (34B) by **+0.100 F1** and **+26.3 pp EM**. Recutils is the only package where SymGen wins — consistent with CodeLlama-34B's source-code pretraining having already seen recutils on GitHub, an advantage not available to our BAP-IR-only model.
+On the matched set, GraphR (25M, from scratch) leads SymGen + LoRA (34B) by **+0.100 F1** and **+26.3 pp EM**. Recutils is the only package where SymGen wins — consistent with CodeLlama-34B's source-code pretraining having already seen recutils on GitHub, an advantage not available to our BAP-IR-only model.
 
 ---
 
