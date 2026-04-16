@@ -232,7 +232,7 @@ Cross-project packages are held out entirely from training. Raw predictions arch
 | SYMGEN + LoRA | NDSS'25 | 34B | 0.663 |
 | BLens (reported) | USENIX Sec'25 | ~200M | 0.46 |
 | LLM Zero-Shot (StarCoder-3B) | - | 3B | 0.654 |
-| **FuncR (ours)** | - | **25M** | **0.718** |
+| **Our Model** | - | **25M** | **0.718** |
 
 Each row is the system's F1 on its own evaluation sample — BAP vs. Ghidra pipelines extract different subsets of ground-truth-named functions per binary, so the total function counts differ across systems (SymGen 15,983; FuncR 10,467; StarCoder 12,391). SymGen + LoRA here is fine-tuned on the full 300K training set; raw predictions archived under `baselines/symgen/`.
 
