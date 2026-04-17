@@ -9,19 +9,19 @@
 # Usage: bash scripts/expand_bap_only.sh [tier1|tier2|tier3|all]
 # ============================================================
 set -eo pipefail
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 # Don't exit on individual package failures
 set +e
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
-DATA_RAW="$HOME/cs785-project/data/raw"
-DATA_STRIPPED="$HOME/cs785-project/data/stripped"
-DATA_DEBUG="$HOME/cs785-project/data/debug"
-DATA_BIR="$HOME/cs785-project/data/bir"
-DATA_GRAPHS="$HOME/cs785-project/data/graphs"
-DATA_LABELS="$HOME/cs785-project/data/labels"
-DATA_EXT="$HOME/cs785-project/data/external_calls"
+BUILD_DIR="$HOME/bfnr-project/build_tmp"
+DATA_RAW="$HOME/bfnr-project/data/raw"
+DATA_STRIPPED="$HOME/bfnr-project/data/stripped"
+DATA_DEBUG="$HOME/bfnr-project/data/debug"
+DATA_BIR="$HOME/bfnr-project/data/bir"
+DATA_GRAPHS="$HOME/bfnr-project/data/graphs"
+DATA_LABELS="$HOME/bfnr-project/data/labels"
+DATA_EXT="$HOME/bfnr-project/data/external_calls"
 
 mkdir -p "$BUILD_DIR" "$DATA_RAW" "$DATA_STRIPPED" "$DATA_DEBUG" "$DATA_BIR" "$DATA_GRAPHS" "$DATA_LABELS" "$DATA_EXT"
 
@@ -63,7 +63,7 @@ compile_at_opts() {
         wget -q "$url" -O "$tarball" 2>&1 || {
             echo "  ⚠ Download failed. Skipping."
             FAILED=$((FAILED + 1))
-            cd ~/cs785-project
+            cd ~/bfnr-project
             return 1
         }
     fi
@@ -73,7 +73,7 @@ compile_at_opts() {
         tar xf "$tarball" 2>/dev/null || {
             echo "  ⚠ Extract failed. Skipping."
             FAILED=$((FAILED + 1))
-            cd ~/cs785-project
+            cd ~/bfnr-project
             return 1
         }
     fi
@@ -139,7 +139,7 @@ compile_at_opts() {
         cd "$BUILD_DIR"
     done
 
-    cd ~/cs785-project
+    cd ~/bfnr-project
 }
 
 # ══════════════════════════════════════════════
@@ -298,7 +298,7 @@ if [ "$TIER" = "tier1" ] || [ "$TIER" = "all" ]; then
         done
         cd "$BUILD_DIR"
     done
-    cd ~/cs785-project
+    cd ~/bfnr-project
 
     echo ""
     echo "Tier 1 done. Compiled: $COMPILED, Failed: $FAILED"

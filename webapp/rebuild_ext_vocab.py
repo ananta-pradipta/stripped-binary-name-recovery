@@ -94,7 +94,7 @@ def main():
     search_dirs = [
         "data/external_calls",
         "../data/external_calls",
-        os.path.expanduser("~/cs785-project/data/external_calls"),
+        os.path.expanduser("~/bfnr-project/data/external_calls"),
     ]
 
     vocab = None
@@ -115,7 +115,7 @@ def main():
         match_paths = [
             "data/match_index.json",
             "../data/match_index.json",
-            os.path.expanduser("~/cs785-project/data/match_index.json"),
+            os.path.expanduser("~/bfnr-project/data/match_index.json"),
         ]
         for mp in match_paths:
             if os.path.exists(mp):

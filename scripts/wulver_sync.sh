@@ -1,16 +1,16 @@
 #!/bin/bash
-# Sync code changes to Wulver (excludes large data/checkpoints)
+# Sync code changes to HPC (excludes large data/checkpoints)
 # Uses rsync — only transfers files that changed, takes seconds.
 #
-# Requires SSH multiplexing (ssh wulver in another terminal first)
+# Requires SSH multiplexing (ssh <hpc-host> in another terminal first)
 #
 # Usage: bash scripts/wulver_sync.sh
 
-WULVER="wulver"
-REMOTE_DIR="/course/2026/spring/cs/785/hz79/adp232/cs785"
-LOCAL_DIR="$HOME/cs785-project"
+WULVER="<hpc-host>"
+REMOTE_DIR="<project-root>"
+LOCAL_DIR="$HOME/bfnr-project"
 
-echo "Syncing code to Wulver..."
+echo "Syncing code to HPC..."
 rsync -avz --delete \
   --exclude 'data/' \
   --exclude 'checkpoints/' \
@@ -18,7 +18,7 @@ rsync -avz --delete \
   --exclude '*.pyc' \
   --exclude '.git/' \
   --exclude '.claude/' \
-  --exclude 'cs785-env/' \
+  --exclude 'bfnr-env/' \
   --exclude 'demo/stripped/' \
   --exclude 'demo/raw/' \
   --exclude 'results/exp*' \

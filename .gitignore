@@ -6,7 +6,7 @@ dist/
 build/
 .venv/
 venv/
-cs785-env/
+bfnr-env/
 checkpoints/
 logs/
 *.pt

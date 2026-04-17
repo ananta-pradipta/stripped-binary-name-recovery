@@ -12,8 +12,8 @@
 #   bash scripts/05_evaluate.sh 1        # evaluate ExtraTrees only
 # ============================================================
 set -e
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
 VARIANT="${1:-all}"
 case "$VARIANT" in
@@ -42,7 +42,7 @@ import sentencepiece as spm
 from collections import defaultdict
 from torch.utils.data import DataLoader, Subset
 
-sys.path.insert(0, os.path.expanduser('~/cs785-project'))
+sys.path.insert(0, os.path.expanduser('~/bfnr-project'))
 
 from src.models.function_namer import FunctionNamer
 from src.preprocessing.build_dataset import FunctionDataset

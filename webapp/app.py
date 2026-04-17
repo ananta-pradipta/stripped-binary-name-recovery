@@ -1,6 +1,6 @@
 """
 Function Name Recovery in Stripped Binaries
-Web Demo -- CS 785 Advanced Binary Analysis w/ Machine Learning
+Web Demo
 """
 import json
 import os
@@ -33,7 +33,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    :root { --njit-red: #D32F2F; --njit-dark: #1a1a2e; }
+    :root { --brand-red: #D32F2F; --brand-dark: #1a1a2e; }
     .main-header {
         background: linear-gradient(135deg, #D32F2F 0%, #8B0000 100%);
         color: white; padding: 1.5rem 2rem; border-radius: 10px; margin-bottom: 1.5rem;
@@ -223,9 +223,7 @@ def render_sidebar(manager, loaded_models):
         st.markdown("---")
         st.markdown("### About")
         st.caption(
-            "CS 785 Advanced Binary Analysis w/ Machine Learning\n\n"
-            "Contributors: Ananta Pradipta, Robert Blacha, Zhihao Lin\n\n"
-            "Reproducing and extending the DeBin with "
+            "Anonymous submission for CCS 2026.\n\n"
             "GNN-based deep learning for binary function name recovery."
         )
 

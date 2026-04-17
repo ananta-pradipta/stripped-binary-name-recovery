@@ -1,20 +1,20 @@
 #!/bin/bash -l
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=<hpc-account>
 #SBATCH --qos=course
 #SBATCH --time=12:00:00
-#SBATCH --job-name=cs785-ablation
+#SBATCH --job-name=bfnr-ablation
 #SBATCH --output=%x.%j.out
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:a100_10g:1
 
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
+cd <project-root>
 
 module load bright
 module load python3
-source ../cs785-env/bin/activate
+source ../bfnr-env/bin/activate
 
 echo "=========================================="
 echo "  Ablation Study — 3 Models Sequential"

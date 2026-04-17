@@ -67,10 +67,10 @@ PER-BINARY
 REPRODUCIBILITY
 ──────────────────────────────────────────────────────────────────────
   Base model          : codellama/CodeLlama-34b-Instruct-hf
-  LoRA adapter        : baselines/SymGen/lora_weights_ours (Wulver)
+  LoRA adapter        : baselines/SymGen/lora_weights_ours (HPC)
   Training data       : our_training_set.json (FULL 300K, ~233K after dedup)
-  Training job        : cs785-symgen-ft.909652 (20h 14m, 4x A100-80GB DDP)
-  Inference job       : cs785-eval-symgen-full.913931 (1x A100-80GB, ~14h)
+  Training job        : bfnr-symgen-ft (20h 14m, 4x A100-80GB DDP)
+  Inference job       : bfnr-eval-symgen-full (1x A100-80GB, ~14h)
   Eval script         : baselines/SymGen/scripts/model_training/predict.py
 
 NOTE: This full-data fine-tune REGRESSED from the 50%-stratified run

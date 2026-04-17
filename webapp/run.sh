@@ -1,6 +1,6 @@
 #!/bin/bash
 # Quick start script for the Function Name Recovery web app.
-# Usage: cd cs785-project/webapp && bash run.sh
+# Usage: cd bfnr-project/webapp && bash run.sh
 set -e
 cd "$(dirname "$0")"
 

@@ -1,17 +1,17 @@
 #!/bin/bash -l
-#SBATCH --job-name=cs785-eval
+#SBATCH --job-name=bfnr-eval
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=<hpc-account>
 #SBATCH --qos=course
 #SBATCH --gres=gpu:a100_10g:1
 #SBATCH --time=02:00:00
 #SBATCH --mem=64G
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --output=cs785-eval.%j.out
+#SBATCH --output=bfnr-eval.%j.out
 
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
-source /course/2026/spring/cs/785/hz79/adp232/cs785-env/bin/activate
+cd <project-root>
+source <project-root>-env/bin/activate
 
 echo "=== k-NN Ablation Study ==="
 echo "Date: $(date)"

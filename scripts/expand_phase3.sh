@@ -2,11 +2,11 @@
 # ============================================================
 # Phase 3: Push to 300K — more coreutils + diverse packages
 # ============================================================
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 set +e
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
+BUILD_DIR="$HOME/bfnr-project/build_tmp"
 DATA_RAW="data/raw"
 DATA_STRIPPED="data/stripped"
 DATA_DEBUG="data/debug"
@@ -18,18 +18,18 @@ COMPILED=0
 save_bin() {
     local actual="$1" name="$2"
     if [ -f "$actual" ] && file "$actual" 2>/dev/null | grep -q ELF; then
-        cp "$actual" "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-        cp "$actual" "$HOME/cs785-project/$DATA_DEBUG/${name}"
-        strip -s "$actual" -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+        cp "$actual" "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+        cp "$actual" "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+        strip -s "$actual" -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
         COMPILED=$((COMPILED + 1))
         return 0
     fi
     # Try .libs fallback
     local libs="$(dirname "$actual")/.libs/$(basename "$actual")"
     if [ -f "$libs" ] && file "$libs" 2>/dev/null | grep -q ELF; then
-        cp "$libs" "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-        cp "$libs" "$HOME/cs785-project/$DATA_DEBUG/${name}"
-        strip -s "$libs" -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+        cp "$libs" "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+        cp "$libs" "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+        strip -s "$libs" -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
         COMPILED=$((COMPILED + 1))
         return 0
     fi
@@ -54,7 +54,7 @@ for opt in O0 O1 O2 O3; do
     # Check if already done
     first_bin=$(echo $EXTRA_BINS | awk '{print $1}')
     first_name="coreutils4_$(basename $first_bin)_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${first_name}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${first_name}_stripped" ]; then
         echo "  [$opt] already compiled, skipping"
         continue
     fi
@@ -67,14 +67,14 @@ for opt in O0 O1 O2 O3; do
         for bin_path in $EXTRA_BINS; do
             bin_name=$(basename "$bin_path")
             name="coreutils4_${bin_name}_${opt}"
-            [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped" ] && continue
+            [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped" ] && continue
             save_bin "$bin_path" "$name" && count=$((count + 1))
         done
         echo "  [$opt] $count binaries"
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 2. zstd — manual build ══
 echo ""
@@ -91,7 +91,7 @@ if [ ! -d "$ZSTD_DIR" ]; then
 fi
 for opt in O0 O1 O2 O3; do
     name="zstd_zstd_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_RAW/${name}_sym" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_RAW/${name}_sym" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -102,7 +102,7 @@ for opt in O0 O1 O2 O3; do
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 3. diffutils at O0/O1/O2/O3 (currently only default opt) ══
 echo ""
@@ -118,7 +118,7 @@ fi
 [ ! -d "$DIFF_DIR" ] && tar xf "$DIFF_TAR"
 for opt in O0 O1 O2 O3; do
     name_check="diffutils2_diff_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -136,7 +136,7 @@ for opt in O0 O1 O2 O3; do
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 4. GNU bc (calculator — different domain) ══
 echo ""
@@ -152,7 +152,7 @@ fi
 [ ! -d "$BC_DIR" ] && tar xf "$BC_TAR"
 for opt in O0 O1 O2 O3; do
     name_check="bc2_bc_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -168,7 +168,7 @@ for opt in O0 O1 O2 O3; do
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 5. GNU plotutils (graphics — very different domain) ══
 echo ""
@@ -184,7 +184,7 @@ fi
 [ ! -d "$PLOT_DIR" ] && tar xf "$PLOT_TAR"
 for opt in O0 O1 O2 O3; do
     name_check="plotutils_graph_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -200,7 +200,7 @@ for opt in O0 O1 O2 O3; do
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 6. GNU mailutils (email — different domain) ══
 echo ""
@@ -216,7 +216,7 @@ fi
 [ ! -d "$MU_DIR" ] && tar xf "$MU_TAR"
 for opt in O0 O2; do
     name_check="mailutils_mail_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name_check}_stripped" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -232,7 +232,7 @@ for opt in O0 O2; do
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 echo ""
 echo "═══════════════════════════════════════════════"

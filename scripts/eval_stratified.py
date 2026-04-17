@@ -1,5 +1,5 @@
 """
-Stratified Evaluation Script for CS785 Binary Function Name Recovery.
+Stratified Evaluation Script for BFNR Binary Function Name Recovery.
 
 Loads the baseline checkpoint and reports metrics stratified by:
   - Easy:         functions with 1+ external calls

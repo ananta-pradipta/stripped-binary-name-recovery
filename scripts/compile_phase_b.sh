@@ -2,12 +2,12 @@
 # ============================================================
 # Phase B: Compile new non-GNU packages at O0-O3
 # ============================================================
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
-DATA_RAW="$HOME/cs785-project/data/raw"
-DATA_STRIPPED="$HOME/cs785-project/data/stripped"
+BUILD_DIR="$HOME/bfnr-project/build_tmp"
+DATA_RAW="$HOME/bfnr-project/data/raw"
+DATA_STRIPPED="$HOME/bfnr-project/data/stripped"
 
 mkdir -p "$BUILD_DIR" "$DATA_RAW" "$DATA_STRIPPED"
 
@@ -28,7 +28,7 @@ compile_at_opt() {
     eval "$build_cmd" OPT="-$opt" 2>/dev/null
     if [ $? -ne 0 ]; then
         echo "    BUILD FAILED for $pkg $opt"
-        cd ~/cs785-project
+        cd ~/bfnr-project
         return 1
     fi
 
@@ -49,7 +49,7 @@ compile_at_opt() {
         strip "$DATA_STRIPPED/${pkg}_${bin_name}_${opt}_stripped"
         echo "    OK: ${pkg}_${bin_name}_${opt}"
     done
-    cd ~/cs785-project
+    cd ~/bfnr-project
 }
 
 echo "═══════════════════════════════════════════════"
@@ -65,7 +65,7 @@ if [ ! -d "$BUILD_DIR/$ZLIB_DIR" ]; then
     cd "$BUILD_DIR"
     wget -q https://zlib.net/zlib-1.3.1.tar.gz
     tar xf zlib-1.3.1.tar.gz
-    cd ~/cs785-project
+    cd ~/bfnr-project
 fi
 
 for opt in O0 O1 O2 O3; do
@@ -102,7 +102,7 @@ for opt in O0 O1 O2 O3; do
             echo "    OK: zlib_zpipe_${opt}"
         fi
     fi
-    cd ~/cs785-project
+    cd ~/bfnr-project
 done
 
 # ── 2. OpenSSL ──
@@ -114,7 +114,7 @@ if [ ! -d "$BUILD_DIR/$OPENSSL_DIR" ]; then
     cd "$BUILD_DIR"
     wget -q https://www.openssl.org/source/openssl-3.2.1.tar.gz
     tar xf openssl-3.2.1.tar.gz
-    cd ~/cs785-project
+    cd ~/bfnr-project
 fi
 
 for opt in O0 O1 O2 O3; do
@@ -137,7 +137,7 @@ for opt in O0 O1 O2 O3; do
             echo "    OK: openssl_${bin_name}_${opt}"
         fi
     done
-    cd ~/cs785-project
+    cd ~/bfnr-project
 done
 
 # ── 3. busybox ──
@@ -149,7 +149,7 @@ if [ ! -d "$BUILD_DIR/$BUSYBOX_DIR" ]; then
     cd "$BUILD_DIR"
     wget -q https://busybox.net/downloads/busybox-1.36.1.tar.bz2
     tar xf busybox-1.36.1.tar.bz2
-    cd ~/cs785-project
+    cd ~/bfnr-project
 fi
 
 for opt in O0 O1 O2 O3; do
@@ -176,7 +176,7 @@ for opt in O0 O1 O2 O3; do
     else
         echo "    FAILED: busybox $opt"
     fi
-    cd ~/cs785-project
+    cd ~/bfnr-project
 done
 
 # ── 4. curl (move from demo to training) ──
@@ -189,7 +189,7 @@ if [ ! -d "$BUILD_DIR/$CURL_DIR" ]; then
     cd "$BUILD_DIR"
     wget -q https://curl.se/download/curl-8.6.0.tar.xz
     tar xf curl-8.6.0.tar.xz
-    cd ~/cs785-project
+    cd ~/bfnr-project
 fi
 
 for opt in O0 O1 O2 O3; do
@@ -211,7 +211,7 @@ for opt in O0 O1 O2 O3; do
     else
         echo "    FAILED: curl $opt"
     fi
-    cd ~/cs785-project
+    cd ~/bfnr-project
 done
 
 echo ""

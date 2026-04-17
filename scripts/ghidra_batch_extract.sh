@@ -3,7 +3,7 @@
 # Ghidra headless CFG extraction for all stripped binaries
 # Replaces BAP for binaries that BAP can't handle
 # ============================================================
-PROJ=/course/2026/spring/cs/785/hz79/adp232/cs785
+PROJ=<project-root>
 GHIDRA=$PROJ/baselines/ghidra_11.3.1_PUBLIC
 JAVA_HOME=$PROJ/baselines/jdk-21.0.10
 export PATH=$JAVA_HOME/bin:$PATH

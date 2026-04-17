@@ -3,10 +3,10 @@
 # Compile additional small/medium packages locally for BAP
 # These are packages that BAP can handle (<5MB binary)
 # ============================================================
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
+BUILD_DIR="$HOME/bfnr-project/build_tmp"
 DATA_RAW="data/raw"
 DATA_STRIPPED="data/stripped"
 
@@ -30,7 +30,7 @@ compile_gnu() {
     fi
 
     for opt in O0 O1 O2 O3; do
-        existing=$(ls "$HOME/cs785-project/$DATA_STRIPPED/${pkg}_"*"_${opt}_stripped" 2>/dev/null | wc -l)
+        existing=$(ls "$HOME/bfnr-project/$DATA_STRIPPED/${pkg}_"*"_${opt}_stripped" 2>/dev/null | wc -l)
         if [ "$existing" -gt 0 ]; then
             echo "  SKIP $opt (exists)"
             continue
@@ -48,14 +48,14 @@ compile_gnu() {
             # Try .libs for libtool
             [ ! -f "$src_bin" ] && src_bin="$BUILD_DIR/$srcdir/$(dirname $bin_path)/.libs/$bin_name"
             if [ -f "$src_bin" ] && file "$src_bin" | grep -q "ELF"; then
-                cp "$src_bin" "$HOME/cs785-project/$DATA_RAW/${pkg}_${bin_name}_${opt}"
-                cp "$src_bin" "$HOME/cs785-project/$DATA_STRIPPED/${pkg}_${bin_name}_${opt}_stripped"
-                strip "$HOME/cs785-project/$DATA_STRIPPED/${pkg}_${bin_name}_${opt}_stripped"
+                cp "$src_bin" "$HOME/bfnr-project/$DATA_RAW/${pkg}_${bin_name}_${opt}"
+                cp "$src_bin" "$HOME/bfnr-project/$DATA_STRIPPED/${pkg}_${bin_name}_${opt}_stripped"
+                strip "$HOME/bfnr-project/$DATA_STRIPPED/${pkg}_${bin_name}_${opt}_stripped"
                 echo "  OK: ${pkg}_${bin_name}_${opt}"
             fi
         done
     done
-    cd ~/cs785-project
+    cd ~/bfnr-project
 }
 
 # Well-known GNU packages, easy to compile, diverse functionality

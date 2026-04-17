@@ -9,8 +9,8 @@
 # Time:  ~1-3 hours (GPU), ~6-10 hours (CPU)
 # ============================================================
 set -e
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
 echo "═══════════════════════════════════════════════"
 echo " Step 4: Training All Model Variants"

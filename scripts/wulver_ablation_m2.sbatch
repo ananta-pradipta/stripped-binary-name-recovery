@@ -1,19 +1,19 @@
 #!/bin/bash -l
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=<hpc-account>
 #SBATCH --qos=course
 #SBATCH --time=04:00:00
-#SBATCH --job-name=cs785-abl2
+#SBATCH --job-name=bfnr-abl2
 #SBATCH --output=%x.%j.out
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --gres=gpu:a100_10g:1
 
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
+cd <project-root>
 module load bright
 module load python3
-source ../cs785-env/bin/activate
+source ../bfnr-env/bin/activate
 
 echo "=== Model 2: GAT + Decoder (no ext, no context) ==="
 mkdir -p checkpoints/ablation_model2

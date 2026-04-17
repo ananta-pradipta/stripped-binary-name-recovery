@@ -1,6 +1,6 @@
 # Baseline Feasibility Assessment — 9 Papers for Reproduction
 
-Deep research compiled 2026-04-06. Each paper assessed for end-to-end reproducibility on our hardware (Wulver: A100 10GB MIG, course_gpu QoS max 1 GPU) and our dataset.
+Deep research compiled 2026-04-06. Each paper assessed for end-to-end reproducibility on our hardware (HPC: A100 10GB MIG, course_gpu QoS max 1 GPU) and our dataset.
 
 ## Summary Table (ranked by feasibility)
 
@@ -83,7 +83,7 @@ Deep research compiled 2026-04-06. Each paper assessed for end-to-end reproducib
 
 ### 5. SymGen (NDSS 2025) — LOW feasibility
 
-**Status:** Repo cloned, CodeLlama-34B downloaded (63GB), Ghidra installed on Wulver. BUT:
+**Status:** Repo cloned, CodeLlama-34B downloaded (63GB), Ghidra installed on HPC. BUT:
 - Only 34B LoRA adapter released (no 7B/13B variant)
 - 34B fp16 needs ~68GB VRAM → won't fit
 - 34B 4-bit needs ~22GB → won't fit on 10GB MIG

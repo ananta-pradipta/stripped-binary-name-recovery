@@ -3,8 +3,7 @@
 A Streamlit web application for predicting human-readable function names from
 stripped ELF binaries using graph neural networks.
 
-**CS 785 Deep Learning, NJIT, Group 1**
-Ananta, Robert Blacha, Zhihao Lin
+**Anonymous submission — CCS 2026**
 
 
 ## Features
@@ -25,7 +24,7 @@ The webapp lives inside the project root and uses **symlinks** to avoid
 duplicating code, data, and model weights:
 
 ```
-cs785-project/
+bfnr-project/
   src/                 <-- shared source code
   data/                <-- shared data (BPE model, ext vocab, match index)
   checkpoints/         <-- trained model weights
@@ -64,7 +63,7 @@ data, or checkpoints in the project root are immediately visible to the webapp.
 ## Quick Start
 
 ```bash
-cd cs785-project/webapp
+cd bfnr-project/webapp
 bash setup.sh         # creates symlinks (one time)
 pip install -r requirements.txt
 bash run.sh           # or: streamlit run app.py
@@ -80,7 +79,7 @@ If the sidebar shows a warning about external vocab mismatch (e.g.,
 Option B) will produce degraded results. To fix:
 
 ```bash
-cd cs785-project
+cd bfnr-project
 python webapp/rebuild_ext_vocab.py
 ```
 
@@ -96,7 +95,7 @@ automatically via the symlink.
 For deployment, copy (not symlink) the shared directories into the webapp:
 
 ```bash
-cd cs785-project
+cd bfnr-project
 mkdir -p webapp_deploy
 cp webapp/*.py webapp_deploy/
 cp webapp/*.sh webapp_deploy/

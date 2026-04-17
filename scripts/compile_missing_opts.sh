@@ -3,12 +3,12 @@
 # Compile missing O1/O3 binaries for packages that only have O0/O2
 # ============================================================
 set +e  # Continue on errors
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
-DATA_RAW="$HOME/cs785-project/data/raw"
-DATA_STRIPPED="$HOME/cs785-project/data/stripped"
+BUILD_DIR="$HOME/bfnr-project/build_tmp"
+DATA_RAW="$HOME/bfnr-project/data/raw"
+DATA_STRIPPED="$HOME/bfnr-project/data/stripped"
 
 # Packages missing O1/O3 and their binary paths (from packages.conf)
 declare -A PKG_BINS
@@ -105,7 +105,7 @@ compile_package() {
         echo "    OK: ${pkg}_${bin_name}_${opt}"
     done
 
-    cd ~/cs785-project
+    cd ~/bfnr-project
 }
 
 echo "═══════════════════════════════════════════════"

@@ -8,7 +8,7 @@
 # Output: results/project_state.md
 # ============================================================
 set -e
-cd ~/cs785-project
+cd ~/bfnr-project
 
 OUT="results/project_state.md"
 mkdir -p results

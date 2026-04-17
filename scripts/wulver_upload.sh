@@ -1,5 +1,5 @@
 #!/bin/bash
-# Upload preprocessed data and code to Wulver HPC
+# Upload preprocessed data and code to Slurm HPC
 # Uses SSH multiplexing — authenticate ONCE, all transfers reuse the connection.
 #
 # Usage:
@@ -7,14 +7,14 @@
 #        mkdir -p ~/.ssh/sockets
 #        Add to ~/.ssh/config:
 #          Host wulver
-#              HostName wulver.njit.edu
-#              User adp232
+#              HostName <hpc-host>
+#              User <hpc-user>
 #              ControlMaster auto
 #              ControlPath ~/.ssh/sockets/%r@%h-%p
 #              ControlPersist 2h
 #
 #   2. Open a connection (authenticates with Duo once):
-#        ssh wulver
+#        ssh <hpc-host>
 #        # Keep this terminal open!
 #
 #   3. In another terminal, run:
@@ -25,24 +25,24 @@
 
 set -e
 
-WULVER="wulver"  # Uses SSH config alias (multiplexed connection)
-REMOTE_BASE="/course/2026/spring/cs/785/hz79/adp232"
-REMOTE_DIR="${REMOTE_BASE}/cs785"
-LOCAL_DIR="$HOME/cs785-project"
+WULVER="<hpc-host>"  # Uses SSH config alias (multiplexed connection)
+REMOTE_BASE="<hpc-user-dir>"
+REMOTE_DIR="${REMOTE_BASE}/bfnr"
+LOCAL_DIR="$HOME/bfnr-project"
 TMP_DIR="/tmp/wulver_upload"
 
 # Check SSH connection is alive
 echo "=== Checking SSH connection ==="
 if ! ssh -O check ${WULVER} 2>/dev/null; then
-    echo "ERROR: No active SSH connection to Wulver."
-    echo "Open a terminal and run:  ssh wulver"
+    echo "ERROR: No active SSH connection to HPC."
+    echo "Open a terminal and run:  ssh <hpc-host>"
     echo "Then re-run this script in another terminal."
     exit 1
 fi
 echo "SSH multiplexed connection active."
 echo ""
 
-echo "=== Uploading to Wulver HPC ==="
+echo "=== Uploading to Slurm HPC ==="
 echo "Remote: ${REMOTE_DIR}"
 echo ""
 
@@ -73,7 +73,7 @@ else
     tar czf ${TMP_DIR}/graphs.tar.gz -C ${LOCAL_DIR}/data graphs
     echo "  Uploading (~500MB compressed)..."
     scp ${TMP_DIR}/graphs.tar.gz ${WULVER}:${REMOTE_DIR}/data/
-    echo "  Extracting on Wulver..."
+    echo "  Extracting on HPC..."
     ssh ${WULVER} "cd ${REMOTE_DIR}/data && tar xzf graphs.tar.gz && rm graphs.tar.gz"
     echo "  Done."
 fi
@@ -155,9 +155,9 @@ echo "  labels:         $(find ${LOCAL_DIR}/data/labels -type f | wc -l) files"
 echo "  external_calls: $(find ${LOCAL_DIR}/data/external_calls -type f | wc -l) files"
 echo "  string_refs:    $(find ${LOCAL_DIR}/data/string_refs -type f | wc -l) files"
 echo ""
-echo "Next steps on Wulver:"
+echo "Next steps on HPC:"
 echo "  # In the SSH terminal that's already open:"
-echo "  bash cs785/scripts/wulver_setup.sh     # first time only"
+echo "  bash bfnr/scripts/wulver_setup.sh     # first time only"
 echo "  cd ${REMOTE_DIR}"
 echo "  sbatch scripts/wulver_train.sbatch"
-echo "  squeue -u adp232"
+echo "  squeue -u <hpc-user>"

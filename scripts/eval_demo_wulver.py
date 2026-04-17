@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Wulver-compatible demo evaluation — NO BAP required.
+HPC-compatible demo evaluation — NO BAP required.
 Loads pre-processed graphs, labels, and external calls from disk,
 runs model inference, and computes metrics.
 
@@ -435,7 +435,7 @@ def main():
 
     # Summary
     print(f"\n{'='*70}")
-    print(f"DEMO RESULTS (Wulver — no BAP)")
+    print(f"DEMO RESULTS (HPC — no BAP)")
     print(f"{'='*70}")
 
     overall_c = sum(v["correct"] for v in per_binary.values())

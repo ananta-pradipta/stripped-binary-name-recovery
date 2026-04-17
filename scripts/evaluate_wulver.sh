@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# Submit evaluation job to Wulver
+# Submit evaluation job to HPC
 # ============================================================
 # Usage:
 #   bash scripts/evaluate_wulver.sh          # Sync code + submit full eval
@@ -9,36 +9,36 @@
 # ============================================================
 
 set -e
-cd ~/cs785-project
+cd ~/bfnr-project
 
-WULVER_DIR="/course/2026/spring/cs/785/hz79/adp232/cs785"
+WULVER_DIR="<project-root>"
 
 case "${1:-submit}" in
     submit)
-        echo "Syncing code to Wulver..."
+        echo "Syncing code to HPC..."
         bash scripts/wulver_sync.sh
 
         echo ""
         echo "Submitting evaluation job..."
-        ssh wulver "cd $WULVER_DIR && sbatch scripts/wulver_eval_full.sbatch"
+        ssh <hpc-host> "cd $WULVER_DIR && sbatch scripts/wulver_eval_full.sbatch"
 
         echo ""
         echo "Use 'bash scripts/evaluate_wulver.sh status' to check progress"
         echo "Use 'bash scripts/evaluate_wulver.sh log' to view output"
         ;;
     status)
-        ssh wulver "squeue -u adp232"
+        ssh <hpc-host> "squeue -u <hpc-user>"
         ;;
     log)
         # Find the latest eval output file
-        LATEST=$(ssh wulver "ls -t $WULVER_DIR/cs785-eval.*.out 2>/dev/null | head -1")
+        LATEST=$(ssh <hpc-host> "ls -t $WULVER_DIR/bfnr-eval.*.out 2>/dev/null | head -1")
         if [ -z "$LATEST" ]; then
             echo "No evaluation output files found."
             exit 1
         fi
         echo "Latest output: $LATEST"
         echo "================================================================"
-        ssh wulver "sed 's/\r/\n/g' $LATEST | grep -v 'it/s' | grep -v '^\$'"
+        ssh <hpc-host> "sed 's/\r/\n/g' $LATEST | grep -v 'it/s' | grep -v '^\$'"
         ;;
     *)
         echo "Usage: bash scripts/evaluate_wulver.sh [submit|status|log]"

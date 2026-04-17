@@ -1,11 +1,11 @@
 #!/bin/bash
 # ============================================================
-# Batch download, compile, and preprocess packages on Wulver
-# Uses Wulver's BAP (installed at ~/.opam/4.14.2/bin/bap)
+# Batch download, compile, and preprocess packages on HPC
+# Uses HPC's BAP (installed at ~/.opam/4.14.2/bin/bap)
 # Submits as SLURM jobs for parallel processing
 # ============================================================
 
-PROJ=/course/2026/spring/cs/785/hz79/adp232/cs785
+PROJ=<project-root>
 BUILD=$PROJ/build_tmp
 DATA_RAW=$PROJ/data/raw
 DATA_STRIPPED=$PROJ/data/stripped
@@ -24,7 +24,7 @@ setup_bap() {
 # Setup Python environment
 setup_python() {
     module load bright python3 2>/dev/null
-    source $PROJ/../cs785-env/bin/activate
+    source $PROJ/../bfnr-env/bin/activate
 }
 
 mkdir -p $BUILD $DATA_RAW $DATA_STRIPPED $DATA_BIR $DATA_GRAPHS $DATA_LABELS $DATA_EXT
@@ -199,7 +199,7 @@ print(f'  Labels: $name = {len(labels)}')
 
 # Main
 echo "═══════════════════════════════════════════════"
-echo " Wulver Batch Preprocessing Pipeline"
+echo " HPC Batch Preprocessing Pipeline"
 echo " Target: 500K functions"
 echo "═══════════════════════════════════════════════"
 

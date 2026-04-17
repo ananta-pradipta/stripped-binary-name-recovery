@@ -1,5 +1,4 @@
-# CS 785 Pipeline: Input/Output Examples for Every Step
-## Group 1: Robert Blacha, Zhihao Lin, Ananta Pradipta
+# Pipeline: Input/Output Examples for Every Step
 
 This package contains realistic example data showing the exact input and output format for each step in the function name recovery pipeline.
 

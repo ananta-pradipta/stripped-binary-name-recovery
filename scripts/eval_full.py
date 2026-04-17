@@ -9,7 +9,7 @@ Produces a full report with:
   4. Sample predictions (correct, close, wrong)
   5. Ablation table (if checkpoints available)
 
-Works both locally and on Wulver.
+Works both locally and on HPC.
 
 Usage:
   python3 scripts/eval_full.py                          # Full report
@@ -552,7 +552,7 @@ def main():
     use_knn = not args.no_knn
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    header("CS785 BINARY FUNCTION NAME RECOVERY — EVALUATION REPORT")
+    header("BFNR BINARY FUNCTION NAME RECOVERY — EVALUATION REPORT")
     print(f"  Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"  Device: {device}")
     print(f"  Inference: {'k-NN hybrid (threshold=' + str(KNN_THRESHOLD) + ')' if use_knn else 'decoder only'}")

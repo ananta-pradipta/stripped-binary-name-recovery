@@ -9,11 +9,11 @@
 # 5. zstd: compile O1/O3
 # 6. nettle: compile from scratch (all opts)
 # ============================================================
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 set +e
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
+BUILD_DIR="$HOME/bfnr-project/build_tmp"
 DATA_RAW="data/raw"
 DATA_STRIPPED="data/stripped"
 DATA_DEBUG="data/debug"
@@ -33,30 +33,30 @@ echo "════════════════════════�
 cd "$BUILD_DIR/busybox-1.36.1"
 for opt in O0 O1 O2 O3; do
     name="busybox_busybox_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_RAW/${name}_sym" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_RAW/${name}_sym" ]; then
         echo "  [$opt] already has debug binary, skipping compile"
     else
         echo "  [$opt] compiling..."
         make clean 2>/dev/null || true
         make -j$(nproc) CFLAGS="-g -${opt}" LDFLAGS="-g" 2>/dev/null && {
             if [ -f busybox_unstripped ]; then
-                cp busybox_unstripped "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-                cp busybox_unstripped "$HOME/cs785-project/$DATA_DEBUG/${name}"
-                strip -s busybox_unstripped -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+                cp busybox_unstripped "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+                cp busybox_unstripped "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+                strip -s busybox_unstripped -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
                 echo "  [$opt] compiled"
                 COMPILED=$((COMPILED + 1))
             elif [ -f busybox ]; then
-                cp busybox "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-                cp busybox "$HOME/cs785-project/$DATA_DEBUG/${name}"
-                strip -s busybox -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+                cp busybox "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+                cp busybox "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+                strip -s busybox -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
                 echo "  [$opt] compiled (from busybox)"
                 COMPILED=$((COMPILED + 1))
             fi
         } || echo "  [$opt] FAILED"
     fi
     # Extract labels from debug binary
-    raw_bin="$HOME/cs785-project/$DATA_RAW/${name}_sym"
-    labels_file="$HOME/cs785-project/$DATA_LABELS/${name}_labels.json"
+    raw_bin="$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+    labels_file="$HOME/bfnr-project/$DATA_LABELS/${name}_labels.json"
     if [ -f "$raw_bin" ] && [ ! -f "$labels_file" ]; then
         echo -n "  [$opt] extracting labels... "
         nm --defined-only "$raw_bin" 2>/dev/null | awk '$2 ~ /[tT]/ {printf "{\"0x%s\": \"%s\"}\n", $1, $3}' | python3 -c "
@@ -75,7 +75,7 @@ print(f'{len(labels)} labels')
 "
     fi
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 2. GNU Chess ══
 echo ""
@@ -91,7 +91,7 @@ fi
 [ ! -d "$GNUCHESS_DIR" ] && tar xf "$GNUCHESS_TAR"
 for opt in O0 O1 O2 O3; do
     name="gnuchess_gnuchess_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -104,9 +104,9 @@ for opt in O0 O1 O2 O3; do
         [ -f "$bin_path" ] && ! file "$bin_path" | grep -q ELF && actual="src/.libs/gnuchess"
         [ -f "$actual" ] || actual="$bin_path"
         if [ -f "$actual" ] && file "$actual" | grep -q ELF; then
-            cp "$actual" "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-            cp "$actual" "$HOME/cs785-project/$DATA_DEBUG/${name}"
-            strip -s "$actual" -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+            cp "$actual" "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+            cp "$actual" "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+            strip -s "$actual" -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
             echo "  [$opt] compiled"
             COMPILED=$((COMPILED + 1))
         else
@@ -115,7 +115,7 @@ for opt in O0 O1 O2 O3; do
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 3. wdiff ══
 echo ""
@@ -131,7 +131,7 @@ fi
 [ ! -d "$WDIFF_DIR" ] && tar xf "$WDIFF_TAR"
 for opt in O0 O1 O2 O3; do
     name="wdiff_wdiff_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -144,16 +144,16 @@ for opt in O0 O1 O2 O3; do
         [ -f "$bin" ] && ! file "$bin" | grep -q ELF && actual="src/.libs/wdiff"
         [ -f "$actual" ] || actual="$bin"
         if [ -f "$actual" ] && file "$actual" | grep -q ELF; then
-            cp "$actual" "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-            cp "$actual" "$HOME/cs785-project/$DATA_DEBUG/${name}"
-            strip -s "$actual" -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+            cp "$actual" "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+            cp "$actual" "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+            strip -s "$actual" -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
             echo "  [$opt] compiled"
             COMPILED=$((COMPILED + 1))
         fi
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 4. wget O1/O2/O3 ══
 echo ""
@@ -169,7 +169,7 @@ fi
 [ ! -d "$WGET_DIR" ] && tar xf "$WGET_TAR"
 for opt in O0 O1 O2 O3; do
     name="wget_wget_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -182,16 +182,16 @@ for opt in O0 O1 O2 O3; do
         [ -f "$bin" ] && ! file "$bin" | grep -q ELF && actual="src/.libs/wget"
         [ -f "$actual" ] || actual="$bin"
         if [ -f "$actual" ] && file "$actual" | grep -q ELF; then
-            cp "$actual" "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-            cp "$actual" "$HOME/cs785-project/$DATA_DEBUG/${name}"
-            strip -s "$actual" -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+            cp "$actual" "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+            cp "$actual" "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+            strip -s "$actual" -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
             echo "  [$opt] compiled"
             COMPILED=$((COMPILED + 1))
         fi
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 5. zstd O1/O3 ══
 echo ""
@@ -207,7 +207,7 @@ fi
 [ ! -d "$ZSTD_DIR" ] && tar xf "$ZSTD_TAR"
 for opt in O0 O1 O2 O3; do
     name="zstd_zstd_${opt}"
-    if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped" ] && [ -f "$HOME/cs785-project/$DATA_RAW/${name}_sym" ]; then
+    if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped" ] && [ -f "$HOME/bfnr-project/$DATA_RAW/${name}_sym" ]; then
         echo "  [$opt] already compiled"
         continue
     fi
@@ -215,16 +215,16 @@ for opt in O0 O1 O2 O3; do
     make clean 2>/dev/null || true
     make -j$(nproc) CFLAGS="-g -${opt}" LDFLAGS="-g" 2>/dev/null && {
         if [ -f programs/zstd ]; then
-            cp programs/zstd "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-            cp programs/zstd "$HOME/cs785-project/$DATA_DEBUG/${name}"
-            strip -s programs/zstd -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+            cp programs/zstd "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+            cp programs/zstd "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+            strip -s programs/zstd -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
             echo "  [$opt] compiled"
             COMPILED=$((COMPILED + 1))
         fi
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══ 6. nettle ══
 echo ""
@@ -241,7 +241,7 @@ fi
 for opt in O0 O1 O2 O3; do
     for bin_name in nettle-hash sexp-conv; do
         name="nettle_${bin_name}_${opt}"
-        if [ -f "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped" ]; then
+        if [ -f "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped" ]; then
             echo "  [$opt] $bin_name already compiled"
             continue
         fi
@@ -257,9 +257,9 @@ for opt in O0 O1 O2 O3; do
             [ -f "$actual" ] || actual="$bin"
             name="nettle_${bin_name}_${opt}"
             if [ -f "$actual" ] && file "$actual" | grep -q ELF; then
-                cp "$actual" "$HOME/cs785-project/$DATA_RAW/${name}_sym"
-                cp "$actual" "$HOME/cs785-project/$DATA_DEBUG/${name}"
-                strip -s "$actual" -o "$HOME/cs785-project/$DATA_STRIPPED/${name}_stripped"
+                cp "$actual" "$HOME/bfnr-project/$DATA_RAW/${name}_sym"
+                cp "$actual" "$HOME/bfnr-project/$DATA_DEBUG/${name}"
+                strip -s "$actual" -o "$HOME/bfnr-project/$DATA_STRIPPED/${name}_stripped"
                 echo "  [$opt] $bin_name"
                 COMPILED=$((COMPILED + 1))
             fi
@@ -267,7 +267,7 @@ for opt in O0 O1 O2 O3; do
     } || echo "  [$opt] FAILED"
     cd "$BUILD_DIR"
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 echo ""
 echo "═══════════════════════════════════════════════"

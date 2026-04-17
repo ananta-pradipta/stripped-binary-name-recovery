@@ -7,9 +7,9 @@
 # ============================================================
 
 set -e
-source ~/cs785-project/activate.sh
+source ~/bfnr-project/activate.sh
 
-PROJECT_ROOT="$HOME/cs785-project"
+PROJECT_ROOT="$HOME/bfnr-project"
 DATA_RAW="$PROJECT_ROOT/data/raw"
 DATA_STRIPPED="$PROJECT_ROOT/data/stripped"
 DATA_BIR="$PROJECT_ROOT/data/bir"

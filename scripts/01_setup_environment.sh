@@ -31,7 +31,7 @@ echo "✓ System packages installed"
 # ── 1.2 Create project directory ──
 echo ""
 echo "── 1.2 Creating project directory ──"
-PROJECT_DIR="$HOME/cs785-project"
+PROJECT_DIR="$HOME/bfnr-project"
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "Creating $PROJECT_DIR"
     mkdir -p "$PROJECT_DIR"
@@ -43,11 +43,11 @@ cd "$PROJECT_DIR"
 # ── 1.3 Python virtual environment ──
 echo ""
 echo "── 1.3 Setting up Python virtual environment ──"
-python3 -m venv cs785-env
-source cs785-env/bin/activate
+python3 -m venv bfnr-env
+source bfnr-env/bin/activate
 pip install --upgrade pip setuptools wheel
 
-echo "✓ Virtual environment created: cs785-env"
+echo "✓ Virtual environment created: bfnr-env"
 
 # ── 1.4 PyTorch ──
 echo ""
@@ -135,8 +135,8 @@ cat > "$PROJECT_DIR/activate.sh" << 'ACTIVATE'
 #!/bin/bash
 # Source this file to activate the environment:
 #   source activate.sh
-cd ~/cs785-project
-source cs785-env/bin/activate
+cd ~/bfnr-project
+source bfnr-env/bin/activate
 eval $(opam env 2>/dev/null) || true
 export PROJECT_ROOT=$(pwd)
 echo "✓ Environment activated. Project root: $PROJECT_ROOT"
@@ -152,7 +152,7 @@ echo " ✓ ENVIRONMENT SETUP COMPLETE"
 echo "═══════════════════════════════════════════════"
 echo ""
 echo " To activate in the future, run:"
-echo "   source ~/cs785-project/activate.sh"
+echo "   source ~/bfnr-project/activate.sh"
 echo ""
 echo " Next step: bash scripts/02_compile_dataset.sh"
 echo "═══════════════════════════════════════════════"

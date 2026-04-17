@@ -14,17 +14,17 @@
 # Time:  ~1-2 hours (all opts + both platforms)
 # ============================================================
 set -e
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
 echo "═══════════════════════════════════════════════"
 echo " Step 2: Compiling Dataset"
 echo "═══════════════════════════════════════════════"
 
-BUILD_DIR="$HOME/cs785-project/build_tmp"
-DATA_RAW="$HOME/cs785-project/data/raw"
-DATA_STRIPPED="$HOME/cs785-project/data/stripped"
-PACKAGE_CONF="$HOME/cs785-project/configs/packages.conf"
+BUILD_DIR="$HOME/bfnr-project/build_tmp"
+DATA_RAW="$HOME/bfnr-project/data/raw"
+DATA_STRIPPED="$HOME/bfnr-project/data/stripped"
+PACKAGE_CONF="$HOME/bfnr-project/configs/packages.conf"
 mkdir -p "$BUILD_DIR" "$DATA_RAW" "$DATA_STRIPPED"
 
 if [ ! -f "$PACKAGE_CONF" ]; then
@@ -158,7 +158,7 @@ compile_one() {
 
     touch "$build_marker"
     echo "    [$suffix] $count binaries"
-    cd ~/cs785-project
+    cd ~/bfnr-project
     return 0
 }
 
@@ -183,7 +183,7 @@ compile_package_full() {
         echo "  Downloading..."
         wget -q --show-progress "$url" -O "$tarball" 2>&1 || {
             echo "  ⚠ Download failed. Skipping."
-            cd ~/cs785-project
+            cd ~/bfnr-project
             return 1
         }
     fi
@@ -192,7 +192,7 @@ compile_package_full() {
     if [ ! -d "$src_dir" ]; then
         tar xf "$tarball" 2>/dev/null || {
             echo "  ⚠ Extract failed. Skipping."
-            cd ~/cs785-project
+            cd ~/bfnr-project
             return 1
         }
     fi
@@ -210,7 +210,7 @@ compile_package_full() {
         fi
     done
 
-    cd ~/cs785-project
+    cd ~/bfnr-project
     return 0
 }
 
@@ -281,7 +281,7 @@ for opt in $OPT_LEVELS; do
         fi
     fi
 done
-cd ~/cs785-project
+cd ~/bfnr-project
 
 # ══════════════════════════════════════════════
 # All other packages from config file
@@ -380,7 +380,7 @@ done
 echo "  TOTAL: $TOTAL_FUNCS functions across $NUM_RAW binaries"
 
 # Save manifest
-cat > "$HOME/cs785-project/data/build_manifest.json" << EOF
+cat > "$HOME/bfnr-project/data/build_manifest.json" << EOF
 {
     "optimization_levels": "$OPT_LEVELS",
     "platforms": "$PLATFORMS",

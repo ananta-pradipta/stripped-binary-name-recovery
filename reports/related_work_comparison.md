@@ -36,7 +36,7 @@ Jin, Pei, Won, Lin, CCS 2022. Trex-based execution-aware encoder on Ghidra ICFGs
 Patrick-Evans, Dannehl, Kinder, IEEE S&P 2023. Reformulates naming as extreme multi-label tag prediction using the DEXTER static-feature embedding. Trained on 10K+ Debian binaries (82.5% precision). **xfl-r** refactored version recommended for comparison. Caveat: output is multi-label tags, not generated name strings — direct F1 comparison requires recomposing names the way the paper does.
 
 ### 6. SymGen — MEDIUM-LOW feasibility
-Jiang et al., NDSS 2025. "Beyond Classification" autoregressive generation using CodeLlama-7B/34B fine-tuned with LoRA on Ghidra-decompiled pseudo-C. Dataset: 2.24M functions across 33 projects, x86/x64/ARM/MIPS, O0-O3, on Zenodo. Sample data + LoRA weights in repo. **Hardware blocker**: 34B wants A100 80GB; 7B feasible on our Wulver 40GB A100 but with weaker results. Pipeline requires Ghidra headless per binary.
+Jiang et al., NDSS 2025. "Beyond Classification" autoregressive generation using CodeLlama-7B/34B fine-tuned with LoRA on Ghidra-decompiled pseudo-C. Dataset: 2.24M functions across 33 projects, x86/x64/ARM/MIPS, O0-O3, on Zenodo. Sample data + LoRA weights in repo. **Hardware blocker**: 34B wants A100 80GB; 7B feasible on our HPC 40GB A100 but with weaker results. Pipeline requires Ghidra headless per binary.
 
 ### 7. BLens — LOW feasibility
 Benoit et al., USENIX Sec 2025. Ensemble of **DEXTER + CLAP + PalmTree + VarCLR** embeddings fused contrastively with a "LORD" decoder. Very heavy: **80GB VRAM recommended**, 50GB disk per experiment, 200+200 epoch schedule, requires 4 separate pretrained embedding stacks wired together. Dataset + checkpoints on Zenodo. Only feasible with H100/A100-80GB + 2+ weeks.

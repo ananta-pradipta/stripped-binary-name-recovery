@@ -5,7 +5,7 @@
 # This avoids duplicating src/, data/, checkpoints/, etc.
 # Run this once after cloning or unzipping.
 #
-# Usage: cd cs785-project/webapp && bash setup.sh
+# Usage: cd bfnr-project/webapp && bash setup.sh
 # ============================================================
 set -e
 

@@ -17,8 +17,8 @@
 # ============================================================
 
 set -e
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
 MODE="${1:-all}"
 CHECKPOINT="${CHECKPOINT:-checkpoints/best_model.pt}"

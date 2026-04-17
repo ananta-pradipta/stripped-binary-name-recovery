@@ -3,8 +3,8 @@
 # Preprocess only NEW binaries (O1/O3 additions)
 # Steps: Labels → BAP lift → Parse graphs → Extract ext calls → Update match_index
 # ============================================================
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
 DATA_RAW="data/raw"
 DATA_STRIPPED="data/stripped"

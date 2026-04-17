@@ -10,8 +10,8 @@
 # ============================================================
 
 set -e
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 
 DEMO="demo"
 mkdir -p "$DEMO/build" "$DEMO/raw" "$DEMO/stripped"
@@ -61,7 +61,7 @@ if [ ! -f "src/diff" ]; then
     make -j$(nproc) --quiet 2>/dev/null
 fi
 
-cd ~/cs785-project
+cd ~/bfnr-project
 for bin_name in diff cmp sdiff diff3; do
     src="$DEMO/build/diffutils-3.10/src/$bin_name"
     if [ -f "$src" ]; then

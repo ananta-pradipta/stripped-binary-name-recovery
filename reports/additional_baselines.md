@@ -70,7 +70,7 @@ Supplement to `related_work_comparison.md`. Papers found via deep search on 2026
 ## Revised baseline ranking (merged with original list)
 
 **Tier 1 — Must include in comparison (HIGH relevance, feasible to reproduce or cite):**
-1. **SymLM** (CCS 2022) — currently training from scratch on Wulver
+1. **SymLM** (CCS 2022) — currently training from scratch on HPC
 2. **AsmDepictor** (AsiaCCS 2023) — public pretrained checkpoint on Zenodo
 3. **BLens** (USENIX Sec 2025) — cite published numbers (80GB VRAM out of reach)
 4. **SymGen** (NDSS 2025) — cite published numbers (80GB VRAM out of reach)

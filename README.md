@@ -4,7 +4,7 @@
 [![PyTorch 2.5](https://img.shields.io/badge/pytorch-2.5+-ee4c2c.svg)](https://pytorch.org/)
 [![BAP 2.5](https://img.shields.io/badge/BAP-2.5.0-green.svg)](https://github.com/BinaryAnalysisPlatform/bap)
 
-> NJIT: Ananta Dian Pradipta, Robert Blacha, Zhihao Lin, Haotian Zhang
+> Anonymous submission for CCS 2026.
 
 ---
 
@@ -68,7 +68,7 @@ Stage 3b: k-NN Retrieval (alternative to decoder)
 ## Repository Structure
 
 ```
-cs785-project/
+bfnr-project/
 ├── scripts/                        # Pipeline scripts
 │   ├── 01_setup_environment.sh     # Install dependencies
 │   ├── 02_compile_dataset.sh       # Download, compile, strip binaries
@@ -84,8 +84,7 @@ cs785-project/
 │   ├── statistical_significance.py # Statistical significance tests
 │   ├── eval_stratified.py          # Stratified evaluation
 │   ├── build_pretrain_pairs.py     # Build contrastive pairs for pretraining
-│   ├── archive/                    # Archived scripts (05_evaluate.sh, 06_demo.sh, etc.)
-│   └── wulver_*.sh / *.sbatch     # NJIT Wulver HPC scripts
+│   └── wulver_*.sh / *.sbatch     # Slurm HPC scripts (anonymized)
 │
 ├── src/
 │   ├── preprocessing/
@@ -117,14 +116,6 @@ cs785-project/
 │   ├── ablation_model[2-4].yaml    # Ablation study configs
 │   └── variant[2-4]_*.yaml         # Midterm architecture variants
 │
-├── docs/                           # Contributor guides
-│   ├── preprocessing_contributor_guide.md
-│   ├── modeling_contributor_guide.md
-│   └── evaluation_contributor_guide.md
-│
-├── reports/
-│   ├── final_report.md
-│   └── final_report_presentation.md
 ├── results/                        # Evaluation outputs
 ├── data/                           # Preprocessed data (not tracked)
 ├── demo/                           # Cross-project evaluation data
@@ -136,13 +127,9 @@ cs785-project/
 ## Quick Start
 
 ```bash
-# Clone
-git clone https://github.com/ananta-pradipta/stripped-binary-name-recovery.git
-cd stripped-binary-name-recovery
-
 # Setup environment (installs BAP, PyTorch, dependencies)
 bash scripts/01_setup_environment.sh
-source ~/cs785-project/activate.sh
+source activate.sh
 
 # Full pipeline
 bash scripts/02_compile_dataset.sh   # Compile binaries
@@ -169,27 +156,9 @@ python3 -m src.training.train \
   --pretrained-encoder checkpoints/pretrained_encoder.pt
 ```
 
-### HPC Training (NJIT Wulver)
+### HPC Training (Slurm)
 
-```bash
-# Setup SSH multiplexing (one-time)
-# Add to ~/.ssh/config:
-#   Host wulver
-#       HostName wulver.njit.edu
-#       User <ucid>
-#       ControlMaster auto
-#       ControlPath ~/.ssh/sockets/%r@%h-%p
-#       ControlPersist 12h
-
-# Upload data (first time)
-bash scripts/wulver_upload.sh
-
-# Quick code sync (after changes)
-bash scripts/wulver_sync.sh
-
-# Submit training job
-ssh wulver "cd <project_dir> && sbatch scripts/wulver_train.sbatch"
-```
+Helper scripts under `scripts/` (`wulver_*.sh`, `*.sbatch`) are provided for reference. They reference cluster-specific account / partition / host values that will need to be replaced for any other site. Anonymized placeholders (`<hpc-host>`, `<hpc-user>`, `<hpc-account>`) are used throughout.
 
 ---
 

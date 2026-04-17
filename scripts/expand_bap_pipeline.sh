@@ -6,8 +6,8 @@
 # Processes ALL stripped binaries that don't have .bir files yet
 # Incrementally updates match_index.json
 # ============================================================
-source ~/cs785-project/activate.sh
-cd ~/cs785-project
+source ~/bfnr-project/activate.sh
+cd ~/bfnr-project
 set +e  # Don't exit on individual failures
 
 DATA_RAW="data/raw"
@@ -261,4 +261,4 @@ echo "════════════════════════�
 echo " BAP PIPELINE COMPLETE"
 echo "═══════════════════════════════════════════════"
 echo ""
-echo "Next: sync to Wulver and train"
+echo "Next: sync to HPC and train"

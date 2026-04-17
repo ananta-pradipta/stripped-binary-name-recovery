@@ -1,14 +1,14 @@
 #!/bin/bash
-# First-time setup on Wulver HPC
+# First-time setup on HPC (Slurm cluster)
 # Run this AFTER uploading data with wulver_upload.sh
-# Run this ON Wulver (after SSH-ing in)
+# Run this ON the cluster (after SSH-ing in)
 #
-# Usage: bash cs785/scripts/wulver_setup.sh
+# Usage: bash bfnr/scripts/wulver_setup.sh
 
-COURSE_DIR="/course/2026/spring/cs/785/hz79/adp232"
+COURSE_DIR="<hpc-user-dir>"
 cd ${COURSE_DIR}
 
-echo "=== Setting up Python environment on Wulver ==="
+echo "=== Setting up Python environment on HPC ==="
 
 # Load Python module
 module load bright 2>/dev/null
@@ -22,14 +22,14 @@ module load Python/3.10 2>/dev/null || module load python3 2>/dev/null || module
 echo "Python: $(python3 --version)"
 
 # Create virtual environment
-if [ ! -d "cs785-env" ]; then
+if [ ! -d "bfnr-env" ]; then
     echo "Creating virtual environment..."
-    python3 -m venv cs785-env
+    python3 -m venv bfnr-env
 else
     echo "Virtual environment already exists."
 fi
 
-source cs785-env/bin/activate
+source bfnr-env/bin/activate
 
 # Install dependencies
 echo "Installing PyTorch with CUDA..."
@@ -62,4 +62,4 @@ print('All dependencies OK')
 
 echo ""
 echo "=== Setup complete! ==="
-echo "To train: cd cs785 && sbatch scripts/wulver_train.sbatch"
+echo "To train: cd bfnr && sbatch scripts/wulver_train.sbatch"
