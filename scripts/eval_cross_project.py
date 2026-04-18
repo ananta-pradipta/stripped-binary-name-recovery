@@ -81,11 +81,15 @@ def load_binary_fingerprints(ext_calls_dirs):
 
 def batch_knn_lookup_with_p2(query_embeddings, train_normed, train_names,
                               train_binary_idx, unique_binaries, unique_binary_fps,
-                              target_binary_fp, binary_sim_threshold=0.2, k=1):
+                              target_binary_fp, binary_sim_threshold=0.2, k=1,
+                              return_similarities=False):
     """k-NN lookup with P2 binary fingerprint filtering.
 
     Masks out training functions from binaries with low Jaccard similarity
     to the target binary's external call fingerprint.
+
+    If return_similarities=True, returns (names, top1_sims) where top1_sims[i]
+    is the post-filter cosine similarity of the retrieved name for query i.
     """
     norms = np.linalg.norm(query_embeddings, axis=1, keepdims=True)
     query_normed = query_embeddings / (norms + 1e-8)
@@ -105,14 +109,19 @@ def batch_knn_lookup_with_p2(query_embeddings, train_normed, train_names,
 
     chunk_size = 500
     results = []
+    top_sims = [] if return_similarities else None
     for start in range(0, len(query_normed), chunk_size):
         end = min(start + chunk_size, len(query_normed))
         sims = query_normed[start:end] @ train_normed.T
         if binary_mask is not None:
             sims = np.where(binary_mask, sims, -1.0)
         best_idx = np.argmax(sims, axis=1)
-        for idx in best_idx:
+        for row_pos, idx in enumerate(best_idx):
             results.append(train_names[idx])
+            if return_similarities:
+                top_sims.append(float(sims[row_pos, idx]))
+    if return_similarities:
+        return results, np.array(top_sims, dtype=np.float32)
     return results
 
 
@@ -554,6 +563,26 @@ def predict_binary_with_embeddings(functions, ext_by_func, model, token_vocab, e
 
 
 # ---------------------------------------------------------------------------
+# Reverse hybrid: k-NN default with decoder fallback on low similarity
+# ---------------------------------------------------------------------------
+def apply_reverse_hybrid(knn_names, top_sims, decoder_names, sim_threshold):
+    """If top-1 post-filter cosine sim >= threshold: use k-NN name.
+    Else: fall back to decoder name."""
+    assert len(knn_names) == len(top_sims) == len(decoder_names)
+    final = []
+    n_knn = 0
+    n_decoder = 0
+    for knn_n, sim, dec_n in zip(knn_names, top_sims, decoder_names):
+        if sim >= sim_threshold:
+            final.append(knn_n)
+            n_knn += 1
+        else:
+            final.append(dec_n)
+            n_decoder += 1
+    return final, n_knn, n_decoder
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 def main():
@@ -564,6 +593,16 @@ def main():
     parser.add_argument('--amp', action='store_true', help='Use AMP for inference')
     parser.add_argument('--save', default='results/cross_project_eval_v2.json',
                         help='Path to save JSON results')
+    parser.add_argument('--binary-sim-threshold', type=float, default=0.2,
+                        help='Jaccard threshold for P2 BinFilter (default 0.2; paper headline uses 0.5)')
+    parser.add_argument('--reverse-hybrid', action='store_true',
+                        help='Evaluate k-NN+P2 default with decoder fallback on low cosine similarity')
+    parser.add_argument('--sim-threshold', type=float, default=None,
+                        help='Cosine sim threshold for decoder fallback. '
+                             'If k-NN+P2 top-1 sim < threshold, use decoder. '
+                             'Required when --reverse-hybrid without --sweep-sim.')
+    parser.add_argument('--sweep-sim', action='store_true',
+                        help='Sweep sim thresholds 0.50..0.95 (step 0.05) in reverse-hybrid mode')
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -748,7 +787,7 @@ def main():
         names = batch_knn_lookup_with_p2(
             bin_embs, train_normed, train_names,
             train_binary_idx, unique_binaries, unique_binary_fps,
-            target_fp, binary_sim_threshold=0.2, k=1
+            target_fp, binary_sim_threshold=args.binary_sim_threshold, k=1
         )
         for j, idx in enumerate(bin_indices):
             test_knn_p2_names[idx] = names[j]
@@ -879,18 +918,21 @@ def main():
     # k-NN k=1 + P2 binary filter (batched per unique binary)
     xproj_pred_binaries = [p.get('binary', '') for p in all_preds]
     xproj_knn_p2_names = [''] * len(all_demo_embeddings)
+    xproj_knn_p2_sims = np.zeros(len(all_demo_embeddings), dtype=np.float32)
     xproj_bins_unique = sorted(set(xproj_pred_binaries))
     for xbin in xproj_bins_unique:
         bin_indices = [i for i, b in enumerate(xproj_pred_binaries) if b == xbin]
         target_fp = all_fingerprints.get(xbin, set())
         bin_embs = all_demo_embeddings[bin_indices]
-        names = batch_knn_lookup_with_p2(
+        names, sims = batch_knn_lookup_with_p2(
             bin_embs, train_normed, train_names,
             train_binary_idx, unique_binaries, unique_binary_fps,
-            target_fp, binary_sim_threshold=0.2, k=1
+            target_fp, binary_sim_threshold=args.binary_sim_threshold, k=1,
+            return_similarities=True,
         )
         for j, idx in enumerate(bin_indices):
             xproj_knn_p2_names[idx] = names[j]
+            xproj_knn_p2_sims[idx] = sims[j]
     xproj_knn_p2 = compute_metrics(xproj_knn_p2_names, xproj_true_names)
     print(f"    k-NN k=1 + P2: EM={xproj_knn_p2['em']:.1%}, F1={xproj_knn_p2['f1']:.4f}, "
           f"NgSim={xproj_knn_p2['ngsim']:.4f}, EdSim={xproj_knn_p2['edsim']:.4f}")
@@ -935,7 +977,146 @@ def main():
         'per_package': xproj_per_pkg,
         'n_functions': len(all_preds),
         'n_packages': len(set(all_pkg_labels)),
+        'binary_sim_threshold': args.binary_sim_threshold,
     }
+
+    # =====================================================================
+    # STEP 4 (optional): Reverse hybrid — k-NN+P2 default, decoder fallback
+    # =====================================================================
+    if args.reverse_hybrid:
+        print(f"\n{'='*80}")
+        print(f"STEP 4: Reverse hybrid (k-NN+P2 default, decoder fallback on low sim)")
+        print(f"        BinFilter tau = {args.binary_sim_threshold}")
+        print(f"{'='*80}")
+
+        if args.sweep_sim:
+            sim_grid = [round(x, 2) for x in np.arange(0.50, 0.96, 0.05)]
+            print(f"\n  Sweeping sim thresholds: {sim_grid}")
+            print(f"  {'sigma':>6} {'kNN%':>6} {'Dec%':>6} {'EM':>7} {'F1':>7} "
+                  f"{'vs kNN+P2 F1':>14}")
+            baseline_f1 = xproj_knn_p2['f1']
+            sweep_results = {}
+            best_sigma = None
+            best_f1 = baseline_f1
+            for sigma in sim_grid:
+                final_names, n_knn, n_dec = apply_reverse_hybrid(
+                    xproj_knn_p2_names, xproj_knn_p2_sims,
+                    xproj_decoder_names, sigma,
+                )
+                m = compute_metrics(final_names, xproj_true_names)
+                frac_knn = n_knn / max(1, n_knn + n_dec)
+                frac_dec = n_dec / max(1, n_knn + n_dec)
+                delta = m['f1'] - baseline_f1
+                print(f"  {sigma:>6.2f} {frac_knn:>5.1%} {frac_dec:>5.1%} "
+                      f"{m['em']:>6.1%} {m['f1']:>7.4f} {delta:>+13.4f}")
+                sweep_results[str(sigma)] = {
+                    'knn_used': n_knn,
+                    'decoder_used': n_dec,
+                    'metrics': m,
+                    'delta_f1': delta,
+                }
+                if m['f1'] > best_f1:
+                    best_f1 = m['f1']
+                    best_sigma = sigma
+
+            if best_sigma is not None:
+                print(f"\n  Best sigma = {best_sigma}, F1 = {best_f1:.4f} "
+                      f"(+{best_f1 - baseline_f1:.4f} over k-NN+P2 = {baseline_f1:.4f})")
+            else:
+                print(f"\n  No sigma improved over k-NN+P2 baseline ({baseline_f1:.4f})")
+
+            # Per-package breakdown at best sigma (or best-effort fallback)
+            report_sigma = best_sigma if best_sigma is not None else sim_grid[len(sim_grid) // 2]
+            print(f"\n  Per-package at sigma={report_sigma}:")
+            print(f"  {'Package':<12} {'N':>5} {'kNN%':>6} {'Dec%':>6} {'EM':>7} "
+                  f"{'F1':>7} {'Δ F1 vs P2':>11}")
+            per_pkg_reverse = {}
+            for pkg in sorted(per_pkg_preds.keys()):
+                pkg_indices = [j for j, lbl in enumerate(all_pkg_labels) if lbl == pkg]
+                pkg_knn_names = [xproj_knn_p2_names[j] for j in pkg_indices]
+                pkg_knn_sims = xproj_knn_p2_sims[pkg_indices]
+                pkg_dec_names = [xproj_decoder_names[j] for j in pkg_indices]
+                pkg_true_names = [xproj_true_names[j] for j in pkg_indices]
+
+                pkg_final, n_knn, n_dec = apply_reverse_hybrid(
+                    pkg_knn_names, pkg_knn_sims, pkg_dec_names, report_sigma,
+                )
+                pkg_m = compute_metrics(pkg_final, pkg_true_names)
+                pkg_p2_f1 = xproj_per_pkg[pkg]['knn_p2']['f1']
+                frac_knn = n_knn / max(1, n_knn + n_dec)
+                frac_dec = n_dec / max(1, n_knn + n_dec)
+                print(f"  {pkg:<12} {pkg_m['n']:>5} {frac_knn:>5.1%} {frac_dec:>5.1%} "
+                      f"{pkg_m['em']:>6.1%} {pkg_m['f1']:>7.4f} "
+                      f"{pkg_m['f1'] - pkg_p2_f1:>+11.4f}")
+                per_pkg_reverse[pkg] = {
+                    'metrics': pkg_m,
+                    'knn_used': n_knn,
+                    'decoder_used': n_dec,
+                    'delta_f1_vs_p2': pkg_m['f1'] - pkg_p2_f1,
+                }
+
+            save_data['reverse_hybrid_sweep'] = {
+                'binary_sim_threshold': args.binary_sim_threshold,
+                'sim_grid': sim_grid,
+                'baseline_knn_p2_f1': baseline_f1,
+                'best_sigma': best_sigma,
+                'best_f1': best_f1,
+                'per_sigma': sweep_results,
+                'per_package_at_best': per_pkg_reverse,
+                'report_sigma': report_sigma,
+            }
+
+        else:
+            if args.sim_threshold is None:
+                print("  ERROR: --reverse-hybrid without --sweep-sim requires --sim-threshold")
+                return
+            sigma = args.sim_threshold
+            final_names, total_knn, total_dec = apply_reverse_hybrid(
+                xproj_knn_p2_names, xproj_knn_p2_sims,
+                xproj_decoder_names, sigma,
+            )
+            rev_m = compute_metrics(final_names, xproj_true_names)
+            print(f"\n  sigma = {sigma}")
+            print(f"    k-NN used: {total_knn}/{total_knn + total_dec} ({total_knn/(total_knn+total_dec):.1%})")
+            print(f"    Decoder used: {total_dec}/{total_knn + total_dec} ({total_dec/(total_knn+total_dec):.1%})")
+            print(f"    EM={rev_m['em']:.1%}, F1={rev_m['f1']:.4f}, "
+                  f"NgSim={rev_m['ngsim']:.4f}, EdSim={rev_m['edsim']:.4f}")
+            print(f"    vs k-NN+P2 baseline F1={xproj_knn_p2['f1']:.4f}: "
+                  f"Δ={rev_m['f1'] - xproj_knn_p2['f1']:+.4f}")
+
+            # Per-package
+            print(f"\n  Per-package:")
+            print(f"  {'Package':<12} {'N':>5} {'EM':>7} {'F1':>7} {'Δ F1 vs P2':>11}")
+            per_pkg_reverse = {}
+            for pkg in sorted(per_pkg_preds.keys()):
+                pkg_indices = [j for j, lbl in enumerate(all_pkg_labels) if lbl == pkg]
+                pkg_knn_names = [xproj_knn_p2_names[j] for j in pkg_indices]
+                pkg_knn_sims = xproj_knn_p2_sims[pkg_indices]
+                pkg_dec_names = [xproj_decoder_names[j] for j in pkg_indices]
+                pkg_true_names = [xproj_true_names[j] for j in pkg_indices]
+
+                pkg_final, n_knn, n_dec = apply_reverse_hybrid(
+                    pkg_knn_names, pkg_knn_sims, pkg_dec_names, sigma,
+                )
+                pkg_m = compute_metrics(pkg_final, pkg_true_names)
+                pkg_p2_f1 = xproj_per_pkg[pkg]['knn_p2']['f1']
+                print(f"  {pkg:<12} {pkg_m['n']:>5} {pkg_m['em']:>6.1%} {pkg_m['f1']:>7.4f} "
+                      f"{pkg_m['f1'] - pkg_p2_f1:>+11.4f}")
+                per_pkg_reverse[pkg] = {
+                    'metrics': pkg_m,
+                    'knn_used': n_knn,
+                    'decoder_used': n_dec,
+                    'delta_f1_vs_p2': pkg_m['f1'] - pkg_p2_f1,
+                }
+
+            save_data['reverse_hybrid'] = {
+                'binary_sim_threshold': args.binary_sim_threshold,
+                'sim_threshold': sigma,
+                'knn_used': total_knn,
+                'decoder_used': total_dec,
+                'metrics': rev_m,
+                'per_package': per_pkg_reverse,
+            }
 
     # =====================================================================
     # Summary

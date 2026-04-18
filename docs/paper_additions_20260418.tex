@@ -1,0 +1,140 @@
+% ============================================================================
+% Paper additions — 2026-04-18 session
+% Five topics: (1) param table, (2) kNN vs decoder table, (3) encoder+decoder
+% architecture, (4) composition-not-memorization evidence, (5) recutils failure.
+% Intended to be inserted into paper_ccs.tex; see inline placement notes.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% (1) Parameter breakdown table — insert in Method (Sec 4) after model overview
+% ----------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\small
+\caption{Per-component parameter counts for the 25M \sysname{} model (configuration \texttt{optimized\_large}).}
+\label{tab:params}
+\begin{tabular}{lrl}
+\toprule
+Component & Params & Configuration \\
+\midrule
+Block encoder (Transformer)           &  $\sim$8.0M & 4 layers, 8 heads, embed 256, out 512 \\
+Graph encoder (GAT, attn pool)        &  $\sim$5.0M & 3 layers, 8 heads, hidden 512, out 1024 \\
+External-call encoder (GRU)           &  $\sim$1.2M & vocab 2{,}237, embed 256, hidden 256, out 1024 \\
+Callee encoder (avg-pool + MLP)       &  $\sim$0.5M & embed 128, hidden 256 \\
+Caller encoder (avg-pool + MLP)       &  $\sim$0.5M & embed 128, hidden 256 \\
+Gated fusion (3-stage cascade)        &  $\sim$2.8M & ext $\to$ callee $\to$ caller, 1024-dim gates \\
+Decoder (GRU, LM-pretrained)          &  $\sim$7.2M & vocab 7{,}004, embed 512, hidden 1024 \\
+\midrule
+\textbf{Total}                         & \textbf{$\sim$25M} & Trained in 2\,h 12\,m on one A100-80GB \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ----------------------------------------------------------------------------
+% (2) kNN-vs-Decoder per-package routing table — insert in Results (Sec 5)
+% ----------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\small
+\caption{Per-package cross-project F1 with the adaptive Jaccard gate ($\tau_{\text{bin}}{=}0.7$). \emph{Route} is determined by $J_{\max}(B)$ without knowledge of ground truth. $k$-NN dominates where the target binary has a close training neighbor; the pretrained decoder dominates everywhere else.}
+\label{tab:route-vs-winner}
+\begin{tabular}{lrrrcrr}
+\toprule
+Package     & N       & $J_{\max}$ & Route     & $k$-NN F1 & Dec.\,F1 & Gate F1 \\
+\midrule
+nginx118    & 3{,}470 & 0.998 & $k$-NN     & \textbf{0.878} & 0.773 & 0.878 \\
+angie       & 3{,}893 & 0.971 & $k$-NN     & \textbf{0.819} & 0.709 & 0.819 \\
+\midrule
+tengine     &    554  & 0.695 & decoder    & 0.531          & \textbf{0.630} & 0.645 \\
+grep$^*$    & 1{,}609 & 0.639 & decoder    & 0.401          & \textbf{0.843} & 0.902 \\
+sed$^*$     & 1{,}103 & 0.447 & decoder    & 0.443          & \textbf{0.814} & 0.872 \\
+psmisc      &    272  & 0.391 & decoder    & 0.167          & \textbf{0.745} & 0.761 \\
+recutils    & 2{,}550 & 0.349 & decoder    & 0.308          & 0.311          & 0.346 \\
+dash        & 1{,}324 & 0.290 & decoder    & 0.130          & \textbf{0.770} & 0.815 \\
+gettext     & 1{,}518 & 0.173 & decoder    & 0.036          & \textbf{0.807} & 0.834 \\
+\bottomrule
+\end{tabular}
+
+\raggedright
+\footnotesize $^*$grep and sed are present in the training split and are excluded from the clean seven-package aggregate in Table~X. They are reported here for transparency.
+\end{table}
+
+\paragraph{Interpretation.}
+The routing decision is fully determined by the binary-level fingerprint similarity $J_{\max}(B)$ and never inspects ground-truth names. For nginx-family packages whose external-call vocabulary nearly matches a training binary, retrieval recovers the exact caller-reusable name and dominates by 5--11 points over the pretrained decoder. For packages far from training vocabulary (dash, gettext, psmisc), retrieval returns structurally-similar but semantically-wrong neighbors (e.g., retrieving a libc string function for a dash parser), while the decoder composes plausible sub-token sequences conditioned on the encoder's code representation. The adaptive gate routes each binary to its stronger head without ever peeking at targets.
+
+% ----------------------------------------------------------------------------
+% (3) Encoder + Decoder roles & why both — insert in Method (Sec 4)
+% ----------------------------------------------------------------------------
+\subsection{Why both encoder and decoder}
+\label{sec:enc-dec-roles}
+
+A purely generative architecture (decoder conditioned on raw tokens) tends to hallucinate plausible-looking but wrong names on short or atypical functions. A purely retrieval-based architecture ($k$-NN over trained embeddings) fails on packages whose training neighbors are structurally or lexically distant. Our system combines both heads by routing on a computable confidence signal.
+
+\textbf{Encoder role (retrieval grounding).} The encoder produces a 1024-dimensional function embedding $\mathbf{z}_f$ that combines (i) block-level instruction patterns via a Transformer over Votes sub-tokens; (ii) control-flow topology via a GAT-based graph encoder with attention pooling; (iii) external-call context via a GRU over the target's library calls; (iv) callee and caller context via the structural neighbors' signatures. Training uses cross-entropy on the decoder target plus a contrastive loss that pulls same-name embeddings together. At inference, $\mathbf{z}_f$ indexes a cached datastore of training $(\mathbf{z}_i, n_i)$ pairs for $k$-NN retrieval.
+
+\textbf{Decoder role (compositional generation).} A single-layer GRU over the 7{,}004-token Votes sub-token vocabulary generates a name sequence conditioned on $\mathbf{z}_f$ via the initial hidden state $\mathbf{h}_0{=}\mathrm{proj}(\mathbf{z}_f)$. Before end-to-end fine-tuning, the decoder is pretrained as an unconditional sub-token language model on a 397{,}000-name corpus (73K from our compiled training set, 329K from the XFL release). This pretraining equips the decoder with strong priors over C naming conventions (prefixes like \texttt{parse\_}, \texttt{msg\_}, \texttt{get\_}; suffixes like \texttt{\_cb}, \texttt{\_init}; snake-case composition) that the fine-tune-only decoder does not acquire from 300K in-domain training pairs alone.
+
+\textbf{Adaptive routing.} At inference, the binary-level Jaccard signal $J_{\max}(B)$ determines the head: high-coverage binaries (target close to a training binary) use $k$-NN because retrieval is extremely reliable when neighbors exist; low-coverage binaries use the decoder because retrieval returns structurally-similar but lexically-wrong neighbors. A per-query cosine-similarity safety valve promotes $k$-NN even in decoder mode for the rare cases of near-duplicate embeddings.
+
+% ----------------------------------------------------------------------------
+% (4) Composition, not memorization — evidence — insert in Discussion (Sec 6)
+% ----------------------------------------------------------------------------
+\subsection{Is the decoder composing or memorizing?}
+\label{sec:comp-vs-mem}
+
+A natural concern is that the decoder's pretraining corpus (397K names including XFL's Debian labels) overlaps with test-set ground-truth names, which could inflate F1 via pure memorization. We quantify this in two ways.
+
+\paragraph{Exact-name overlap.}
+Counting how many test-set ground-truth names appear verbatim in the 397K pretrain corpus:
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lrr}
+\toprule
+Package & Test names & In corpus verbatim \\
+\midrule
+dash    &   352 & 299 (84.9\%) \\
+psmisc  &    86 &  58 (67.4\%) \\
+gettext &   514 &  93 (18.1\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Sub-token coverage of unseen names.}
+For names \emph{not} in the corpus verbatim, we compute how many of their sub-tokens (after Votes tokenization) are present in the corpus. This measures whether the decoder can \emph{compose} a name it never saw as a full string.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lrrr}
+\toprule
+Package & Unseen names & Mean sub-token coverage & Composable ($\geq\!90\%$) \\
+\midrule
+dash    &  53 & 29.7\% & 21\% \\
+psmisc  &  28 & 90.4\% & 61\% \\
+gettext & 421 & \textbf{95.3\%} & \textbf{85\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For gettext, 82\% of test names are \emph{novel} to the pretrain corpus; yet 85\% of those novel names can be composed from sub-tokens the decoder has seen. The decoder therefore produces names like \texttt{arglist\_parser\_remember\_msgctxt} by combining learned prefixes (\texttt{arglist\_}, \texttt{parser\_}) with known operations (\texttt{remember}, \texttt{msgctxt}) — evidence of genuine compositional generation rather than string recall.
+
+The dash case is less favorable: 85\% of its names \emph{are} present verbatim, and the remaining 15\% have low sub-token coverage (29.7\%) because they are GCC-mangled ($\texttt{\_\_do\_global\_dtors\_aux}$, $\texttt{cmdloop.constprop.0}$) — neither memorizable nor composable. We report this in Section~\ref{sec:limitations} and make the per-package composition analysis available in our artifact.
+
+\paragraph{Relationship to LM-pretrained baselines.}
+This form of pretrain-corpus exposure is the same category as SymGen's CodeLlama-34B backbone, which was pretrained on 2~trillion tokens of GitHub source including Debian packages. Neither system trains on test-package $(\text{code}, \text{name})$ pairs; both rely on large-scale naming-vocabulary exposure. Our corpus is smaller but more targeted (397K curated function names versus 2T general tokens), producing stronger per-token priors. We disclose this explicitly; it is not traditional data leakage (no supervised mapping seen at training time) but is worth distinguishing from a zero-exposure cold start.
+
+% ----------------------------------------------------------------------------
+% (5) Why recutils fails — insert in Discussion (Sec 6)
+% ----------------------------------------------------------------------------
+\subsection{Why recutils remains hard}
+\label{sec:recutils-limit}
+
+Recutils is the weakest cross-project package across every evaluation mode and both heads: pure $k$-NN F1\,=\,0.31, pure decoder F1\,=\,0.31, adaptive gate F1\,=\,0.35. Neither retrieval nor compositional generation recovers its names. Two factors explain the floor.
+
+\textbf{Vocabulary isolation.}
+Recutils is a GNU database library whose names use a distinctive prefixed family (\texttt{rec\_db\_*}, \texttt{rec\_field\_*}, \texttt{rec\_record\_*}, \texttt{rec\_rset\_*}, \texttt{rec\_mset\_*}). Out of the 397K function names in our pretrain corpus, only 88 use a \texttt{rec\_} prefix, and sub-tokens like \texttt{rset}, \texttt{mset}, \texttt{fex} appear fewer than 10 times each. The decoder's LM prior therefore gives very low probability to the correct compositions, and falls back to plausible-but-wrong names (\texttt{parse\_include}, \texttt{get\_options}).
+
+\textbf{Structural mismatch.}
+Recutils functions are short database accessors with minimal external calls; their block-level and call-graph signatures closely resemble generic parser or container utilities in training (e.g., coreutils, findutils), producing high cosine similarity to training neighbors but with the \emph{wrong} names. This is the classic failure mode of structure-only retrieval: $J_{\max}(B){=}0.349$ routes recutils to the decoder in our gate, but the decoder's weak prior on \texttt{rec\_} vocabulary means its top-1 candidate also misses.
+
+This is a fundamental cold-start limitation of any LM-pretraining-based approach: packages with vocabulary families that appear fewer than a few hundred times in the pretraining corpus cannot be composed. We expect the gap to close as the pretraining corpus grows or with targeted per-package adaptation, but we flag it as an open limitation in Section~\ref{sec:future-work}.

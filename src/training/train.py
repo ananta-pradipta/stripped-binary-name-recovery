@@ -418,6 +418,8 @@ def main():
                         help='Random seed for reproducibility')
     parser.add_argument('--pretrained-encoder', type=str, default=None,
                         help='Path to pretrained encoder weights (from pretrain.py)')
+    parser.add_argument('--pretrained-decoder', type=str, default=None,
+                        help='Path to decoder weights pretrained as sub-token LM on broad name corpus')
     parser.add_argument('--amp', action='store_true',
                         help='Enable mixed precision training (AMP) for ~2x speedup on A100')
     parser.add_argument('--num-workers', type=int, default=0,
@@ -583,6 +585,29 @@ def main():
               f"{len(partial_keys)} partial, {len(skipped_keys)} skipped")
         if skipped_keys:
             print(f"  Skipped: {skipped_keys[:5]}{'...' if len(skipped_keys) > 5 else ''}")
+
+    # Load pretrained decoder weights (from sub-token LM pretraining on broad name corpus)
+    if args.pretrained_decoder:
+        dec_ckpt = torch.load(args.pretrained_decoder, map_location=device, weights_only=False)
+        dec_state = dec_ckpt['state_dict']
+        model_state = model.state_dict()
+        loaded = []
+        skipped = []
+        for k, v in dec_state.items():
+            # Pretrain saved keys as "embedding.weight", "gru.weight_ih_l0", etc.
+            # Full model stores them under "decoder.embedding.weight", etc.
+            target_key = f'decoder.{k}'
+            if target_key in model_state and model_state[target_key].shape == v.shape:
+                model_state[target_key] = v
+                loaded.append(target_key)
+            else:
+                skipped.append((target_key, v.shape if hasattr(v, 'shape') else None))
+        model.load_state_dict(model_state)
+        print(f"Loaded pretrained decoder from {args.pretrained_decoder}: "
+              f"{len(loaded)} keys loaded, {len(skipped)} skipped")
+        print(f"  Pretrain val_loss: {dec_ckpt.get('val_loss', '?')}  epoch: {dec_ckpt.get('epoch', '?')}")
+        if skipped:
+            print(f"  Skipped keys: {skipped[:5]}")
 
     optimizer = torch.optim.AdamW(
         model.parameters(),
