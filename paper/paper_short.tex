@@ -463,8 +463,8 @@ Table~\ref{tab:pred_examples} shows representative predictions across five categ
 \section{Discussion}
 \label{sec:discussion}
 
-\textbf{Retrieval Outperforms Generation.}
-A key finding is that 0 out of 1,873 unseen function names were correctly predicted; every correct prediction matches a training name. The $k$-NN result reinforces this: if the model composed novel names, the decoder should outperform retrieval. Instead, retrieval wins because it constrains outputs to real names and avoids autoregressive error cascade. The 11\% of test functions with unseen target names establishes a theoretical EM ceiling of ${\sim}$89\%; our best system achieves 85.7\% of this maximum.
+\textbf{Retrieval and Generation are Complementary.}
+Earlier ablations on the fine-tune-only decoder showed a strong retrieval advantage: 0 of 1,873 truly-unseen names recovered, and retrieval beating generation by constraining outputs to real names and avoiding autoregressive error cascade. With 397K-name LM pretraining, the decoder acquires sub-token priors that enable a non-trivial compositional regime on packages whose sub-tokens are present in the corpus (e.g., 85\% of gettext's novel names are composable from known sub-tokens). An adaptive binary-coverage gate routes high-Jaccard binaries to $k$-NN (where exact neighbors exist) and low-Jaccard binaries to the pretrained decoder (where composition shines). The 11\% of test functions with unseen-and-uncomposable target names still caps the theoretical EM ceiling near ${\sim}$89\%.
 
 \textbf{The O0/O2 Generalization Gap.}
 O0-compiled binaries are significantly harder than higher optimization levels. On the unified 13,559-function test set the final 32M model reaches F1 0.770 / EM 70.8\% overall, with O0 remaining the weakest per-level slice. O0 code produces many small wrapper functions with similar instruction signatures. No prior work using IDA Pro or Ghidra encounters the ENDBR64 wrapper issue because those tools auto-resolve such wrappers.
