@@ -481,6 +481,7 @@ The trend in binary analysis is toward ever-larger language models: SYMGEN~\cite
 \textbf{Structure-Aware vs. Source-Code LLM Paradigms.}
 Recent literature has bifurcated into two paradigms. \emph{Source-code LLM} approaches~\cite{symgen,beyondclass} map decompiled pseudo-code to names by exploiting patterns their billion-parameter backbones absorbed from GitHub-scale corpora. \emph{Structure-aware} approaches (including ours, BLens~\cite{blens}, XFL~\cite{xfl}, SymLM~\cite{symlm}, TYGR~\cite{tygr}) directly encode binary-intrinsic features using small-to-medium models trained on binary representations. We view source-code LLMs and structure-aware models as complementary. \sysname{} focuses on binary-intrinsic structure rather than source-level phrasing. AI-assisted coding tools are increasingly homogenizing source-text conventions, so structure-aware models that tie predictions to computational invariants (how the function behaves) should degrade more gracefully under text-distribution shift than source-code-LLM approaches.
 
+
 % ============================================================================
 \section{Limitations}
 \label{sec:limitations}
@@ -491,7 +492,18 @@ The model is a pure recognizer and cannot compose novel names; for codebases wit
 \section{Future Work}
 \label{sec:future}
 
+\subsection{Improvements to the Model}
 Several directions could extend this work. First, cross-architecture support (ARM, MIPS) would require adapting the instruction-type tokenization but the graph-based architecture should transfer. Second, integrating our encoder embeddings with a fine-tuned LLM could enable compositional name generation for unseen-name functions (11\% of test). Third, the $k$-NN datastore could support incremental learning: as analysts confirm function names, new entries expand the index without retraining. Finally, confidence-based selective prediction, where the system abstains below a score threshold, could improve precision for deployment scenarios where wrong names are worse than no names.
+
+\subsection{Improvements to the context considered}
+% Robert: I'm not sure I like how this flows but I want to include a section that outlines why external calls work well and suggests other sources of information for function name prediction that share similar traits
+External calls were used as an extra source of information for function name prediction, resulting in a more efficient, more accurate model than the state of the art. One can examine the aspects that make external calls a valuable source of information to expand into other additional context within a binary that can help function name generation. Specifically, external calls are
+\begin{itemize}
+    \item \textbf{Stateless}, the \texttt{.got} section of a binary will always contain information on what external functions are referenced without having to rely on dynamic analysis of the binary.
+    \item \textbf{Common} across enough binaries to consistently be used within a function or within one of its callers/callees.
+    \item \textbf{Meaningful} to the purpose of a function, as they often involve around operating system tasks (e.g. \texttt{open()}, \texttt{socket()}, \texttt{fork()}).
+\end{itemize} 
+Examining these criteria help suggest possible areas for continued experimentation, such as the \texttt{rodata} of a binary, which is stateless, exists across many binaries, and often contains magic numbers or strings that are used for error messages, protocol specification for networking functions, or access specification for file interfacing. 
 
 % ============================================================================
 \section{Conclusion}
