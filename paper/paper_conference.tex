@@ -627,16 +627,17 @@ We verified the paradox is not an artifact of the specific training run by retra
 
 \begin{table}[t]
     \centering
-    \caption{Main results comparing decoder and $k$-NN hybrid inference on 300{,}013-function dataset.}
+    \caption{Main results. XProj-4: original four-package cross-project set (10{,}467 fns). XProj-7: Clean 7 extension adding dash, gettext, psmisc (13{,}581 fns, fully held out). The adaptive gate (Sec.~\ref{sec:adaptive-gate}) routes each binary to $k$-NN or decoder based on $J_{\max}(B)$.}
     \label{tab:main}
     \footnotesize
-    \begin{tabular}{lcccc}
+    \begin{tabular}{lcccccc}
         \toprule
-        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XProj EM} & \textbf{XProj F1} \\
+        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XProj-4 F1} & \textbf{XProj-4 EM} & \textbf{XProj-7 F1} & \textbf{XProj-7 EM} \\
         \midrule
-        Decoder only (beam $k{=}5$) & 70.6\% & 0.770 & 54.6\% & 0.673 \\
-        $k$-NN unfiltered & 70.8\% & 0.770 & 56.1\% & 0.698 \\
-        $k$-NN + BinFilter ($\tau{=}0.5$) & \textbf{70.8\%} & \textbf{0.770} & \textbf{57.0\%} & \textbf{0.718} \\
+        Decoder only (beam $k{=}5$) & 70.6\% & 0.770 & 0.668 & 53.9\% & 0.665 & 56.5\% \\
+        $k$-NN unfiltered & 70.8\% & 0.770 & 0.698 & 55.6\% & --- & --- \\
+        $k$-NN + BinFilter ($\tau{=}0.5$) & 70.8\% & 0.770 & \textbf{0.715} & \textbf{57.0\%} & 0.558 & 44.7\% \\
+        Adaptive gate ($\tau_{\text{bin}}{=}0.7$) & \textbf{71.0\%} & \textbf{0.777} & 0.714 & 56.8\% & \textbf{0.738} & \textbf{58.4\%} \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -801,6 +802,8 @@ Table~\ref{tab:comparison} reports cross-project F1 across published systems in 
 \end{table}
 
 The LLM-contamination pattern comes out clearly in this split. \sysname{} wins the three nginx-family packages by +0.10 to +0.24 F1: nginx forks include post-2023 code that CodeLlama never saw, and our BAP-trained encoder has no such asymmetric advantage. SYMGEN wins recutils by +0.28: recutils is a canonical GNU record-management library whose source is on every Linux distribution and GitHub mirror, so its function names are plausibly in CodeLlama's 2T-token pretraining. Table~\ref{tab:matched} is the cleanest evidence we can provide that the gap between \sysname{} and LLM baselines depends on which direction the pretraining contamination runs, not on the systems' nominal parameter counts.
+
+\textbf{Expanded nine-package head-to-head.} We additionally ran SYMGEN+LoRA on five more cross-project packages (dash, gettext, psmisc, grep, sed) using the same LoRA adapter and Ghidra extraction pipeline. On Clean 7 (dropping grep+sed as training-contaminated), SYMGEN+LoRA aggregates to F1=0.6301 (18{,}944 fns) versus \sysname{} with adaptive gate at F1=0.7381 (13{,}581 fns). The widest gap is on the three low-coverage additions (dash/gettext/psmisc), where SYMGEN F1=0.4412 trails \sysname{}'s Gate F1=0.8198 by $+0.38$. The gap is driven by the pretrained decoder's ability to compose plausible sub-token combinations for packages whose names are far from retrieval reach; SYMGEN's 34B CodeLlama backbone, despite broader LM pretraining, does not close this specific gap in our evaluation. SYMGEN retains its advantage only on recutils, consistent with the contamination asymmetry discussed above.
 
 \textbf{Output-space differences across prior systems.} SymLM~\cite{symlm} uses a 3{,}069-class classification head over a fixed label vocabulary, and XFL~\cite{xfl} performs multi-label prediction over a closed tag set. Both are structurally unable to emit names outside their training label space: BLens's unified reproduction~\cite{blens} reports that 43.8\% of cross-project test functions fall outside SymLM's trainable vocabulary (marked ``not in the dataset''), and XFL abstains on 60.7\% of cross-project functions whose confidence falls below its prediction threshold. \sysname{}'s output stage differs in two ways: the GRU decoder emits sub-token sequences over a 7{,}004-token Votes vocabulary (rather than selecting from a fixed set of whole-name classes), and the $k$-NN head retrieves from the full training-name index (approximately 276K distinct embedding-name pairs). We emphasize that this is a difference in \emph{output-space design}, and that after LM-pretraining the decoder partially addresses the generalization gap rather than merely expanding the recognition base. In our initial ablation on the fine-tune-only decoder, zero of 1{,}873 truly-unseen function names were correctly predicted. With LM pretraining on a 397K-name corpus, the decoder now composes a non-trivial fraction of previously-unseen names (for example, 85\% of gettext's non-verbatim names are composable from known sub-tokens). The advantage on cross-project packages therefore comes from two complementary mechanisms: a larger recognition base (via $k$-NN retrieval) for packages similar to training, and a sub-token prior (via the pretrained decoder) for packages far from training. BLens~\cite{blens} and Epitome~\cite{epitome} use sub-token generation similar to ours and do not suffer from the SymLM/XFL structural bound; we cite their published numbers on the Punstrip Debian dataset as literature anchors and do not reproduce them directly because their test distribution differs from ours.
 

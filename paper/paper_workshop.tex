@@ -572,16 +572,17 @@ Adding callee/caller context (Model 4) resolves the paradox: cross-project EM ju
 
 \begin{table}[t]
     \centering
-    \caption{Main results on the 300K-trained 25M model comparing Decoder, unfiltered $k$-NN, and $k$-NN + BinFilter. All three use the same encoder; only the output head differs.}
+    \caption{Main results on the 300K-trained 25M model. XProj-4: original cross-project set (10{,}467 fns). XProj-7: Clean 7 extension adds dash, gettext, psmisc (13{,}581 fns). The adaptive gate routes binaries by external-call Jaccard coverage.}
     \label{tab:main}
     \footnotesize
-    \begin{tabular}{lcccc}
+    \begin{tabular}{lcccccc}
         \toprule
-        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XProj EM} & \textbf{XProj F1} \\
+        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XPr-4 F1} & \textbf{XPr-4 EM} & \textbf{XPr-7 F1} & \textbf{XPr-7 EM} \\
         \midrule
-        Decoder (beam $k{=}5$)          & 70.6\% & 0.770 & 54.6\% & 0.673 \\
-        $k$-NN unfiltered               & 70.8\% & 0.770 & 56.1\% & 0.698 \\
-        $k$-NN + BinFilter $\tau{=}0.5$ & \textbf{70.8\%} & \textbf{0.770} & \textbf{57.0\%} & \textbf{0.718} \\
+        Decoder (beam $k{=}5$)          & 70.6\% & 0.770 & 0.668 & 53.9\% & 0.665 & 56.5\% \\
+        $k$-NN unfiltered               & 70.8\% & 0.770 & 0.698 & 55.6\% & --- & --- \\
+        $k$-NN + BinFilter $\tau{=}0.5$ & 70.8\% & 0.770 & \textbf{0.715} & \textbf{57.0\%} & 0.558 & 44.7\% \\
+        Adaptive gate $\tau_b{=}0.7$    & \textbf{71.0\%} & \textbf{0.777} & 0.714 & 56.8\% & \textbf{0.738} & \textbf{58.4\%} \\
         \bottomrule
     \end{tabular}
 \end{table}
