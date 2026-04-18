@@ -60,7 +60,7 @@
 \email{haotian.zhang@njit.edu}
 
 \begin{abstract}
-Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. Recent systems for this task increasingly rely on billion-parameter LLM backbones. On our evaluation setup, we show a small, structure-aware encoder can match or outperform them. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study shows that external-call information alone improves in-distribution performance but reduces cross-project generalization by 4.3 points. Adding callee and caller context offsets this effect and improves disambiguation. We further show that self-supervised pre-training (MLM plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 32M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1}. In our experiments, nearest-neighbor retrieval over encoder embeddings outperformed the autoregressive decoder on unseen packages, improving exact match by 4.7 points without additional training. This result suggests that, for our model and dataset, embedding quality was more important than the decoding strategy. Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves \textbf{0.770 F1} on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions), outperforming the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset, \sysname{} leads SYMGEN+LoRA by \textbf{+0.10 F1} and \textbf{+26 pp EM}. Our 32M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
+Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. Recent systems for this task increasingly rely on billion-parameter LLM backbones. On our evaluation setup, we show a small, structure-aware encoder can match or outperform them. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study shows that external-call information alone improves in-distribution performance but reduces cross-project generalization by 4.3 points. Adding callee and caller context offsets this effect and improves disambiguation. We further show that self-supervised pre-training (MLM plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 25M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1}. In our experiments, nearest-neighbor retrieval over encoder embeddings outperformed the autoregressive decoder on unseen packages, improving exact match by 4.7 points without additional training. This result suggests that, for our model and dataset, embedding quality was more important than the decoding strategy. Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves \textbf{0.770 F1} on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions), outperforming the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset, \sysname{} leads SYMGEN+LoRA by \textbf{+0.10 F1} and \textbf{+26 pp EM}. Our 25M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
 \end{abstract}
 
 \keywords{binary analysis, function name recovery, graph neural networks, gated fusion, retrieval-augmented inference}
@@ -80,7 +80,7 @@ Prior work on automated function name recovery has explored statistical approach
 
 We address these challenges with \sysname{}, a graph neural network system that lifts stripped binaries to BAP intermediate representation, encodes each function's control flow graph with a GAT-based encoder, and fuses multiple sources of inter-procedural context through a cascaded gated mechanism with conditional bypass. Self-supervised pretraining (masked language modeling and contrastive learning) with partial embedding transfer further strengthens the encoder representations. At inference time, we demonstrate that simple $k$-nearest-neighbor retrieval over the learned embeddings outperforms autoregressive beam search decoding, improving cross-project exact match by 4.7 percentage points with zero retraining.
 
-Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions), outperforming the released SYMGEN~\cite{symgen} checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training set (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65), while using only 32M parameters, over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
+Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions), outperforming the released SYMGEN~\cite{symgen} checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training set (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65), while using only 25M parameters, over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
 
 In summary, we make the following contributions:
 
@@ -89,9 +89,9 @@ In summary, we make the following contributions:
 
     \item We present an empirical analysis showing that $k$-nearest-neighbor retrieval over encoder embeddings outperforms autoregressive decoding by +2.0pp test EM and +4.7pp cross-project EM with zero retraining. This finding, consistent with kNN-LM~\cite{knnlm}, demonstrates that for our encoder architecture, representation quality is the primary bottleneck rather than the decoding strategy.
 
-    \item We demonstrate that a compact, structure-aware encoder can match or outperform billion-parameter LLM-based baselines on this task. \sysname{} uses 32M parameters (over 1{,}000$\times$ fewer than SYMGEN's CodeLlama-34B backbone), trains in under 2.5 hours on a single A100-80GB GPU, and serves predictions in single-digit milliseconds per function, an order of magnitude faster than autoregressive decoding from a 34B LLM. This makes \sysname{} practical for interactive reverse-engineering workflows.
+    \item We demonstrate that a compact, structure-aware encoder can match or outperform billion-parameter LLM-based baselines on this task. \sysname{} uses 25M parameters (over 1{,}000$\times$ fewer than SYMGEN's CodeLlama-34B backbone), trains in under 2.5 hours on a single A100-80GB GPU, and serves predictions in single-digit milliseconds per function, an order of magnitude faster than autoregressive decoding from a 34B LLM. This makes \sysname{} practical for interactive reverse-engineering workflows.
 
-    \item We show that self-supervised pre-training (masked language modeling on instruction tokens, plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 32M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1} from our 8M-parameter ablation baseline. Partial embedding transfer (84.4\% of token embeddings matched by name) lets us reuse pre-training across vocabulary changes between pre-training and fine-tuning runs, reducing the practical cost of re-training when the dataset evolves.
+    \item We show that self-supervised pre-training (masked language modeling on instruction tokens, plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 25M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1} from our 8M-parameter ablation baseline. Partial embedding transfer (84.4\% of token embeddings matched by name) lets us reuse pre-training across vocabulary changes between pre-training and fine-tuning runs, reducing the practical cost of re-training when the dataset evolves.
 
     \item We advance the state of the art in cross-project function name recovery, achieving 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions). This exceeds the released SYMGEN~\cite{symgen} checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on our full 300K training data (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset we lead SYMGEN+LoRA by +0.10 F1 / +26 pp EM while using 1{,}000$\times$ fewer parameters. Our code and dataset are publicly available at \href{https://github.com/ananta-pradipta/stripped-binary-name-recovery}{\textcolor{blue}{https://github.com/\allowbreak{}ananta-pradipta/\allowbreak{}stripped-binary-name-recovery}}.
 \end{itemize}
@@ -460,7 +460,7 @@ We pre-train the block encoder and graph encoder jointly with two self-supervise
 
 \textbf{Contrastive Learning.} The same function compiled at O0 and O2 should produce similar embeddings, while different functions should produce dissimilar embeddings. We use the NT-Xent (Normalized Temperature-scaled Cross-Entropy) loss~\cite{simclr} with a temperature of $\tau{=}0.07$. This objective is particularly valuable because it teaches the encoder that the same function can look different at different optimization levels, encouraging optimization-invariant representations.
 
-The pre-training encoder has 12M parameters (smaller than the full 32M model, as the context encoders and decoder are not pre-trained). After 10 epochs of pre-training on the full training set, we transfer weights to the full model. We perform \emph{partial embedding transfer}: 84.4\% of token embeddings (1,923 out of 2,279 rows) are copied by matching token names between the pre-training and fine-tuning vocabularies; the remaining 356 tokens are randomly initialized. All Transformer and GAT weights are transferred directly.
+The pre-training encoder has 12M parameters (smaller than the full 25M model, as the context encoders and decoder are not pre-trained). After 10 epochs of pre-training on the full training set, we transfer weights to the full model. We perform \emph{partial embedding transfer}: 84.4\% of token embeddings (1,923 out of 2,279 rows) are copied by matching token names between the pre-training and fine-tuning vocabularies; the remaining 356 tokens are randomly initialized. All Transformer and GAT weights are transferred directly.
 
 \subsection{Decoder and $k$-NN Inference}
 \label{sec:decoder}
@@ -487,7 +487,7 @@ We train on 300{,}013 functions from 77 packages spanning 851 binaries at four G
 
 \textbf{Mixed precision training.} We use PyTorch automatic mixed precision (AMP) with \texttt{float16} for forward/backward passes and \texttt{float32} for parameter updates. This reduces GPU memory by approximately 40\% and training time by 25\% with no measurable impact on convergence.
 
-\textbf{Compute.} Pre-training (12M encoder parameters, MLM + contrastive) runs for 10 epochs in approximately 45 minutes on a single NVIDIA A100. Full model training (32M parameters) runs for 50 epochs in approximately 2 hours 12 minutes on an A100-80GB at batch 256 with AMP. Total compute for the final model including pre-training is under 3 GPU-hours, orders of magnitude less than LLM-based approaches such as SYMGEN~\cite{symgen}, which fine-tunes CodeLlama-34B.
+\textbf{Compute.} Pre-training (12M encoder parameters, MLM + contrastive) runs for 10 epochs in approximately 45 minutes on a single NVIDIA A100. Full model training (25M parameters) runs for 50 epochs in approximately 2 hours 12 minutes on an A100-80GB at batch 256 with AMP. Total compute for the final model including pre-training is under 3 GPU-hours, orders of magnitude less than LLM-based approaches such as SYMGEN~\cite{symgen}, which fine-tunes CodeLlama-34B.
 
 % ============================================================================
 \section{Evaluation}
@@ -552,7 +552,7 @@ We evaluate using four metrics (we omit BLEU~\cite{bleu} and ROUGE~\cite{rouge} 
     \end{tabular}
 \end{table}
 
-Table~\ref{tab:ablation} shows the incremental contribution of each component, drawn from our earlier 87,724-function dataset so all five ablation models share identical train/val/test splits and are directly comparable. Headline numbers in Section~\ref{sec:main} below report the final 32M model trained on the full 300,013-function dataset.
+Table~\ref{tab:ablation} shows the incremental contribution of each component, drawn from our earlier 87,724-function dataset so all five ablation models share identical train/val/test splits and are directly comparable. Headline numbers in Section~\ref{sec:main} below report the final 25M model trained on the full 300,013-function dataset.
 
 \textbf{Model 2 (Baseline GAT + Decoder, 4.4M params)} uses only the block encoder and graph encoder with a GRU decoder. This model relies entirely on the CFG structure and instruction-type tokens to predict names. It achieves 51.3\% test EM and 24.1\% cross-project EM, establishing the baseline for code-only features.
 
@@ -572,7 +572,7 @@ Adding callee/caller context (Model 4) resolves the paradox: cross-project EM ju
 
 \begin{table}[t]
     \centering
-    \caption{Main results on the 300K-trained 32M model comparing Decoder, unfiltered $k$-NN, and $k$-NN + BinFilter. All three use the same encoder; only the output head differs.}
+    \caption{Main results on the 300K-trained 25M model comparing Decoder, unfiltered $k$-NN, and $k$-NN + BinFilter. All three use the same encoder; only the output head differs.}
     \label{tab:main}
     \footnotesize
     \begin{tabular}{lcccc}
@@ -594,19 +594,26 @@ $k$-NN at $k{=}1$ is optimal; majority vote with $k{>}1$ degrades monotonically 
 
 \begin{table}[t]
     \centering
-    \caption{Per-package cross-project results under $k$-NN + BinFilter ($\tau{=}0.5$). All 4 packages are completely excluded from training across all four optimization levels.}
+    \caption{Per-package cross-project results. Upper group: original four-package set (Paper 4). Lower group: three low-coverage additions (Clean 7). $J_{\max}$ is the target binary's max external-call Jaccard to any training binary; the adaptive gate routes $J_{\max}\!\ge\!0.7$ to $k$-NN and the rest to the LM-pretrained decoder.}
     \label{tab:perpackage}
     \footnotesize
-    \begin{tabular}{lrccc}
+    \begin{tabular}{lrcccc}
         \toprule
-        \textbf{Package} & \textbf{Funcs} & \textbf{Dec.\ F1} & \textbf{$k$-NN F1} & \textbf{$k$-NN EM} \\
+        \textbf{Package} & \textbf{Funcs} & \boldmath$J_{\max}$ & \textbf{Dec} & \textbf{$k$-NN+P2} & \textbf{Gate} \\
         \midrule
-        nginx118 & 3{,}470 & 0.787 & \textbf{0.883} & 72.9\% \\
-        angie    & 3{,}893 & 0.699 & \textbf{0.814} & 63.2\% \\
-        tengine  &    554 & 0.685 & 0.738 & 66.8\% \\
-        recutils & 2{,}550 & 0.296 & 0.343 & 24.0\% \\
+        \multicolumn{6}{l}{\emph{Paper 4}} \\
+        nginx118 & 3{,}470 & 1.00 & 0.773 & \textbf{0.878} & \textbf{0.878} \\
+        angie    & 3{,}893 & 0.97 & 0.709 & \textbf{0.819} & \textbf{0.819} \\
+        tengine  &    554 & 0.70 & \textbf{0.630} & 0.531 & 0.645 \\
+        recutils & 2{,}550 & 0.35 & 0.311 & 0.308 & 0.346 \\
         \midrule
-        \textbf{Overall} & \textbf{10{,}467} & \textbf{0.673} & \textbf{0.718} & \textbf{57.0\%} \\
+        \multicolumn{6}{l}{\emph{Clean 7 extension}} \\
+        dash     & 1{,}324 & 0.29 & \textbf{0.770} & 0.130 & 0.815 \\
+        gettext  & 1{,}518 & 0.17 & \textbf{0.807} & 0.036 & 0.834 \\
+        psmisc   &    272 & 0.39 & \textbf{0.745} & 0.167 & 0.761 \\
+        \midrule
+        \textbf{Paper 4 aggregate} & \textbf{10{,}467} & --- & 0.668 & \textbf{0.715} & 0.714 \\
+        \textbf{Clean 7 aggregate} & \textbf{13{,}581} & --- & 0.665 & 0.558 & \textbf{0.738} \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -629,12 +636,12 @@ Table~\ref{tab:perpackage} shows $k$-NN + BinFilter improves all four unseen pac
         BLens reported~\cite{blens}        & USENIX Sec 2025 & $\sim$200M & 0.46 \\
         SymLM (BLens repro)~\cite{symlm,blens} & CCS 2022 & N/A & 0.277 \\
         LLM Zero-Shot (StarCoder-3B)        & N/A & 3B & 0.654 \\
-        \sysname{} (ours)                   & N/A & \textbf{32M} & \textbf{0.718} \\
+        \sysname{} (ours)                   & N/A & \textbf{25M} & \textbf{0.718} \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\sysname{} beats the released SYMGEN checkpoint by +0.27 F1 (34B vs.\ 32M parameters), beats an end-to-end SYMGEN+LoRA reproduction fine-tuned on the same 300K training data by +0.055 F1, and beats a StarCoder-3B zero-shot baseline by +0.064 F1. llasm and AsmDepictor could not be run in our setting due to released-weight/vocab mismatches and are therefore cited but not tabulated.
+\sysname{} beats the released SYMGEN checkpoint by +0.27 F1 (34B vs.\ 25M parameters), beats an end-to-end SYMGEN+LoRA reproduction fine-tuned on the same 300K training data by +0.055 F1, and beats a StarCoder-3B zero-shot baseline by +0.064 F1. llasm and AsmDepictor could not be run in our setting due to released-weight/vocab mismatches and are therefore cited but not tabulated.
 
 \textbf{Efficiency comparison.} Beyond accuracy, \sysname{} offers a dramatic efficiency advantage over the LLM-based baselines. Table~\ref{tab:cost-comparison} compares end-to-end resource usage across the same reproduced systems: \sysname{} trains in 2h 12m on a single A100-80GB with \textasciitilde{}12 GB peak memory and serves predictions in \textasciitilde{}5 ms per function, whereas SYMGEN+LoRA requires four A100-80GBs for roughly 18 hours of DDP fine-tuning and \textasciitilde{}200 ms per function at inference.
 
@@ -648,7 +655,7 @@ Table~\ref{tab:perpackage} shows $k$-NN + BinFilter improves all four unseen pac
         \toprule
         \textbf{System} & \textbf{Params} & \textbf{GPU(s)} & \textbf{Train time} & \textbf{Peak GPU mem} & \textbf{Infer/fn} \\
         \midrule
-        \textbf{\sysname{} (ours)} & \textbf{32M} & \textbf{1$\times$A100-80GB} & \textbf{2h 12m} & \textbf{\textasciitilde{}12 GB} & \textbf{\textasciitilde{}5 ms} \\
+        \textbf{\sysname{} (ours)} & \textbf{25M} & \textbf{1$\times$A100-80GB} & \textbf{2h 12m} & \textbf{\textasciitilde{}12 GB} & \textbf{\textasciitilde{}5 ms} \\
         SYMGEN + LoRA (full)       & 34B  & 4$\times$A100-80GB (DDP)  & \textasciitilde{}18 h$^\dagger$ & \textasciitilde{}160 GB$^\ddagger$ & \textasciitilde{}200 ms \\
         SYMGEN (zero-shot)         & 34B  & 1$\times$A100-80GB        & 0 (pretrained)                  & \textasciitilde{}70 GB (infer)     & \textasciitilde{}200 ms \\
         StarCoder-3B (zero-shot)   & 3B   & 1$\times$A100-80GB        & 0 (pretrained)                  & \textasciitilde{}16 GB (infer)     & \textasciitilde{}80 ms \\
@@ -826,7 +833,7 @@ Table~\ref{tab:examples} provides additional context by showing the external cal
 
 \subsection{Runtime Analysis}
 
-Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs; the end-to-end comparison against our reproduced baselines appears earlier in Table~\ref{tab:cost-comparison}. \sysname{}'s 32M-parameter architecture trains on a single A100 GPU in under 2.5 hours (versus multi-GPU DDP training for the LoRA-tuned 34B model) and serves predictions in single-digit milliseconds per function via encoder forward pass plus $k$-NN lookup, an order of magnitude faster than autoregressive decoding from a 34B model. This makes \sysname{} practical for interactive reverse-engineering workflows.
+Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs; the end-to-end comparison against our reproduced baselines appears earlier in Table~\ref{tab:cost-comparison}. \sysname{}'s 25M-parameter architecture trains on a single A100 GPU in under 2.5 hours (versus multi-GPU DDP training for the LoRA-tuned 34B model) and serves predictions in single-digit milliseconds per function via encoder forward pass plus $k$-NN lookup, an order of magnitude faster than autoregressive decoding from a 34B model. This makes \sysname{} practical for interactive reverse-engineering workflows.
 
 \begin{table}[t]
     \centering
@@ -839,7 +846,7 @@ Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs; th
         \textbf{Phase} & \textbf{Configuration} & \textbf{Time} \\
         \midrule
         Pre-training & 12M params, 10 epochs & 45 min \\
-        Training & 32M params, 50 epochs, AMP batch 256 & 2h 12m \\
+        Training & 25M params, 50 epochs, AMP batch 256 & 2h 12m \\
         \midrule
         Inference (decoder) & beam $k{=}5$, batch 32 & 1.6s/batch \\
         Inference ($k$-NN index) & 300K embeddings, build & 8.0s \\
@@ -852,7 +859,7 @@ Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs; th
     }
 \end{table}
 
-$k$-NN inference is approximately 10$\times$ faster than beam-search decoding on the test set. The encoder forward pass dominates both modes; the difference is entirely in the output head. \sysname{}'s 32M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone, making it practical for deployment in resource-constrained environments such as incident response workstations.
+$k$-NN inference is approximately 10$\times$ faster than beam-search decoding on the test set. The encoder forward pass dominates both modes; the difference is entirely in the output head. \sysname{}'s 25M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone, making it practical for deployment in resource-constrained environments such as incident response workstations.
 
 % ============================================================================
 \section{Discussion}
@@ -861,20 +868,20 @@ $k$-NN inference is approximately 10$\times$ faster than beam-search decoding on
 \textbf{Retrieval and Generation are Complementary.}
 Earlier ablations on the fine-tune-only decoder showed a strong retrieval advantage: 0 of 1,873 truly-unseen function names were correctly predicted, and every correct prediction matched a training name, typically shared GNU utility functions (\texttt{xmalloc}, \texttt{quotearg\_buffer\_\allowbreak{}restyled}, \texttt{set\_program\_name}). In that regime the decoder's compositional capacity was empirically unused, and retrieval won by constraining outputs to real names and avoiding the autoregressive error cascade.
 
-With LM pretraining on a 397K-name corpus, the decoder acquires sub-token priors that enable a non-trivial compositional regime on packages whose sub-tokens are present in the pretraining corpus (e.g., 85\% of gettext's novel names are composable from known sub-tokens). An adaptive binary-coverage gate exploits this: high-coverage binaries (nginx-family, with binary-level Jaccard $\ge 0.7$) route to $k$-NN for exact-name recovery, while low-coverage binaries (dash, gettext, psmisc) route to the pretrained decoder for sub-token composition. SYMGEN~\cite{symgen} demonstrates that LLMs can generate function names with different tradeoffs, though an end-to-end SYMGEN+LoRA reproduction (F1 0.663 on the full 300K fine-tune) still trails our 32M model by +0.055 F1 overall and +0.100 F1 on the matched head-to-head. Our finding is that for GNN-based encoders, retrieval and a targeted sub-token LM pretrain are complementary drivers of cross-project generalization, with an adaptive routing mechanism selecting between them per binary.
+With LM pretraining on a 397K-name corpus, the decoder acquires sub-token priors that enable a non-trivial compositional regime on packages whose sub-tokens are present in the pretraining corpus (e.g., 85\% of gettext's novel names are composable from known sub-tokens). An adaptive binary-coverage gate exploits this: high-coverage binaries (nginx-family, with binary-level Jaccard $\ge 0.7$) route to $k$-NN for exact-name recovery, while low-coverage binaries (dash, gettext, psmisc) route to the pretrained decoder for sub-token composition. SYMGEN~\cite{symgen} demonstrates that LLMs can generate function names with different tradeoffs, though an end-to-end SYMGEN+LoRA reproduction (F1 0.663 on the full 300K fine-tune) still trails our 25M model by +0.055 F1 overall and +0.100 F1 on the matched head-to-head. Our finding is that for GNN-based encoders, retrieval and a targeted sub-token LM pretrain are complementary drivers of cross-project generalization, with an adaptive routing mechanism selecting between them per binary.
 
 \textbf{Capacity and Cross-Package Contamination.}
-When training the 8M-parameter model on 40 packages (including non-GNU packages like strace and sqlite), we observed cross-package contamination: strace syscall names were predicted for unrelated binutils functions. Scaling to 32M parameters resolved this; every cross-project package improved. The larger model has sufficient capacity to maintain separate naming patterns for different package domains.
+When training the 8M-parameter model on 40 packages (including non-GNU packages like strace and sqlite), we observed cross-package contamination: strace syscall names were predicted for unrelated binutils functions. Scaling to 25M parameters resolved this; every cross-project package improved. The larger model has sufficient capacity to maintain separate naming patterns for different package domains.
 
 \textbf{Why Pre-training + Scale Yields the Largest Gain.}
 \label{sec:pretrain-discussion}
-The single largest jump in our ablation table is from Model 4 (8M-parameter, multi-context fusion, no pre-training) to Model 5 (32M-parameter, same architecture, with self-supervised pre-training): cross-project F1 rises from 0.460 to 0.593, a +0.13 gain (28.9\% relative) that exceeds the combined contributions of every prior architectural change in the table. Our self-supervised objectives (MLM on instruction tokens plus contrastive learning that pulls together embeddings of the same function compiled at O0 and O2) train the encoder on a much larger signal than supervised fine-tuning alone: every block embedding in every binary becomes an MLM target, providing approximately two orders of magnitude more gradient updates per encoder parameter than supervised name prediction. Partial embedding transfer (84.4\% of token embeddings matched by name between pre-training and fine-tuning vocabularies) makes the pre-training reusable: when the dataset evolves and adds new instruction types, existing token embeddings are kept and only the new tokens are randomly initialized, decoupling the cost of re-training from vocabulary changes. This is consistent with our observation that the encoder, not the decoder, is the bottleneck (Section~\ref{sec:discussion}): pre-training on much larger unlabeled binary corpora (which require no debug symbols) is a promising scaling axis for future work, complementary to the supervised data scaling we explored here.
+The single largest jump in our ablation table is from Model 4 (8M-parameter, multi-context fusion, no pre-training) to Model 5 (25M-parameter, same architecture, with self-supervised pre-training): cross-project F1 rises from 0.460 to 0.593, a +0.13 gain (28.9\% relative) that exceeds the combined contributions of every prior architectural change in the table. Our self-supervised objectives (MLM on instruction tokens plus contrastive learning that pulls together embeddings of the same function compiled at O0 and O2) train the encoder on a much larger signal than supervised fine-tuning alone: every block embedding in every binary becomes an MLM target, providing approximately two orders of magnitude more gradient updates per encoder parameter than supervised name prediction. Partial embedding transfer (84.4\% of token embeddings matched by name between pre-training and fine-tuning vocabularies) makes the pre-training reusable: when the dataset evolves and adds new instruction types, existing token embeddings are kept and only the new tokens are randomly initialized, decoupling the cost of re-training from vocabulary changes. This is consistent with our observation that the encoder, not the decoder, is the bottleneck (Section~\ref{sec:discussion}): pre-training on much larger unlabeled binary corpora (which require no debug symbols) is a promising scaling axis for future work, complementary to the supervised data scaling we explored here.
 
 \textbf{Why Train from Scratch vs Existing Pretrained Models.}
 A natural question is why we did not initialize from PalmTree~\cite{palmtree}, CLAP~\cite{clap}, or jTrans~\cite{jtrans}. We chose from-scratch BAP-IR pre-training for three reasons: (1) those models operate on raw x86 assembly tokens, while \sysname{} uses instruction-type abstractions (1,510 semantic types) that give +1,750\% F1 over raw tokens; reusing them would forfeit that abstraction or require an adapter layer with no measurable gain in pilot experiments. (2) BAP-IR is structurally different from raw assembly (an RTL-style IR with explicit typing of loads, stores, and side effects), so x86 pre-training transfers poorly. (3) From-scratch training avoids source-text contamination from those models' undisclosed pre-training corpora, which likely include our cross-project packages. Using only training-split binaries gives a clean cross-project measurement.
 
 \textbf{The O0/O2 Generalization Gap.}
-O0-compiled binaries are significantly harder than higher optimization levels. On the unified 13,559-function test set, the final 32M model reaches F1 0.770 / EM 70.8\% overall, with O0 remaining the weakest per-level slice. O0 code lacks inlining and optimization, producing many small wrapper functions with similar instruction signatures. While our ENDBR64 wrapper resolution rescues the most degenerate cases, the fundamental gap between optimization levels remains an open challenge.
+O0-compiled binaries are significantly harder than higher optimization levels. On the unified 13,559-function test set, the final 25M model reaches F1 0.770 / EM 70.8\% overall, with O0 remaining the weakest per-level slice. O0 code lacks inlining and optimization, producing many small wrapper functions with similar instruction signatures. While our ENDBR64 wrapper resolution rescues the most degenerate cases, the fundamental gap between optimization levels remains an open challenge.
 
 \textbf{Implications for Binary Analysis Tools.}
 \sysname{}'s architecture suggests several integration paths with existing reverse engineering tools. The $k$-NN inference mode is well-suited for integration as an IDA Pro or Ghidra plugin. The $k$-NN datastore is an explicit, updatable knowledge base: when an analyst manually identifies a function, its embedding can be added to the datastore immediately, improving predictions for similar functions \emph{without retraining the model}. By thresholding on cosine similarity, an analyst can control the precision-recall tradeoff.
@@ -918,17 +925,17 @@ Several directions could extend \sysname{}'s capabilities. First, cross-architec
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented \sysname{}, a 32M-parameter graph neural network system for binary function name recovery that reaches 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions). It beats the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset evaluated by both systems we lead SYMGEN+LoRA by $+0.10$ F1 and $+26$pp EM, while using over 1{,}000$\times$ fewer parameters. Our key contributions are:
+We presented \sysname{}, a 25M-parameter graph neural network system for binary function name recovery that reaches 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions). It beats the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset evaluated by both systems we lead SYMGEN+LoRA by $+0.10$ F1 and $+26$pp EM, while using over 1{,}000$\times$ fewer parameters. Our key contributions are:
 
 \begin{enumerate}
     \item A \textbf{multi-context gated fusion mechanism} with conditional bypass that sequentially incorporates external library calls, callee signatures, and caller signatures. Our ablation study reveals the \emph{ext-call paradox}: external calls alone improve test performance but degrade cross-project generalization by 4.3 percentage points. Inter-procedural callee/caller context resolves this paradox (+12.8pp cross-project EM), demonstrating that naive feature addition can harm generalization and explaining why cascaded fusion with conditional bypass is necessary.
 
     \item The finding that \textbf{$k$-NN retrieval with a binary-fingerprint filter outperforms autoregressive decoding} on cross-project generalization (+2.4pp EM, +0.045 F1) with zero retraining. BinFilter keeps retrieval candidates whose parent binary has at least Jaccard $\tau{=}0.5$ overlap in external-call vocabulary with the query binary, which reduces cross-package contamination. The encoder representation plus this retrieval filter, not the decoder, is the key driver of cross-project performance.
 
-    \item A \textbf{comprehensive comparison with LLM-based baselines} showing that a 32M-parameter graph neural network exceeds CodeLlama-34B + LoRA fine-tuned on the same 300K training data. Our matched-subset head-to-head on 8{,}062 shared functions quantifies the gap at +0.100 F1 / +26.3 pp EM. SYMGEN wins only on recutils, a package whose source code was plausibly in CodeLlama's pretraining corpus: direct evidence for the LLM-pretraining-contamination concern on open-source benchmarks.
+    \item A \textbf{comprehensive comparison with LLM-based baselines} showing that a 25M-parameter graph neural network exceeds CodeLlama-34B + LoRA fine-tuned on the same 300K training data. Our matched-subset head-to-head on 8{,}062 shared functions quantifies the gap at +0.100 F1 / +26.3 pp EM. SYMGEN wins only on recutils, a package whose source code was plausibly in CodeLlama's pretraining corpus: direct evidence for the LLM-pretraining-contamination concern on open-source benchmarks.
 \end{enumerate}
 
-Our results indicate that a 32M-parameter encoder with a filtered nearest-neighbor retrieval head is a strong and efficient baseline for this task under our evaluation setting.
+Our results indicate that a 25M-parameter encoder with a filtered nearest-neighbor retrieval head is a strong and efficient baseline for this task under our evaluation setting.
 
 % ============================================================================
 % References
