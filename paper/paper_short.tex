@@ -304,16 +304,17 @@ Table~\ref{tab:ablation} shows incremental contributions. \textbf{Model 2} (base
 
 \begin{table}[t]
     \centering
-    \caption{Main results: decoder vs.\ $k$-NN inference.}
+    \caption{Main results: XPr-4 = original 4-pkg set; XPr-7 = Clean 7 extension adds dash/gettext/psmisc. Adaptive gate routes binaries by external-call Jaccard.}
     \label{tab:main}
     \footnotesize
-    \begin{tabular}{lcccc}
+    \begin{tabular}{lcccccc}
         \toprule
-        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XProj EM} & \textbf{XProj F1} \\
+        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XPr-4 F1} & \textbf{XPr-4 EM} & \textbf{XPr-7 F1} & \textbf{XPr-7 EM} \\
         \midrule
-        Decoder only (beam) & 70.6\% & 0.770 & 54.6\% & 0.673 \\
-        $k$-NN unfiltered & 70.8\% & 0.770 & 56.1\% & 0.698 \\
-        $k$-NN + BinFilter ($\tau{=}0.5$) & \textbf{70.8\%} & \textbf{0.770} & \textbf{57.0\%} & \textbf{0.718} \\
+        Decoder (beam) & 70.6\% & 0.770 & 0.668 & 53.9\% & 0.665 & 56.5\% \\
+        $k$-NN unfilt. & 70.8\% & 0.770 & 0.698 & 55.6\% & --- & --- \\
+        $k$-NN+P2 & 70.8\% & 0.770 & \textbf{0.715} & \textbf{57.0\%} & 0.558 & 44.7\% \\
+        Adaptive gate & \textbf{71.0\%} & \textbf{0.777} & 0.714 & 56.8\% & \textbf{0.738} & \textbf{58.4\%} \\
         \bottomrule
     \end{tabular}
 \end{table}
