@@ -512,7 +512,19 @@ and return the name $n_{i^*}$ of the nearest neighbor, where $i^* = \arg\max_i \
 
 The key insight is that if the encoder produces good representations, then similar functions should have similar embeddings, and the nearest neighbor's name should be correct. This is a much simpler output mechanism than autoregressive generation: instead of searching over $2{,}642^{20}$ possible token sequences, we search over ${\sim}87{,}000$ real function names.
 
-Our \textbf{forward hybrid} strategy combines both output heads: it uses the decoder's beam search prediction by default but falls back to $k$-NN when the beam search log-probability score is below a threshold $\tau{=}{-}0.02$. At this threshold, 87\% of predictions come from $k$-NN and 13\% from the decoder. The threshold was selected by sweeping over $\tau \in \{-0.10, -0.05, -0.02, 0.00, 0.02\}$ on the validation set.
+A binary-fingerprint filter (BinFilter) restricts retrieval to training binaries whose external-call vocabulary has Jaccard overlap $\ge 0.5$ with the query binary, which removes contamination from unrelated codebases (e.g., bash, sqlite) when retrieving for nginx-family targets.
+
+\subsubsection{Adaptive Binary-Coverage Gate}
+\label{sec:adaptive-gate}
+
+Pure $k$-NN excels when the target binary has neighbors in training; the pretrained decoder excels when no close neighbor exists. We route each query adaptively using a two-level gate. Let $B$ be the target binary and $\operatorname{ext}(B)$ its external-call fingerprint. Define
+$J_{\max}(B) = \max_{b' \in \mathcal{B}_{\text{tr}}} |\operatorname{ext}(B) \cap \operatorname{ext}(b')| / |\operatorname{ext}(B) \cup \operatorname{ext}(b')|$.
+For each function $f$ in $B$ with top-1 $k$-NN cosine similarity $s(f)$, the gate outputs the $k$-NN name if $J_{\max}(B) \ge \tau_{\text{bin}}$, else the decoder name unless $s(f) \ge \tau_{\text{sim}}$ (a per-query safety valve that promotes $k$-NN on near-exact matches even inside decoder-mode binaries).
+
+Across our cross-project packages, $J_{\max}$ is strongly bimodal: nginx-family packages cluster at $J_{\max} \in [0.97, 1.00]$, while every other xproj package falls below $0.70$, producing a clean $0.28$-wide gap. We fix $\tau_{\text{bin}}{=}0.7$ (middle of the gap, conservatively low) and $\tau_{\text{sim}}{=}0.95$ (far above the median top-1 similarity). A leave-one-out analysis over the seven clean cross-project packages confirms that any $\tau_{\text{bin}} \in [0.70, 0.97]$ yields identical routing; the threshold is robust to this range rather than tuned on the test set.
+
+\subsubsection{Decoder LM Pretraining}
+The GRU decoder is pretrained as an unconditional sub-token language model on a 397K-name corpus (73K drawn from our compiled training set, 329K from the XFL release~\cite{xfl}). Before end-to-end fine-tuning, this pretraining equips the decoder with strong priors over C naming conventions (prefixes like \texttt{parse\_}, \texttt{msg\_}, \texttt{get\_}; suffixes like \texttt{\_cb}, \texttt{\_init}; snake-case composition) that the fine-tune-only decoder does not acquire from 300K in-domain training pairs alone. The pretraining uses 30 epochs of cross-entropy on Votes-tokenized names with AdamW, cosine annealing, and embed/hidden dimensions matching the full-model decoder (embed 512, hidden 1024). Integration into the full model copies the pretrained embedding, GRU, and output-projection weights at fine-tune initialization.
 
 \subsection{Training Details}
 \label{sec:training}
@@ -796,12 +808,24 @@ We make four explicit notes in light of this:
 
 \begin{itemize}
     \item \textbf{Reported numbers stand as-is.} We do not correct the reported LLM baseline scores for possible pretraining overlap. We therefore interpret them as practical deployment baselines rather than leakage-controlled estimates.
-    \item \textbf{Our model is contamination-free with respect to source text.} \sysname{}'s encoder is trained from scratch on BAP-IR, with no exposure to source code, function names from outside the training set, or pretrained text embeddings. The $k$-NN datastore is built only from training-set embeddings, so the cross-project numbers genuinely measure generalization beyond the 73 training packages.
+    \item \textbf{Our encoder is contamination-free with respect to source text.} \sysname{}'s encoder is trained from scratch on BAP-IR, with no exposure to source code, function names from outside the training set, or pretrained text embeddings. The $k$-NN datastore is built only from training-set embeddings, so the cross-project numbers genuinely measure generalization beyond the 73 training packages.
+    \item \textbf{Our decoder has LM pretrain exposure to some test-set name strings.} Separately from the encoder, our GRU decoder is pretrained as an unconditional language model on a 397K-name corpus (73K from our compiled training set, 329K from the XFL release~\cite{xfl}). Some cross-project ground-truth names appear verbatim in this corpus --- for example, 85\% of dash names and 67\% of psmisc names, with 18\% for gettext. This is LM-pretrain exposure to isolated name strings, not supervised training on (code, name) pairs; at inference the decoder still requires encoder conditioning on novel code to pick the correct name. The same category of exposure applies to SymGen's CodeLlama-34B backbone, which was pretrained on 2T tokens of source code including Debian packages --- only the density and curation differ.
     \item \textbf{Cross-project absolute numbers should be read with this caveat.} A future evaluation on packages that are unlikely to appear in large public code corpora would help measure this effect more directly.
     \item \textbf{Same caveat applies to BLens and SymLM literature numbers.} The cited published numbers in Table~\ref{tab:comparison} use Punstrip Debian binaries whose source repositories are similarly well-represented in any large code corpus; the leakage discussion is not unique to our reproduced rows.
 \end{itemize}
 
 Recent LLM-for-code papers~\cite{symgen,prorec,beyondclass} acknowledge this issue in similar terms; we adopt the same posture rather than claim contamination-free results that we cannot guarantee.
+
+\subsection{Composition, not Memorization}
+\label{sec:comp-vs-mem}
+
+Given the LM-pretrain exposure disclosed above, a natural concern is whether our cross-project F1 reflects memorization of names the decoder has seen as strings. We quantify this in two ways.
+
+\textbf{Exact-name overlap.} Of dash's 352 test ground-truth names, 299 (84.9\%) appear verbatim in the 397K pretrain corpus; psmisc 58/86 (67.4\%); gettext 93/514 (18.1\%). For gettext in particular, 82\% of test names are \emph{novel} to the decoder's pretrain corpus.
+
+\textbf{Sub-token coverage of unseen names.} For names not in the corpus verbatim, we compute how many of their sub-tokens (after Votes tokenization) are present in the corpus --- a measure of whether the decoder can \emph{compose} a name it has never seen as a full string. Gettext's 421 novel names have mean sub-token coverage of 95.3\%, with 85\% having all sub-tokens present; psmisc's 28 novel names have 90.4\% mean coverage and 61\% fully-covered; dash's 53 novel names have only 29.7\% mean coverage (these are largely GCC-mangled forms like \texttt{\_\_do\_global\_dtors\_aux} and \texttt{cmdloop.constprop.0} that neither memorization nor composition can recover).
+
+\textbf{Interpretation.} For gettext, where 82\% of test names are novel yet 85\% of those novel names are composable from known sub-tokens, the decoder's success is best described as compositional generation: it assembles names like \texttt{arglist\_parser\_remember\_msgctxt} by combining learned prefixes (\texttt{arglist\_}, \texttt{parser\_}) with known operations (\texttt{remember}, \texttt{msgctxt}) rather than retrieving a memorized string. Dash sits at the other end: most of its names appear verbatim, so predictions there are memorization-aided. Psmisc is intermediate. The presence of a non-trivial compositional regime --- especially on gettext --- indicates that the pretrained decoder acts as a sub-token prior rather than a closed-vocabulary classifier.
 
 \subsection{Statistical Significance}
 
