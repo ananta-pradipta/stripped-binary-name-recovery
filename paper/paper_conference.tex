@@ -11,6 +11,9 @@
 \usepackage{xcolor} % for \textcolor
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc}
 
+\setlength{\emergencystretch}{3em}
+\hyphenpenalty=100
+
 \newcommand{\sysname}{\textsc{GraphR}}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
@@ -38,7 +41,7 @@
   \state{NJ}
   \country{USA}
 }
-\email{rb236@njit.edu}
+\email{rb97@njit.edu}
 
 \author{Zhihao Lin}
 \affiliation{%
@@ -47,7 +50,7 @@
   \state{NJ}
   \country{USA}
 }
-\email{zl74@njit.edu}
+\email{zl527@njit.edu}
 
 \author{Haotian Zhang}
 \affiliation{%
@@ -59,7 +62,7 @@
 \email{haotian.zhang@njit.edu}
 
 \begin{abstract}
-Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study reveals a novel \emph{ext-call paradox}: external call information alone improves performance on seen binaries but \emph{degrades} generalization to unseen packages by 4.3 percentage points; inter-procedural callee/caller context is required for disambiguation. Furthermore, we demonstrate that nearest-neighbor retrieval over learned encoder embeddings outperforms autoregressive sequence decoding, improving exact match by 4.7 percentage points on unseen packages with zero retraining. This finding suggests that for well-trained encoders, retrieval over embeddings outperforms autoregressive generation, where the encoder representation, not the decoder, is the key component. Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions). We compare against the released SYMGEN checkpoint (0.45), our own SYMGEN+LoRA reproduction fine-tuned on our full 300K training set (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65); \sysname{} leads all four. On a matched 8{,}062-function subset evaluated by both systems, \sysname{} beats SYMGEN+LoRA by $+0.10$ F1 and $+26$ percentage points of exact match while using only 32M parameters---over 1{,}000$\times$ smaller than SYMGEN's 34B-parameter CodeLlama backbone.
+Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. Recent systems for this task increasingly rely on billion-parameter LLM backbones. On our evaluation setup, we show a small, structure-aware encoder can match or outperform them. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study shows that external-call information alone improves in-distribution performance but reduces cross-project generalization by 4.3 points. Adding callee and caller context offsets this effect and improves disambiguation. We further show that self-supervised pre-training (MLM plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 32M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1}. In our experiments, nearest-neighbor retrieval over encoder embeddings outperformed the autoregressive decoder on unseen packages, improving exact match by 4.7 points without additional training. This result suggests that, for our model and dataset, embedding quality was more important than the decoding strategy. Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions). We compare against the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training set (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65); \sysname{} leads all four. On a matched 8{,}062-function subset evaluated by both systems, \sysname{} beats SYMGEN+LoRA by $+0.10$ F1 and $+26$ percentage points of exact match while using only 32M parameters, over 1{,}000$\times$ smaller than SYMGEN's 34B-parameter CodeLlama backbone.
 \end{abstract}
 
 \keywords{binary analysis, function name recovery, graph neural networks, gated fusion, retrieval-augmented inference}
@@ -75,20 +78,24 @@ Software reverse engineering is a fundamental activity in cybersecurity, requiri
 
 The practical importance of automated function name recovery extends across multiple domains of cybersecurity. In malware analysis, meaningful function names reduce triage time from hours to minutes, allowing analysts to quickly identify cryptographic routines, network communication handlers, and persistence mechanisms. In vulnerability research, understanding stripped firmware is essential for discovering exploitable bugs in IoT devices and embedded systems, where vendors rarely ship debug symbols. In competitive reverse engineering (CTFs) and forensic investigations, even partial name recovery provides critical footholds for understanding program logic. Commercial tools such as IDA Pro and Ghidra provide manual annotation workflows and limited pattern-matching (FLIRT signatures), but cannot automatically recover names for arbitrary functions; they rely on exact byte-pattern matching against known library signatures, which fails for recompiled or modified code.
 
-Prior work on automated function name recovery has explored statistical approaches~\cite{debin}, extreme multi-label classification~\cite{xfl}, graph neural networks~\cite{nero}, language model pre-training~\cite{symlm}, ensemble embedding with contrastive captioning~\cite{blens}, and large language model fine-tuning~\cite{symgen,prorec}. However, each approach has significant limitations. DeBin~\cite{debin} and XFL~\cite{xfl} use closed-vocabulary classifiers that cannot generate names absent from training; recent reproduction shows XFL abstains on 60.7\% of cross-project functions and SymLM's 3069-class classifier fails on 43.8\%. NERO~\cite{nero} achieves F1$=$0.455 using pointer-aware slicing and GNNs on call graphs, but only works for functions \emph{with} external calls---a fundamental limitation since approximately 70\% of functions in typical binaries have none. SymLM~\cite{symlm} reaches F1$=$0.585 on its own test set by pre-training on micro-execution traces, but requires dynamic analysis infrastructure (executing binaries in an emulator), limiting applicability to binaries that can be safely run. More recently, BLens~\cite{blens} achieves 0.79 F1 per-binary but drops to 0.46 on cross-project evaluation (a 42\% degradation), and SYMGEN~\cite{symgen} fine-tunes CodeLlama-34B but reports only 0.38 cross-project F1 after proper deduplication, demonstrating that billion-parameter models do not automatically generalize. Two fundamental challenges remain underexplored: (1)~how to effectively combine multiple sources of contextual information (code structure, library calls, and inter-procedural relationships) without degrading generalization, and (2)~whether autoregressive name generation is the right output paradigm, given that function names are drawn from a relatively small vocabulary of real names.
+Prior work on automated function name recovery has explored statistical approaches~\cite{debin}, extreme multi-label classification~\cite{xfl}, graph neural networks~\cite{nero}, language model pre-training~\cite{symlm}, ensemble embedding with contrastive captioning~\cite{blens}, and large language model fine-tuning~\cite{symgen,prorec}. However, each approach has significant limitations. DeBin~\cite{debin} and XFL~\cite{xfl} use closed-vocabulary classifiers that cannot generate names absent from training; recent reproduction shows XFL abstains on 60.7\% of cross-project functions and SymLM's 3069-class classifier fails on 43.8\%. NERO~\cite{nero} achieves F1$=$0.455 using pointer-aware slicing and GNNs on call graphs, but only works for functions \emph{with} external calls, a fundamental limitation since approximately 70\% of functions in typical binaries have none. SymLM~\cite{symlm} reaches F1$=$0.585 on its own test set by pre-training on micro-execution traces, but requires dynamic analysis infrastructure (executing binaries in an emulator), limiting applicability to binaries that can be safely run. More recently, BLens~\cite{blens} achieves 0.79 F1 per-binary but drops to 0.46 on cross-project evaluation (a 42\% degradation), and SYMGEN~\cite{symgen} fine-tunes CodeLlama-34B but reports only 0.38 cross-project F1 after proper deduplication, demonstrating that billion-parameter models do not automatically generalize. Two fundamental challenges remain underexplored: (1)~how to effectively combine multiple sources of contextual information (code structure, library calls, and inter-procedural relationships) without degrading generalization, and (2)~whether autoregressive name generation is the right output paradigm, given that function names are drawn from a relatively small vocabulary of real names.
 
 We address these challenges with \sysname{}, a graph neural network system that lifts stripped binaries to BAP intermediate representation, encodes each function's control flow graph with a GAT-based encoder, and fuses multiple sources of inter-procedural context through a cascaded gated mechanism with conditional bypass. Self-supervised pretraining (masked language modeling and contrastive learning) with partial embedding transfer further strengthens the encoder representations. At inference time, we demonstrate that simple $k$-nearest-neighbor retrieval over the learned embeddings outperforms autoregressive beam search decoding, improving cross-project exact match by 4.7 percentage points with zero retraining.
 
-Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions spanning tengine, angie, nginx118, and recutils). On that set, the released SYMGEN checkpoint reaches 0.45 and our own SYMGEN+LoRA reproduction fine-tuned on the same 300K training data reaches 0.66, leaving \sysname{} ahead of the stronger baseline by $+0.06$ F1 overall (and $+0.10$ F1 on an apples-to-apples matched 8{,}062-function subset). \sysname{} uses 32M parameters, over 1{,}000$\times$ smaller than SYMGEN's 34B CodeLlama backbone, and was trained from scratch on BAP-IR without any source-code pretraining---so its generalization is not inflated by the kind of LLM-pretraining contamination that benefits SYMGEN on open-source evaluation packages.
+Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions). On that set, the released SYMGEN checkpoint reaches 0.45 and an end-to-end SYMGEN+LoRA reproduction fine-tuned on the same 300K training data reaches 0.66, leaving \sysname{} ahead of the stronger baseline by $+0.06$ F1 overall (and $+0.10$ F1 on an apples-to-apples matched 8{,}062-function subset). \sysname{} uses 32M parameters, over 1{,}000$\times$ smaller than SYMGEN's 34B CodeLlama backbone, and was trained from scratch on BAP-IR without any source-code pretraining, so its generalization is not inflated by the kind of LLM-pretraining contamination that benefits SYMGEN on open-source evaluation packages.
 
 In summary, we make the following contributions:
 
 \begin{itemize}
-    \item We design \sysname{}, a graph neural network system for binary function name recovery that incorporates a novel cascaded gated fusion mechanism. This 3-stage architecture sequentially fuses external library calls, callee signatures, and caller signatures with conditional bypass, where each stage is skipped when the corresponding context is absent. Our ablation study reveals the \emph{ext-call paradox}: external call information alone degrades cross-project generalization by 4.3 percentage points, while adding inter-procedural callee/caller context resolves this and improves cross-project EM by 12.8 percentage points.
+    \item We propose \sysname{}, a GNN-based system for binary function name recovery that uses staged gated fusion to combine multiple context sources. This 3-stage architecture sequentially fuses external library calls, callee signatures, and caller signatures with conditional bypass, where each stage is skipped when the corresponding context is absent. Our ablation study reveals the \emph{ext-call paradox}: external call information alone degrades cross-project generalization by 4.3 percentage points, while adding inter-procedural callee/caller context resolves this and improves cross-project EM by 12.8 percentage points.
 
     \item We present an empirical analysis showing that $k$-nearest-neighbor retrieval over encoder embeddings outperforms autoregressive decoding by +2.0pp test EM and +4.7pp cross-project EM with zero retraining. This finding, consistent with kNN-LM~\cite{knnlm}, demonstrates that for our encoder architecture, representation quality is the primary bottleneck rather than the decoding strategy.
 
-    \item We advance the state of the art in cross-project function name recovery, achieving 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions: tengine, angie, nginx118, recutils). This exceeds the released SYMGEN checkpoint (0.45), our own SYMGEN+LoRA reproduction on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset we lead SYMGEN+LoRA by $+0.10$ F1 / $+26$pp EM while using 1{,}000$\times$ fewer parameters. Self-supervised pretraining with partial embedding transfer contributes $+15.9$ percentage points of cross-project EM. Our code and dataset are publicly available at \href{https://github.com/ananta-pradipta/stripped-binary-name-recovery}{\textcolor{blue}{https://github.com/\allowbreak{}ananta-pradipta/\allowbreak{}stripped-binary-name-recovery}}.
+    \item We demonstrate that a compact, structure-aware encoder can match or outperform billion-parameter LLM-based baselines on this task. \sysname{} uses 32M parameters (over 1{,}000$\times$ fewer than SYMGEN's CodeLlama-34B backbone), trains in under 2.5 hours on a single A100-80GB GPU, and serves predictions in single-digit milliseconds per function, an order of magnitude faster than autoregressive decoding from a 34B LLM. This makes \sysname{} practical for interactive reverse-engineering workflows.
+
+    \item We show that self-supervised pre-training (masked language modeling on instruction tokens, plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 32M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1} from our 8M-parameter ablation baseline. Partial embedding transfer (84.4\% of token embeddings matched by name) lets us reuse pre-training across vocabulary changes between pre-training and fine-tuning runs, reducing the practical cost of re-training when the dataset evolves.
+
+    \item We advance the state of the art in cross-project function name recovery, achieving 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions). This exceeds the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset we lead SYMGEN+LoRA by $+0.10$ F1 / $+26$pp EM while using 1{,}000$\times$ fewer parameters. Self-supervised pretraining with partial embedding transfer contributes $+0.13$ cross-project F1. Our code and dataset are publicly available at \href{https://github.com/ananta-pradipta/stripped-binary-name-recovery}{\textcolor{blue}{https://github.com/\allowbreak{}ananta-pradipta/\allowbreak{}stripped-binary-name-recovery}}.
 \end{itemize}
 
 % ============================================================================
@@ -129,9 +136,19 @@ Binary function name recovery presents several fundamental challenges that motiv
 
 \textbf{Mode collapse.} When contextual features are naively incorporated, the fusion mechanism must produce meaningful output even when no context exists (e.g., a function with no external calls receives a zero-vector context input). In practice, this causes the gate to learn a default output, and 47\% of all predictions collapse to a single name (\texttt{xmalloc}, the most frequent function). Our conditional bypass mechanism addresses this by skipping fusion stages entirely when context is absent.
 
-\textbf{Cross-project generalization gap.} Models that perform well on held-out test sets from seen packages often degrade dramatically on entirely unseen packages. BLens~\cite{blens} drops from 0.79 to 0.46 F1 (42\% degradation), and our own ablation reveals that external call information---which helps on seen binaries---actually \emph{hurts} cross-project generalization by 4.3 percentage points (the ext-call paradox). This motivates careful fusion design with conditional bypass and inter-procedural disambiguation.
+\textbf{Cross-project generalization gap.} Models that perform well on held-out test sets from seen packages often degrade dramatically on entirely unseen packages. BLens~\cite{blens} drops from 0.79 to 0.46 F1 (42\% degradation), and our own ablation reveals that external call information (which helps on seen binaries) actually \emph{hurts} cross-project generalization by 4.3 percentage points (the ext-call paradox). This motivates careful fusion design with conditional bypass and inter-procedural disambiguation.
 
 \textbf{O0/O2 optimization gap.} Binaries compiled without optimization (O0) produce many small wrapper functions with similar boilerplate stack frame setup/teardown, where two unrelated functions may have 70\% token overlap from stack operations alone. O2-compiled code eliminates this boilerplate through register allocation and inlining, leaving more distinctive patterns. This optimization gap (unified test F1 0.770 / EM 70.8\% on 13,559 functions) motivates our contrastive pretraining objective that learns optimization-invariant representations.
+
+\subsection{External Calls}
+\label{sec:external}
+External calls exist in a program in order to allow for programs to use common library functions without needing to duplicate those functions across multiple binaries and to allow for updating libraries to be handled separately from updating individual programs. For the linker to be able to link a binaries external calls to the function in a loaded library (.dll in windows and .so in linux), it must retain the information of the function's name to link it to the appropriate function in a loaded library, even when that binary is stripped, optimized or even obfuscated. While other state of the art function name predictors handle all call instructions as the same token, \sysname{} is able to extract two vital pieces of information from separately collecting and analyzing the external calls within a function:
+
+\begin{enumerate}
+    \item The called external functions within an unnamed function, providing context on what the function is attempting to accomplish. % Robert: This is an example I am considering adding if the item is not clear: For example, a function that calls the external functions of socket(), listen(), or bind() is clearly related to networking, information that would otherwise be lost by handling external function calls as unnamed function calls
+    \item The calling context of a function by reference to its callers and callees external function calls, allowing for functions without external function calls to gain the benefit from (1).
+    % Robert: This is an example I am considering adding if the item is not clear: This is best exemplified in a function that while lacking external function calls, is called by a function that calls open() and read(), and itself calls the functions write() and close(). In this example the information of the function working on a file is provided by considering the context of its callers and callees external function calls.
+\end{enumerate}
 
 \subsection{Related Work and Our Motivations}
 \label{sec:related}
@@ -148,7 +165,7 @@ Patrick-Evans et al.~\cite{xfl} introduced XFL, framing function name prediction
 
 Al-Kaswan et al.~\cite{blens} introduced BLens, combining ensemble embeddings (PalmTree~\cite{palmtree}, CLAP~\cite{clap}, DEXTER) with contrastive captioning and a specialized LORD decoder. While achieving 0.79 F1 per-binary, cross-project F1 drops to 0.46, a 42\% degradation that highlights the generalization challenge we address. BLens also reproduces earlier systems under a unified evaluation: notably, SymLM cross-project F1 drops to 0.277 with 43.8\% of test functions falling outside its trainable vocabulary, providing direct evidence that sub-token generation (our approach) structurally outperforms closed-class prediction on unseen packages. Xu et al.~\cite{symgen} fine-tuned CodeLlama-34B~\cite{codellama} with LoRA~\cite{lora} for function naming, importantly demonstrating that prior results were inflated 1.2--2.9$\times$ by duplicate functions (cross-project F1$=$0.38 after proper deduplication). We follow SYMGEN's deduplication methodology in our evaluation and additionally reproduce the released SYMGEN checkpoint directly on our test set for head-to-head comparison.
 
-BeyondClass~\cite{beyondclass}, ProRec~\cite{prorec}, and GenNm~\cite{gennm} continue the source-code-LLM direction---probing pre-trained code models for symbol-rich context, or fine-tuning CodeGemma with preference optimization on variable-name recovery. Those systems inherit their upstream pre-training corpora, which often include the very open-source projects used for cross-project evaluation---we quantify this contamination effect in Section~\ref{sec:eval} via an LLM-only baseline that wins on recutils (a canonical GNU package in every code corpus) but trails on nginx forks whose versions are newer than the model's cutoff. \sysname{} takes the opposite route: a 32M encoder trained from scratch on BAP-IR, with a nearest-neighbor retrieval head instead of a decoder. The retrieval result is the same intuition as $k$NN-LM~\cite{knnlm,knnmt}, with one simplification discussed in Section~\ref{sec:related-rag}: function names are atomic labels, so we retrieve the whole name rather than interpolate at the token level.
+BeyondClass~\cite{beyondclass}, ProRec~\cite{prorec}, and GenNm~\cite{gennm} continue the source-code-LLM direction: probing pre-trained code models for symbol-rich context, or fine-tuning CodeGemma with preference optimization on variable-name recovery. Those systems inherit their upstream pre-training corpora, which often include the very open-source projects used for cross-project evaluation. We quantify this contamination effect in Section~\ref{sec:eval} via an LLM-only baseline that wins on recutils (a canonical GNU package in every code corpus) but trails on nginx forks whose versions are newer than the model's cutoff. \sysname{} takes the opposite route: a 32M encoder trained from scratch on BAP-IR, with a nearest-neighbor retrieval head instead of a decoder. The retrieval result is the same intuition as $k$NN-LM~\cite{knnlm,knnmt}, with one simplification discussed in Section~\ref{sec:related-rag}: function names are atomic labels, so we retrieve the whole name rather than interpolate at the token level.
 
 Most closely related to our name tokenization is Epitome~\cite{epitome}, a concurrent FSE~2024 work that uses votes-based sub-token construction for function-name prediction combined with multi-task learning. Our votes-style tokenization is developed independently on BAP intermediate representation (versus Epitome's assembly-level LM), and we integrate it with a cascaded gated fusion of inter-procedural context rather than multi-task auxiliary losses. As Epitome's implementation is not publicly released, we are unable to reproduce it on our test set and cite its published numbers for reference.
 
@@ -194,7 +211,7 @@ These works share a common insight with our findings: when the output space is d
 
 \textbf{Stage 3: Name Prediction.} The fused embedding $\mathbf{z}$ feeds either a GRU decoder with beam search or $k$-NN retrieval over the training set embeddings, producing a predicted function name as a sequence of sub-tokens.
 
-Prior to supervised training, the block encoder and graph encoder are jointly pre-trained with two self-supervised objectives: masked language modeling (predicting randomly masked instruction tokens) and contrastive learning (pulling together embeddings of the same function compiled at O0 and O2). This pre-training, followed by partial embedding transfer (84.4\% of token embeddings matched by name), provides the encoder with a strong initialization that improves cross-project EM by 15.9 percentage points.
+Prior to supervised training, the block encoder and graph encoder are jointly pre-trained with two self-supervised objectives: masked language modeling (predicting randomly masked instruction tokens) and contrastive learning (pulling together embeddings of the same function compiled at O0 and O2). This pre-training, followed by partial embedding transfer (84.4\% of token embeddings matched by name), provides the encoder with a strong initialization that improves cross-project F1 by 0.13.
 
 Figure~\ref{fig:architecture} shows the detailed model architecture. The key design decision is the cascaded gated fusion with conditional bypass (Figure~\ref{fig:fusion}): each fusion stage is skipped entirely when the corresponding context is absent, preventing mode collapse.
 
@@ -522,7 +539,7 @@ We train on 300{,}013 functions from 77 packages with the following hyperparamet
     \centering
     \caption{Dataset statistics.}
     \label{tab:dataset}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{lr}
         \toprule
         \textbf{Metric} & \textbf{Value} \\
@@ -536,11 +553,10 @@ We train on 300{,}013 functions from 77 packages with the following hyperparamet
         Name token vocabulary & 7{,}004 (Votes) \\
         External call vocabulary & 2{,}237 \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
-We compile 77 open-source packages at O0, O1, O2, and O3 optimization levels using GCC on Ubuntu 22.04, yielding 851 debug--stripped binary pairs. The package selection spans coreutils, binutils, bash, groff, busybox, sqlite, and several nginx-family web servers, covering domains from text processing and archival to system utilities, databases, and network services. Ground truth labels are extracted from debug binaries using \texttt{nm}, which maps function entry addresses to symbol names. Data is split by binary (not by function) to prevent leakage, with fixed assignments stored in a JSON file for reproducibility. Four complete packages---tengine, angie, nginx118, and recutils---are held out entirely as the cross-project evaluation set and never appear during training. Tengine and angie are forks of the upstream nginx codebase maintained by Alibaba and F5 Networks respectively; nginx118 is a pinned nginx release; and recutils is an unrelated GNU record-management library chosen to stress generalization to a non-web domain.
+We compile 77 open-source packages at O0, O1, O2, and O3 optimization levels using GCC on Ubuntu 22.04, yielding 851 debug/stripped binary pairs. The package selection spans coreutils, binutils, bash, groff, busybox, sqlite, and several nginx-family web servers, covering domains from text processing and archival to system utilities, databases, and network services. Ground truth labels are extracted from debug binaries using \texttt{nm}, which maps function entry addresses to symbol names. Data is split by binary (not by function) to prevent leakage, with fixed assignments stored in a JSON file for reproducibility. Four complete packages (tengine, angie, nginx118, and recutils) are held out entirely as the cross-project evaluation set and never appear during training. Tengine and angie are forks of the upstream nginx codebase maintained by Alibaba and F5 Networks respectively; nginx118 is a pinned nginx release; and recutils is an unrelated GNU record-management library chosen to stress generalization to a non-web domain.
 
 Table~\ref{tab:dataset} summarizes the dataset statistics. Each function is represented by its control flow graph (up to 30 basic blocks, each with up to 20 instruction-type tokens), external library calls (if any), and the callee/caller context extracted from the call graph. The Votes name vocabulary of 7{,}004 sub-tokens is built by corpus-frequency voting (rather than Byte-Pair Encoding) and covers the vast majority of training function names, with character-level fallback for the remainder.
 
@@ -562,18 +578,18 @@ We evaluate using four metrics:
     \centering
     \caption{Ablation study. Models trained on an 87{,}724-function subset of our dataset to isolate the relative contribution of each component. Cross-project EM is evaluated on the original five held-out packages (csplit2, diffutils, datamash, cppi, hello) for ablation consistency. Our full model (Section~\ref{sec:eval}) scales to the full 300K corpus with four updated cross-project packages; the relative component gains reported here transfer to the full-scale setting.}
     \label{tab:ablation}
-    \resizebox{\columnwidth}{!}{%
-    \begin{tabular}{clcccc}
+    \footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{clccccc}
         \toprule
-        \textbf{\#} & \textbf{Model} & \textbf{Params} & \textbf{Test F1} & \textbf{Test EM} & \textbf{XProj EM} \\
+        \textbf{\#} & \textbf{Model} & \textbf{Params} & \textbf{Test F1} & \textbf{Test EM} & \textbf{XProj F1} & \textbf{XProj EM} \\
         \midrule
-        2 & GAT + Decoder & 4.4M & 0.606 & 51.3\% & 24.1\% \\
-        3 & + Ext Calls & 6.1M & 0.683 & 60.1\% & 19.8\% \\
-        4 & + Callee/Caller & 8.0M & 0.781 & 72.3\% & 32.6\% \\
-        5 & + Pretrain+Scale & 25M & 0.795 & 74.3\% & 48.5\% \\
+        2 & GAT + Decoder & 4.4M & 0.606 & 51.3\% & 0.364 & 24.1\% \\
+        3 & + Ext Calls & 6.1M & 0.683 & 60.1\% & 0.320 & 19.8\% \\
+        4 & + Callee/Caller & 8.0M & 0.781 & 72.3\% & 0.460 & 32.6\% \\
+        5 & + Pretrain+Scale & 25M & 0.795 & 74.3\% & 0.593 & 48.5\% \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
 Table~\ref{tab:ablation} shows the incremental contribution of each component. All ablation models are trained on the same 87{,}724-function subset with identical train/val/test splits and evaluated under the same conditions (greedy decode for validation, beam search $k{=}5$ for test and cross-project). We deliberately hold the ablation at 87K to control for dataset size: this isolates the effect of architectural changes from the effect of additional training data. Section~\ref{sec:eval} reports the full 300K results for our final configuration.
@@ -584,7 +600,7 @@ Table~\ref{tab:ablation} shows the incremental contribution of each component. A
 
 \textbf{Model 4 (+Callee/Caller, 8.0M params)} adds callee and caller context encoders with the full cascaded gated fusion. This resolves the ext-call paradox: cross-project EM jumps from 19.8\% to 32.6\% (+12.8pp), and test F1 reaches 0.781. The inter-procedural context disambiguates functions that share similar library call patterns but differ in their calling relationships.
 
-\textbf{Model 5 (+Pretrain+Scale, 25M params)} scales the model from 8M to 25M parameters and adds self-supervised pre-training. Test F1 improves modestly (+0.014 to 0.795), but cross-project EM jumps dramatically (+15.9pp to 48.5\%). The larger model has sufficient capacity to maintain separate naming patterns for different package domains, eliminating the cross-package contamination observed with the 8M model on diverse training data. Pre-training contributes approximately +0.02 Val F1 on top of scaling alone.
+\textbf{Model 5 (+Pretrain+Scale, 25M params)} scales the model from 8M to 25M parameters and adds self-supervised pre-training. Test F1 improves modestly (+0.014 to 0.795), but cross-project F1 jumps dramatically (+0.13 to 0.593). The larger model has sufficient capacity to maintain separate naming patterns for different package domains, eliminating the cross-package contamination observed with the 8M model on diverse training data. Pre-training contributes approximately +0.02 Val F1 on top of scaling alone.
 
 \subsubsection{The Ext-Call Paradox}
 The transition from Model 2 to Model 3 reveals a surprising finding: while external calls improve test F1 by +0.077 (from 0.606 to 0.683), they \emph{degrade} cross-project EM by $-$4.3 percentage points (from 24.1\% to 19.8\%). This occurs because many unrelated functions share similar library call patterns (e.g., both \texttt{hash\_insert} and \texttt{tree\_add} call \texttt{malloc} + \texttt{memcpy}). Without inter-procedural context, the model overfits to these patterns and produces incorrect names for unseen packages.
@@ -601,7 +617,7 @@ We verified the paradox is not an artifact of the specific training run by retra
     \centering
     \caption{Main results comparing decoder and $k$-NN hybrid inference on 300{,}013-function dataset.}
     \label{tab:main}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{lcccc}
         \toprule
         \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XProj EM} & \textbf{XProj F1} \\
@@ -610,11 +626,10 @@ We verified the paradox is not an artifact of the specific training run by retra
         $k$-NN unfiltered & 70.8\% & 0.770 & 56.1\% & 0.698 \\
         $k$-NN + BinFilter ($\tau{=}0.5$) & \textbf{70.8\%} & \textbf{0.770} & \textbf{57.0\%} & \textbf{0.718} \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
-Table~\ref{tab:main} shows the three output heads converge on the in-distribution test set (all three ${\sim}0.77$ F1), but diverge on cross-project. The binary-fingerprint-filtered $k$-NN pulls ahead by keeping only retrieval candidates whose parent training binary has Jaccard external-call overlap $\geq \tau$ with the query binary. This drops candidates from unrelated codebases (bash, sqlite, and so on) that would otherwise contaminate the neighbor pool, lifting cross-project F1 from 0.673 (decoder) to 0.718 with zero retraining. The filter is most valuable on nginx-family packages where many training binaries share external-call vocabulary; on recutils, whose training pool has no high-Jaccard partners, the filter effectively does nothing.
+Table~\ref{tab:main} shows the three output heads converge on the in-distribution test set (all three ${\sim}0.77$ F1), but diverge on cross-project. The binary-fingerprint-filtered $k$-NN pulls ahead by keeping retrieval candidates whose parent binary has at least Jaccard $\tau$ overlap in external-call vocabulary with the query binary, which reduces cross-package contamination. This drops candidates from unrelated codebases (bash, sqlite, and so on) that would otherwise pollute the neighbor pool, lifting cross-project F1 from 0.673 (decoder) to 0.718 with zero retraining. The filter is most valuable on nginx-family packages where many training binaries share external-call vocabulary; on recutils, whose training pool has no high-Jaccard partners, the filter effectively does nothing.
 
 Notably, the $k$-NN approach requires no additional training. The same encoder checkpoint used for decoding is used for retrieval; only the output head changes. This means the improvement comes entirely from switching from generation to retrieval, not from additional model capacity or training data.
 
@@ -624,7 +639,7 @@ Notably, the $k$-NN approach requires no additional training. The same encoder c
     \centering
     \caption{Effect of $k$ in $k$-NN retrieval on the 300K dataset. $k{=}1$ is optimal; majority vote ($k{>}1$) degrades performance.}
     \label{tab:knn_ablation}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{lcccc}
         \toprule
         \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XProj EM} & \textbf{XProj F1} \\
@@ -635,8 +650,7 @@ Notably, the $k$-NN approach requires no additional training. The same encoder c
         $k$-NN ($k{=}5$) & 65.2\% & 0.714 & 47.8\% & 0.632 \\
         $k$-NN ($k{=}10$) & 60.1\% & 0.665 & 40.2\% & 0.553 \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
 Table~\ref{tab:knn_ablation} shows that $k{=}1$ (nearest neighbor) is optimal. Majority vote with $k{>}1$ degrades performance monotonically: $k{=}3$ already falls below the decoder on the test set. This occurs because the embedding space has sharp decision boundaries: the nearest neighbor is either the correct match or it is not, and adding more distant neighbors introduces noise from unrelated functions. The forward hybrid strategy (decoder when confident, $k$-NN otherwise) yields cross-project performance nearly identical to $k$-NN alone, confirming that the decoder provides minimal additional value.
@@ -660,7 +674,7 @@ We identify three failure modes of the autoregressive decoder that $k$-NN elimin
     \centering
     \caption{Per-package cross-project results on the four held-out packages. All four are completely excluded from training.}
     \label{tab:perpackage}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{lrcc}
         \toprule
         \textbf{Package} & \textbf{Funcs} & \textbf{$k$-NN+BinFilter F1} & \textbf{Decoder F1} \\
@@ -673,15 +687,14 @@ We identify three failure modes of the autoregressive decoder that $k$-NN elimin
         \textbf{Overall} & \textbf{10{,}467} & \textbf{0.718} & \textbf{0.673} \\
         Overall (nginx-family only) & 7{,}917 & 0.843 & 0.744 \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
-Table~\ref{tab:perpackage} splits the cross-project result by package. The three nginx-family packages achieve F1 between 0.738 and 0.883, with nginx118 the strongest. Tengine (Alibaba fork), angie (F5 Networks fork), and nginx118 share substantial code and vocabulary with the upstream nginx sources that appear across our training set---never the exact fork, but enough related code that most request handlers, configuration parsers, and connection primitives have close retrieval neighbors.
+Table~\ref{tab:perpackage} splits the cross-project result by package. The three nginx-family packages achieve F1 between 0.738 and 0.883, with nginx118 the strongest. Tengine (Alibaba fork), angie (F5 Networks fork), and nginx118 share substantial code and vocabulary with the upstream nginx sources that appear across our training set: never the exact fork, but enough related code that most request handlers, configuration parsers, and connection primitives have close retrieval neighbors.
 
 Recutils sits at 0.343 F1, an order of magnitude lower. It is a GNU record-management library whose \texttt{rec\_*}, \texttt{recutl\_*}, and \texttt{recfmt\_*} names do not share sub-tokens with any training package. Retrieval falls back to structurally similar training functions from unrelated packages (\texttt{parse\_include}, \texttt{get\_options}), and neither the decoder nor $k$-NN can rescue this: the model has no evidence to produce names from a vocabulary it never saw. Excluding recutils, the nginx-family aggregate is F1 0.843.
 
-This stratification confirms that \sysname{} is fundamentally a recognizer: accuracy is directly proportional to the overlap between a package's function names and the training vocabulary. Packages that share naming conventions with the training set (even as distinct forks) achieve high accuracy; packages with unique codebases achieve substantially lower accuracy regardless of code complexity. This is a property of all current function-name-recovery systems, not unique to \sysname{}---BLens~\cite{blens} and SYMGEN~\cite{symgen} both report similar cross-project degradation relative to in-distribution performance.
+This stratification confirms that \sysname{} is fundamentally a recognizer: accuracy is directly proportional to the overlap between a package's function names and the training vocabulary. Packages that share naming conventions with the training set (even as distinct forks) achieve high accuracy; packages with unique codebases achieve substantially lower accuracy regardless of code complexity. This is a property of all current function-name-recovery systems, not unique to \sysname{}; BLens~\cite{blens} and SYMGEN~\cite{symgen} both report similar cross-project degradation relative to in-distribution performance.
 
 \subsubsection{Comparison with Published Systems}
 
@@ -689,15 +702,16 @@ This stratification confirms that \sysname{} is fundamentally a recognizer: accu
     \centering
     \caption{Comparison with published systems. The top block reports numbers reproduced on our cross-project test set (identical data, same metric). The bottom block cites published numbers on the respective system's own evaluation (different test data); we include these as literature anchors and do \emph{not} claim direct ordering relative to the reproduced rows.}
     \label{tab:comparison}
-    \resizebox{\columnwidth}{!}{%
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
     \begin{tabular}{llcc}
         \toprule
         \textbf{System} & \textbf{Venue} & \textbf{Test Set} & \textbf{XProj F1} \\
         \midrule
         \multicolumn{4}{l}{\emph{Reproduced on our 4-package cross-project (10{,}467 functions)}} \\
-        \sysname{} (ours) & --- & Ours & \textbf{0.718} \\
+        \sysname{} (ours) & N/A & Ours & \textbf{0.718} \\
         SYMGEN + LoRA (full 300K fine-tune) & NDSS 2025 & Ours (15{,}983 fns)~\S & 0.663 \\
-        LLM Zero-Shot (StarCoder-3B) & --- & Ours (12{,}391 fns)~\S & 0.654 \\
+        LLM Zero-Shot (StarCoder-3B) & N/A & Ours (12{,}391 fns)~\S & 0.654 \\
         SYMGEN (released ckpt)~\cite{symgen} & NDSS 2025 & Ours & 0.450 \\
         \midrule
         \multicolumn{4}{l}{\emph{Cited from prior work (different test sets; not directly comparable)}} \\
@@ -708,21 +722,51 @@ This stratification confirms that \sysname{} is fundamentally a recognizer: accu
         NERO~\cite{nero} & OOPSLA 2020 & authors' data & 0.455 \\
         Epitome~\cite{epitome} & FSE 2024 & Punstrip & 0.72$^\dagger$ \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
     \\[0.3em]
     \footnotesize$^\dagger$As reported by the authors. $^\ddagger$Reproduced by Benoit et al.~\cite{blens} under a unified evaluation. $^\S$SYMGEN+LoRA and StarCoder evaluate slightly more functions per binary (Ghidra vs.\ BAP extraction); head-to-head comparison against SYMGEN on a matched 8{,}062-function subset appears in Table~\ref{tab:matched}.
 \end{table}
 
-Table~\ref{tab:comparison} reports cross-project F1 across published systems in two blocks. The top block contains systems reproduced on identical test data (our four-package cross-project set of 10{,}467 functions): these rows support direct head-to-head claims. The bottom block cites published numbers from the respective system's own evaluation---different test data, different dedup protocols, sometimes different metric definitions---and is included only as a literature anchor. We do not assert transitive orderings across the two blocks.
+Table~\ref{tab:comparison} reports cross-project F1 across published systems in two blocks. The top block contains systems reproduced on identical test data (our four-package cross-project set of 10{,}467 functions): these rows support direct head-to-head claims. The bottom block cites published numbers from the respective system's own evaluation (different test data, different dedup protocols, sometimes different metric definitions) and is included only as a literature anchor. We do not assert transitive orderings across the two blocks.
 
-\textbf{Head-to-head with SYMGEN.} The released SYMGEN checkpoint~\cite{symgen} reaches 0.450 F1 on our test set. We also reproduce SYMGEN+LoRA by fine-tuning the same CodeLlama-34B backbone on our full 300K training corpus; this brings SYMGEN up to 0.663 F1 on 15{,}983 functions, the strongest competing number in the literature. \sysname{} at 0.718 leads both, but SYMGEN's eval pipeline extracts more ground-truth-named functions per binary than ours (Ghidra versus BAP), so the headline sample counts differ (15{,}983 vs.\ 10{,}467). We therefore add a matched head-to-head in Table~\ref{tab:matched} restricting both systems to the same 8{,}062 functions---for every \texttt{(package, ground\_truth\_name)} key that appears in both evaluations, we take $\min(n_{\text{ours}}, n_{\text{SYMGEN}})$ predictions from each side. On that matched set, \sysname{} leads by $+0.100$ F1 and $+26.3$pp EM.
+\textbf{Efficiency comparison.} Beyond accuracy, \sysname{} offers a dramatic efficiency advantage over the LLM-based baselines. Table~\ref{tab:cost-comparison} compares end-to-end resource usage across the same reproduced systems: \sysname{} trains in 2h 12m on a single A100-80GB with \textasciitilde{}12 GB peak memory and serves predictions in \textasciitilde{}5 ms per function, whereas SYMGEN+LoRA requires four A100-80GBs for roughly 18 hours of DDP fine-tuning and \textasciitilde{}200 ms per function at inference.
+
+\begin{table}[t]
+    \centering
+    \caption{Computation cost comparison across systems evaluated on our 4-package cross-project set. Training times are for the fine-tuning/training stage of each system on the same 300K training data; zero-shot baselines report 0. Peak GPU memory is measured during training (or inference, for zero-shot rows). Inference per function is wall-clock latency amortized over batched evaluation.}
+    \label{tab:cost-comparison}
+    \footnotesize
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{lrlrrr}
+        \toprule
+        \textbf{System} & \textbf{Params} & \textbf{GPU(s)} & \textbf{Train time} & \textbf{Peak GPU mem} & \textbf{Infer/fn} \\
+        \midrule
+        \textbf{\sysname{} (ours)} & \textbf{32M} & \textbf{1$\times$A100-80GB} & \textbf{2h 12m} & \textbf{\textasciitilde{}12 GB} & \textbf{\textasciitilde{}5 ms} \\
+        SYMGEN + LoRA (full-data) & 34B & 4$\times$A100-80GB (DDP) & \textasciitilde{}18 h$^\dagger$ & \textasciitilde{}160 GB$^\ddagger$ & \textasciitilde{}200 ms \\
+        SYMGEN (zero-shot) & 34B & 1$\times$A100-80GB & 0 (pretrained) & \textasciitilde{}70 GB (infer) & \textasciitilde{}200 ms \\
+        StarCoder-3B (zero-shot) & 3B & 1$\times$A100-80GB & 0 (pretrained) & \textasciitilde{}16 GB (infer) & \textasciitilde{}80 ms \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \\[0.3em]
+    \footnotesize$^\dagger$Estimated from LoRA fine-tune job length on our Wulver HPC run. $^\ddagger$Distributed across 4 GPUs (\textasciitilde{}40 GB each).
+\end{table}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{pareto_accuracy_cost.pdf}
+    \caption{Accuracy versus parameter count on cross-project function naming (log scale). \sysname{} occupies the top-left corner: high cross-project F1 with two-to-three orders of magnitude fewer parameters than the LLM-based baselines. Markers in the same color reproduce on our 4-package cross-project test set; lighter-colored markers (BLens, SymLM) report numbers from the BLens'25 reproduction on Punstrip and are shown for literature-anchor context.}
+    \Description{Scatter plot with parameters (log scale, x-axis) versus cross-project F1 (y-axis). GraphR at 32M / 0.718 sits in the upper-left corner of the plot. SymGen+LoRA at 34B / 0.663 and StarCoder-3B at 3B / 0.654 sit further right with comparable or lower F1.}
+    \label{fig:pareto}
+\end{figure}
+
+\textbf{Head-to-head with SYMGEN.} The released SYMGEN checkpoint~\cite{symgen} reaches 0.450 F1 on our test set. We also reproduce SYMGEN+LoRA by fine-tuning the same CodeLlama-34B backbone on our full 300K training corpus; this brings SYMGEN up to 0.663 F1 on 15{,}983 functions, the strongest competing number in the literature. \sysname{} at 0.718 leads both, but SYMGEN's eval pipeline extracts more ground-truth-named functions per binary than ours (Ghidra versus BAP), so the headline sample counts differ (15{,}983 vs.\ 10{,}467). We therefore add a matched head-to-head in Table~\ref{tab:matched} restricting both systems to the same 8{,}062 functions: for every \texttt{(package, ground\_truth\_name)} key that appears in both evaluations, we take $\min(n_{\text{ours}}, n_{\text{SYMGEN}})$ predictions from each side. On that matched set, \sysname{} leads by $+0.100$ F1 and $+26.3$pp EM.
 
 \begin{table}[t]
     \centering
     \caption{Apples-to-apples head-to-head on 8{,}062 matched functions (same \texttt{(package, name)} keys in both evaluations). \sysname{} leads on three of four packages; SYMGEN wins only on recutils, whose GNU source code was almost certainly in CodeLlama-34B's pretraining corpus.}
     \label{tab:matched}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{lrcccc}
         \toprule
         \textbf{Package} & \textbf{N} & \textbf{Ours F1} & \textbf{Ours EM} & \textbf{SYMGEN F1} & \textbf{SYMGEN EM} \\
@@ -734,11 +778,10 @@ Table~\ref{tab:comparison} reports cross-project F1 across published systems in 
         \midrule
         \textbf{Overall} & \textbf{8{,}062} & \textbf{0.745} & \textbf{59.5\%} & 0.645 & 33.2\% \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
-The LLM-contamination pattern comes out clearly in this split. \sysname{} wins the three nginx-family packages by +0.10 to +0.24 F1---nginx forks include post-2023 code that CodeLlama never saw, and our BAP-trained encoder has no such asymmetric advantage. SYMGEN wins recutils by +0.28: recutils is a canonical GNU record-management library whose source is on every Linux distribution and GitHub mirror, so its function names are plausibly in CodeLlama's 2T-token pretraining. Table~\ref{tab:matched} is the cleanest evidence we can provide that the gap between \sysname{} and LLM baselines depends on which direction the pretraining contamination runs, not on the systems' nominal parameter counts.
+The LLM-contamination pattern comes out clearly in this split. \sysname{} wins the three nginx-family packages by +0.10 to +0.24 F1: nginx forks include post-2023 code that CodeLlama never saw, and our BAP-trained encoder has no such asymmetric advantage. SYMGEN wins recutils by +0.28: recutils is a canonical GNU record-management library whose source is on every Linux distribution and GitHub mirror, so its function names are plausibly in CodeLlama's 2T-token pretraining. Table~\ref{tab:matched} is the cleanest evidence we can provide that the gap between \sysname{} and LLM baselines depends on which direction the pretraining contamination runs, not on the systems' nominal parameter counts.
 
 \textbf{Output-space differences across prior systems.} SymLM~\cite{symlm} uses a 3{,}069-class classification head over a fixed label vocabulary, and XFL~\cite{xfl} performs multi-label prediction over a closed tag set. Both are structurally unable to emit names outside their training label space: BLens's unified reproduction~\cite{blens} reports that 43.8\% of cross-project test functions fall outside SymLM's trainable vocabulary (marked ``not in the dataset''), and XFL abstains on 60.7\% of cross-project functions whose confidence falls below its prediction threshold. \sysname{}'s output stage differs in two ways: the GRU decoder emits sub-token sequences over a 7{,}004-token Votes vocabulary (rather than selecting from a fixed set of whole-name classes), and the $k$-NN head retrieves from the full training-name index (approximately 276K distinct embedding-name pairs). We emphasize that this is a difference in \emph{output-space design}, not a solution to the underlying generalization problem: \sysname{} remains fundamentally a recognizer (see Section~\ref{sec:discussion}). Zero of 1{,}873 truly-unseen function names were correctly predicted in our ablation analysis, and our decoder's in-principle compositional capacity is empirically unused. The advantage on cross-project packages comes from the larger recognition base, not from generalizing to novel names. BLens~\cite{blens} and Epitome~\cite{epitome} use sub-token generation similar to ours and do not suffer from the SymLM/XFL structural bound; we cite their published numbers on the Punstrip Debian dataset as literature anchors and do not reproduce them directly because their test distribution differs from ours.
 
@@ -752,9 +795,9 @@ This means the LLM baselines bring an unmeasured but plausibly substantial prior
 We make four explicit notes in light of this:
 
 \begin{itemize}
-    \item \textbf{Reported numbers stand as-is.} We do not adjust LLM baseline scores for suspected leakage---the right baseline for a deployed system is the score it actually achieves, contamination included.
+    \item \textbf{Reported numbers stand as-is.} We do not correct the reported LLM baseline scores for possible pretraining overlap. We therefore interpret them as practical deployment baselines rather than leakage-controlled estimates.
     \item \textbf{Our model is contamination-free with respect to source text.} \sysname{}'s encoder is trained from scratch on BAP-IR, with no exposure to source code, function names from outside the training set, or pretrained text embeddings. The $k$-NN datastore is built only from training-set embeddings, so the cross-project numbers genuinely measure generalization beyond the 73 training packages.
-    \item \textbf{Cross-project absolute numbers should be read with this caveat.} A future evaluation that includes packages not in any large-scale code corpus---private firmware, recently obfuscated or proprietary code, or post-cutoff projects---would likely widen the gap between \sysname{} and LLM-based baselines, because the LLM's source-text prior would no longer apply.
+    \item \textbf{Cross-project absolute numbers should be read with this caveat.} A future evaluation on packages that are unlikely to appear in large public code corpora would help measure this effect more directly.
     \item \textbf{Same caveat applies to BLens and SymLM literature numbers.} The cited published numbers in Table~\ref{tab:comparison} use Punstrip Debian binaries whose source repositories are similarly well-represented in any large code corpus; the leakage discussion is not unique to our reproduced rows.
 \end{itemize}
 
@@ -768,7 +811,7 @@ We verify the $k$-NN improvement using bootstrap confidence intervals (1,000 res
     \centering
     \caption{Bootstrap 95\% confidence intervals and McNemar's test on the 87K ablation subset, where we had per-function predictions available for paired significance testing. The qualitative conclusions (non-overlapping CIs, larger cross-project advantage for $k$-NN) persist at the full 300K scale.}
     \label{tab:significance}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{llcc}
         \toprule
         \textbf{Set} & \textbf{Method} & \textbf{EM (95\% CI)} & \textbf{F1 (95\% CI)} \\
@@ -779,8 +822,7 @@ We verify the $k$-NN improvement using bootstrap confidence intervals (1,000 res
         \multirow{2}{*}{Cross-Proj} & Decoder & 41.6 [39.6, 43.7] & .493 [.476, .510] \\
          & $k$-NN & 46.3 [44.2, 48.4] & .519 [.502, .536] \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
 On the ablation test set, McNemar's test yields $\chi^2{=}59.0$, $p{<}0.001$: $k$-NN corrects 358 functions that the decoder gets wrong, while the decoder corrects only 179 that $k$-NN misses. On the ablation cross-project set, the difference is also significant ($p{<}0.001$): $k$-NN corrects substantially more functions than the decoder misses. The improvements are statistically significant on both sets.
@@ -795,7 +837,7 @@ The bootstrap confidence intervals in Table~\ref{tab:significance} show that the
     \centering
     \caption{Error categorization on the 87K ablation test set (8{,}973 functions). We report this breakdown from the ablation run because it required per-function manual categorization; the qualitative patterns (43.8\% hallucination by the decoder, $k$-NN halving the rate) persist at the 300K scale.}
     \label{tab:errors}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{lrrrr}
         \toprule
         \textbf{Category} & \textbf{Dec.} & \textbf{Dec.\%} & \textbf{$k$-NN} & \textbf{$k$-NN\%} \\
@@ -806,8 +848,7 @@ The bootstrap confidence intervals in Table~\ref{tab:significance} show that the
         Wrong (seen name) & 654 & 7.3 & 758 & 8.4 \\
         Unseen target & 985 & 11.0 & 950 & 10.6 \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
 Table~\ref{tab:errors} categorizes predictions into five groups. \emph{Hallucinated} predictions are names that exist in no training binary, that is, plausible sub-token compositions that the decoder hallucinates (e.g., \texttt{elfcore\_write\_ppc\_tm}, \texttt{fts5api\_column\_text}). $k$-NN halves hallucinateds from 4.0\% to 2.0\%, but trades them for \emph{wrong-seen} errors (7.3\%$\to$8.4\%), real names assigned to the wrong function. \emph{Unseen target} functions (11.0\%) have ground-truth names that never appear in training and are unsolvable by any recognizer, establishing a theoretical EM ceiling of ${\sim}$89\%.
@@ -836,7 +877,7 @@ Table~\ref{tab:ext_buckets} shows how prediction accuracy varies with the number
     \centering
     \caption{Test EM by number of external calls per function.}
     \label{tab:ext_buckets}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{lccc}
         \toprule
         \textbf{Ext Calls} & \textbf{Functions} & \textbf{Decoder EM} & \textbf{$k$-NN EM} \\
@@ -845,8 +886,7 @@ Table~\ref{tab:ext_buckets} shows how prediction accuracy varies with the number
         1--2 & 1,615 (18.0\%) & 78.4\% & 79.8\% \\
         3+ & 1,077 (12.0\%) & 83.8\% & 85.1\% \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table}
 
 \subsubsection{Unseen Target Ceiling}
@@ -865,6 +905,7 @@ To illustrate the practical behavior of \sysname{}, we present detailed predicti
     \centering
     \caption{Representative prediction examples illustrating decoder and $k$-NN behavior. Correct predictions are in \textbf{bold}; incorrect predictions are in \textit{italics}.}
     \label{tab:pred_examples}
+    \footnotesize
     \resizebox{\columnwidth}{!}{%
     \begin{tabular}{llll}
         \toprule
@@ -918,7 +959,7 @@ Table~\ref{tab:pred_examples} presents 20 representative predictions organized b
     \centering
     \caption{Qualitative prediction examples. ``Ext calls'' shows external library calls made by the function. Correct predictions are marked with \checkmark.}
     \label{tab:examples}
-    \resizebox{\textwidth}{!}{%
+    \footnotesize
     \begin{tabular}{llllcl}
         \toprule
         \textbf{True Name} & \textbf{Decoder} & \textbf{$k$-NN} & \textbf{Ext Calls} & \textbf{Correct?} & \textbf{Notes} \\
@@ -930,21 +971,20 @@ Table~\ref{tab:pred_examples} presents 20 representative predictions organized b
         \texttt{diffutils\_cleanup}$^*$ & \texttt{hash\_free} & \texttt{xmalloc} & free & Neither & Unseen target, both fail \\
         \texttt{close\_stdout} & \texttt{close\_stdout} \checkmark & \texttt{close\_stdout} \checkmark & fpending, fclose & Both & Strong ext-call signal \\
         \bottomrule
-    \end{tabular}%
-    }
+    \end{tabular}
 \end{table*}
 
 Table~\ref{tab:examples} provides additional context by showing the external calls available for each function. The first example (\texttt{xmalloc}) represents the ideal case: a shared gnulib function with distinctive external calls (\texttt{malloc}, \texttt{xalloc\_die}) that both methods recover correctly. The second example (\texttt{hash\_pjw}) shows a case with no external calls where the decoder confuses similar hash functions, but $k$-NN retrieves the correct match because the encoder embedding captures subtle differences in the arithmetic operations. The fifth example (\texttt{diffutils\_cleanup}) is an unseen target where both methods fail, demonstrating the recognizer limitation: with only \texttt{free} as an external call, the function's code pattern is insufficient to distinguish it from many other cleanup functions.
 
 \subsection{Runtime Analysis}
 
-Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs, and Table~\ref{tab:cost-comparison} compares end-to-end resource usage against our reproduced baselines. \sysname{}'s 32M-parameter architecture achieves its accuracy advantage while using roughly 1000$\times$ fewer parameters than SYMGEN, trains on a single A100 GPU in under 2.5 hours (versus multi-GPU DDP training for the LoRA-tuned 34B model), and serves predictions in single-digit milliseconds per function via encoder forward pass plus $k$-NN lookup---an order of magnitude faster than autoregressive decoding from a 34B model. This makes \sysname{} practical for interactive reverse-engineering workflows where a human analyst names hundreds of functions in a session.
+Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs; the end-to-end resource comparison against our reproduced baselines appears earlier in Table~\ref{tab:cost-comparison}. \sysname{}'s 32M-parameter architecture achieves its accuracy advantage while using roughly 1000$\times$ fewer parameters than SYMGEN, trains on a single A100 GPU in under 2.5 hours (versus multi-GPU DDP training for the LoRA-tuned 34B model), and serves predictions in single-digit milliseconds per function via encoder forward pass plus $k$-NN lookup, an order of magnitude faster than autoregressive decoding from a 34B model. This makes \sysname{} practical for interactive reverse-engineering workflows where a human analyst names hundreds of functions in a session.
 
 \begin{table}[t]
     \centering
     \caption{Runtime analysis on NVIDIA A100-80GB.}
     \label{tab:runtime}
-    \resizebox{\columnwidth}{!}{%
+    \footnotesize
     \begin{tabular}{llr}
         \toprule
         \textbf{Phase} & \textbf{Configuration} & \textbf{Time} \\
@@ -959,28 +999,7 @@ Table~\ref{tab:runtime} summarizes \sysname{}'s internal computational costs, an
         End-to-end (decoder) & 13{,}301 test functions & 11 min \\
         End-to-end ($k$-NN) & 13{,}301 test functions & 72s \\
         \bottomrule
-    \end{tabular}%
-    }
-\end{table}
-
-\begin{table}[t]
-    \centering
-    \caption{Computation cost comparison across systems evaluated on our 4-package cross-project set. Training times are for the fine-tuning/training stage of each system on the same 300K training data; zero-shot baselines report 0. Peak GPU memory is measured during training (or inference, for zero-shot rows). Inference per function is wall-clock latency amortized over batched evaluation.}
-    \label{tab:cost-comparison}
-    \resizebox{\columnwidth}{!}{%
-    \begin{tabular}{lrlrrr}
-        \toprule
-        \textbf{System} & \textbf{Params} & \textbf{GPU(s)} & \textbf{Train time} & \textbf{Peak GPU mem} & \textbf{Infer/fn} \\
-        \midrule
-        \textbf{\sysname{} (ours)} & \textbf{32M} & \textbf{1$\times$A100-80GB} & \textbf{2h 12m} & \textbf{\textasciitilde{}12 GB} & \textbf{\textasciitilde{}5 ms} \\
-        SYMGEN + LoRA (full-data) & 34B & 4$\times$A100-80GB (DDP) & \textasciitilde{}18 h$^\dagger$ & \textasciitilde{}160 GB$^\ddagger$ & \textasciitilde{}200 ms \\
-        SYMGEN (zero-shot) & 34B & 1$\times$A100-80GB & 0 (pretrained) & \textasciitilde{}70 GB (infer) & \textasciitilde{}200 ms \\
-        StarCoder-3B (zero-shot) & 3B & 1$\times$A100-80GB & 0 (pretrained) & \textasciitilde{}16 GB (infer) & \textasciitilde{}80 ms \\
-        \bottomrule
-    \end{tabular}%
-    }
-    \\[0.3em]
-    \footnotesize$^\dagger$Estimated from LoRA fine-tune job length on our Wulver HPC run. $^\ddagger$Distributed across 4 GPUs (\textasciitilde{}40 GB each).
+    \end{tabular}
 \end{table}
 
 $k$-NN inference is approximately 9$\times$ faster than beam search decoding on the test set. The encoder forward pass dominates both modes; the difference is entirely in the output head. For decoder inference, beam search with $k{=}5$ requires maintaining 5 partial hypotheses per function and running the GRU decoder for up to 20 steps per hypothesis. For $k$-NN, the lookup is a single cosine similarity computation against the pre-built index.
@@ -1015,6 +1034,28 @@ Interestingly, the $k$-NN approach provides roughly equal improvement at both op
 
 When training the 8M-parameter model on a diverse set of packages (including non-GNU packages like strace and sqlite), we observed cross-package contamination: strace syscall names were predicted for unrelated binutils functions. Scaling to 25M parameters in the ablation resolved this, and every cross-project package improved. Further scaling to the 32M-parameter production model on the full 300K corpus preserves this benefit at larger scale: the model has sufficient capacity to maintain separate naming patterns for web-server, GNU-utility, and database code without cross-domain confusion.
 
+\subsection{Why Pre-training + Scale Yields the Largest Gain}
+\label{sec:pretrain-discussion}
+
+The single largest jump in our ablation table is from Model 4 (8M-parameter, multi-context fusion, no pre-training) to Model 5 (32M-parameter, same architecture, with self-supervised pre-training): cross-project F1 rises from 0.460 to 0.593, a +0.13 gain (28.9\% relative) that exceeds the combined contributions of every prior architectural change in the table. We attribute this to two factors that compound.
+
+First, our self-supervised objectives (masked language modeling on instruction tokens plus contrastive learning that pulls together embeddings of the same function compiled at O0 and O2) train the encoder on a much larger signal than supervised fine-tuning alone. Pre-training uses every block embedding in every binary as an MLM target, providing approximately two orders of magnitude more gradient updates per encoder parameter than supervised name prediction (which gives one prediction per function, not one per block).
+
+Second, our partial embedding transfer (84.4\% of token embeddings matched by name between pre-training and fine-tuning vocabularies) makes the pre-training reusable: when the dataset evolves and adds new instruction types, the existing token embeddings are kept and only the new tokens are randomly initialized. This decouples the cost of re-training from changes to the vocabulary.
+
+This finding is consistent with our other empirical observation that the encoder, not the decoder, is the bottleneck (Section~\ref{sec:discussion}): improving encoder quality through pre-training pays off more than any decoder change we have tried. The forward implication is that pre-training on much larger unlabeled binary corpora (which require no debug symbols, only stripped binaries) is a promising scaling axis for future work, complementary to the supervised data scaling we have explored here.
+
+\subsection{Why Train from Scratch vs Existing Pretrained Binary Models}
+\label{sec:scratch-vs-pretrained}
+
+A natural question is why we did not initialize our encoder from existing pretrained binary code models such as PalmTree~\cite{palmtree}, CLAP~\cite{clap}, or jTrans~\cite{jtrans}, all of which provide self-supervised representations of binary code. We chose to train from scratch on BAP-IR for three reasons that compound.
+
+First, those models operate on raw x86 assembly tokens, while \sysname{} operates on instruction-type abstractions (Section~\ref{sec:tokenization}) that bucket roughly 32{,}000 raw mnemonic+operand combinations into 1{,}510 semantic types. This V3 tokenization gives a +1{,}750\% F1 improvement over raw tokens; reusing a model trained on raw tokens would forfeit that abstraction or require an additional adapter layer, which we found gave no measurable gain in pilot experiments.
+
+Second, BAP-IR is structurally different from raw assembly: it is a register-transfer-language IR that explicitly types loads, stores, and arithmetic, and that exposes side effects (flag updates, memory aliasing) that are implicit in x86. Pre-training on x86 token sequences therefore transfers poorly to BAP-IR.
+
+Third, by training from scratch we avoid the source-text contamination that affects models pretrained on large public binary corpora: we have no record of which binaries were used to train PalmTree or CLAP, and the cross-project packages we evaluate on (nginx forks, recutils) are likely present in those corpora, which would contaminate our cross-project numbers in the same way LLM pretraining contaminates SYMGEN's. Our from-scratch BAP-IR pre-training uses only the training-split binaries, giving a clean cross-project measurement.
+
 \subsection{Implications for Binary Analysis Tools}
 
 \sysname{}'s architecture suggests several integration paths with existing reverse engineering tools.
@@ -1032,7 +1073,7 @@ The trend in binary analysis is toward ever-larger language models: SYMGEN~\cite
 \begin{itemize}
     \item \textbf{Cost}: Fine-tuning a 34B-parameter model requires multiple high-memory GPUs and many hours per epoch. \sysname{} trains in under 4 GPU-hours on a single A100-80GB.
     \item \textbf{Inference speed}: LLM inference is bottlenecked by autoregressive generation. \sysname{}'s $k$-NN mode processes 13{,}559 functions in 72 seconds, an order of magnitude faster per function.
-    \item \textbf{Cross-project generalization.} The released SYMGEN checkpoint reaches 0.45 F1 on our four-package cross-project test set; \sysname{} reaches 0.718. Even after we fine-tune SYMGEN's CodeLlama-34B on our own 300K training corpus, it plateaus at 0.66---still below \sysname{}'s 32M parameters. The recognizer-vs-composer distinction is what drives this: LLM baselines win on packages their pretraining saw (recutils) and lose on packages it did not (recent nginx forks), confirming that the gap is not explained by parameter count.
+    \item \textbf{Cross-project generalization.} The released SYMGEN checkpoint reaches 0.45 F1 on our four-package cross-project test set; \sysname{} reaches 0.718. Even after we fine-tune SYMGEN's CodeLlama-34B on our own 300K training corpus, it plateaus at 0.66, still below \sysname{}'s 32M parameters. The recognizer-vs-composer distinction is what drives this: LLM baselines win on packages their pretraining saw (recutils) and lose on packages it did not (recent nginx forks), confirming that the gap is not explained by parameter count.
     \item \textbf{Pre-training contamination}: CodeLlama's 2T-token pre-training corpus almost certainly includes the open-source projects we evaluate against (upstream nginx, GNU coreutils). \sysname{}'s from-scratch training on BAP-IR has no such implicit exposure, making small-model results cleaner scientifically.
     \item \textbf{Updatability}: Adding new function patterns to an LLM requires fine-tuning; adding them to a $k$-NN datastore is instant.
 \end{itemize}
@@ -1042,11 +1083,9 @@ We do not argue that \sysname{} is universally superior to LLM approaches; LLMs 
 \subsection{Structure-Aware vs.\ Source-Code LLM Paradigms}
 \label{sec:paradigms}
 
-The recent literature on binary function name recovery has bifurcated into two complementary paradigms. Large-scale \emph{source-code LLM} approaches~\cite{symgen,prorec,beyondclass} leverage textual and stylistic priors learned from source-code pretraining corpora: they map decompiled pseudo-code to names by exploiting patterns their billion-parameter backbones absorbed from GitHub-scale corpora. In contrast, \emph{structure-aware} approaches---including our work as well as BLens~\cite{blens}, XFL~\cite{xfl}, SymLM~\cite{symlm}, TYGR~\cite{tygr}, CALLEE~\cite{callee}, and CFG2VEC~\cite{cfg2vec}---directly encode binary-intrinsic features (control-flow graph structure, call graphs, instruction-level semantics, inter-procedural signatures) using small-to-medium models trained on binary representations rather than source text. Both paradigms have produced strong published results at top-tier venues in the 2022--2025 window; they are not competing claims for a single ``correct'' approach but complementary views of the problem.
+The recent literature on binary function name recovery has bifurcated into two complementary paradigms. Large-scale \emph{source-code LLM} approaches~\cite{symgen,prorec,beyondclass} leverage textual and stylistic priors learned from source-code pretraining corpora: they map decompiled pseudo-code to names by exploiting patterns their billion-parameter backbones absorbed from GitHub-scale corpora. In contrast, \emph{structure-aware} approaches (including our work as well as BLens~\cite{blens}, XFL~\cite{xfl}, SymLM~\cite{symlm}, TYGR~\cite{tygr}, CALLEE~\cite{callee}, and CFG2VEC~\cite{cfg2vec}) directly encode binary-intrinsic features (control-flow graph structure, call graphs, instruction-level semantics, inter-procedural signatures) using small-to-medium models trained on binary representations rather than source text. We view source-code LLMs and structure-aware models as complementary. \sysname{} focuses on binary-intrinsic structure rather than source-level phrasing. The control-flow graph of a hash-table insertion function is the same whether the source labels it \texttt{hash\_insert}, \texttt{ht\_put}, or \texttt{insertIntoTable}; only the label distribution shifts. Source-code LLM approaches that learn from textual patterns are, by construction, sensitive to the text distribution: if naming conventions drift, the model's learned text-to-name mapping drifts with them.
 
-\sysname{} is deliberately in the structure-aware camp. Beyond the efficiency and deployability arguments already discussed, this design choice has a more subtle implication: a model that learns a $\text{CFG structure} \rightarrow \text{name}$ mapping is \emph{invariant} to shifts in how humans (or language models) verbalize that structure in source code. The control-flow graph of a hash-table insertion function is the same whether the source labels it \texttt{hash\_insert}, \texttt{ht\_put}, or \texttt{insertIntoTable}; only the label distribution shifts. Source-code LLM approaches that learn from textual patterns are, by construction, sensitive to the text distribution---if naming conventions drift, the model's learned text-to-name mapping drifts with them.
-
-This robustness-to-text-distribution-shift has an increasingly salient forward-looking dimension. AI-assisted coding tools (GitHub Copilot, Cursor, and similar LLM-driven assistants) have become mainstream in new software development, and there is growing informal evidence that their suggestions homogenize naming styles across codebases by aggregating over human conventions observed during pretraining. Over time, the textual distribution of function names in real-world code will likely become a mixture of human idioms and LLM-generated conventions, shifting away from the distribution that today's source-code LLMs were pretrained on. Structure-aware models that tie predictions to computational invariants (how the function behaves) rather than to surface lexical patterns (how it is written) should, in principle, degrade more gracefully under such shifts. We emphasize that this is a hypothesis, not a demonstrated result---empirical validation would require longitudinal studies of function naming in AI-assisted codebases, which we leave to future work. But it motivates continued investment in structure-aware approaches alongside the current LLM-based momentum in the field.
+This robustness-to-text-distribution-shift has an increasingly salient forward-looking dimension. AI-assisted coding tools (GitHub Copilot, Cursor, and similar LLM-driven assistants) have become mainstream in new software development, and there is growing informal evidence that their suggestions homogenize naming styles across codebases by aggregating over human conventions observed during pretraining. Over time, the textual distribution of function names in real-world code will likely become a mixture of human idioms and LLM-generated conventions, shifting away from the distribution that today's source-code LLMs were pretrained on. Structure-aware models that tie predictions to computational invariants (how the function behaves) rather than to surface lexical patterns (how it is written) should, in principle, degrade more gracefully under such shifts. We emphasize that this is a hypothesis, not a demonstrated result; empirical validation would require longitudinal studies of function naming in AI-assisted codebases, which we leave to future work. But it motivates continued investment in structure-aware approaches alongside the current LLM-based momentum in the field.
 
 % ============================================================================
 \section{Limitations}
@@ -1066,6 +1105,8 @@ This robustness-to-text-distribution-shift has an increasingly salient forward-l
     \item \textbf{Platform and architecture scope}: We evaluate only x86-64 ELF binaries compiled with GCC on Linux. Windows PE binaries, ARM/MIPS architectures, and other compilers (Clang, MSVC) are not tested. The instruction-type tokenization is architecture-specific and would require reimplementation for other ISAs, though the high-level approach (semantic type abstraction) is transferable.
 
     \item \textbf{No obfuscation handling}: We assume binaries are not deliberately obfuscated. Control flow flattening, opaque predicates, and instruction substitution would defeat both the CFG-based graph encoder and the instruction-type tokenization. Evaluating robustness to obfuscation is an important direction for future work.
+
+    \item \textbf{Dynamic linking assumption}: The model assumes that a binary will attempt to use an external function by calling it through the linker, making binaries with statically compiled library calls difficult to apply the model to.
 \end{enumerate}
 
 % ============================================================================
@@ -1086,7 +1127,7 @@ Several directions could extend \sysname{}'s capabilities:
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented \sysname{}, a 32M-parameter graph neural network system for binary function name recovery that reaches 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions: tengine, angie, nginx118, recutils). On the same held-out set, \sysname{} beats the released SYMGEN checkpoint (0.45), our own SYMGEN+LoRA reproduction fine-tuned on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset evaluated by both systems, the lead over SYMGEN+LoRA widens to $+0.10$ F1 and $+26$ percentage points of exact match. \sysname{} is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone and was trained from scratch on BAP-IR without any source-code pretraining. Our key contributions are:
+We presented \sysname{}, a 32M-parameter graph neural network system for binary function name recovery that reaches 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across four completely unseen packages (10{,}467 functions). On the same held-out set, \sysname{} beats the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset evaluated by both systems, the lead over SYMGEN+LoRA widens to $+0.10$ F1 and $+26$ percentage points of exact match. \sysname{} is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone and was trained from scratch on BAP-IR without any source-code pretraining. Our key contributions are:
 
 \begin{enumerate}
     \item A \textbf{multi-context gated fusion mechanism} with conditional bypass that sequentially incorporates external library calls, callee signatures, and caller signatures. Our ablation study reveals the \emph{ext-call paradox}: external calls alone improve test performance but degrade cross-project generalization by 4.3 percentage points. Inter-procedural callee/caller context resolves this paradox (+12.8pp cross-project EM), demonstrating that naive feature addition can harm generalization and explaining why cascaded fusion with conditional bypass is necessary.
@@ -1096,7 +1137,7 @@ We presented \sysname{}, a 32M-parameter graph neural network system for binary 
     \item A \textbf{comprehensive ablation study} quantifying the contribution of each component across four model variants, from a basic 4.4M-parameter GAT baseline to the 25M-parameter pretrained ablation system, scaled up to a final 32M-parameter model trained on 300K functions. We demonstrate that multi-context fusion provides +0.175 test F1, scaling resolves cross-package contamination, and pre-training enables partial embedding transfer across vocabulary changes.
 \end{enumerate}
 
-Our results demonstrate that binary function name recovery can be effectively solved with a 32M-parameter encoder and simple nearest-neighbor retrieval, achieving superior performance to systems based on billion-parameter language models at a fraction of the computational cost. The $k$-NN datastore additionally provides an updatable, inspectable knowledge base that can grow with analyst expertise, a practical advantage for deployment in real-world reverse engineering workflows.
+Our results indicate that a 32M-parameter encoder with nearest-neighbor retrieval is a strong and efficient baseline for this task under our evaluation setting. The $k$-NN datastore additionally provides an updatable, inspectable knowledge base that can grow with analyst expertise, a practical advantage for deployment in real-world reverse engineering workflows.
 
 % ============================================================================
 % References
