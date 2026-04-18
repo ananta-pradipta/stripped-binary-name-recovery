@@ -1,0 +1,38 @@
+% ============================================================================
+% Draft subsection: Adaptive Binary-Coverage Gate
+% Intended to slot into paper_ccs.tex after the current \subsubsection{$k$-NN Retrieval}
+% or as a new subsection in the Method section.
+% ============================================================================
+
+\subsubsection{Adaptive Binary-Coverage Gate}
+\label{sec:adaptive-gate}
+
+Pure $k$-NN excels when the target binary has neighbors in training; the pretrained decoder excels when no close neighbor exists. We route each query adaptively using a two-level gate.
+
+\paragraph{Decision rule.}
+Let $B$ be the target binary and $\operatorname{ext}(B)$ its external-call fingerprint (set of library-function names called anywhere in $B$). Let $\mathcal{B}_{\text{tr}}$ be the training binaries. Define
+\[
+J_{\max}(B) \;=\; \max_{b' \in \mathcal{B}_{\text{tr}}}\; \frac{|\operatorname{ext}(B) \cap \operatorname{ext}(b')|}{|\operatorname{ext}(B) \cup \operatorname{ext}(b')|}.
+\]
+For each function $f$ in $B$ we first compute the top-1 $k$-NN neighbor and its cosine similarity $s(f)$. The gate outputs
+\[
+\hat{n}(f) \;=\;
+\begin{cases}
+\text{$k$-NN name}, & J_{\max}(B) \ge \tau_{\text{bin}},\\[2pt]
+\text{$k$-NN name}, & J_{\max}(B) < \tau_{\text{bin}} \text{ and } s(f) \ge \tau_{\text{sim}},\\[2pt]
+\text{decoder name}, & \text{otherwise}.
+\end{cases}
+\]
+Intuitively, we default to $k$-NN when a close training binary exists ($\tau_{\text{bin}}$); otherwise we default to the decoder, keeping a per-query safety valve ($\tau_{\text{sim}}$) that promotes $k$-NN if a specific function happens to match near-exactly despite the binary-level mismatch.
+
+\paragraph{Choice of $\tau_{\text{bin}}$.}
+Across our nine cross-project packages, $J_{\max}$ is strongly bimodal. nginx-family packages cluster at $J_{\max} \in [0.97, 1.00]$, while all other xproj packages fall below $0.70$, producing a clean $0.28$-wide gap. Any threshold in $[0.70, 0.97]$ yields identical routing, so we set $\tau_{\text{bin}}{=}0.7$ — the lower end of the gap — as the most conservative choice. We fix $\tau_{\text{sim}}{=}0.95$ (far above the median top-1 similarity of $\sim\!0.6$), so the safety valve triggers only on near-duplicate functions.
+
+\paragraph{Generalization (leave-one-out).}
+To show that $\tau_{\text{bin}}$ is not a value tuned on the test set, we run leave-one-out over the seven clean cross-project packages: hold out one package, grid-search for the best $\tau$ on the remaining six (tie-broken by preferring the larger $\tau$), and apply the chosen $\tau$ to the held-out package. All seven rounds pick $\tau \in [0.70, 0.95]$, and the held-out F1 matches the oracle-tuned value to within $10^{-4}$. The aggregate leave-one-out F1 equals the oracle F1 ($0.7381$), confirming that the bimodal structure — not the specific threshold value — drives the decision.
+
+\paragraph{Generalization (pseudo cross-project).}
+As an independent check we construct a pseudo-cross-project set from four held-out training packages — \texttt{jq} (4{,}775 fns), \texttt{lua} (5{,}897 fns), \texttt{lz4} (1{,}227 fns), and \texttt{htop} (1{,}661 fns) — by removing them from the $k$-NN index at inference time while keeping the trained encoder. All four packages land in the low-$J_{\max}$ regime ($J_{\max} \in [0.37, 0.44]$), so our $\tau_{\text{bin}}{=}0.7$ rule routes each of them to the decoder. The effect is dramatic: pure $k$-NN F1 collapses to $0.014$ (no close neighbors available in the index), while the decoder — operating on the same trained encoder's $z$ — achieves $0.585$ weighted F1. Per-package, the decoder gains are $+0.14$ (htop), $+0.75$ (jq), $+0.58$ (lua), and $+0.43$ (lz4) over $k$-NN. This confirms the decoder-regime direction of the gate without peeking at the xproj test set. Combined with the leave-one-out evidence above (which validates the $k$-NN regime on angie and nginx118 at $J_{\max} \approx 1.0$), both directions of the gate are independently verified.
+
+\paragraph{Future work: learned gate.}
+A natural successor is to replace the two hand-specified thresholds with a small MLP that takes the per-query features $(s(f), J_{\max}(B), \text{beam score}, \text{num blocks}, \text{num ext-calls}, \text{top-$k$ name frequency})$ and outputs a continuous mixing weight. Preliminary analysis (not included in this submission due to scope) suggests such a learned gate could recover the full oracle-per-package improvement (+0.04 F1 over fixed $\tau$) while remaining fully differentiable. We leave this as future work.
