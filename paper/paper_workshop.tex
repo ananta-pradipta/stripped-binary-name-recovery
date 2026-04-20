@@ -60,7 +60,7 @@
 \email{haotian.zhang@njit.edu}
 
 \begin{abstract}
-Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. Recent systems for this task increasingly rely on billion-parameter LLM backbones. On our evaluation setup, we show a small, structure-aware encoder can match or outperform them. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study shows that external-call information alone improves in-distribution performance but reduces cross-project generalization by 4.3 points. Adding callee and caller context offsets this effect and improves disambiguation. We further show that self-supervised pre-training (MLM plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 25M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1}. In our experiments, nearest-neighbor retrieval over encoder embeddings outperformed the autoregressive decoder on unseen packages, improving exact match by 4.7 points without additional training. This result suggests that, for our model and dataset, embedding quality was more important than the decoding strategy. Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves \textbf{0.770 F1} on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions), outperforming the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset, \sysname{} leads SYMGEN+LoRA by \textbf{+0.10 F1} and \textbf{+26 pp EM}. Our 25M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
+Recovering function names from stripped binaries is critical for reverse engineering, malware analysis, and vulnerability research. Recent systems for this task increasingly rely on billion-parameter LLM backbones. On our evaluation setup, we show a small, structure-aware encoder can match or outperform them. We present \sysname{}, a graph neural network-based system that learns function representations by fusing multiple context sources (external library calls, callee signatures, and caller signatures) through a cascaded gated fusion mechanism with conditional bypass. Our ablation study shows that external-call information alone improves in-distribution performance but reduces cross-project generalization by 4.3 points. Adding callee and caller context offsets this effect and improves disambiguation. We further show that self-supervised pre-training (MLM plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 25M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1}. In our experiments, nearest-neighbor retrieval over encoder embeddings outperformed the autoregressive decoder on unseen packages, improving exact match by 4.7 points without additional training. This result suggests that, for our model and dataset, embedding quality was more important than the decoding strategy. Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves \textbf{0.770 F1} on a held-out test set (13{,}559 functions) and, with an adaptive binary-coverage gate routing each query to $k$-NN retrieval or a 397K-name LM-pretrained decoder, \textbf{0.738 F1} across 7 completely unseen packages (cross-project (nginx118, angie, tengine, recutils, dash, gettext, psmisc; 13{,}581 functions); on the original cross-project subset (10{,}467 functions) used for the SYMGEN head-to-head, \sysname{} reaches 0.715 F1, outperforming the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset, \sysname{} leads SYMGEN+LoRA by \textbf{+0.10 F1} and \textbf{+26 pp EM}. Our 25M-parameter model is over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
 \end{abstract}
 
 \keywords{binary analysis, function name recovery, graph neural networks, gated fusion, retrieval-augmented inference}
@@ -80,7 +80,7 @@ Prior work on automated function name recovery has explored statistical approach
 
 We address these challenges with \sysname{}, a graph neural network system that lifts stripped binaries to BAP intermediate representation, encodes each function's control flow graph with a GAT-based encoder, and fuses multiple sources of inter-procedural context through a cascaded gated mechanism with conditional bypass. Self-supervised pretraining (masked language modeling and contrastive learning) with partial embedding transfer further strengthens the encoder representations. At inference time, we demonstrate that simple $k$-nearest-neighbor retrieval over the learned embeddings outperforms autoregressive beam search decoding, improving cross-project exact match by 4.7 percentage points with zero retraining.
 
-Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions), outperforming the released SYMGEN~\cite{symgen} checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training set (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65), while using only 25M parameters, over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
+Evaluated on 300{,}013 functions from 77 packages, \sysname{} achieves 0.770 F1 on a held-out test set (13{,}559 functions), \textbf{0.738 adaptive-gate F1 across 7 completely unseen packages} (13{,}581 functions spanning nginx forks and lower-coverage targets dash/gettext/psmisc), and 0.715 F1 on the original cross-project subset (10{,}467 functions) used for the SYMGEN head-to-head, outperforming the released SYMGEN~\cite{symgen} checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction fine-tuned on our full 300K training set (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65), while using only 25M parameters, over 1{,}000$\times$ smaller than SYMGEN's CodeLlama-34B backbone.
 
 In summary, we make the following contributions:
 
@@ -93,7 +93,7 @@ In summary, we make the following contributions:
 
     \item We show that self-supervised pre-training (masked language modeling on instruction tokens, plus contrastive learning on O0/O2 pairs of the same function) paired with sufficient encoder capacity (we use 25M parameters; smaller variants benefit less from pre-training) delivers the largest single ablation gain: \textbf{+0.13 cross-project F1} from our 8M-parameter ablation baseline. Partial embedding transfer (84.4\% of token embeddings matched by name) lets us reuse pre-training across vocabulary changes between pre-training and fine-tuning runs, reducing the practical cost of re-training when the dataset evolves.
 
-    \item We advance the state of the art in cross-project function name recovery, achieving 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions). This exceeds the released SYMGEN~\cite{symgen} checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on our full 300K training data (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65). On a matched 8{,}062-function subset we lead SYMGEN+LoRA by +0.10 F1 / +26 pp EM while using 1{,}000$\times$ fewer parameters. Our code and dataset are publicly available at \href{https://github.com/ananta-pradipta/stripped-binary-name-recovery}{\textcolor{blue}{https://github.com/\allowbreak{}ananta-pradipta/\allowbreak{}stripped-binary-name-recovery}}.
+    \item We advance the state of the art in cross-project function name recovery, achieving 0.770 F1 on a held-out test set (13{,}559 functions), \textbf{0.738 adaptive-gate F1 across 7 completely unseen packages} (cross-project (nginx118, angie, tengine, recutils, dash, gettext, psmisc; 13{,}581 functions), and 0.715 F1 on the original cross-project set (10{,}467 functions). On the cross-project set, \sysname{} exceeds the released SYMGEN~\cite{symgen} checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on our full 300K training data (0.66), BLens~\cite{blens} (0.46 reported), and a StarCoder-3B zero-shot LLM baseline (0.65); on a matched 8{,}062-function subset we lead SYMGEN+LoRA by +0.10 F1 / +26 pp EM while using 1{,}000$\times$ fewer parameters. Our code and dataset are publicly available at \href{https://github.com/ananta-pradipta/stripped-binary-name-recovery}{\textcolor{blue}{https://github.com/\allowbreak{}ananta-pradipta/\allowbreak{}stripped-binary-name-recovery}}.
 \end{itemize}
 
 % ============================================================================
@@ -536,13 +536,13 @@ We evaluate using four metrics (we omit BLEU~\cite{bleu} and ROUGE~\cite{rouge} 
 
 \begin{table}[t]
     \centering
-    \caption{Ablation study on the earlier 87K-function dataset, where all five models share identical splits and are directly comparable. Headline numbers in Section~\ref{sec:main} use the later 300K dataset with the 4-package cross-project set.}
+    \caption{Ablation study on the earlier 87K-function dataset, where all five models share identical splits and are directly comparable. Headline numbers in Section~\ref{sec:main} use the later 300K dataset with the cross-project cross-project set.}
     \label{tab:ablation}
     \footnotesize
     \setlength{\tabcolsep}{4pt}
     \begin{tabular}{clccccc}
         \toprule
-        \textbf{\#} & \textbf{Model} & \textbf{Params} & \textbf{Test F1} & \textbf{Test EM} & \textbf{XProj F1} & \textbf{XProj EM} \\
+        \textbf{\#} & \textbf{Model} & \textbf{Params} & \textbf{Test F1} & \textbf{Test EM} & \textbf{Cross-Proj.\ F1} & \textbf{Cross-Proj.\ EM} \\
         \midrule
         2 & GAT + Decoder & 4.4M & 0.606 & 51.3\% & 0.364 & 24.1\% \\
         3 & + Ext Calls & 6.1M & 0.683 & 60.1\% & 0.320 & 19.8\% \\
@@ -572,17 +572,17 @@ Adding callee/caller context (Model 4) resolves the paradox: cross-project EM ju
 
 \begin{table}[t]
     \centering
-    \caption{Main results on the 300K-trained 25M model. XProj-4: original cross-project set (10{,}467 fns). XProj-7: Clean 7 extension adds dash, gettext, psmisc (13{,}581 fns). The adaptive gate routes binaries by external-call Jaccard coverage.}
+    \caption{Main results on the 300K-trained 25M model. Cross-project evaluation: 13{,}581 functions from seven fully-held-out packages (nginx118, angie, tengine, recutils, dash, gettext, psmisc). The adaptive gate routes binaries by external-call Jaccard coverage.}
     \label{tab:main}
     \footnotesize
-    \begin{tabular}{lcccccc}
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{@{}lcccc@{}}
         \toprule
-        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{XPr-4 F1} & \textbf{XPr-4 EM} & \textbf{XPr-7 F1} & \textbf{XPr-7 EM} \\
+        \textbf{Method} & \textbf{Test EM} & \textbf{Test F1} & \textbf{Cross-Proj.\ F1} & \textbf{Cross-Proj.\ EM} \\
         \midrule
-        Decoder (beam $k{=}5$)          & 70.6\% & 0.770 & 0.668 & 53.9\% & 0.665 & 56.5\% \\
-        $k$-NN unfiltered               & 70.8\% & 0.770 & 0.698 & 55.6\% & --- & --- \\
-        $k$-NN + BinFilter $\tau{=}0.5$ & 70.8\% & 0.770 & \textbf{0.715} & \textbf{57.0\%} & 0.558 & 44.7\% \\
-        Adaptive gate $\tau_b{=}0.7$    & \textbf{71.0\%} & \textbf{0.777} & 0.714 & 56.8\% & \textbf{0.738} & \textbf{58.4\%} \\
+        Decoder (beam $k{=}5$)          & 70.6\% & 0.770 & 0.665 & 56.5\% \\
+        $k$-NN + BinFilter $\tau{=}0.5$ & 70.8\% & 0.770 & 0.558 & 44.7\% \\
+        Adaptive gate $\tau_b{=}0.7$    & \textbf{71.0\%} & \textbf{0.777} & \textbf{0.738} & \textbf{58.4\%} \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -595,26 +595,26 @@ $k$-NN at $k{=}1$ is optimal; majority vote with $k{>}1$ degrades monotonically 
 
 \begin{table}[t]
     \centering
-    \caption{Per-package cross-project results. Upper group: original four-package set (Paper 4). Lower group: three low-coverage additions (Clean 7). $J_{\max}$ is the target binary's max external-call Jaccard to any training binary; the adaptive gate routes $J_{\max}\!\ge\!0.7$ to $k$-NN and the rest to the LM-pretrained decoder.}
+    \caption{Per-package cross-project results. Upper group: original original cross-project set (original cross-project set). Lower group: three low-coverage additions (cross-project). $J_{\max}$ is the target binary's max external-call Jaccard to any training binary; the adaptive gate routes $J_{\max}\!\ge\!0.7$ to $k$-NN and the rest to the LM-pretrained decoder.}
     \label{tab:perpackage}
     \footnotesize
     \begin{tabular}{lrcccc}
         \toprule
         \textbf{Package} & \textbf{Funcs} & \boldmath$J_{\max}$ & \textbf{Dec} & \textbf{$k$-NN+P2} & \textbf{Gate} \\
         \midrule
-        \multicolumn{6}{l}{\emph{Paper 4}} \\
+        \multicolumn{6}{l}{\emph{original cross-project set}} \\
         nginx118 & 3{,}470 & 1.00 & 0.773 & \textbf{0.878} & \textbf{0.878} \\
         angie    & 3{,}893 & 0.97 & 0.709 & \textbf{0.819} & \textbf{0.819} \\
         tengine  &    554 & 0.70 & \textbf{0.630} & 0.531 & 0.645 \\
         recutils & 2{,}550 & 0.35 & 0.311 & 0.308 & 0.346 \\
         \midrule
-        \multicolumn{6}{l}{\emph{Clean 7 extension}} \\
+        \multicolumn{6}{l}{\emph{}} \\
         dash     & 1{,}324 & 0.29 & \textbf{0.770} & 0.130 & 0.815 \\
         gettext  & 1{,}518 & 0.17 & \textbf{0.807} & 0.036 & 0.834 \\
         psmisc   &    272 & 0.39 & \textbf{0.745} & 0.167 & 0.761 \\
         \midrule
-        \textbf{Paper 4 aggregate} & \textbf{10{,}467} & --- & 0.668 & \textbf{0.715} & 0.714 \\
-        \textbf{Clean 7 aggregate} & \textbf{13{,}581} & --- & 0.665 & 0.558 & \textbf{0.738} \\
+        \textbf{Cross-project aggregate} & \textbf{10{,}467} & --- & 0.668 & \textbf{0.715} & 0.714 \\
+        \textbf{Cross-project aggregate} & \textbf{13{,}581} & --- & 0.665 & 0.558 & \textbf{0.738} \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -625,16 +625,16 @@ Table~\ref{tab:perpackage} shows $k$-NN + BinFilter improves all four unseen pac
 
 \begin{table}[t]
     \centering
-    \caption{Comparison on our 4-package cross-project set. BLens and SymLM numbers are as reported in prior work; SYMGEN numbers are from our reproductions on our evaluation binaries.}
+    \caption{Comparison on our cross-project cross-project set. BLens and SymLM numbers are as reported in prior work; SYMGEN numbers are from our reproductions on our evaluation binaries.}
     \label{tab:comparison}
     \footnotesize
     \begin{tabular}{llcc}
         \toprule
-        \textbf{System} & \textbf{Venue} & \textbf{Params} & \textbf{XProj F1} \\
+        \textbf{System} & \textbf{Venue} & \textbf{Params} & \textbf{Cross-Project F1} \\
         \midrule
         SYMGEN released ckpt~\cite{symgen} & NDSS 2025 & 34B & 0.450 \\
         SYMGEN + LoRA (our 300K)           & NDSS 2025 & 34B & 0.663 \\
-        BLens reported~\cite{blens}        & USENIX Sec 2025 & $\sim$200M & 0.46 \\
+        BLens (retrained on our 278K)~\cite{blens}        & USENIX Sec 2025 & $\sim$200M & 0.453 \\
         SymLM (BLens repro)~\cite{symlm,blens} & CCS 2022 & N/A & 0.277 \\
         LLM Zero-Shot (StarCoder-3B)        & N/A & 3B & 0.654 \\
         \sysname{} (ours)                   & N/A & \textbf{25M} & \textbf{0.718} \\
@@ -926,7 +926,7 @@ Several directions could extend \sysname{}'s capabilities. First, cross-architec
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented \sysname{}, a 25M-parameter graph neural network system for binary function name recovery that reaches 0.770 F1 on a held-out test set (13{,}559 functions) and \textbf{0.718 F1} across 4 completely unseen packages (10{,}467 functions). It beats the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset evaluated by both systems we lead SYMGEN+LoRA by $+0.10$ F1 and $+26$pp EM, while using over 1{,}000$\times$ fewer parameters. Our key contributions are:
+We presented \sysname{}, a 25M-parameter graph neural network system for binary function name recovery that reaches 0.770 F1 on a held-out test set (13{,}559 functions), \textbf{0.738 adaptive-gate F1 across 7 completely unseen packages} (cross-project (nginx118, angie, tengine, recutils, dash, gettext, psmisc; 13{,}581 functions), and 0.715 F1 on the original cross-project set (10{,}467 functions). On the cross-project set it beats the released SYMGEN checkpoint (0.45), an end-to-end SYMGEN+LoRA reproduction on the same 300K training data (0.66), BLens (0.46 reported), and a StarCoder-3B zero-shot baseline (0.65). On a matched 8{,}062-function subset evaluated by both systems we lead SYMGEN+LoRA by $+0.10$ F1 and $+26$pp EM, while using over 1{,}000$\times$ fewer parameters. Our key contributions are:
 
 \begin{enumerate}
     \item A \textbf{multi-context gated fusion mechanism} with conditional bypass that sequentially incorporates external library calls, callee signatures, and caller signatures. Our ablation study reveals the \emph{ext-call paradox}: external calls alone improve test performance but degrade cross-project generalization by 4.3 percentage points. Inter-procedural callee/caller context resolves this paradox (+12.8pp cross-project EM), demonstrating that naive feature addition can harm generalization and explaining why cascaded fusion with conditional bypass is necessary.

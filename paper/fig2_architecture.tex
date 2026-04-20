@@ -73,16 +73,20 @@
 
     \node[above=0.05cm of g2, font=\small\bfseries, text=green!50!black] {Cascaded Gated Fusion (conditional bypass per stage)};
 
-    % ----- Output heads -----
-    \node[dec, left=1.0cm of g3] (decoder) {GRU Decoder\\{\scriptsize\ttfamily1024 hidden, 1 layer}\\{\scriptsize Votes vocab 7,004}\\{\scriptsize beam search $k{=}5$}};
-    \node[dec, below=0.6cm of decoder] (knn) {$k$-NN + BinFilter\\{\scriptsize\ttfamily $k{=}20$, $\tau{=}0.5$}\\{\scriptsize 300K training index}};
+    % ----- Output heads (simplified, more space to avoid overlap) -----
+    \node[dec, minimum width=2.2cm, left=1.2cm of g3] (decoder) {GRU Decoder\\{\scriptsize LM-pretrained}\\{\scriptsize 397K-name corpus}};
+    \node[dec, minimum width=2.2cm, below=1.2cm of decoder] (knn) {$k$-NN + BinFilter\\{\scriptsize $k{=}20$, $\tau{=}0.5$}};
 
     \draw[arr] (g3.west) -- node[above, lbl] {$\mathbf{z}$} (decoder.east);
-    \draw[arr] (g3.south west) |- (knn.east);
+    \draw[arr] (g3.south west) to[out=180, in=0] (knn.east);
 
-    \node[data, left=0.7cm of $(decoder)!0.5!(knn)$] (out) {Function\\Name};
-    \draw[arr] (decoder.west) -| (out.north);
-    \draw[arr] (knn.west) -| (out.south);
+    % Adaptive gate merging the two heads, placed further left with extra gap
+    \node[gate, minimum width=2.4cm, left=1.8cm of $(decoder)!0.5!(knn)$] (agate) {Adaptive Gate\\{\scriptsize $J_{\max}(B)\!\ge\!0.7 \Rightarrow k$-NN}\\{\scriptsize else Decoder}};
+    \draw[arr] (decoder.west) -| (agate.north);
+    \draw[arr] (knn.west) -| (agate.south);
+
+    \node[data, left=1.2cm of agate] (out) {Function\\Name};
+    \draw[arr] (agate.west) -- (out.east);
 
     \end{tikzpicture}%
 
