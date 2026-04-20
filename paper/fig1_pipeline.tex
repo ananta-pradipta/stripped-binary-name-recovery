@@ -59,18 +59,20 @@
     \node[phase, fit=(blockenc)(gat)(fuse1)(fuse2)(fuse3)(ext)(callee)(caller), inner sep=8pt, label={[font=\small\bfseries]above:Phase 2: Encoder + Multi-Context Fusion}] (p2) {};
 
     % === Phase 3: Inference & Evaluation ===
-    \node[output, right=1.0cm of fuse3, yshift=0.5cm] (decoder) {GRU Decoder\\{\scriptsize beam $k{=}5$}};
+    \node[output, right=1.0cm of fuse3, yshift=0.5cm] (decoder) {GRU Decoder\\{\scriptsize LM-pretrained}\\{\scriptsize beam $k{=}5$}};
     \node[output, right=1.0cm of fuse3, yshift=-0.5cm] (knn) {$k$-NN + BinFilter\\{\scriptsize $k{=}20$, $\tau{=}0.5$}};
-    \node[input, right=0.7cm of $(decoder)!0.5!(knn)$] (name) {Predicted\\Name};
-    \node[input, right=0.6cm of name] (metrics) {Metrics\\{\scriptsize F1, EM}\\{\scriptsize EdSim, NgSim}};
+    \node[gate, right=0.6cm of $(decoder)!0.5!(knn)$] (agate) {Adaptive Gate\\{\scriptsize $J_{\max}(B)\ge 0.7$}};
+    \node[input, right=0.5cm of agate] (name) {Predicted\\Name};
+    \node[input, right=0.5cm of name] (metrics) {Metrics\\{\scriptsize F1, EM}\\{\scriptsize EdSim, NgSim}};
 
     \draw[arr] (fuse3.east) -- ++(0.25,0) |- node[above right, lbl, pos=0.3] {$\mathbf{z}$} (decoder.west);
     \draw[arr] (fuse3.east) -- ++(0.25,0) |- (knn.west);
-    \draw[arr] (decoder.east) -- ++(0.2,0) |- (name.west);
-    \draw[arr] (knn.east) -- ++(0.2,0) |- (name.west);
+    \draw[arr] (decoder.east) -- ++(0.25,0) |- (agate.west);
+    \draw[arr] (knn.east) -- ++(0.25,0) |- (agate.west);
+    \draw[arr] (agate) -- (name);
     \draw[arr] (name) -- (metrics);
 
-    \node[phase, fit=(decoder)(knn)(name)(metrics), inner sep=8pt, label={[font=\small\bfseries]above:Phase 3: Inference \& Evaluation}] (p3) {};
+    \node[phase, fit=(decoder)(knn)(agate)(name)(metrics), inner sep=8pt, label={[font=\small\bfseries]above:Phase 3: Adaptive Inference \& Evaluation}] (p3) {};
 
     \end{tikzpicture}%
 
