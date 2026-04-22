@@ -7,9 +7,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=16G
 #SBATCH --time=06:00:00
-set -e
-module load bright 2>/dev/null
-module load GCC/12.3.0 2>/dev/null
+module load bright 2>/dev/null || true
+module load GCC/12.3.0 2>/dev/null || true
 
 cd /mmfs1/project/hz79/_shared/cs785
 bash scripts/compile_6pkg_unseen.sh
