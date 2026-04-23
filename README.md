@@ -280,14 +280,14 @@ On the matched set, HyDRA (25M, from scratch) leads SymGen + LoRA (34B) by **+0.
 
 ## References
 
-- He, J., et al. (2018). **Debin: Predicting Debug Information in Stripped Binaries.** CCS'18.
-- David, Y., et al. (2020). **NERO: Neural Reverse Engineering of Stripped Binaries.** OOPSLA'20.
-- Jin, X., et al. (2022). **SymLM: Predicting Function Names via Context-Sensitive Execution-Aware Code Embeddings.** CCS'22.
-- Patrick-Evans, J., et al. (2023). **XFL: Naming Functions in Binaries with Extreme Multi-Label Learning.** IEEE S&P'23.
-- Al-Kaswan, A., et al. (2025). **BLens: Contrastive Captioning of Binary Functions.** USENIX Security'25.
-- Xu, X., et al. (2025). **Beyond Classification (SymGen): Generating Function Names from Binary Code.** NDSS'25.
-- Veličković, P., et al. (2018). **Graph Attention Networks.** ICLR'18.
-- Khandelwal, U., et al. (2020). **Generalization through Memorization: Nearest Neighbor Language Models.** ICLR'20.
+- He, J., Ivanov, P., Tsankov, P., Raychev, V., & Vechev, M. (2018). **Debin: Predicting Debug Information in Stripped Binaries.** CCS'18.
+- David, Y., Alon, U., & Yahav, E. (2020). **Neural Reverse Engineering of Stripped Binaries using Augmented Control Flow Graphs** (NERO). OOPSLA'20.
+- Jin, X., Pei, K., Won, J. Y., & Lin, Z. (2022). **SymLM: Predicting Function Names in Stripped Binaries via Context-Sensitive Execution-Aware Code Embeddings.** CCS'22.
+- Patrick-Evans, J., Dannehl, M., & Kinder, J. (2023). **XFL: Naming Functions in Binaries with Extreme Multi-Label Learning.** IEEE S&P'23.
+- Benoit, T., Wang, Y., Dannehl, M., & Kinder, J. (2025). **BLens: Contrastive Captioning of Binary Functions using Ensemble Embedding.** USENIX Security'25.
+- Jiang, L., Jin, X., & Lin, Z. (2025). **Beyond Classification: Inferring Function Names in Stripped Binaries via Domain Adapted LLMs** (SymGen). NDSS'25.
+- Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018). **Graph Attention Networks.** ICLR'18.
+- Khandelwal, U., Levy, O., Jurafsky, D., Zettlemoyer, L., & Lewis, M. (2020). **Generalization through Memorization: Nearest Neighbor Language Models.** ICLR'20.
 
 ---
 
