@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --partition=course_gpu
-#SBATCH --account=<hpc-account>
+#SBATCH --account=2026-spring-cs-785-<account>-<user>
 #SBATCH --qos=course
 #SBATCH --time=08:00:00
 #SBATCH --job-name=bfnr-train
@@ -19,7 +19,7 @@ module load python3
 source ../bfnr-env/bin/activate
 
 echo "=========================================="
-echo "  BFNR Training Job"
+echo "  [course] Training Job"
 echo "=========================================="
 echo "Date:       $(date)"
 echo "Job ID:     $SLURM_JOB_ID"

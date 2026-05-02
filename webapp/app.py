@@ -1,6 +1,6 @@
 """
 Function Name Recovery in Stripped Binaries
-Web Demo
+Web Demo -- CS 785 Advanced Binary Analysis w/ Machine Learning
 """
 import json
 import os
@@ -223,7 +223,9 @@ def render_sidebar(manager, loaded_models):
         st.markdown("---")
         st.markdown("### About")
         st.caption(
-            "Anonymous submission for CCS 2026.\n\n"
+            "CS 785 Advanced Binary Analysis w/ Machine Learning\n\n"
+            "Contributors: Anonymous Author, Anonymous Author, Anonymous Author\n\n"
+            "Reproducing and extending the DeBin with "
             "GNN-based deep learning for binary function name recovery."
         )
 

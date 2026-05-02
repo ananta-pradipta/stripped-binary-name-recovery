@@ -552,7 +552,7 @@ def main():
     use_knn = not args.no_knn
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    header("BFNR BINARY FUNCTION NAME RECOVERY — EVALUATION REPORT")
+    header("[course] BINARY FUNCTION NAME RECOVERY — EVALUATION REPORT")
     print(f"  Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"  Device: {device}")
     print(f"  Inference: {'k-NN hybrid (threshold=' + str(KNN_THRESHOLD) + ')' if use_knn else 'decoder only'}")

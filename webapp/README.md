@@ -3,7 +3,8 @@
 A Streamlit web application for predicting human-readable function names from
 stripped ELF binaries using graph neural networks.
 
-**Anonymous submission — CCS 2026**
+**Anonymous submission for CCS 2026**
+Anonymous Author, Anonymous Author, Anonymous Author
 
 
 ## Features

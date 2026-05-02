@@ -23,9 +23,6 @@ data/match_index_expanded.json
 data/match_index_trainval.json
 build_tmp/
 .archive/
-.claude/
-CLAUDE.md
-docs/project_context_for_claude_web.md
 paper/
 results/wulver_logs/
 results/exp*
@@ -36,6 +33,23 @@ results/exp*
 !data/bir/.gitkeep
 !data/external_calls/.gitkeep
 !data/string_refs/.gitkeep
+# Local-dev symlinks into ccs/src/models/ that re-export shared modules so
+# the namespace package resolves locally. On HPC these are real files.
+ccs/src/models/block_encoder.py
+ccs/src/models/external_encoder.py
+ccs/src/models/gated_fusion.py
+ccs/src/models/graph_encoder.py
+ccs/src/models/lm_decoder.py
+ccs/src/models/lora_decoder.py
+ccs/src/models/pretrain_heads.py
+# Same pattern for preprocessing/ — only build_dataset.py is the local override.
+ccs/src/preprocessing/align_labels.py
+ccs/src/preprocessing/build_text_dataset.py
+ccs/src/preprocessing/build_votes.py
+ccs/src/preprocessing/extract_external.py
+ccs/src/preprocessing/extract_strings.py
+ccs/src/preprocessing/match.py
+ccs/src/preprocessing/parse_bap.py
 demo/stripped/*
 demo/raw/*
 demo/results/expanded/predictions_*.json

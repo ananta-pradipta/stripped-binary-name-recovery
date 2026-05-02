@@ -17,7 +17,6 @@ rsync -avz --delete \
   --exclude '__pycache__/' \
   --exclude '*.pyc' \
   --exclude '.git/' \
-  --exclude '.claude/' \
   --exclude 'bfnr-env/' \
   --exclude 'demo/stripped/' \
   --exclude 'demo/raw/' \

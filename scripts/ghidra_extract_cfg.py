@@ -2,7 +2,7 @@
 # Run via: analyzeHeadless /tmp/ghidra_proj proj -import binary -postScript ghidra_extract_cfg.py output_dir
 #
 # Outputs one JSON per function in the same format as parse_bap.py
-# @category BFNR
+# @category [course]
 
 import json
 import os

@@ -27,7 +27,7 @@ case "${1:-submit}" in
         echo "Use 'bash scripts/evaluate_wulver.sh log' to view output"
         ;;
     status)
-        ssh <hpc-host> "squeue -u <hpc-user>"
+        ssh <hpc-host> "squeue -u <user>"
         ;;
     log)
         # Find the latest eval output file

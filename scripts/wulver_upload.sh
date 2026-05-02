@@ -1,14 +1,14 @@
 #!/bin/bash
-# Upload preprocessed data and code to Slurm HPC
+# Upload preprocessed data and code to HPC cluster
 # Uses SSH multiplexing — authenticate ONCE, all transfers reuse the connection.
 #
 # Usage:
 #   1. First, set up SSH config (one-time):
 #        mkdir -p ~/.ssh/sockets
 #        Add to ~/.ssh/config:
-#          Host wulver
+#          Host <hpc-host>
 #              HostName <hpc-host>
-#              User <hpc-user>
+#              User <user>
 #              ControlMaster auto
 #              ControlPath ~/.ssh/sockets/%r@%h-%p
 #              ControlPersist 2h
@@ -26,7 +26,7 @@
 set -e
 
 WULVER="<hpc-host>"  # Uses SSH config alias (multiplexed connection)
-REMOTE_BASE="<hpc-user-dir>"
+REMOTE_BASE="/course/2026/spring/cs/785/<account>/<user>"
 REMOTE_DIR="${REMOTE_BASE}/bfnr"
 LOCAL_DIR="$HOME/bfnr-project"
 TMP_DIR="/tmp/wulver_upload"
@@ -42,7 +42,7 @@ fi
 echo "SSH multiplexed connection active."
 echo ""
 
-echo "=== Uploading to Slurm HPC ==="
+echo "=== Uploading to HPC cluster ==="
 echo "Remote: ${REMOTE_DIR}"
 echo ""
 
@@ -160,4 +160,4 @@ echo "  # In the SSH terminal that's already open:"
 echo "  bash bfnr/scripts/wulver_setup.sh     # first time only"
 echo "  cd ${REMOTE_DIR}"
 echo "  sbatch scripts/wulver_train.sbatch"
-echo "  squeue -u <hpc-user>"
+echo "  squeue -u <user>"

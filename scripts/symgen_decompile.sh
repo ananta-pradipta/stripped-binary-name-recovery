@@ -5,9 +5,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-GHIDRA_HOME="<home>/ghidra"
+GHIDRA_HOME="~/ghidra"
 GHIDRA_HEADLESS="$GHIDRA_HOME/support/analyzeHeadless"
-SYMGEN_DIR="<home>/SymGen"
+SYMGEN_DIR="~/SymGen"
 PROJECT_DIR="/tmp/ghidra_project"
 OUTPUT_DIR="data/symgen_decomp"
 

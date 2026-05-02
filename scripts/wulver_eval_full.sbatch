@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --job-name=bfnr-eval
 #SBATCH --partition=course_gpu
-#SBATCH --account=<hpc-account>
+#SBATCH --account=2026-spring-cs-785-<account>-<user>
 #SBATCH --qos=course
 #SBATCH --gres=gpu:a100_10g:1
 #SBATCH --time=06:00:00

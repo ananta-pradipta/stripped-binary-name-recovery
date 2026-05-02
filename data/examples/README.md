@@ -1,4 +1,5 @@
-# Pipeline: Input/Output Examples for Every Step
+# CS 785 Pipeline: Input/Output Examples for Every Step
+## Group 1: Anonymous Author, Anonymous Author, Anonymous Author
 
 This package contains realistic example data showing the exact input and output format for each step in the function name recovery pipeline.
 

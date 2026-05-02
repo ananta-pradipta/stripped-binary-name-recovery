@@ -1,11 +1,11 @@
 #!/bin/bash
-# First-time setup on HPC (Slurm cluster)
+# First-time setup on HPC cluster
 # Run this AFTER uploading data with wulver_upload.sh
-# Run this ON the cluster (after SSH-ing in)
+# Run this ON HPC (after SSH-ing in)
 #
 # Usage: bash bfnr/scripts/wulver_setup.sh
 
-COURSE_DIR="<hpc-user-dir>"
+COURSE_DIR="/course/2026/spring/cs/785/<account>/<user>"
 cd ${COURSE_DIR}
 
 echo "=== Setting up Python environment on HPC ==="
