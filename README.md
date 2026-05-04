@@ -4,7 +4,7 @@
 [![PyTorch 2.5](https://img.shields.io/badge/pytorch-2.5+-ee4c2c.svg)](https://pytorch.org/)
 [![BAP 2.5](https://img.shields.io/badge/BAP-2.5.0-green.svg)](https://github.com/BinaryAnalysisPlatform/bap)
 
-> Anonymous artifact for CCS 2026 double-blind review.
+> NJIT: Ananta Dian Pradipta, Robert Blacha, Zhihao Lin, Haotian Zhang
 
 ---
 
@@ -130,8 +130,8 @@ stripped-binary-name-recovery/
 ## Quick Start
 
 ```bash
-# Clone the anonymous artifact
-# (anonymous.4open.science serves a read-only view during double-blind review)
+git clone https://github.com/ananta-pradipta/stripped-binary-name-recovery.git
+cd stripped-binary-name-recovery
 
 # Setup environment (installs BAP, PyTorch, dependencies)
 bash scripts/01_setup_environment.sh
