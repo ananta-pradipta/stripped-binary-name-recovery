@@ -436,10 +436,12 @@ def main():
         print(f"BPE vocab size (actual): {sp_model.get_piece_size()}")
     actual_name_vocab_size = sp_model.get_piece_size()
 
-    with open(cfg['data']['external_vocab_path']) as f:
-        ext_vocab_data = json.load(f)
-    actual_ext_vocab_size = ext_vocab_data['vocab_size']
-    print(f"External vocab size (actual): {actual_ext_vocab_size}")
+    dataset_format = cfg['data'].get('format', 'v1')
+    if dataset_format != 'v2':
+        with open(cfg['data']['external_vocab_path']) as f:
+            ext_vocab_data = json.load(f)
+        actual_ext_vocab_size = ext_vocab_data['vocab_size']
+        print(f"External vocab size (actual): {actual_ext_vocab_size}")
 
     # String refs (enabled via config)
     string_refs_dir = None
@@ -448,28 +450,52 @@ def main():
         string_refs_dir = 'data/string_refs'
         string_vocab_path = 'data/string_refs/string_vocab.json'
 
-    dataset = FunctionDataset(
-        graphs_dir=cfg['data']['graphs_dir'],
-        labels_dir=cfg['data']['labels_dir'],
-        external_calls_dir=cfg['data']['external_calls_dir'],
-        bpe_model_path=cfg['data']['bpe_model_path'],
-        external_vocab_path=cfg['data']['external_vocab_path'],
-        max_blocks=cfg['data']['max_blocks_per_function'],
-        max_tokens=cfg['data']['max_tokens_per_block'],
-        max_name_len=cfg['data']['max_name_length'],
-        votes_vocab_path=votes_vocab_path,
-        enrich_callees=args.enrich_callees,
-        callee_dropout=args.callee_dropout,
-        string_refs_dir=string_refs_dir,
-        string_vocab_path=string_vocab_path,
-    )
+    split_file = cfg['data'].get('split_file', 'data/split_assignments.json')
+    if dataset_format == 'v2':
+        # Dataset v2 (docs/DUALHEAD_HYDRA_PLAN.md): matcher-v2 index + graphs_v3 + string_refs_v2.
+        # Vocabularies (token / ext / string) are built from the TRAIN tier binaries only.
+        from src.preprocessing.dataset_v2 import FunctionDatasetV2
+        with open(split_file) as f:
+            _split = json.load(f)
+        _train_bins = set(_split['train'])
+        dataset = FunctionDatasetV2(
+            match_index_path=cfg['data'].get('match_index_path', 'data/match_index_v2.json'),
+            string_refs_dir=cfg['data'].get('string_refs_dir', 'data/string_refs_v2'),
+            votes_vocab_path=votes_vocab_path,
+            max_blocks=cfg['data']['max_blocks_per_function'],
+            max_tokens=cfg['data']['max_tokens_per_block'],
+            max_name_len=cfg['data']['max_name_length'],
+            min_tokens=cfg['data'].get('min_tokens', 1),
+            corpora=set(cfg['data']['corpora']) if cfg['data'].get('corpora') else None,
+            vocab_binaries=_train_bins,
+            max_token_vocab=cfg['data'].get('max_token_vocab', 3000),
+            max_ext_vocab=cfg['data'].get('max_ext_vocab', 5000),
+        )
+        actual_ext_vocab_size = len(dataset.ext_vocab)
+        print(f"External vocab size (v2, train-built): {actual_ext_vocab_size}")
+    else:
+        dataset = FunctionDataset(
+          graphs_dir=cfg['data']['graphs_dir'],
+          labels_dir=cfg['data']['labels_dir'],
+          external_calls_dir=cfg['data']['external_calls_dir'],
+          bpe_model_path=cfg['data']['bpe_model_path'],
+          external_vocab_path=cfg['data']['external_vocab_path'],
+          max_blocks=cfg['data']['max_blocks_per_function'],
+          max_tokens=cfg['data']['max_tokens_per_block'],
+          max_name_len=cfg['data']['max_name_length'],
+          votes_vocab_path=votes_vocab_path,
+          enrich_callees=args.enrich_callees,
+          callee_dropout=args.callee_dropout,
+          string_refs_dir=string_refs_dir,
+          string_vocab_path=string_vocab_path,
+        )
 
     if len(dataset) == 0:
         print("ERROR: Dataset is empty!")
         return
 
     train_idx, val_idx, test_idx = dataset.get_splits(
-        cfg['data']['train_split'], cfg['data']['val_split']
+        cfg['data']['train_split'], cfg['data']['val_split'], split_file=split_file,
     )
 
     if len(train_idx) == 0 or len(val_idx) == 0:

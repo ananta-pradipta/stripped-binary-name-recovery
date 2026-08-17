@@ -58,7 +58,7 @@ def split_name_to_subtokens(name: str) -> list:
     return tokens
 
 
-def build_votes_vocab(match_index_path: str, min_count: int = 2) -> dict:
+def build_votes_vocab(match_index_path: str, min_count: int = 2, restrict_binaries=None) -> dict:
     """Build vocabulary from function name sub-token votes.
 
     Args:
@@ -71,10 +71,16 @@ def build_votes_vocab(match_index_path: str, min_count: int = 2) -> dict:
     with open(match_index_path) as f:
         match_index = json.load(f)
 
-    # Count sub-token frequencies across all function names
+    # Count sub-token frequencies across function names.
+    # v1 index: dict path -> entry (all names).  v2 index (list of records): restrict to
+    # the binaries in `restrict_binaries` (the TRAIN split) so held-out sub-tokens never
+    # shape the vocabulary (dataset v2, B9).
     subtok_counter = Counter()
     all_names = set()
-    for entry in match_index.values():
+    entries = match_index.values() if isinstance(match_index, dict) else match_index
+    for entry in entries:
+        if restrict_binaries is not None and entry.get('binary') not in restrict_binaries:
+            continue
         name = entry['real_name']
         if name.startswith('sub_'):
             continue
@@ -210,11 +216,19 @@ def main():
     parser = argparse.ArgumentParser(description="Build votes tokenization vocabulary")
     parser.add_argument('--match-index', default='data/match_index.json')
     parser.add_argument('--output', default='data/votes_vocab.json')
+    parser.add_argument('--split', default=None, help='split file; only names of the listed tiers are used')
+    parser.add_argument('--tiers', nargs='*', default=['train'])
     parser.add_argument('--min-count', type=int, default=2,
                         help='Minimum sub-token frequency to include in vocab')
     args = parser.parse_args()
 
-    result = build_votes_vocab(args.match_index, args.min_count)
+    restrict = None
+    if args.split:
+        sp = json.load(open(args.split))
+        restrict = set(b for t in args.tiers for b in sp.get(t, []))
+        print(f"Restricting vocabulary to {len(restrict)} binaries from tiers {args.tiers}")
+    result = build_votes_vocab(args.match_index, args.min_count, restrict_binaries=restrict)
+    result['built_from'] = {'match_index': args.match_index, 'split': args.split, 'tiers': args.tiers}
 
     # Save
     with open(args.output, 'w') as f:
