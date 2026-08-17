@@ -498,6 +498,9 @@ def main():
         cfg['data']['train_split'], cfg['data']['val_split'], split_file=split_file,
     )
 
+    if len(val_idx) == 0 and getattr(dataset, 'val_xproj_idx', None):
+        print("NOTE: val_indist tier is empty; using val_xproj as the validation set")
+        val_idx = list(dataset.val_xproj_idx)
     if len(train_idx) == 0 or len(val_idx) == 0:
         print(f"ERROR: Empty split! Train: {len(train_idx)}, Val: {len(val_idx)}")
         return
