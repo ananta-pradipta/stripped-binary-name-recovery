@@ -227,6 +227,7 @@ def process(item, force, bap_timeout):
         # 4. bap
         if force or not (os.path.exists(bir_p) and os.path.exists(syms_p) and os.path.getsize(bir_p) > 0):
             cmd = ['bap', stripped, '--read-symbols-from=' + starts_p,
+                   '--print-bir-attr=address',  # real addresses on every term (matcher v2 / string refs)
                    '--dump=bir:' + bir_p, '--dump-symbols', '--dump-symbols-file=' + syms_p]
             try:
                 r = run(cmd, timeout=bap_timeout)
@@ -270,12 +271,19 @@ def main():
     ap.add_argument('--force', action='store_true')
     ap.add_argument('--bap-timeout', type=int, default=3600)
     ap.add_argument('--no-assert', action='store_true')
+    ap.add_argument('--min-mb', type=float, default=0.0, help='only debug ELFs >= this size (MB)')
+    ap.add_argument('--max-mb', type=float, default=1e9, help='only debug ELFs < this size (MB)')
     args = ap.parse_args()
     for d in (OUT_STRIP, OUT_LABELS, OUT_BIR):
         os.makedirs(d, exist_ok=True)
     items = discover(args.sources)
     if args.ids:
         want = set(args.ids); items = [it for it in items if it[0] in want]
+    def _mb(it):
+        p = it[2].split('  [')[0]
+        return os.path.getsize(p) / 1e6 if os.path.exists(p) else 0.0
+    items = [it for it in items if args.min_mb <= _mb(it) < args.max_mb]
+    items.sort(key=_mb, reverse=True)  # big ones first so the tail is short
     done = load_manifest()
     todo = [it for it in items if args.force or done.get(it[0], {}).get('rc') != '0'
             or not os.path.exists(os.path.join(OUT_BIR, it[0] + '.bir'))]
