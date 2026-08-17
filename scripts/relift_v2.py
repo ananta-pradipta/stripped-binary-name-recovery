@@ -273,6 +273,7 @@ def main():
     ap.add_argument('--bap-timeout', type=int, default=3600)
     ap.add_argument('--no-assert', action='store_true')
     ap.add_argument('--min-mb', type=float, default=0.0, help='only debug ELFs >= this size (MB)')
+    ap.add_argument('--ascending', action='store_true', help='smallest first (memory-limited hosts)')
     ap.add_argument('--max-mb', type=float, default=1e9, help='only debug ELFs < this size (MB)')
     args = ap.parse_args()
     for d in (OUT_STRIP, OUT_LABELS, OUT_BIR):
@@ -284,7 +285,7 @@ def main():
         p = it[2].split('  [')[0]
         return os.path.getsize(p) / 1e6 if os.path.exists(p) else 0.0
     items = [it for it in items if args.min_mb <= _mb(it) < args.max_mb]
-    items.sort(key=_mb, reverse=True)  # big ones first so the tail is short
+    items.sort(key=_mb, reverse=not args.ascending)  # big first (short tail) or small first (memory-limited)
     done = load_manifest()
     todo = [it for it in items if args.force or done.get(it[0], {}).get('rc') != '0'
             or not os.path.exists(os.path.join(OUT_BIR, it[0] + '.bir'))]
