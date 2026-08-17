@@ -527,6 +527,22 @@ def main():
         shuffle=False, collate_fn=collate_fn, num_workers=args.num_workers,
         persistent_workers=args.num_workers > 0,
     )
+    # Dataset v2: package-disjoint dev tier (val_xproj). Model selection uses it when
+    # data.select_on == 'val_xproj' (fixes the "validation not representative" defect:
+    # every learned threshold/gate previously tuned on in-distribution val failed on
+    # cross-project test). Both F1s are logged every epoch.
+    select_on = cfg['data'].get('select_on', 'val_indist')
+    val_xproj_idx = list(getattr(dataset, 'val_xproj_idx', []) or [])
+    val_xproj_loader = None
+    if val_xproj_idx:
+        val_xproj_loader = DataLoader(
+            Subset(dataset, val_xproj_idx), batch_size=cfg['training']['batch_size'],
+            shuffle=False, collate_fn=collate_fn, num_workers=args.num_workers,
+            persistent_workers=args.num_workers > 0,
+        )
+        print(f"val_xproj (package-disjoint dev): {len(val_xproj_idx)} functions; model selection on: {select_on}")
+    elif select_on == 'val_xproj':
+        raise RuntimeError("data.select_on == 'val_xproj' but the split has no val_xproj tier")
 
     # Override config with actual vocab sizes
     cfg['block_encoder']['token_vocab_size'] = len(dataset.token_vocab)
@@ -697,6 +713,13 @@ def main():
         dataset.training_mode = False  # Disable enrichment for validation
         val_loss, val_f1 = validate(model, val_loader, criterion, device, sp_model,
                                     use_amp=args.amp)
+        val_xproj_f1 = None
+        if val_xproj_loader is not None:
+            _, val_xproj_f1 = validate(model, val_xproj_loader, criterion, device, sp_model,
+                                       use_amp=args.amp)
+            print(f"  [val_indist F1 {val_f1:.4f} | val_xproj F1 {val_xproj_f1:.4f}]", end="")
+            if select_on == 'val_xproj':
+                val_f1 = val_xproj_f1
 
         scheduler.step()
 
