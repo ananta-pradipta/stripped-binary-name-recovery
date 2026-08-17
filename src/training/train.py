@@ -696,6 +696,8 @@ def main():
                 'config': cfg,
                 'token_vocab': dataset.token_vocab,
                 'ext_vocab': dataset.ext_vocab,
+                'split_sha256': getattr(dataset, 'split_sha256', None),
+                'split_schema': getattr(dataset, 'split_schema', None),
             }
             torch.save(_ckpt, os.path.join(ckpt_dir, args.save_name))
             print(f" ★ New best!")
@@ -712,6 +714,8 @@ def main():
                 'config': cfg,
                 'token_vocab': dataset.token_vocab,
                 'ext_vocab': dataset.ext_vocab,
+                'split_sha256': getattr(dataset, 'split_sha256', None),
+                'split_schema': getattr(dataset, 'split_schema', None),
             }, os.path.join(ckpt_dir, _latest_name))
         if not args.save_every_epoch and patience_counter >= patience:
             print(f"\nEarly stopping at epoch {epoch+1}")
