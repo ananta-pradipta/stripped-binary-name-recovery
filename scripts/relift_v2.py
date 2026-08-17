@@ -40,24 +40,48 @@ FIELDS = ['id', 'corpus', 'debug_elf', 'build_id', 'elf_type', 'n_labels', 'n_lo
 
 
 # --------------------------------------------------------------------------- sources
+def _is_elf_with_symtab(path):
+    try:
+        with open(path, 'rb') as fh:
+            if fh.read(4) != b'\x7fELF':
+                return False
+    except OSError:
+        return False
+    out = subprocess.run(['readelf', '-S', path], capture_output=True, text=True).stdout
+    return '.symtab' in out
+
+
+def _build_id_quiet(path):
+    out = subprocess.run(['readelf', '-n', path], capture_output=True, text=True).stdout
+    m = re.search(r'Build ID:\s*([0-9a-f]+)', out)
+    return m.group(1) if m else ''
+
+
 def discover(sources):
-    """Yield (id, corpus, debug_elf_path)."""
-    seen = set()
-    def emit(i, c, p):
-        if i in seen:
-            return
-        seen.add(i)
-        yield_list.append((i, c, p))
-    yield_list = []
+    """Return [(id, corpus, debug_elf_path)].
+
+    Several locations may hold a debug ELF for the same id (data/raw/<id>_sym,
+    data/raw/<id>, data/cross_project/debug/<id>, data/cross_project/candidates/<id>);
+    some of those files are libtool wrapper *scripts* (gettext, dico, libtool) and
+    some ids exist as two different builds (busybox, curl_O0).  Policy: keep only
+    real ELFs with a .symtab; among them prefer the one whose build-id matches an
+    existing shipped stripped ELF (data/stripped/<id>_stripped or
+    data/cross_project/stripped/<id>_stripped) so v2 stays comparable with the
+    old corpus; otherwise take the first candidate in the order above.
+    """
+    cands = {}   # id -> list of (corpus, path)
+    def add(i, c, p):
+        cands.setdefault(i, []).append((c, p))
     if 'main' in sources:
         d = 'data/raw'
         for f in sorted(os.listdir(d)):
             i = f[:-4] if f.endswith('_sym') else f
-            emit(i, 'local_main', os.path.join(d, f))
-        d = 'data/cross_project/debug'
-        if os.path.isdir(d):
-            for f in sorted(os.listdir(d)):
-                emit(f, 'local_xproj', os.path.join(d, f))
+            add(i, 'local_main', os.path.join(d, f))
+        for d, c in (('data/cross_project/debug', 'local_xproj'),
+                     ('data/cross_project/candidates', 'local_xproj_cand')):
+            if os.path.isdir(d):
+                for f in sorted(os.listdir(d)):
+                    add(f, c, os.path.join(d, f))
     for src, corpus in (('ftdomains', 'ftdomains'), ('ftdomains2', 'ftdomains2'),
                         ('clang_train', 'clang_train'), ('clang_o1o3', 'clang_o1o3')):
         if src in sources or ('clang' in sources and src.startswith('clang')):
@@ -65,8 +89,23 @@ def discover(sources):
             if os.path.isdir(d):
                 for f in sorted(os.listdir(d)):
                     if f.endswith('.debug'):
-                        emit(f[:-6], corpus, os.path.join(d, f))
-    return yield_list
+                        add(f[:-6], corpus, os.path.join(d, f))
+    out = []
+    for i in sorted(cands):
+        valid = [(c, p) for c, p in cands[i] if _is_elf_with_symtab(p)]
+        if not valid:
+            out.append((i, cands[i][0][0], cands[i][0][1] + '  [NO_VALID_DEBUG_ELF]'))
+            continue
+        chosen = valid[0]
+        if len(valid) > 1:
+            shipped = [q for q in (f'data/stripped/{i}_stripped', f'data/stripped/{i}',
+                                   f'data/cross_project/stripped/{i}_stripped') if os.path.exists(q)]
+            shipped_ids = {_build_id_quiet(q) for q in shipped}
+            for c, p in valid:
+                if _build_id_quiet(p) in shipped_ids:
+                    chosen = (c, p); break
+        out.append((i, chosen[0], chosen[1]))
+    return out
 
 
 # --------------------------------------------------------------------------- helpers
@@ -152,6 +191,8 @@ def process(item, force, bap_timeout):
     starts_p = os.path.join(OUT_BIR, bid + '.starts')
     bir_p = os.path.join(OUT_BIR, bid + '.bir')
     syms_p = os.path.join(OUT_BIR, bid + '.syms')
+    if debug.endswith('[NO_VALID_DEBUG_ELF]'):
+        row.update(rc='NOELF', note='no valid debug ELF (libtool wrapper script or missing .symtab)', seconds=0); return row
     try:
         # 1. strip
         if force or not os.path.exists(stripped):
@@ -170,7 +211,7 @@ def process(item, force, bap_timeout):
         row['n_labels'] = len(funcs)
         row['n_local'] = sum(1 for f in funcs.values() if f['binding'] == 'LOCAL')
         row['n_dynsym'] = sum(1 for f in funcs.values() if f['in_dynsym'])
-        json.dump({'binary': bid, 'corpus': corpus, 'build_id': row['build_id'], 'elf_type': row['elf_type'],
+        json.dump({'binary': bid, 'corpus': corpus, 'debug_elf': debug, 'build_id': row['build_id'], 'elf_type': row['elf_type'],
                    'label_source': 'readelf -s .symtab FUNC (debug ELF); in_dynsym from stripped .dynsym',
                    'functions': {n: {'addr': hex(f['addr']), 'size': f['size'], 'binding': f['binding'],
                                      'section': f['section'], 'in_dynsym': f['in_dynsym']}
