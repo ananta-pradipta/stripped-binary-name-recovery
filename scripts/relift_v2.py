@@ -78,7 +78,8 @@ def discover(sources):
             i = f[:-4] if f.endswith('_sym') else f
             add(i, 'local_main', os.path.join(d, f))
         for d, c in (('data/cross_project/debug', 'local_xproj'),
-                     ('data/cross_project/candidates', 'local_xproj_cand')):
+                     ('data/cross_project/candidates', 'local_xproj_cand'),
+                     ('data/raw_wulver', 'wulver')):
             if os.path.isdir(d):
                 for f in sorted(os.listdir(d)):
                     add(f, c, os.path.join(d, f))
