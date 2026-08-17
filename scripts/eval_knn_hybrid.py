@@ -47,36 +47,7 @@ def hextester(s):
         return False
 
 
-def collate_fn(batch):
-    """Custom collate for variable-length sequences."""
-    keys = batch[0].keys()
-    result = {}
-    for k in keys:
-        if isinstance(batch[0][k], torch.Tensor):
-            if k == 'edge_index':
-                edge_lists = []
-                offset = 0
-                for sample in batch:
-                    ei = sample[k].clone()
-                    ei = ei + offset
-                    edge_lists.append(ei)
-                    offset += sample['num_blocks']
-                result[k] = torch.cat(edge_lists, dim=1)
-            elif k in ('decoder_input', 'decoder_target', 'ext_call_ids'):
-                max_len = max(s[k].size(0) for s in batch)
-                padded = torch.zeros(len(batch), max_len, dtype=batch[0][k].dtype)
-                for i, s in enumerate(batch):
-                    padded[i, :s[k].size(0)] = s[k]
-                result[k] = padded
-            else:
-                result[k] = torch.stack([s[k] for s in batch])
-        elif k == 'block_features':
-            result[k] = torch.stack([s[k] for s in batch])
-        elif k == 'num_blocks':
-            result[k] = [s[k] for s in batch]
-        else:
-            result[k] = [s[k] for s in batch]
-    return result
+from src.training.collate import collate_fn  # canonical (B1 fix)
 
 
 def extract_embeddings_and_predict(model, loader, device, sp_model, desc="",
