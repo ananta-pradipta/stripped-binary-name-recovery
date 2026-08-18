@@ -4002,3 +4002,10 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - FP intrinsics were CALL_intrinsic; `syscall` was CALL_interrupt.
 - 17 "debug ELFs" in data/raw are libtool wrapper scripts (all 12 gettext ids, dico, libtool).
 **Validation on the first 45 re-lifted binaries:** parser byte-deterministic; median per-binary label coverage 0.990 (0 < 0.90); 5,956 thunk duplicates dropped with aliases kept; 22.8% of functions carry ≥1 .rodata string; smoke training run through 1 epoch OK.
+
+## 2026-08-18 — Dataset v2 relift COMPLETE + preprocessing moved to Wulver CPU
+- **1,890/1,890 binaries lifted, rc=0, zero empty .bir** (manifest: 1,895 unique ids; 5 permanent NOELF = libtool wrapper scripts). Median label coverage ≥0.98; low-cov tail = tiny binaries (peekfd, tdbrestore) + asm-heavy pkgs (libsodium/pcre2 clang, cov 0.975-0.979).
+- **All BAP preprocessing now on Wulver CPU nodes** (general partition, ~100 SU total; recipe + pitfalls in memory `project_wulver_bap_container.md`). Container lift validated **byte-identical** (md5 .bir/.starts/.syms/labels) vs local on acct_ac_O0, libsodium_sign_clang_O1, pcre2_pcre2grep_clang_O3.
+- Jobs: 1185664 (clang 618, 1.3h), 1185684 (ftdomains 86), 1185685 (main remainder 19 — fossil_O0 7.6min cov 0.9996, openssl_O0 11min cov 0.9995), 1185701 (manifest heal + effect check, PASS).
+- Canonical dataset home: `/project/hz79/_shared/cs785/relift_ws/data/`; local `data/` is a mirror (synced both ways 2026-08-18).
+- Next: split assignment for new pkgs (nginx family → holdout, GNU *2 siblings, openssl 57K fns, sbase candidates), then parse/graph build (Wulver CPU).
