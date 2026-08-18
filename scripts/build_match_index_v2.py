@@ -99,18 +99,32 @@ def main():
     ap.add_argument('--out', default='data/match_index_v2.json')
     ap.add_argument('--report', default='data/match_index_v2_report.tsv')
     ap.add_argument('--ids', nargs='*')
+    ap.add_argument('--workers', type=int, default=1)  # per-record graph reads dominate; parallelism is I/O relief on GPFS
     args = ap.parse_args()
     ids = sorted(f[:-11] for f in os.listdir(GRAPHS) if f.endswith('.index.json'))
     if args.ids:
         ids = [i for i in ids if i in set(args.ids)]
     all_recs = []; reps = []
-    for k, bid in enumerate(ids, 1):
-        recs, rep = process(bid)
-        if recs is None:
-            continue
-        all_recs.extend(recs); reps.append(rep)
-        if k % 50 == 0:
-            print(f'{k}/{len(ids)} binaries, {len(all_recs)} records', flush=True)
+    if args.workers > 1:
+        from concurrent.futures import ProcessPoolExecutor
+        pairs = {}
+        with ProcessPoolExecutor(args.workers) as ex:
+            for k, (bid, (recs, rep)) in enumerate(zip(ids, ex.map(process, ids, chunksize=4)), 1):
+                if recs is not None:
+                    pairs[bid] = (recs, rep)
+                if k % 50 == 0:
+                    print(f'{k}/{len(ids)} binaries', flush=True)
+        for bid in ids:  # deterministic order regardless of worker scheduling
+            if bid in pairs:
+                all_recs.extend(pairs[bid][0]); reps.append(pairs[bid][1])
+    else:
+        for k, bid in enumerate(ids, 1):
+            recs, rep = process(bid)
+            if recs is None:
+                continue
+            all_recs.extend(recs); reps.append(rep)
+            if k % 50 == 0:
+                print(f'{k}/{len(ids)} binaries, {len(all_recs)} records', flush=True)
     json.dump(all_recs, open(args.out, 'w'))
     with open(args.report, 'w', newline='') as fh:
         w = csv.DictWriter(fh, fieldnames=list(reps[0].keys()), delimiter='\t'); w.writeheader(); w.writerows(reps)
