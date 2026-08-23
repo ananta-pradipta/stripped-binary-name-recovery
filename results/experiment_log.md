@@ -4017,3 +4017,11 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Votes vocab v2 (train tier only): 8,385 sub-tokens. Split sha256 f0b97bd53277… recorded in checkpoints.
 - Smoke (CPU job 1192658, 7 binaries, 1 epoch): full v2 path OK, policy stats printed, checkpoint written.
 - **P2 launched: Wulver job 1192671** — `configs/dualhead_v2_large.yaml` (CCS architecture unchanged, 30.4M params), seed 42, AMP, select on val_xproj, 50 epochs, patience 20. Output `dh2/slurm/p2_1192671.out`, checkpoint `dh2/checkpoints/p2_ccsarch_v2_seed42.pt`. Code git 9163aa1b.
+
+## 2026-08-23 — P2 RESULT (honest baseline, CCS arch unchanged on dataset v2; Wulver 1192671/1192722)
+- Train 190,151 deduped fns, 33.7M params, 50 ep (best ep 43), 339 s/ep. **Val F1 0.114** (greedy, 10 pkgs, 10,617 scored).
+- **TEST (268,178 scored, 50 pkgs, greedy):** micro F1 **0.080** / EM 5.2%; per-package macro F1 **0.306** / EM 24.9%.
+  - FT (27 pkgs, 223K fns): micro 0.019 / macro 0.051. NCT (23 pkgs, 45K fns): micro 0.383 / macro 0.605.
+  - Strata: seen-name (name ∈ train) F1 **0.526** n=33,500; novel-name F1 **0.016**, EM 0.000, n=234,678 (87.5% of scored test).
+  - Pred uniqueness: val 0.67, test 0.20 (FT collapses onto a few names). bdb+icu+mbedtls = 175K of 223K FT fns → micro is their number.
+- Interpretation: recognizer confirmed at scale (0.53 vs 0.016); the v2 protocol exposes it directly. Old 0.738 headline ≈ seen-name stratum. Files: results/dualhead_v2/p2_eval_greedy.json, p2_preds_greedy.tsv; Wulver ckpt dh2/checkpoints/p2_ccsarch_v2_seed42.pt.
