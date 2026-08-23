@@ -501,6 +501,12 @@ def main():
     if len(val_idx) == 0 and getattr(dataset, 'val_xproj_idx', None):
         print("NOTE: val_indist tier is empty; using val_xproj as the validation set")
         val_idx = list(dataset.val_xproj_idx)
+    if cfg['data'].get('split_policy') == 'v3':
+        if not hasattr(dataset, 'apply_split_policy'):
+            raise RuntimeError("data.split_policy v3 requires the v2 dataset format")
+        train_idx, val_idx, test_idx = dataset.apply_split_policy(train_idx, val_idx, test_idx)
+        if getattr(dataset, 'val_xproj_idx', None):
+            dataset.val_xproj_idx = list(val_idx) if set(val_idx) <= set(dataset.val_xproj_idx) else dataset.val_xproj_idx
     if len(train_idx) == 0 or len(val_idx) == 0:
         print(f"ERROR: Empty split! Train: {len(train_idx)}, Val: {len(val_idx)}")
         return

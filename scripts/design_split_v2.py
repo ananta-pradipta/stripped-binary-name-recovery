@@ -11,17 +11,19 @@ Output: data/split_v2.json  (schema v2, consumed by FunctionDataset.get_splits):
 Assignment unit = PROGRAM = (package, tool): all optimisation levels of a program move
 together (otherwise O0/O2 builds of the same source leak across splits).
 
-Tiers
-  train        : programs of training packages
-  val_indist   : held-out programs of training packages   (~VAL_INDIST_FRAC of train fns)
-  test         : held-out programs of training packages   (~TEST_INDIST_FRAC)
-  val_xproj    : whole packages, disjoint from train AND from xproject; regime-mixed
-                 (this is the dev set every threshold / router / early-stopping uses)
-  xproject     : whole packages, the reported cross-project test; each package tagged with a
-                 regime: NCT (near-clone: version/fork of a training package, family overlap
-                 >= NCT_NAME_OVERLAP) or FT (far transfer)
-  excluded     : duplicate builds (B5), programs with < MIN_FNS functions, ids without labels,
-                 anything the caller lists in EXCLUDE
+Tiers (policy v3, agreed 2026-08-23: three package-disjoint tiers, no in-distribution eval)
+  train        : all binaries of training package families
+  val_xproj    : whole packages, disjoint from train AND test — the ONLY dev set (model
+                 selection, thresholds, router). Written under the v2 key `val_xproj`;
+                 `val_indist` is emitted EMPTY so the v2 loader falls back to val_xproj.
+  test         : whole held-out packages = former xproject (FT + NCT) + the reserve pool.
+                 Each package carries a regime tag in meta.test_regime: NCT (shares a
+                 family with a training package) or FT (far transfer). One test set,
+                 reported as one headline + two regime sub-rows.
+  excluded     : duplicate builds (B5), binaries with < MIN_FNS functions, EXCLUDE_PKGS
+Record-level policy (applied by FunctionDatasetV2.apply_split_policy, stats in meta.policy):
+  train  : one sample per (tok_hash, name)
+  val/test: drop samples whose tok_hash occurs in train; drop in_dynsym (symbol-visible)
 
 Families: packages whose function-name sets overlap >= FAMILY_OVERLAP (Jaccard on names of
 functions with >= 5 tokens) are one family (e.g. coreutils/coreutils2/3/4, nginx/nginx118/
@@ -45,13 +47,18 @@ XPROJECT_FT = ['dash', 'gettext', 'psmisc', 'recutils',            # CCS far-tra
 XPROJECT_NCT = ['nginx118', 'angie', 'tengine', 'openresty', 'nginx114', 'nginx126',
                 'gawk2', 'grep2', 'sed2', 'gzip2', 'tar2', 'units2', 'which2', 'patch2',
                 'findutils2', 'diffutils2', 'inetutils2', 'coreutils4']
+XPROJECT_RESERVE = ['atop', 'bdb', 'bsdtar', 'byacc', 'diffutils3', 'entr', 'file', 'gdbm',
+                    'gperf2', 'icu', 'lsof', 'mawk', 'mksh', 'mutt', 'procps', 'pv', 'sbase',
+                    'sysstat', 'tcsh', 'tdb']                        # 2026-08 Wulver harvest, never trained on
 VAL_XPROJ = ['rush', 'cppi', 'direvent', 'csplit2', 'wdiff', 'spell',   # small FT-like
              'coreutils3',                                              # near-clone of coreutils (version)
              'zstd', 'tig', 'iotop']                                    # non-GNU domains
 EXCLUDE_PKGS = ['libtool', 'combinatorics']
-VAL_INDIST_FRAC, TEST_INDIST_FRAC = 0.05, 0.10
 FAMILY_OVERLAP = 0.35
-MIN_FNS = 20
+NCT_NAME_OVERLAP = 60.0   # % verbatim-name overlap with train at/above which a held-out package is NCT
+UBIQ_PKGS = 3          # a name in >= this many packages is 'ubiquitous' and ignored for family detection
+MIN_FNS = 20          # applies to train-pool binaries; held-out binaries need >= MIN_FNS_HELDOUT
+MIN_FNS_HELDOUT = 5
 SEED = 20260817
 
 
@@ -113,7 +120,8 @@ def main():
                 dup_excluded.add(b)
             else:
                 kept_hashes.append(hs)
-    small = {b for b in bins if len(by_bin[b]) < MIN_FNS}
+    heldout_pkgs = set(XPROJECT_FT) | set(XPROJECT_NCT) | set(XPROJECT_RESERVE) | set(VAL_XPROJ)
+    small = {b for b in bins if len(by_bin[b]) < (MIN_FNS_HELDOUT if pkg_of(b) in heldout_pkgs else MIN_FNS)}
     excluded = set(dup_excluded) | small | {b for b in bins if pkg_of(b) in EXCLUDE_PKGS}
     live = [b for b in bins if b not in excluded]
 
@@ -124,6 +132,12 @@ def main():
             if r['n_tokens'] >= 5:
                 pkg_names[pkg_of(b)].add(r['real_name'])
     pkgs = sorted(pkg_names)
+    # names shared by >= UBIQ_PKGS packages (gnulib/libc-style helpers) must not define families:
+    # otherwise every gnulib user chains into one 40-package family. Their leakage is still
+    # measured per package in the leakage table (verbatim-name %).
+    name_pkg_count = Counter(n for p in pkgs for n in pkg_names[p])
+    ubiquitous = {n for n, c in name_pkg_count.items() if c >= UBIQ_PKGS}
+    pkg_names = {p: pkg_names[p] - ubiquitous for p in pkgs}
     parent = {p: p for p in pkgs}
     def find(p):
         while parent[p] != p:
@@ -146,7 +160,7 @@ def main():
 
     # ---- roles ---------------------------------------------------------------------------
     role = {}
-    ft = set(XPROJECT_FT); nct = set(XPROJECT_NCT); vx = set(VAL_XPROJ)
+    ft = set(XPROJECT_FT) | set(XPROJECT_RESERVE); nct = set(XPROJECT_NCT); vx = set(VAL_XPROJ)
     for p in pkgs:
         if p in ft:
             role[p] = 'xproject_FT'
@@ -166,41 +180,15 @@ def main():
             for m in members:
                 if role[m] == 'xproject_FT':
                     role[m] = 'xproject_NCT'
-        if 'val_xproj' in roles and 'xproject_FT' in roles:
-            warnings.append(f'family {members}: val_xproj and xproject_FT in one family')
+        if 'val_xproj' in roles and ('xproject_FT' in roles or 'xproject_NCT' in roles):
+            warnings.append(f'family {members}: val_xproj shares a family with a test package')
 
-    # ---- in-distribution split of the train pool by program --------------------------------
-    train_progs = sorted({program_of(b) for b in live if role[pkg_of(b)] == 'train_pool'})
-    # stratify by package: shuffle programs within package, take last k% for val/test
-    prog_by_pkg = defaultdict(list)
-    for pr in train_progs:
-        prog_by_pkg[pkg_of(pr)].append(pr)
-    val_progs, test_progs = set(), set()
-    n_fn = lambda pr: sum(len(by_bin[b]) for b in prog_bins[pr] if b in set(live))
-    for p, prs in sorted(prog_by_pkg.items()):
-        prs = sorted(prs); random.shuffle(prs)
-        if len(prs) < 3:
-            continue           # single-program packages stay entirely in train
-        tot = sum(n_fn(pr) for pr in prs)
-        acc = 0
-        for pr in prs:
-            if acc < tot * TEST_INDIST_FRAC:
-                test_progs.add(pr)
-            elif acc < tot * (TEST_INDIST_FRAC + VAL_INDIST_FRAC):
-                val_progs.add(pr)
-            else:
-                break
-            acc += n_fn(pr)
-    split = {'train': [], 'val_indist': [], 'val_xproj': [], 'test': [], 'xproject': [], 'excluded': sorted(excluded)}
+    # ---- three package-disjoint tiers (v2 loader schema; val_indist / xproject empty) -----
+    split = {'train': [], 'val_indist': [], 'val_xproj': [], 'test': [], 'xproject': [],
+             'excluded': sorted(excluded)}
     for b in live:
-        p, pr = pkg_of(b), program_of(b)
-        r = role[p]
-        if r == 'train_pool':
-            split['test' if pr in test_progs else 'val_indist' if pr in val_progs else 'train'].append(b)
-        elif r == 'val_xproj':
-            split['val_xproj'].append(b)
-        else:
-            split['xproject'].append(b)
+        r = role[pkg_of(b)]
+        split['train' if r == 'train_pool' else 'val_xproj' if r == 'val_xproj' else 'test'].append(b)
 
     # ---- leakage table -------------------------------------------------------------------
     train_names, train_hashes, train_name_hash = set(), set(), set()
@@ -223,14 +211,39 @@ def main():
                 'name_and_body_dup_pct': round(100 * nb / max(1, n), 1),
                 'in_dynsym_pct': round(100 * dyn / max(1, n), 1)}
     tiers = {}
-    for tier in ('val_indist', 'test', 'val_xproj', 'xproject'):
+    for tier in ('val_xproj', 'test'):
         per_pkg = defaultdict(list)
         for b in split[tier]:
             per_pkg[pkg_of(b)].append(b)
-        tiers[tier] = {p: dict(leak(bl), regime=role[p].replace('xproject_', '') if tier == 'xproject' else tier)
+        tiers[tier] = {p: dict(leak(bl), regime=role[p].replace('xproject_', '') if tier == 'test' else
+                               ('NCT' if any(p in m for m in families.values()) else 'FT'))
                        for p, bl in sorted(per_pkg.items())}
+    # data-driven regime: a package whose names are mostly already training names is a
+    # near-clone regardless of family detection (catches single-binary siblings, e.g. diffutils3)
+    for tier in tiers.values():
+        for p, d in tier.items():
+            if d['regime'] == 'FT' and d['verbatim_name_pct'] >= NCT_NAME_OVERLAP:
+                d['regime'] = 'NCT'; warnings.append(f'{p}: verbatim-name {d["verbatim_name_pct"]}% >= {NCT_NAME_OVERLAP} -> NCT')
+    test_regime = {p: d['regime'] for p, d in tiers['test'].items()}
+    # record-level policy preview (the loader applies the same rules; numbers must agree)
+    seen = set(); n_train = 0; n_train_kept = 0
+    all_train_hashes = set()
+    for b in split['train']:
+        for r in by_bin[b]:
+            n_train += 1; all_train_hashes.add(r['tok_hash'])
+            k = (r['tok_hash'], r['real_name'])
+            if k not in seen:
+                seen.add(k); n_train_kept += 1
+    policy = {'train_raw': n_train, 'train_dedup_hash_name': n_train_kept}
+    for tier in ('val_xproj', 'test'):
+        rs = [r for b in split[tier] for r in by_bin[b]]
+        body = sum(1 for r in rs if r['tok_hash'] in all_train_hashes)
+        dyn = sum(1 for r in rs if r.get('in_dynsym') and r['tok_hash'] not in all_train_hashes)
+        policy[tier] = {'raw': len(rs), 'drop_body_in_train': body, 'drop_in_dynsym': dyn,
+                        'scored': len(rs) - body - dyn}
 
-    meta = {'seed': SEED, 'families': families, 'family_pairs': fam_pairs, 'roles': role,
+    meta = {'schema': 'v2', 'policy_version': 'v3-2026-08-23', 'seed': SEED, 'families': families,
+            'family_pairs': fam_pairs, 'roles': role, 'test_regime': test_regime, 'policy': policy,
             'warnings': warnings, 'n_dup_excluded': len(dup_excluded), 'n_small_excluded': len(small),
             'tiers': tiers,
             'counts': {k: {'binaries': len(v), 'functions': sum(len(by_bin[b]) for b in v)} for k, v in split.items()}}
@@ -249,12 +262,13 @@ def main():
         L.append(f'- {mem}')
     if warnings:
         L += ['', '## Warnings'] + [f'- {w}' for w in warnings]
-    for tier in ('xproject', 'val_xproj', 'test', 'val_indist'):
-        L += ['', f'## {tier} — leakage table (vs train)', '',
+    L += ['', '## Record-level policy (train dedup; eval drops body-in-train and in_dynsym)', '', '```', json.dumps(policy, indent=1), '```']
+    for tier in ('test', 'val_xproj'):
+        L += ['', f'## {tier} — leakage table (vs train, before record-level drops)', '',
               '| package | regime | bins | fns | verbatim-name % | body-dup (>=10 tok) % | name+body dup % | in_dynsym % |', '|---|---|---|---|---|---|---|---|']
         for p, d in tiers[tier].items():
             L.append(f"| {p} | {d['regime']} | {d['n_bins']} | {d['n_fns']} | {d['verbatim_name_pct']} | {d['body_dup_ge10_pct']} | {d['name_and_body_dup_pct']} | {d['in_dynsym_pct']} |")
-    os.makedirs(os.path.dirname(args.card), exist_ok=True)
+    os.makedirs(os.path.dirname(args.card) or '.', exist_ok=True)
     open(args.card, 'w').write('\n'.join(L) + '\n')
     print(json.dumps(meta['counts'], indent=1))
     for w in warnings:

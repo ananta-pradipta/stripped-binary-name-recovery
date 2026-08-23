@@ -228,6 +228,49 @@ class FunctionDatasetV2(FunctionDataset):
                   f"strings on {len(self.string_refs)} fns; in_dynsym {sum(s['in_dynsym'] for s in self.samples)}; "
                   f"filtered {dict(self.filter_stats)}")
 
+    # record-level split policy (v3, 2026-08-23) --------------------------------------------
+    def apply_split_policy(self, train_idx, val_idx, test_idx, dedup_train=True,
+                           drop_body_in_train=True, drop_in_dynsym=True, quiet=False):
+        """Apply the dataset-v2 record-level policy on top of the binary-level split.
+
+        train   : keep one sample per (tok_hash, name)   [dedup_train]
+        val/test: drop samples whose tok_hash occurs anywhere in train (byte-identical
+                  body already supervised)                [drop_body_in_train]
+                  drop in_dynsym samples (name is visible in the stripped ELF, so it is
+                  not a prediction target)                [drop_in_dynsym]
+        Dropped eval samples are kept in self.policy_dropped[tier] so the "seen-body" and
+        "symbol-visible" strata can still be reported separately. Stats in self.policy_stats.
+        """
+        S = self.samples
+        train_hashes = {S[i]['tok_hash'] for i in train_idx}
+        stats = {'train_raw': len(train_idx)}
+        if dedup_train:
+            seen, kept = set(), []
+            for i in train_idx:
+                k = (S[i]['tok_hash'], S[i]['name'])
+                if k not in seen:
+                    seen.add(k); kept.append(i)
+            train_idx = kept
+        stats['train_kept'] = len(train_idx)
+        self.policy_dropped = {}
+        out = []
+        for tier, idx in (('val', val_idx), ('test', test_idx)):
+            keep, body, dyn = [], [], []
+            for i in idx:
+                if drop_body_in_train and S[i]['tok_hash'] in train_hashes:
+                    body.append(i)
+                elif drop_in_dynsym and S[i]['in_dynsym']:
+                    dyn.append(i)
+                else:
+                    keep.append(i)
+            self.policy_dropped[tier] = {'body_in_train': body, 'in_dynsym': dyn}
+            stats[tier] = {'raw': len(idx), 'drop_body_in_train': len(body), 'drop_in_dynsym': len(dyn), 'scored': len(keep)}
+            out.append(keep)
+        self.policy_stats = stats
+        if not quiet:
+            print(f"split policy v3: {stats}")
+        return train_idx, out[0], out[1]
+
     # thunk-alias aware signature lookups ---------------------------------------------------
     def _lookup_graph(self, binary, name):
         g = self._all_graphs.get((binary, name))
