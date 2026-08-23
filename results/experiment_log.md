@@ -4009,3 +4009,11 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Jobs: 1185664 (clang 618, 1.3h), 1185684 (ftdomains 86), 1185685 (main remainder 19 — fossil_O0 7.6min cov 0.9996, openssl_O0 11min cov 0.9995), 1185701 (manifest heal + effect check, PASS).
 - Canonical dataset home: `/project/hz79/_shared/cs785/relift_ws/data/`; local `data/` is a mirror (synced both ways 2026-08-18).
 - Next: split assignment for new pkgs (nginx family → holdout, GNU *2 siblings, openssl 57K fns, sbase candidates), then parse/graph build (Wulver CPU).
+
+## 2026-08-23 — Dataset v2 split policy v3 (agreed on Discord) + P2 launch
+- Policy: three package-disjoint tiers (train / val = 10 whole pkgs / test = 33 whole pkgs, former xproject + reserve pool merged). No in-distribution val/test. Unit = package family (name-overlap ≥0.35 on non-ubiquitous names; names in ≥3 pkgs ignored — otherwise gnulib chained 41 pkgs into one family). Regime tag per test pkg: NCT if family-linked to train OR verbatim-name overlap ≥60% (moved psmisc 64%, diffutils3 98%, cppi 95% to NCT); else FT.
+- Record-level policy (`FunctionDatasetV2.apply_split_policy`, `data.split_policy: v3`): train one sample per (tok_hash,name); val/test drop tok_hash∈train and in_dynsym (kept as strata).
+- Measured (Wulver job 1192654, `docs/DATASET_V2_CARD.md`): train 997 bins 434,651 → 190,151 after dedup; val 104 bins 21,982 → 10,617 scored; test 611 bins 362,912 → 268,178 scored (81,988 body-in-train + 12,746 exported dropped). Test regimes: FT 27 pkgs / 263,113 raw fns (name overlap 0.2–35%), NCT 24 pkgs / 99,799 (42–100%). bdb+icu = 44% of raw test → report per-package macro-F1 alongside micro.
+- Votes vocab v2 (train tier only): 8,385 sub-tokens. Split sha256 f0b97bd53277… recorded in checkpoints.
+- Smoke (CPU job 1192658, 7 binaries, 1 epoch): full v2 path OK, policy stats printed, checkpoint written.
+- **P2 launched: Wulver job 1192671** — `configs/dualhead_v2_large.yaml` (CCS architecture unchanged, 30.4M params), seed 42, AMP, select on val_xproj, 50 epochs, patience 20. Output `dh2/slurm/p2_1192671.out`, checkpoint `dh2/checkpoints/p2_ccsarch_v2_seed42.pt`. Code git 9163aa1b.
