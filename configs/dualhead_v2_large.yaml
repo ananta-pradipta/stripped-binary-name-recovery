@@ -13,6 +13,7 @@ data:
   split_file: data/split_v2.json
   select_on: val_xproj
   split_policy: v3
+  cache_path: data_cache/corpus_v2.pkl
   corpora: null
   min_tokens: 1
   max_token_vocab: 3000

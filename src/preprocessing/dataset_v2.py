@@ -60,6 +60,7 @@ class FunctionDatasetV2(FunctionDataset):
                  max_ext_vocab: int = 5000,
                  max_string_vocab: int = 5000,
                  vocab_binaries: Optional[set] = None,
+                 cache_path: Optional[str] = None,
                  quiet: bool = False):
         # NOTE: deliberately not calling FunctionDataset.__init__ (legacy corpus loader).
         self.max_blocks = max_blocks
@@ -84,7 +85,44 @@ class FunctionDatasetV2(FunctionDataset):
         else:
             raise ValueError('need votes_vocab_path or bpe_model_path')
 
-        # ---- records
+        # ---- parsed-corpus cache (graph loading from GPFS took ~2.5 h for 875K files on Wulver)
+        import pickle, hashlib
+        cache_key = None
+        if cache_path and only_binaries is None and not exclude_binaries:
+            st = os.stat(match_index_path)
+            cache_key = hashlib.sha256(f"{os.path.abspath(match_index_path)}|{st.st_size}|{int(st.st_mtime)}|"
+                                       f"{min_tokens}|{sorted(corpora) if corpora else None}|v1".encode()).hexdigest()[:16]
+        if cache_key and os.path.exists(cache_path):
+            with open(cache_path, 'rb') as fh:
+                blob = pickle.load(fh)
+            if blob.get('key') == cache_key:
+                for k, v in blob['state'].items():
+                    setattr(self, k, v)
+                ext_counter = blob['ext_counter']
+                if not quiet:
+                    print(f"DatasetV2: loaded parsed corpus from cache {cache_path} (key {cache_key})")
+            else:
+                print(f"DatasetV2: cache key mismatch ({blob.get('key')} != {cache_key}); reloading from files")
+                cache_key, blob = cache_key, None
+        else:
+            blob = None
+        if blob is None:
+            ext_counter = self._load_from_files(match_index_path, corpora, only_binaries, exclude_binaries, min_tokens)
+            if cache_key:
+                state = {k: getattr(self, k) for k in ('records', '_all_graphs', '_graphs_by_addr', 'ext_calls',
+                                                       'samples', 'token_counter', 'filter_stats', '_callers',
+                                                       '_binary_ext_calls')}
+                tmp = cache_path + '.tmp'
+                os.makedirs(os.path.dirname(cache_path) or '.', exist_ok=True)
+                with open(tmp, 'wb') as fh:
+                    pickle.dump({'key': cache_key, 'state': state, 'ext_counter': ext_counter}, fh, protocol=pickle.HIGHEST_PROTOCOL)
+                os.replace(tmp, cache_path)
+                if not quiet:
+                    print(f"DatasetV2: wrote parsed-corpus cache {cache_path} ({os.path.getsize(cache_path)/1e9:.2f} GB)")
+        self._finish_init(vocab_binaries, token_vocab, ext_vocab, string_vocab, string_refs_dir,
+                          max_token_vocab, max_ext_vocab, max_string_vocab, ext_counter, quiet)
+
+    def _load_from_files(self, match_index_path, corpora, only_binaries, exclude_binaries, min_tokens):
         with open(match_index_path) as fh:
             records = json.load(fh)
         self.records = []
@@ -161,7 +199,10 @@ class FunctionDatasetV2(FunctionDataset):
         for (binary, _), calls in self.ext_calls.items():
             self._binary_ext_calls[binary].update(calls)
         self._binary_ext_calls = {b: sorted(v) for b, v in self._binary_ext_calls.items()}
+        return ext_counter
 
+    def _finish_init(self, vocab_binaries, token_vocab, ext_vocab, string_vocab, string_refs_dir,
+                     max_token_vocab, max_ext_vocab, max_string_vocab, ext_counter, quiet):
         # ---- vocabularies (built from vocab_binaries subset if given — the train split)
         def _restrict(counter_fn):
             if vocab_binaries is None:

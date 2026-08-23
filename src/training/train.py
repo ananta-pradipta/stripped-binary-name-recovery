@@ -470,6 +470,7 @@ def main():
             vocab_binaries=_train_bins,
             max_token_vocab=cfg['data'].get('max_token_vocab', 3000),
             max_ext_vocab=cfg['data'].get('max_ext_vocab', 5000),
+            cache_path=cfg['data'].get('cache_path'),
         )
         actual_ext_vocab_size = len(dataset.ext_vocab)
         print(f"External vocab size (v2, train-built): {actual_ext_vocab_size}")
