@@ -41,12 +41,12 @@ def decode_ids(ids, sos_id, eos_id):
     return out
 
 
-def run(model, dataset, idx, device, sp, decode, use_amp, batch_size):
+def run(model, dataset, idx, device, sp, decode, use_amp, batch_size, num_workers=0):
     sos_id, eos_id = sp.bos_id(), sp.eos_id()
     model.eval()
     preds = []
     loader = DataLoader(Subset(dataset, idx), batch_size=1 if decode == 'beam' else batch_size,
-                        shuffle=False, collate_fn=collate_fn, num_workers=0)
+                        shuffle=False, collate_fn=collate_fn, num_workers=num_workers)
     with torch.no_grad():
         for batch in tqdm(loader, desc=f'eval[{decode}]', leave=False):
             bt, ei, ec = (batch['block_tokens'].to(device), batch['edge_index'].to(device),
@@ -95,6 +95,7 @@ def main():
     ap.add_argument('--decode', choices=['greedy', 'beam'], default='greedy')
     ap.add_argument('--amp', action='store_true')
     ap.add_argument('--batch-size', type=int, default=256)
+    ap.add_argument('--num-workers', type=int, default=4)
     ap.add_argument('--save', default=None)
     ap.add_argument('--dump-preds', default=None, help='TSV of binary, bap_name, true, pred, regime, stratum')
     args = ap.parse_args()
@@ -146,7 +147,7 @@ def main():
     for tier in args.tiers:
         reg = regime if tier == 'test' else val_regime
         idx = scored[tier]
-        preds = run(model, dataset, idx, device, sp, args.decode, args.amp, args.batch_size)
+        preds = run(model, dataset, idx, device, sp, args.decode, args.amp, args.batch_size, args.num_workers)
         rows = []
         for i, pred in zip(idx, preds):
             s = dataset.samples[i]
