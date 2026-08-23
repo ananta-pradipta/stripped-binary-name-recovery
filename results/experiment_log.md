@@ -4023,5 +4023,5 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - **TEST (268,178 scored, 50 pkgs, greedy):** micro F1 **0.080** / EM 5.2%; per-package macro F1 **0.306** / EM 24.9%.
   - FT (27 pkgs, 223K fns): micro 0.019 / macro 0.051. NCT (23 pkgs, 45K fns): micro 0.383 / macro 0.605.
   - Strata: seen-name (name ∈ train) F1 **0.526** n=33,500; novel-name F1 **0.016**, EM 0.000, n=234,678 (87.5% of scored test).
-  - Pred uniqueness: val 0.67, test 0.20 (FT collapses onto a few names). bdb+icu+mbedtls = 175K of 223K FT fns → micro is their number.
+  - Not mode-collapsed: FT 41,367 unique predictions over 223K fns (top name 0.3%); 1.9% empty predictions. Novel-name fns with any sub-token credit: 5.1%; F1≥0.5: 0.6%. bdb+icu+mbedtls = 175K of 223K FT fns → micro is their number.
 - Interpretation: recognizer confirmed at scale (0.53 vs 0.016); the v2 protocol exposes it directly. Old 0.738 headline ≈ seen-name stratum. Files: results/dualhead_v2/p2_eval_greedy.json, p2_preds_greedy.tsv; Wulver ckpt dh2/checkpoints/p2_ccsarch_v2_seed42.pt.
