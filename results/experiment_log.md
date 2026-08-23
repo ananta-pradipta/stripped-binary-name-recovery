@@ -4025,3 +4025,12 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
   - Strata: seen-name (name ∈ train) F1 **0.526** n=33,500; novel-name F1 **0.016**, EM 0.000, n=234,678 (87.5% of scored test).
   - Not mode-collapsed: FT 41,367 unique predictions over 223K fns (top name 0.3%); 1.9% empty predictions. Novel-name fns with any sub-token credit: 5.1%; F1≥0.5: 0.6%. bdb+icu+mbedtls = 175K of 223K FT fns → micro is their number.
 - Interpretation: recognizer confirmed at scale (0.53 vs 0.016); the v2 protocol exposes it directly. Old 0.738 headline ≈ seen-name stratum. Files: results/dualhead_v2/p2_eval_greedy.json, p2_preds_greedy.tsv; Wulver ckpt dh2/checkpoints/p2_ccsarch_v2_seed42.pt.
+
+## 2026-08-23 — P2-Baseline diagnosis (frozen encoder, k-NN retrieval head; Wulver 1193032)
+- Decision rule (pre-registered on Discord): proceed to P3-DualHead iff hybrid-oracle ≥ decoder+0.03 F1 AND seen-vs-novel AUC ≥ 0.75. **Both PASS on test: +0.033 (0.113 vs 0.080), AUC 0.787** (val: +0.041, AUC 0.731 — marginal).
+- Retrieval alone > decoder already: test micro 0.101 vs 0.080, macro 0.351 vs 0.306; seen-name 0.699 vs 0.526 (+0.17 — recovers most of the decoder's "knows the name but doesn't say it" failures); NCT 0.506 vs 0.383. Novel-name: both ≈0.016 (dead, as established — contribution there is abstention only).
+- Perfect-router ceiling (hybrid-oracle): test 0.113 micro / 0.375 macro → router headroom over retrieval-alone is +0.011 micro / +0.024 macro. Top5-oracle 0.127 → rerank headroom similar.
+- Router features work: sim1 AUC retrieval-correct 0.860; seen-vs-novel 0.787; margin AUC (retrieval-vs-decoder wins) only 0.617 (weak — need richer features for head choice).
+- Abstention is the big lever: risk-coverage on sim1 — top 5% coverage F1 0.475, 10% 0.419, 20% 0.344 vs 0.101 overall. Selective prediction is publishable value.
+- Vocab-oracle (sampled, n=4000): test 0.484 — retrieval reaches only 21% of it (selection/representation gap persists on v2, matches the 15–38% finding on the old corpus).
+- Files: results/dualhead_v2/diag_p2.json; dump on Wulver dh2/results/diag_p2_dump.tsv. VERDICT: GO for P3-DualHead (retrieval head + calibrated router + abstention; decoder kept for graceful degradation).
