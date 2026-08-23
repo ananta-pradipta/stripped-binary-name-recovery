@@ -724,8 +724,11 @@ def main():
                                     use_amp=args.amp)
         val_xproj_f1 = None
         if val_xproj_loader is not None:
-            _, val_xproj_f1 = validate(model, val_xproj_loader, criterion, device, sp_model,
-                                       use_amp=args.amp)
+            if list(val_idx) == val_xproj_idx:
+                val_xproj_f1 = val_f1      # same set (val_indist empty): do not validate twice
+            else:
+                _, val_xproj_f1 = validate(model, val_xproj_loader, criterion, device, sp_model,
+                                           use_amp=args.amp)
             print(f"  [val_indist F1 {val_f1:.4f} | val_xproj F1 {val_xproj_f1:.4f}]", end="")
             if select_on == 'val_xproj':
                 val_f1 = val_xproj_f1
