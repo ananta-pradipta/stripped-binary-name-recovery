@@ -4039,3 +4039,9 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Head-choice: degenerates to always-retrieval (retrieval ≥ decoder on 96% of fns) → hybrid = retrieval 0.1014; gate Δ≥+0.01 vs best single NOT met. Perfect-router headroom +0.011 lives in the 4% decoder-wins set — router v2 will add decoder confidence, ext-Jaccard, string overlap.
 - Abstention: learned confidence router AURC 0.739 vs sim1-only 0.774 vs unranked 0.899. Selective F1: 5% cov 0.784, 10% 0.520, 20% 0.355, 50% 0.180 (full 0.101). Selective prediction axis WORKS.
 - Interim P3 verdict: retrieval-dominant selective system supported; head-choice pending router v2.
+
+## 2026-08-24 — P3-DualHead router v2 (full features; Wulver 1193224). Head-choice CLOSED, abstention axis STRONG.
+- Features: sim1, margin, ext_jacc(top-1 nbr), str_jacc, d_conf, d_len, n_ext, n_str, n_blocks. Trained on val only.
+- Head-choice: router still picks retrieval 100% of the time (Δ vs best single = 0.0 on val AND test). With 9 features the 4% decoder-wins set is NOT identifiable → learned head-choice gate FAILS definitively on this encoder. Dual-head as "pick per function" = honest negative result.
+- Abstention/calibration (the win): AURC 0.7075 (vs sim1-ranking 0.7726, unranked 0.899); **ECE 0.0059** (old CCS heads: ≥0.56 — calibration fixed by 2 orders of magnitude). Selective F1 on test: **5% coverage 0.960, 10% 0.700, 20% 0.407**, 30% 0.291, 50% 0.188, full 0.101. Val: 5% 0.964, 10% 0.883.
+- Final P3 system = retrieval + calibrated confidence + abstention ("selective name recovery"); decoder relegated to a compared baseline head. results/dualhead_v2/router_v2.json.
