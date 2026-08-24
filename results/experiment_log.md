@@ -4034,3 +4034,8 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Abstention is the big lever: risk-coverage on sim1 — top 5% coverage F1 0.475, 10% 0.419, 20% 0.344 vs 0.101 overall. Selective prediction is publishable value.
 - Vocab-oracle (sampled, n=4000): test 0.484 — retrieval reaches only 21% of it (selection/representation gap persists on v2, matches the 15–38% finding on the old corpus).
 - Files: results/dualhead_v2/diag_p2.json; dump on Wulver dh2/results/diag_p2_dump.tsv. VERDICT: GO for P3-DualHead (retrieval head + calibrated router + abstention; decoder kept for graceful degradation).
+
+## 2026-08-24 — P3-DualHead router v1 (features: sim1+margin; trained on val, eval on test; local, from diag dump)
+- Head-choice: degenerates to always-retrieval (retrieval ≥ decoder on 96% of fns) → hybrid = retrieval 0.1014; gate Δ≥+0.01 vs best single NOT met. Perfect-router headroom +0.011 lives in the 4% decoder-wins set — router v2 will add decoder confidence, ext-Jaccard, string overlap.
+- Abstention: learned confidence router AURC 0.739 vs sim1-only 0.774 vs unranked 0.899. Selective F1: 5% cov 0.784, 10% 0.520, 20% 0.355, 50% 0.180 (full 0.101). Selective prediction axis WORKS.
+- Interim P3 verdict: retrieval-dominant selective system supported; head-choice pending router v2.
