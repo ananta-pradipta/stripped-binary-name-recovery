@@ -34,7 +34,11 @@ with open('/project/hz79/_shared/cs785/dh2/results/router_v2_features.tsv') as f
 
 rows = []
 for p, m in zip(preds, meta):
-    sp = clean(p if isinstance(p, str) else p.get('predicted', '') if isinstance(p, dict) else '')
+    raw = p if isinstance(p, str) else (p.get('predicted_name') or p.get('predicted') or '') if isinstance(p, dict) else ''
+    raw = raw.replace('The predicted function name is', ' ').replace('</s>', ' ')
+    sp = clean(raw)
+    if isinstance(p, dict) and p.get('ground_truth') not in (None, m['gt_name']):
+        raise AssertionError(f"positional join broken at {m['key']}")
     f1 = compute_subtoken_f1(sp, m['gt_name'])
     o = ours_by_name.get((m['binary'], m['gt_name']))
     rows.append({'pkg': m['package'], 'sg_f1': f1, 'sg_em': float(sp == m['gt_name']),

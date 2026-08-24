@@ -21,7 +21,7 @@ INTERIM_C_PKGS = {'atop', 'bdb', 'byacc', 'entr', 'file', 'gdbm', 'icu', 'lsof',
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--mode', choices=['interim_c', 'full'], default='interim_c')
+    ap.add_argument('--mode', choices=['interim_c', 'nct_seen', 'full'], default='interim_c')
     ap.add_argument('--cap-per-pkg', type=int, default=400)
     ap.add_argument('--tiers', nargs='+', default=['test'])
     args = ap.parse_args()
@@ -42,6 +42,8 @@ def main():
             rows.append(r)
     if args.mode == 'interim_c':
         rows = [r for r in rows if r['package'] in INTERIM_C_PKGS and r.get('regime') == 'FT']
+    elif args.mode == 'nct_seen':
+        rows = [r for r in rows if r.get('regime') == 'NCT']
         by_pkg = defaultdict(list)
         for r in rows:
             by_pkg[r['package']].append(r)
@@ -59,7 +61,7 @@ def main():
         if '[MASK]' not in code:
             miss += 1
             continue
-        inputs.append({'instruction': INSTR, 'input': '\n\n' + code})
+        inputs.append({'instruction': INSTR, 'input': '\n\n' + code, 'output': r['name']})
         meta.append({'key': f"{r['binary']}_{r['entry_addr']}", 'package': r['package'],
                      'binary': r['binary'], 'gt_name': r['name'], 'addr': r['entry_addr'],
                      'tier': r['tier'], 'regime': r.get('regime'), 'name_seen': r.get('name_seen_in_train')})

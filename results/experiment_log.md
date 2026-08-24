@@ -4052,3 +4052,8 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - HONEST READ: on far-transfer/novel names, decompiled-code input + 34B LLM prior yields ~4× our sub-token F1 — partial semantic credit (loop/compare/free vocabulary) that BAP-token models never produce. "Beat SymGen" does NOT hold on the FT axis. Our winning axes: NCT/seen-name (retrieval 0.5–0.7), efficiency (34M vs 34B; ~ms vs 2.6 s/fn), calibration+selective prediction (SymGen has no confidence signal), BAP-only/no-decompiler deployment constraint.
 - Caveat for paper: SymGen input = Ghidra decompiled C (needs a working decompiler); a matched selective comparison requires a confidence proxy for SymGen (none native).
 - Next: NCT+seen-name SymGen sample (same cap) for the full table; BLens on identical protocol; then decide framing.
+
+## 2026-08-24 — METRIC v2 (user-approved): camelCase split-order bug fixed + C++ demangling in scoring
+- Bug: `split_name` lowercased via normalize_name BEFORE the camel regexes → camelCase names were single tokens; a correct `select_expander` for `selectExpander` scored F1=0. 20.4% of v2 test GT names affected (camel 6.2%, mangled 14.2%; icu 95%, expat 81%, fossil 39%).
+- Fix: camel split before lowercase (src/evaluation/metrics.py); scoring-side C++ demangle via c++filt + drop args/templates + keep Class::method (scripts/rescore_metric_v2.py). Applied identically to every system; raw predictions frozen.
+- Rescored (metric v2): TEST decoder 0.086/0.308 (was 0.080/0.306), retrieval 0.104/0.355 (was 0.101/0.351); VAL decoder 0.114, retrieval 0.146. SymGen interim-C sample: 0.120/0.135 vs our retrieval 0.037/0.050 (gap unchanged, ~3.2×; SymGen advantage is real, not a casing artifact).
