@@ -4057,3 +4057,8 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Bug: `split_name` lowercased via normalize_name BEFORE the camel regexes → camelCase names were single tokens; a correct `select_expander` for `selectExpander` scored F1=0. 20.4% of v2 test GT names affected (camel 6.2%, mangled 14.2%; icu 95%, expat 81%, fossil 39%).
 - Fix: camel split before lowercase (src/evaluation/metrics.py); scoring-side C++ demangle via c++filt + drop args/templates + keep Class::method (scripts/rescore_metric_v2.py). Applied identically to every system; raw predictions frozen.
 - Rescored (metric v2): TEST decoder 0.086/0.308 (was 0.080/0.306), retrieval 0.104/0.355 (was 0.101/0.351); VAL decoder 0.114, retrieval 0.146. SymGen interim-C sample: 0.120/0.135 vs our retrieval 0.037/0.050 (gap unchanged, ~3.2×; SymGen advantage is real, not a casing artifact).
+
+## 2026-08-24 — P4-ExternalBaselines: BLens interim row (retrained ours-cp LORD ep59; jobs 1193786-88)
+- Same 7,532 clean-FT keys, metric v2: **BLens micro F1 0.0261 / EM 0.4% / macro 0.0296** — below our retrieval (0.037/0.050) and decoder (0.032/0.047); SymGen 0.120/0.135 leads.
+- Pipeline: labels_v2-preseeded Ghidra asm export (272/274 bins) → CLAP (89.5% key coverage, zero-vec fallback) + PalmTree → LORD inference. Caveats: LORD head @ep59 (their best-val), CLAP coverage gap penalizes ~10%, trained on v1 corpus (same lineage as ours).
+- FT ranking (clean 24-pkg sample): SymGen-34B 0.120 ≫ our retrieval 0.037 > our decoder 0.032 > BLens-0.1B 0.026. Files: results/dualhead_v2/blens_interim_c_score.json.
