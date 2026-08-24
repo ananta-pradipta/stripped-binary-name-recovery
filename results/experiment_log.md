@@ -4062,3 +4062,9 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Same 7,532 clean-FT keys, metric v2: **BLens micro F1 0.0261 / EM 0.4% / macro 0.0296** — below our retrieval (0.037/0.050) and decoder (0.032/0.047); SymGen 0.120/0.135 leads.
 - Pipeline: labels_v2-preseeded Ghidra asm export (272/274 bins) → CLAP (89.5% key coverage, zero-vec fallback) + PalmTree → LORD inference. Caveats: LORD head @ep59 (their best-val), CLAP coverage gap penalizes ~10%, trained on v1 corpus (same lineage as ours).
 - FT ranking (clean 24-pkg sample): SymGen-34B 0.120 ≫ our retrieval 0.037 > our decoder 0.032 > BLens-0.1B 0.026. Files: results/dualhead_v2/blens_interim_c_score.json.
+
+## 2026-08-24 — Redesign censuses (Track A) + eval audits
+- **A1 strings census (Wulver, full honest test):** FT: 29.1% of fns reference ≥1 string; among those mean GT-subtoken recall 0.387, full name present 14.7% (=4.3% of ALL FT fns). NCT: 53.4%/0.240/9.6%. Aggregate FT signal ≈0.11 recall ≈ SymGen's whole FT score. A1 = top priority (string channel to both heads + copy/candidate source + router feature).
+- **A2 magic-constant census: NEGATIVE.** 156 crypto-heavy binaries, 183K fns: 325 fns with algo immediates, 0% name-keyword precision (constants in .rodata tables, not immediates; found in callers not primitives). A2 dropped as separate track; rodata-table matching folded into A1 channel.
+- **Batch-size audit (job 1193962): PASS** — val micro F1 0.1078 identical at batch 32 and 256; eval_v2 is batch-stable. Train-time val metric reads +0.006 high (own decode path); all reported numbers pinned to eval_v2.
+- Unit tests committed: tests/test_metrics_v2.py, tests/test_split_policy.py. BLens join audit 0 mismatches; BLens targets-empty anomaly verified harmless (caption_tokens print-only at inference).
