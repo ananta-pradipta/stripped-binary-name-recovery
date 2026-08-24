@@ -4068,3 +4068,11 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - **A2 magic-constant census: NEGATIVE.** 156 crypto-heavy binaries, 183K fns: 325 fns with algo immediates, 0% name-keyword precision (constants in .rodata tables, not immediates; found in callers not primitives). A2 dropped as separate track; rodata-table matching folded into A1 channel.
 - **Batch-size audit (job 1193962): PASS** — val micro F1 0.1078 identical at batch 32 and 256; eval_v2 is batch-stable. Train-time val metric reads +0.006 high (own decode path); all reported numbers pinned to eval_v2.
 - Unit tests committed: tests/test_metrics_v2.py, tests/test_split_policy.py. BLens join audit 0 mismatches; BLens targets-empty anomaly verified harmless (caption_tokens print-only at inference).
+
+## 2026-08-24 — P4-ExternalBaselines interim COMPLETE: SymGen NCT row (job 1193783; metric v2, matched keys)
+- NCT sample (23 pkgs, 7,063 fns, cap 350/pkg): **our retrieval 0.707 micro / 0.709 macro / EM 64.3% ≫ SymGen 0.234/0.232 / EM 7.1%** (decoder 0.609). Per-pkg: we win 19/23 (gawk2 0.95-vs-0.19, nginx126 0.93-vs-0.45); SymGen wins openresty/psmisc (+dash close).
+- Strata: NCT seen-name ourR 0.792 vs SymGen 0.229; NCT novel-name SymGen 0.267 vs ourR 0.116 — SymGen leads wherever names are novel, we lead wherever names are known. Cross-system confirmation of the dual-head thesis: exact recognition needs retrieval memory; novel naming needs decompiled-code semantics. Neither system has both.
+- INTERIM TABLE (clean-FT 7,532 + NCT 7,063, metric v2, micro/macro):
+  FT:  SymGen 0.120/0.135 > ourR 0.037/0.050 > ourD 0.032/0.047 > BLens 0.026/0.030
+  NCT: ourR 0.707/0.709 > ourD 0.609/– > SymGen 0.234/0.232 (BLens NCT not run)
+- Files: results/dualhead_v2/symgen_nct_score.json. Retrains on final corpus deferred to end (user-approved).
