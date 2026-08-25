@@ -61,7 +61,7 @@ def evaluate(model, tok, loader, device, max_tgt, out_path=None, amp_dtype=torch
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--model', default='Salesforce/codet5p-220m')
+    ap.add_argument('--model', default='/project/hz79/_shared/cs785/baselines/hf_local/codet5p-220m')
     ap.add_argument('--tag', required=True)
     ap.add_argument('--max-src', type=int, default=1024)
     ap.add_argument('--max-tgt', type=int, default=24)
