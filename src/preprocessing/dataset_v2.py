@@ -151,7 +151,12 @@ class FunctionDatasetV2(FunctionDataset):
                 rc = rc_cache.get(binary)
                 if rc is None:
                     pth = os.path.join(self._rodata_consts_dir, str(binary) + '.json')
-                    rc = json.load(open(pth)) if os.path.exists(pth) else {}
+                    rc = {}
+                    if os.path.exists(pth):
+                        try:
+                            rc = json.load(open(pth))
+                        except ValueError:
+                            print(f"WARNING: rodata consts file unreadable/empty, treating as none: {pth}")
                     rc_cache[binary] = rc
                 toks = sorted({t for a in g.get('gref_addrs', []) for t in rc.get(a, [])})
                 if toks:
