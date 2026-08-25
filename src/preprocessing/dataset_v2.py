@@ -61,6 +61,8 @@ class FunctionDatasetV2(FunctionDataset):
                  max_string_vocab: int = 5000,
                  vocab_binaries: Optional[set] = None,
                  cache_path: Optional[str] = None,
+                 rodata_consts_dir: Optional[str] = None,
+                 enrich_a3: bool = False,
                  quiet: bool = False):
         # NOTE: deliberately not calling FunctionDataset.__init__ (legacy corpus loader).
         self.max_blocks = max_blocks
@@ -72,6 +74,7 @@ class FunctionDatasetV2(FunctionDataset):
         self.max_string_tokens = 15
         self.max_binary_ext = 30
         self.filter_stats = Counter()
+        self._rodata_cache = {}
 
         # ---- name tokenizer (Votes preferred; same as v1)
         if votes_vocab_path:
@@ -106,6 +109,7 @@ class FunctionDatasetV2(FunctionDataset):
                 cache_key, blob = cache_key, None
         else:
             blob = None
+        self._rodata_consts_dir = rodata_consts_dir
         if blob is None:
             ext_counter = self._load_from_files(match_index_path, corpora, only_binaries, exclude_binaries, min_tokens)
             if cache_key:
@@ -119,8 +123,49 @@ class FunctionDatasetV2(FunctionDataset):
                 os.replace(tmp, cache_path)
                 if not quiet:
                     print(f"DatasetV2: wrote parsed-corpus cache {cache_path} ({os.path.getsize(cache_path)/1e9:.2f} GB)")
+        if enrich_a3:
+            self._apply_a3_enrichment(quiet)
         self._finish_init(vocab_binaries, token_vocab, ext_vocab, string_vocab, string_refs_dir,
                           max_token_vocab, max_ext_vocab, max_string_vocab, ext_counter, quiet)
+
+    def _apply_a3_enrichment(self, quiet=False):
+        """A3+ (2026-08-25): merge lit_tokens into block streams, prepend a synthetic
+        function-header block with ABI features (+ optional rodata-constant tags from
+        rodata_consts_dir). Runs AFTER cache load (cache stays valid); idempotent."""
+        rc_cache = {}
+        n_lit = n_rc = 0
+        for g in {id(s['graph']): s['graph'] for s in self.samples}.values():
+            if g.get('_a3'):
+                continue
+            g['_a3'] = True
+            for b in g['blocks']:
+                lt = b.get('lit_tokens')
+                if lt:
+                    b['tokens'] = b['tokens'] + lt[:6]
+                    n_lit += 1
+            hdr = ['ARGC_%d' % min(int(g.get('bap_in_args') or 0), 6),
+                   'HAS_RESULT' if g.get('bap_has_result') else 'NO_RESULT']
+            hdr += ['ARGREG_%s' % r for r in sorted(g.get('arg_regs_used') or [])[:6]]
+            if self._rodata_consts_dir:
+                binary = g.get('binary')
+                rc = rc_cache.get(binary)
+                if rc is None:
+                    pth = os.path.join(self._rodata_consts_dir, str(binary) + '.json')
+                    rc = json.load(open(pth)) if os.path.exists(pth) else {}
+                    rc_cache[binary] = rc
+                toks = sorted({t for a in g.get('gref_addrs', []) for t in rc.get(a, [])})
+                if toks:
+                    hdr += toks[:8]; n_rc += 1
+            g['blocks'] = [{'id': '__fnhdr__', 'label': '', 'addr': g.get('entry_addr'),
+                            'tokens': hdr}] + g['blocks']
+        # token_counter (cached) lacks the new tokens; recount so vocab fallback stays sane
+        self.token_counter = defaultdict(int)
+        for s_ in self.samples:
+            for b in s_['graph']['blocks']:
+                for t in b['tokens']:
+                    self.token_counter[t] += 1
+        if not quiet:
+            print(f"A3 enrichment: lit-merged blocks {n_lit}, rodata-tagged fns {n_rc}")
 
     def _load_from_files(self, match_index_path, corpora, only_binaries, exclude_binaries, min_tokens):
         with open(match_index_path) as fh:
