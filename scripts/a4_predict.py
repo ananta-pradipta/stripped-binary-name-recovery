@@ -53,7 +53,7 @@ def main():
     ap.add_argument('--bf16', action='store_true')
     args = ap.parse_args()
     from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-    device = 'cuda'
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     tok = AutoTokenizer.from_pretrained(args.ckpt)
     model = AutoModelForSeq2SeqLM.from_pretrained(args.ckpt).to(device).eval()
     outdir = f'{WS}/results/a4_{args.tag}'; os.makedirs(outdir, exist_ok=True)
@@ -82,7 +82,7 @@ def main():
         for s in range(0, len(todo), args.bs):
             idx = todo[s:s+args.bs]
             enc = tok([items[i][1] for i in idx], max_length=args.max_src, truncation=True, padding=True, return_tensors='pt')
-            with torch.no_grad(), torch.autocast('cuda', dtype=torch.bfloat16 if args.bf16 else torch.float16):
+            with torch.no_grad(), torch.autocast(device, dtype=torch.bfloat16 if (args.bf16 or device == 'cpu') else torch.float16, enabled=(device == 'cuda')):
                 gen = model.generate(input_ids=enc.input_ids.to(device), attention_mask=enc.attention_mask.to(device),
                                      max_new_tokens=args.max_tgt, num_beams=args.beams)
             for i, p in zip(idx, tok.batch_decode(gen, skip_special_tokens=True)):
