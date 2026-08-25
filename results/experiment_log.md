@@ -4081,3 +4081,4 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - E1 string rerank (top-20, score = sim + α·strJacc, α tuned on val): TEST micro 0.103→0.108, macro 0.354→0.368 at α=0.4 (grid boundary; wider sweep running). GATE MET (macro +0.013). Ext-Jaccard weight tunes to 0 (hurts — ext-call paradox again).
 - E2 naive string-emit (longest identifier when sim1<thr): val tuning disables it (thr=0). Census names are present but need a learned candidate scorer (→ C2 dual-encoder spec).
 - Artifacts: results/emb_v2/ on Wulver (train_emb.npy 457M, {val,test}_knn.npz + meta with strings/ext).
+- Wide α sweep (1194770): val plateaus α≥0.8 (0.1509); TEST at α=3.2: micro 0.1084 / macro 0.3693. Production pick α=0.8 (plateau start). String-rerank final: **retrieval 0.103/0.354 → 0.108/0.369** (+0.005/+0.015, zero training).
