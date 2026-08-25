@@ -66,9 +66,8 @@ def scan(binary):
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
-    bins = sorted(os.listdir(GR))
-    bins = [b for b in bins if os.path.isdir(f'{GR}/{b}')]
-    tot = 0
-    for i, b in enumerate(bins):
-        tot += scan(b)
+    bins = sorted(b for b in os.listdir(GR) if os.path.isdir(f'{GR}/{b}'))
+    from multiprocessing import Pool
+    with Pool(int(os.environ.get('NPROC', '12'))) as pool:
+        tot = sum(pool.map(scan, bins, chunksize=4))
     print(f'EFFECT: rodata consts done bins={len(bins)} tagged_addrs={tot}')
