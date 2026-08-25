@@ -4089,3 +4089,8 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Reading: strings mostly help SELECTION among known names (seen-name +0.11), not composition (novel +0.008) — as census predicted. A1b copy / C2 scorer still needed for the novel harvest.
 - Next: emb dump on A1a encoder (1195024) → retrieval + string-rerank on new space.
 - A1a retrieval head (emb dump 1195024, zero-train eval 1195025): TEST micro 0.1147 / macro 0.3797 (old encoder: 0.1030/0.3544) — the string channel also improved the embedding geometry (+0.012/+0.025). String rerank on top: 0.1176/0.3814 (α=0.8; smaller add-on — signal partly internalized). Best current system: **A1a retrieval+rerank 0.118 micro / 0.381 macro** vs P2-era best 0.108/0.369.
+
+## 2026-08-25 — A3+ chain + wait-time prep (dualhead-hydra)
+- A3+ rodata constant matcher (job 1195198): 1,890/1,890 bins, 4,375 tagged fns in 287 bins (BASE64 1756, CRC32 1128, ZLIB_LEN 531, SHA256 307, AES_SBOX 216, SHA512 212, CHACHA 201, …). Smoke 1195199 PASSED (70 A3 tokens in vocab). Retrain 1195200 (`dualhead_v2_a3`) queued; gate val > A1a 0.1310.
+- A4 fine-tune set built (job 1195584, `scripts/a4_build_ft.py`): train 190,133/190,151, val 10,617/10,617 masked-decomp rows; ≤1024 approx-tok 88%/83%. No training run.
+- C1 census (job 1195584, `scripts/c1_census.py`): train anchors 17.0% exact cross-pkg + 23.3% near(J≥0.5); test FT 2.4%/20.1%/72.6% weak/4.9% none; test NCT 65.2% exact. Design: docs/C1_NAME_AWARE_CONTRASTIVE_DESIGN.md. Not launched.
