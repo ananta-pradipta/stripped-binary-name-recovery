@@ -4082,3 +4082,9 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - E2 naive string-emit (longest identifier when sim1<thr): val tuning disables it (thr=0). Census names are present but need a learned candidate scorer (→ C2 dual-encoder spec).
 - Artifacts: results/emb_v2/ on Wulver (train_emb.npy 457M, {val,test}_knn.npz + meta with strings/ext).
 - Wide α sweep (1194770): val plateaus α≥0.8 (0.1509); TEST at α=3.2: micro 0.1084 / macro 0.3693. Production pick α=0.8 (plateau start). String-rerank final: **retrieval 0.103/0.354 → 0.108/0.369** (+0.005/+0.015, zero training).
+
+## 2026-08-25 — A1a RESULT: string channel retrain (job 1194836, ckpt p3a_strings_v2_seed42.pt, ep50 best 0.1310)
+- Config = dualhead_v2_large + string_encoder enabled (existing conditional-gated 4th fusion stage; embed 128, BiGRU 256→1024; string vocab 5000 train-built). Same seed/schedule as P2. Clean single-variable ablation.
+- Decoder eval (greedy, camel-fixed metric, no demangle): val 0.133 micro (P2 0.108); TEST micro 0.100 (P2 0.086), macro 0.339 (0.308), EM 6.1% (5.2%). NCT 0.465 (+0.082), FT 0.027 (+0.008), seen-name 0.635 (+0.109), novel-name 0.024 (+0.008).
+- Reading: strings mostly help SELECTION among known names (seen-name +0.11), not composition (novel +0.008) — as census predicted. A1b copy / C2 scorer still needed for the novel harvest.
+- Next: emb dump on A1a encoder (1195024) → retrieval + string-rerank on new space.
