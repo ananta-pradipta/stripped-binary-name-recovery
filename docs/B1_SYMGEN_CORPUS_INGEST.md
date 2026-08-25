@@ -33,9 +33,10 @@ Ingestible: **24 projects, x86_64, O0–O3**. Version differences (e.g. grep-3.8
   (1,890 bins, which took ~1 day wall-clock on CPU nodes).
 - **A4 head**: join stripped-decomp JSON (address-keyed) with unstripped names → `results/a4_ft/train_symgen.jsonl`
   (same schema as `a4_build_ft.py` output) → concatenate with our 190K rows; `--max-src 1024`.
-- **External benchmark**: SymGen's paper split is by ??? (see §Open) — if it is project-level, score our heads on
-  their held-out projects that are not in our train (candidates: the 15 new projects, held out entirely as a
-  second FT-style test) → reported as "SymGen-corpus FT" next to our own test. Decision below.
+- **External benchmark**: SymGen's own split (`scripts/data_processing/divide_dataset.py`) is a **binary-level random
+  80/10/10 shuffle** with name+body dedup — NOT project-disjoint, so their test tier is in-distribution and unusable
+  as an FT benchmark. The external benchmark is therefore our own project-level holdout of SymGen projects (below),
+  reported as "SymGen-corpus FT" next to our test tier.
 
 ## Open decisions
 - Which of the 15 new projects to hold out as external benchmark vs ingest as train. Proposal: hold out 5
