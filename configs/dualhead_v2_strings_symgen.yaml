@@ -1,6 +1,6 @@
 data:
   bpe_model_path: data/bpe_model/bpe.model
-  votes_vocab_path: data/votes_vocab_v2.json
+  votes_vocab_path: data/votes_vocab_v3.json
   train_split: 0.8
   val_split: 0.1
   test_split: 0.1
