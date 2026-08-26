@@ -14,7 +14,7 @@ data:
   select_on: val_xproj
   split_policy: v3
   cache_path: data_cache/corpus_v3.pkl
-  corpora: [local_main, symgen_zenodo]
+  corpora: null
   train_pkg_cap: 40000
   min_tokens: 1
   max_token_vocab: 3000
