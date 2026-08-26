@@ -167,3 +167,4 @@ Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrast
 | C1 soft λ0.3 (name-aware sampler + hard negs) | **interim ep8** | 0.1595 | 0.1609 | 0.1234 / 0.3859 | 0.1253 / 0.3875 | — |
 | **C1 soft λ1.0** (same sampler) | **interim ep7** | 0.1593 | 0.1617 | **0.1255 / 0.3850** | **0.1278 / 0.3856** | — |
 Val is saturated (~0.1595 for all three) and cannot separate the variants; test does: graded positives + hard negatives give +0.009–0.011 micro over A1a vs +0.002 for exact-name. Jobs 1198229/1198249/1198234/1198260. Final soft checkpoints pending.
+Decoder read of the C1 exact control (eval_v2 greedy, job 1198257): val 0.1350/0.2900 (FT 0.0698 / NCT 0.7077); test 0.1024/0.3465, FT 0.0279 (macro 0.0628), NCT 0.4745 (macro 0.6795), seen 0.6514, novel 0.0240 — vs A1a 0.1000/0.3394, FT 0.0270, NCT 0.4650, seen 0.6353, novel 0.0236. Uniform small plus; the decoder is not where C1's effect lives.
