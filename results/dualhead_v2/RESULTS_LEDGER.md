@@ -133,3 +133,18 @@ A4 confidence quintiles on test (F1): 0.048 / 0.068 / 0.084 / 0.143 / 0.583. Pre
 Val and the external holdout prefer run 2; our test tier prefers run 1 (per-package: NCT GNU version-pairs lose up to −0.13, FT packages gain ≤ +0.03). Protocol selection (val) → run 2; both reported.
 Routing stats (test; heads disagree on 31.6% of functions, ties 68.4%): oracle prefers A4 22.8% / R 8.7% (run 1); GBT routing accuracy on contested rows **82.1%** (run 1) / 82.0% (run 2), overall 94.3%; mean regret 0.018 / 0.019 F1; conf_sim1 76.8% / 75.9%; logreg 80.2% / 79.6%.
 Matched-key (run 2): FT sample A4 0.1185/0.1221 EM 3.75% (SymGen 0.120/0.137, 2.8%); NCT sample GBT 0.765/0.767 (R 0.744, SymGen 0.236).
+
+## ROUTER FEATURE ABLATION (job 1197390, `scripts/ablation_router.py`, A4 run 1 ∪ A1a retrieval, GBT refit on val per row; test)
+| features | micro | macro | NCT | routing acc (contested) | regret | selective @10% / @20% |
+|---|---|---|---|---|---|---|
+| all 11 | **0.2044** | **0.4386** | 0.627 | **0.820** | 0.018 | **0.881 / 0.686** |
+| − retrieval-sim (sim1, margin) | 0.2014 | 0.4328 | 0.614 | 0.802 | 0.021 | 0.863 / 0.672 |
+| − overlap (ext_jacc, str_jacc) | 0.2037 | 0.4375 | 0.624 | 0.813 | 0.019 | 0.873 / 0.682 |
+| − decoder (d_conf, d_len) | 0.2040 | 0.4368 | 0.625 | 0.818 | 0.018 | 0.872 / 0.675 |
+| − size (n_ext, n_str, n_blocks) | 0.2038 | 0.4375 | 0.625 | 0.817 | 0.019 | 0.878 / 0.674 |
+| − A4 conf | 0.2032 | 0.4333 | 0.621 | 0.818 | 0.019 | 0.784 / 0.544 |
+| only retrieval-sim | 0.1990 | 0.4227 | 0.603 | 0.789 | 0.023 | 0.565 / 0.414 |
+| only A4 (conf, sim1−conf) | 0.1973 | 0.4252 | 0.604 | 0.761 | 0.025 | 0.785 / 0.598 |
+| only sim1 | 0.1961 | 0.4234 | 0.596 | 0.763 | 0.026 | 0.429 / 0.378 |
+| only a4_conf | 0.1833 | 0.3761 | 0.518 | 0.693 | 0.039 | 0.770 / 0.571 |
+Reading: routing is driven by retrieval similarity (largest drop when removed); abstention is driven by A4 confidence (selective@20% 0.686 → 0.544 without it). The two signals are complementary: neither alone gets both.
