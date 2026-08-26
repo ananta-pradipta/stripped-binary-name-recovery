@@ -67,3 +67,11 @@ Test + SymGen-holdout pending (job 1196560).
 | A1a | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.954 / 0.754 / 0.448 |
 | A3+ (enriched, valid) | 0.1068 / 0.3572 | 0.1091 / 0.3578 (+emit 0.1101 / 0.3581) | 0.956 / 0.706 / 0.415 |
 A3+ negative holds on decoder, retrieval and router. CLOSED.
+
+## A4 run 1 — TEST (job 1196560, greedy, metric v2, split policy v3; SymGen holdout = 5 pkgs, in_dynsym dropped)
+| head | test micro | test macro | EM | FT micro (macro) | NCT micro (macro) | seen | novel | SymGen holdout micro / macro |
+|---|---|---|---|---|---|---|---|---|
+| BAP decoder A1a | 0.1000 | 0.3394 | 0.061 | 0.0270 (0.0606) | 0.4650 (0.6667) | 0.6353 | 0.0236 | — |
+| BAP retrieval A1a + rerank | 0.1176 | 0.3814 | — | — | — | — | — | — |
+| **A4 gen head (220m, ours only)** | **0.1852** | 0.3680 | 0.055 | **0.1214 (0.1437)** | 0.5042 (0.6314) | 0.6205 | **0.1231** | **0.2231 / 0.1887** |
+Val_xproj: 0.2003 (FT 0.147 / NCT 0.668; macro 0.361). Pred-uniqueness test 0.155; no_decomp 40/268K. Files: results/a4_codet5p220m_v1/val_test_symgen_holdout_{eval.json,preds.tsv}.
