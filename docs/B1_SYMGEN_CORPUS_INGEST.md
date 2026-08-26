@@ -51,7 +51,7 @@ Ingestible: **24 projects, x86_64, O0–O3**. Version differences (e.g. grep-3.8
   adns 37K. After the 9 exclusions ≈ 606K ingestible functions (1.4× our raw train) → B3 domain-balanced sampling
   (cap ncurses/openssl) is required.
 - Holdout proposal revised (ncurses too large/repetitive for a benchmark): **gmp, libpng, libmicrohttpd, poke,
-  libredwg** (17.7K fns). ncurses → train, capped. Awaiting user confirmation.
+  libredwg** (17.7K fns). ncurses → train, capped. **CONFIRMED by user 2026-08-26 00:39 UTC ("Ok").** Implement in `design_split_v2.py`: add sggmp, sglibpng, sglibmicrohttpd, sgpoke, sglibredwg to XPROJECT_RESERVE (FT tier); family detection may demote to NCT if they share names with train — report whatever the policy assigns.
 
 ## Ingest source
 - `relift_ws/symgen/bins/<id>.debug` symlinks, id = `sg<proj>_<tool>_<opt>` (`scripts/symgen_ingest_manifest.py`;
