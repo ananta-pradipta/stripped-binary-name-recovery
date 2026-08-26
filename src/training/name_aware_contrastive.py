@@ -143,17 +143,40 @@ def soft_contrastive_loss(z, names, pkgs, temperature=0.1, beta=1.0, exact_only=
     if valid.sum() == 0:
         return torch.tensor(0.0, device=z.device)
     P = S[valid] / row_mass[valid].unsqueeze(1)
-    zn = torch.nn.functional.normalize(z, dim=1)
-    sim = torch.mm(zn, zn.t()) / temperature
-    sim = sim.masked_fill(torch.eye(B, dtype=torch.bool, device=z.device), -1e9)
-    logq = sim[valid] - torch.logsumexp(sim[valid], dim=1, keepdim=True)
-    return -(P * logq).sum(1).mean()
+    with torch.autocast(device_type='cuda', enabled=False):
+        zf = z.float()
+        zn = torch.nn.functional.normalize(zf, dim=1)
+        sim = torch.mm(zn, zn.t()) / temperature
+        sim = sim.masked_fill(torch.eye(B, dtype=torch.bool, device=z.device), -1e4)   # fp32; -1e4 is safe under any dtype
+        logq = sim[valid] - torch.logsumexp(sim[valid], dim=1, keepdim=True)
+        return -(P * logq).sum(1).mean()
 
 
 def load_hard_negatives(knn_npz, train_meta_json, dataset, train_indices, k=10):
     """Map an embedding-dump kNN over TRAIN (train_knn.npz: nbrs indexes into train_meta order) to dataset indices."""
-    import json
-    meta = json.load(open(train_meta_json)); z = np.load(knn_npz); nbrs = z['nbrs']
+    import json, os
+    meta = json.load(open(train_meta_json))
+    if os.path.exists(knn_npz):
+        nbrs = np.load(knn_npz)['nbrs']
+    else:
+        # embedding dumps only hold val/test->train neighbours; build train->train top-k blockwise (GPU if available)
+        emb_path = os.path.join(os.path.dirname(knn_npz), 'train_emb.npy')
+        E = torch.from_numpy(np.load(emb_path).astype(np.float32))
+        dev = 'cuda' if torch.cuda.is_available() else 'cpu'
+        E = torch.nn.functional.normalize(E.to(dev), dim=1)
+        N = E.shape[0]; kk = min(k + 1, N); out_n = np.zeros((N, kk), dtype=np.int64); bs = 4096
+        for s0 in range(0, N, bs):
+            sims = E[s0:s0 + bs] @ E.t()
+            sims[torch.arange(sims.shape[0]), torch.arange(s0, min(s0 + bs, N))] = -2.0   # drop self
+            out_n[s0:s0 + bs] = torch.topk(sims, kk, dim=1).indices.cpu().numpy()
+        nbrs = out_n
+        try:
+            np.savez_compressed(knn_npz, nbrs=nbrs)
+        except Exception as e:
+            print('WARNING: could not cache train kNN:', e)
+        del E
+        if dev == 'cuda': torch.cuda.empty_cache()
+        print(f"C1: built train->train kNN for {N} rows (k={kk}) from {emb_path}")
     key_to_idx = {}
     for i in train_indices:
         s = dataset.samples[i]; key_to_idx[(s['binary'], s['bap_name'])] = i

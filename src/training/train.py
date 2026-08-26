@@ -106,11 +106,12 @@ def compute_contrastive_loss(z, names, temperature=0.1):
     if B < 2:
         return torch.tensor(0.0, device=z.device)
 
-    # L2-normalize embeddings
-    z_norm = torch.nn.functional.normalize(z, dim=1)
+    # L2-normalize embeddings (float32 outside autocast: fp16 overflows on the -1e9 mask under --amp)
+    z_norm = torch.nn.functional.normalize(z.float(), dim=1)
 
     # Cosine similarity matrix (B, B)
-    sim = torch.mm(z_norm, z_norm.t()) / temperature
+    with torch.autocast(device_type='cuda', enabled=False):
+        sim = torch.mm(z_norm, z_norm.t()) / temperature
 
     # Build positive mask: (i, j) is positive if names[i] == names[j] and i != j
     positive_mask = torch.zeros(B, B, dtype=torch.bool, device=z.device)
@@ -136,7 +137,7 @@ def compute_contrastive_loss(z, names, temperature=0.1):
     # L_i = -log(exp(sim(i, pos)) / sum_j!=i exp(sim(i, j)))
     # Mask out self-similarity
     self_mask = torch.eye(B, dtype=torch.bool, device=z.device)
-    sim = sim.masked_fill(self_mask, -1e9)
+    sim = sim.masked_fill(self_mask, -1e4)
 
     # For each row, compute log-softmax over all non-self entries
     log_softmax = sim - torch.logsumexp(sim, dim=1, keepdim=True)
