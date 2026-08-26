@@ -168,3 +168,15 @@ Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrast
 | **C1 soft λ1.0** (same sampler) | **interim ep7** | 0.1593 | 0.1617 | **0.1255 / 0.3850** | **0.1278 / 0.3856** | — |
 Val is saturated (~0.1595 for all three) and cannot separate the variants; test does: graded positives + hard negatives give +0.009–0.011 micro over A1a vs +0.002 for exact-name. Jobs 1198229/1198249/1198234/1198260. Final soft checkpoints pending.
 Decoder read of the C1 exact control (eval_v2 greedy, job 1198257): val 0.1350/0.2900 (FT 0.0698 / NCT 0.7077); test 0.1024/0.3465, FT 0.0279 (macro 0.0628), NCT 0.4745 (macro 0.6795), seen 0.6514, novel 0.0240 — vs A1a 0.1000/0.3394, FT 0.0270, NCT 0.4650, seen 0.6353, novel 0.0236. Uniform small plus; the decoder is not where C1's effect lives.
+
+## INTERIM SYSTEM with C1 λ1.0 ep7 encoder ∪ A4 run 1 (jobs 1198275/76/77; router/abstainer fit on val)
+| system (test) | micro | macro | FT | NCT | routing acc (contested) | selective @5/10/20/30% |
+|---|---|---|---|---|---|---|
+| retrieval (C1 ep7, router_v2 r_pred) | 0.1269 | 0.3853 | 0.0395 | 0.5638 | — | — |
+| A4 run 1 | 0.1852 | 0.3680 | 0.1214 | 0.5042 | — | — |
+| conf router | 0.1972 | 0.4274 | 0.1137 | 0.6145 | 0.747 | — |
+| learned logreg | 0.2026 | 0.4333 | 0.1199 | 0.6162 | 0.796 | — |
+| **learned GBT** | **0.2052** | **0.4387** | 0.1196 | 0.6332 | 0.805 | 0.943 / 0.880 / 0.690 / 0.534 |
+| oracle R∪A4 | 0.2241 | 0.4713 | 0.1340 | 0.6746 | — | — |
+| (reference: same with A1a encoder) | 0.2044 | 0.4386 | 0.1199 | 0.6269 | 0.821 | 0.958 / 0.881 / 0.686 / 0.529 |
+Reading: C1's +0.011 on the retrieval head becomes +0.001 in the routed union — the router already prefers A4 on most contested rows and C1's gains largely overlap A4's. Oracle +0.002. Final C1 checkpoints may move this slightly.
