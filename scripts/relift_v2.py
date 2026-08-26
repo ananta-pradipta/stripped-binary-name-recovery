@@ -84,7 +84,8 @@ def discover(sources):
                 for f in sorted(os.listdir(d)):
                     add(f, c, os.path.join(d, f))
     for src, corpus in (('ftdomains', 'ftdomains'), ('ftdomains2', 'ftdomains2'),
-                        ('clang_train', 'clang_train'), ('clang_o1o3', 'clang_o1o3')):
+                        ('clang_train', 'clang_train'), ('clang_o1o3', 'clang_o1o3'),
+                        ('symgen', 'symgen_zenodo')):
         if src in sources or ('clang' in sources and src.startswith('clang')):
             d = os.path.join(src, 'bins')
             if os.path.isdir(d):

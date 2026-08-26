@@ -45,6 +45,20 @@ Ingestible: **24 projects, x86_64, O0–O3**. Version differences (e.g. grep-3.8
   number on them is train-contaminated — must be stated).
 - Enlarged-corpus retrains: A1a-config encoder (retrieval/decoder) and A4 — after the current A4 run finishes.
 
+## Census (job 1195865, x86_64)
+- 3,208 ELFs (5.7 GB; PIE, dynamically linked, unstripped). Ghidra unstripped decomp: 2,846 binaries, 751,260 functions
+  (O0 190K / O1 185K / O2 192K / O3 184K). Skew: ncurses 217K, openssl 146K (48% together), coreutils 84K, binutils 82K,
+  adns 37K. After the 9 exclusions ≈ 606K ingestible functions (1.4× our raw train) → B3 domain-balanced sampling
+  (cap ncurses/openssl) is required.
+- Holdout proposal revised (ncurses too large/repetitive for a benchmark): **gmp, libpng, libmicrohttpd, poke,
+  libredwg** (17.7K fns). ncurses → train, capped. Awaiting user confirmation.
+
+## Ingest source
+- `relift_ws/symgen/bins/<id>.debug` symlinks, id = `sg<proj>_<tool>_<opt>` (`scripts/symgen_ingest_manifest.py`;
+  `sg` prefix keeps SymGen builds distinct from our packages; libtool would otherwise hit EXCLUDE_PKGS).
+- `relift_v2.py discover()` gained source `symgen` → corpus tag `symgen_zenodo`. Relift job: `relift_ws/relift_symgen_cpu.sbatch`
+  (16 CPU / 96 G / 24 h, ascending size, --no-assert; heal pass afterwards as for dataset v2).
+
 ## Status log
 - 2026-08-25 23:15 UTC: audit done; downloads of source/decomp tarballs running; job 1195865 extracting x86_64 ELFs
   + decomp function census.
