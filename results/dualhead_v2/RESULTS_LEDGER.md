@@ -53,3 +53,11 @@ Retrieval (emb dump, kNN top-1, metric v2) and router — A1a vs A3+:
 | A1a | 0.1556 / 0.3298 (rerank) | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.954 / 0.754 / 0.448 |
 | A3+ | 0.1436 / 0.3150 (rerank) | 0.1039 / 0.3588 | 0.1067 / 0.3591 | 0.954 / 0.695 / 0.407 |
 Note: the retrieval-head VAL already showed the drop (0.156→0.144) while the decoder val did not — gate BAP-side changes on retrieval val + per-regime decoder val. A3+ CLOSED (negative).
+
+## A4 generation head (CodeT5+ 220m, masked stripped-Ghidra decomp → name), run 1 = our 190K rows, 3 ep — 2026-08-26
+| head | val_xproj micro | val FT | val NCT |
+|---|---|---|---|
+| BAP decoder A1a (greedy) | 0.1327 | 0.0693 | 0.6894 |
+| BAP retrieval A1a + rerank | 0.1556 | — | — |
+| **A4 run 1 (greedy)** | **0.2004** | **0.1470** | 0.6691 |
+Test + SymGen-holdout pending (job 1196560).
