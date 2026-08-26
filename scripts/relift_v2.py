@@ -170,8 +170,11 @@ def fde_starts(stripped):
     return sorted(set(int(m, 16) for m in re.findall(r'FDE cie=[0-9a-f]+ pc=([0-9a-f]+)\.\.', out)))
 
 
-def parse_bap_syms(path):
-    """dump-symbols file: one '(name start end)' per basic block (decimal). Return name -> min start."""
+def parse_bap_syms(path, all_starts=None):
+    """dump-symbols file: one '(name start end)' per basic block (decimal). Return name -> min start.
+    NOTE (audit 2026-08-26): min start is NOT the entry for functions with a chunk placed below the entry
+    (e.g. .text.unlikely cold parts in shared libraries), so coverage against min-starts under-reports
+    (libmailutils.so: 0.63 vs 1.00 real). If `all_starts` (a set) is given, every chunk start is added to it."""
     fns = {}
     with open(path, errors='ignore') as fh:
         for line in fh:
@@ -180,6 +183,8 @@ def parse_bap_syms(path):
                 n, s = m.group(1), int(m.group(2))
                 if n not in fns or s < fns[n]:
                     fns[n] = s
+                if all_starts is not None:
+                    all_starts.add(s)
     return fns
 
 
@@ -239,8 +244,8 @@ def process(item, force, bap_timeout):
                 row.update(rc=r.returncode, note='bap failed: ' + (r.stderr.strip()[-200:] if r.stderr else ''),
                            seconds=round(time.time() - t0, 1)); return row
         # 5. coverage
-        bap_fns = parse_bap_syms(syms_p)          # name -> start
-        starts_set = set(bap_fns.values())
+        starts_set = set()
+        bap_fns = parse_bap_syms(syms_p, all_starts=starts_set)   # name -> min start; starts_set = ALL chunk starts
         row['n_bap_fns'] = len(bap_fns)
         row['n_bap_named'] = sum(1 for n in bap_fns if not n.startswith('sub_') and not n.startswith('.'))
         if funcs:
