@@ -20,6 +20,8 @@ from src.models.function_namer import FunctionNamer
 from src.preprocessing.build_dataset import FunctionDataset
 from src.evaluation.metrics import compute_subtoken_f1
 from src.training.contrastive_sampler import ContrastiveBatchSampler
+from src.training.name_aware_contrastive import NameAwareBatchSampler, soft_contrastive_loss, load_hard_negatives
+CL_MODE, CL_TAU, CL_BETA = 'exact', 0.1, 1.0
 
 
 from src.training.collate import collate_fn  # canonical (B1 fix)
@@ -213,7 +215,11 @@ def train_epoch(model, loader, optimizer, criterion, device, tf_ratio=1.0,
             # Contrastive loss: pull same-name embeddings together
             if contrastive_weight > 0:
                 names = batch['name']  # list of function name strings
-                cl_loss = compute_contrastive_loss(z_enc, names)
+                if CL_MODE == 'soft':
+                    pk = [b.split('_')[0] for b in batch['binary']]
+                    cl_loss = soft_contrastive_loss(z_enc, names, pk, temperature=CL_TAU, beta=CL_BETA)
+                else:
+                    cl_loss = compute_contrastive_loss(z_enc, names)
                 loss = loss + contrastive_weight * cl_loss
                 total_cl_loss += cl_loss.item()
 
@@ -381,6 +387,11 @@ def main():
                         help='Unlikelihood loss weight (0=disabled, try 0.5-2.0)')
     parser.add_argument('--scst-weight', type=float, default=0.0,
                         help='SCST (Phase 4 RL) loss weight. Uses REINFORCE with F1 reward.')
+    parser.add_argument('--contrastive-mode', choices=['exact', 'soft'], default='exact',
+                        help="exact = legacy same-name NT-Xent; soft = C1 name-aware soft-label InfoNCE (name-aware sampler)")
+    parser.add_argument('--contrastive-beta', type=float, default=1.0, help='C1: cross-package positive up-weight')
+    parser.add_argument('--contrastive-tau', type=float, default=0.1)
+    parser.add_argument('--hard-neg-knn', type=str, default=None, help='C1: embedding dump dir with train_knn.npz + train_meta.json')
     parser.add_argument('--contrastive-weight', type=float, default=0.0,
                         help='Contrastive loss weight (0=disabled, try 0.1-1.0)')
     parser.add_argument('--ml-weight', type=float, default=0.0,
@@ -515,13 +526,24 @@ def main():
         print(f"ERROR: Empty split! Train: {len(train_idx)}, Val: {len(val_idx)}")
         return
 
-    if args.contrastive_weight > 0:
+    global CL_MODE, CL_TAU, CL_BETA
+    CL_MODE, CL_TAU, CL_BETA = args.contrastive_mode, args.contrastive_tau, args.contrastive_beta
+    if args.contrastive_weight > 0 and args.contrastive_mode == 'soft':
+        hard = None
+        if args.hard_neg_knn:
+            hard = load_hard_negatives(os.path.join(args.hard_neg_knn, 'train_knn.npz'),
+                                       os.path.join(args.hard_neg_knn, 'train_meta.json'), dataset, train_idx)
+            print(f"C1 hard negatives loaded for {len(hard)} train functions")
+        contrastive_sampler = NameAwareBatchSampler(dataset, train_idx, batch_size=cfg['training']['batch_size'],
+                                                    anchor_count=max(4, cfg['training']['batch_size'] // 4), hard_neg=hard)
+    elif args.contrastive_weight > 0:
         # Use contrastive batch sampler for dense positive pairs
         contrastive_sampler = ContrastiveBatchSampler(
             dataset, train_idx,
             batch_size=cfg['training']['batch_size'],
             pair_count=32,
         )
+    if args.contrastive_weight > 0:
         train_loader = DataLoader(
             dataset, batch_sampler=contrastive_sampler,
             collate_fn=collate_fn, num_workers=args.num_workers,
