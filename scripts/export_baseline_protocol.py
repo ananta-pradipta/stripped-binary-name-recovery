@@ -35,7 +35,8 @@ def main():
         votes_vocab_path=cfg['votes_vocab_path'],
         max_blocks=cfg['max_blocks_per_function'], max_tokens=cfg['max_tokens_per_block'],
         max_name_len=cfg['max_name_length'], min_tokens=cfg.get('min_tokens', 1),
-        cache_path=cfg.get('cache_path'))
+        cache_path=cfg.get('cache_path'),
+        train_pkg_cap=cfg.get('train_pkg_cap'))
     train_idx, val_idx, test_idx = ds.get_splits(cfg['train_split'], cfg['val_split'],
                                                  split_file=cfg['split_file'])
     if not val_idx and ds.val_xproj_idx:

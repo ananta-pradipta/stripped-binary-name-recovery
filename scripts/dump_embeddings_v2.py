@@ -27,7 +27,8 @@ dataset = FunctionDatasetV2(
     token_vocab=ckpt['token_vocab'], ext_vocab=ckpt['ext_vocab'], vocab_binaries=set(split['train']),
     cache_path=cfg['data'].get('cache_path'),
     enrich_a3=bool(cfg['data'].get('enrich_a3', False)),
-    rodata_consts_dir=cfg['data'].get('rodata_consts_dir'))
+    rodata_consts_dir=cfg['data'].get('rodata_consts_dir'),
+    train_pkg_cap=cfg['data'].get('train_pkg_cap'))
 tr, va, te = dataset.get_splits(cfg['data']['train_split'], cfg['data']['val_split'], split_file=cfg['data']['split_file'])
 if not va and dataset.val_xproj_idx:
     va = list(dataset.val_xproj_idx)

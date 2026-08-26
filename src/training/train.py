@@ -473,6 +473,7 @@ def main():
             cache_path=cfg['data'].get('cache_path'),
             enrich_a3=bool(cfg['data'].get('enrich_a3', False)),
             rodata_consts_dir=cfg['data'].get('rodata_consts_dir'),
+            train_pkg_cap=cfg['data'].get('train_pkg_cap'),
         )
         actual_ext_vocab_size = len(dataset.ext_vocab)
         print(f"External vocab size (v2, train-built): {actual_ext_vocab_size}")

@@ -103,7 +103,8 @@ def main():
         max_blocks=cfg['data']['max_blocks_per_function'], max_tokens=cfg['data']['max_tokens_per_block'],
         max_name_len=cfg['data']['max_name_length'], min_tokens=cfg['data'].get('min_tokens', 1),
         token_vocab=ckpt['token_vocab'], ext_vocab=ckpt['ext_vocab'], vocab_binaries=set(split['train']),
-        cache_path=cfg['data'].get('cache_path'))
+        cache_path=cfg['data'].get('cache_path'),
+        train_pkg_cap=cfg['data'].get('train_pkg_cap'))
     train_idx, val_idx, test_idx = dataset.get_splits(cfg['data']['train_split'], cfg['data']['val_split'],
                                                       split_file=split_file)
     if not val_idx and dataset.val_xproj_idx:
