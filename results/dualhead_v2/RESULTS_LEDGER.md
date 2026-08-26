@@ -88,3 +88,16 @@ Val_xproj: 0.2003 (FT 0.147 / NCT 0.668; macro 0.361). Pred-uniqueness test 0.15
 | oracle R∪A4 | 0.2223 | 0.4692 | 0.1327 | 0.6707 | 0.2435 | 0.4367 |
 | oracle R∪D∪A4 | 0.2283 | 0.4762 | 0.1386 | 0.6772 | 0.2526 | 0.4459 |
 Standing best before A4: R + string rerank 0.1176 / 0.3814. Join: 278,204 rows by (binary, entry addr), 591 by name, 0 missing.
+
+## LEARNED 2-HEAD ROUTER + SELECTIVE PREDICTION (job 1196651, `scripts/router2_eval.py`; router/abstainer trained on VAL only, features = kNN sim1, margin, ext_jacc, str_jacc, d_conf, d_len, n_ext, n_str, n_blocks, A4 conf (teacher-forced geometric-mean token prob), sim1−A4conf)
+| system (test) | micro | macro | FT | NCT | %→retrieval |
+|---|---|---|---|---|---|
+| conf router sim1 ≥ 0.615 | 0.1981 | 0.4303 | 0.1155 | 0.6110 | — |
+| learned logreg | 0.2021 | 0.4342 | 0.1196 | 0.6144 | 15.8% |
+| **learned GBT** | **0.2044** | **0.4386** | 0.1199 | 0.6269 | 16.3% |
+| oracle R∪A4 | 0.2223 | 0.4692 | 0.1327 | 0.6707 | — |
+Selective F1 @ coverage (test): | 5% | 10% | 20% | 30% | 50% | 100% |
+| retrieval-only, ranked by sim1 (old system) | 0.524 | 0.467 | 0.389 | 0.298 | 0.200 | 0.116 |
+| conf router, ranked by max(sim1, A4conf) | 0.705 | 0.657 | 0.559 | 0.471 | 0.333 | 0.198 |
+| **GBT router, ranked by GBT-regressed expected F1** | **0.958** | **0.881** | **0.686** | **0.529** | **0.361** | 0.204 |
+A4 confidence quintiles on test (F1): 0.048 / 0.068 / 0.084 / 0.143 / 0.583. Previous best selective (retrieval-only router_v2, A1a): 0.954 @5% / 0.754 @10% / 0.448 @20%.
