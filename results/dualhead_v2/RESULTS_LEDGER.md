@@ -148,3 +148,6 @@ Matched-key (run 2): FT sample A4 0.1185/0.1221 EM 3.75% (SymGen 0.120/0.137, 2.
 | only sim1 | 0.1961 | 0.4234 | 0.596 | 0.763 | 0.026 | 0.429 / 0.378 |
 | only a4_conf | 0.1833 | 0.3761 | 0.518 | 0.693 | 0.039 | 0.770 / 0.571 |
 Reading: routing is driven by retrieval similarity (largest drop when removed); abstention is driven by A4 confidence (selective@20% 0.686 → 0.544 without it). The two signals are complementary: neither alone gets both.
+
+## PENDING — C1 name-aware contrastive sweep (v2 corpus; jobs 1197461 soft λ0.3 / 1197462 soft λ1.0 / 1197463 exact-name control) and BAP v3 retrain (job 1197330)
+Gates (val_xproj, eval_v2): retrieval top-1 > 0.1543 and +rerank > 0.1556 (A1a); decoder per-regime ≥ A1a (FT 0.0693 / NCT 0.6894); novel stratum ≥ 0.06 (C1 target); router selective F1 @10% ≥ 0.754. Test reference: retrieval 0.1147/0.3797 (+rerank 0.1176/0.3814), decoder 0.1000/0.3394, router 0.754@10%/0.448@20%. Rows to be filled from results/c1<tag>_eval_greedy.json, emb_c1<tag>, router_c1<tag>.json, and results/p4sg_* for the v3 retrain.
