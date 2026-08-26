@@ -44,6 +44,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('ckpt')
     ap.add_argument('--tiers', nargs='+', default=['test'])
+    ap.add_argument('--rows', nargs='*', default=[], help='extra jsonl files with prebuilt masked code (e.g. results/a4_ft/symgen_holdout.jsonl); in_dynsym rows are dropped from scoring')
     ap.add_argument('--tag', required=True)
     ap.add_argument('--max-src', type=int, default=1024)
     ap.add_argument('--max-tgt', type=int, default=24)
@@ -65,11 +66,19 @@ def main():
             p = f'{WS}/symgen_v2/decomp/{b}.json'
             dec_cache[b] = json.load(open(p)) if os.path.exists(p) else {}
         return dec_cache[b]
-    for tier in args.tiers:
-        rows = [json.loads(l) for l in open(f'{PROTO}/{tier}.jsonl')]
+    jobs = [(t, f'{PROTO}/{t}.jsonl', False) for t in args.tiers] + \
+           [(os.path.basename(f).replace('.jsonl', ''), f, True) for f in args.rows]
+    for tier, path, prebuilt in jobs:
+        rows = [json.loads(l) for l in open(path)]
+        if prebuilt:
+            n0 = len(rows); rows = [r for r in rows if not r.get('in_dynsym')]
+            print(f'{tier}: prebuilt rows {n0} -> {len(rows)} after dropping in_dynsym', flush=True)
+            for r in rows: r.setdefault('entry_addr', r.get('addr')); r.setdefault('name_seen_in_train', None)
         if args.limit: rows = rows[:args.limit]
         items, miss = [], 0
         for r in rows:
+            if prebuilt:
+                items.append((r, r['code'])); continue
             e = decomp(r['binary']).get(r['entry_addr'])
             if not e or 'code' not in e: miss += 1; items.append((r, None)); continue
             code = e['code'].replace(e['ghidra_name'], '[MASK]', 1)
@@ -113,8 +122,9 @@ def main():
             print(f"  {reg:<4} micro F1 {d['micro']['f1']:.4f} EM {d['micro']['em']:.4f} n={d['micro']['n']} | macro {d['macro_pkg']['f1']:.4f}")
         for k, d in out['by_name_stratum'].items():
             print(f"  {k:<10} F1 {d['f1']:.4f} EM {d['em']:.4f} n={d['n']}")
-    json.dump(report, open(f'{outdir}/{"_".join(args.tiers)}_eval.json', 'w'), indent=1)
-    with open(f'{outdir}/{"_".join(args.tiers)}_preds.tsv', 'w') as fh:
+    stem = '_'.join([t for t, _, _ in jobs])
+    json.dump(report, open(f'{outdir}/{stem}_eval.json', 'w'), indent=1)
+    with open(f'{outdir}/{stem}_preds.tsv', 'w') as fh:
         fh.write('tier\tbinary\tentry_addr\ttrue\tpred\tregime\tname_seen\tf1_raw\tf1_v2\n')
         for x in dump:
             fh.write(f"{x['tier']}\t{x['binary']}\t{x['addr']}\t{x['true']}\t{x['pred']}\t{x['regime']}\t{int(x['name_seen'])}\t{x['f1_raw']:.3f}\t{x['f1_v2']:.3f}\n")
