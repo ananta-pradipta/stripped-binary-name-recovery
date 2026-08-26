@@ -39,3 +39,11 @@ Final baseline retrains on the frozen final corpus: deferred to end of redesign 
 - A2 magic-immediates census: negative (325/183K fns, 0% precision). Rodata-table variant in A3+.
 - Vocab-oracle (sampled): test 0.484; retrieval reaches ~21-24% of it (selection gap).
 - Efficiency: ours 34M params, ms/function, BAP-only; SymGen 34B + Ghidra decomp, ~2.6 s/function.
+
+## A3+ (p3b_a3_v2_seed42, lit/ABI/rodata channels on top of A1a) — eval_v2 greedy, metric v2, 2026-08-26
+| ckpt | val micro | val macro | test micro | test EM | test macro | test FT | test NCT | seen | novel |
+|---|---|---|---|---|---|---|---|---|---|
+| P2  | 0.1078 | 0.2487 | 0.0797 | 0.0523 | 0.3057 | 0.0192 | 0.3827 | 0.5263 | 0.0160 |
+| A1a | 0.1327 | 0.2864 | 0.1000 | 0.0613 | 0.3394 | 0.0270 | 0.4650 | 0.6353 | 0.0236 |
+| A3+ | 0.1324 | 0.3002 | 0.0912 | 0.0551 | 0.2937 | 0.0258 | 0.4178 | 0.5764 | 0.0219 |
+Per-package test (A1a→A3+): units2 0.741→0.416, gzip2 0.785→0.519, tar2 0.791→0.614, patch2 0.782→0.623, sed2 0.763→0.620, diffutils2 0.822→0.682, grep2 0.819→0.690; better: bsdtar 0.703→0.742, coreutils4 0.719→0.725. 12 better / 37 worse.
