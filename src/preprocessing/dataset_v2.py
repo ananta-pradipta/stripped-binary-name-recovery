@@ -42,6 +42,23 @@ def tokenize_string(s: str, max_tokens: int = 8):
     return toks
 
 
+
+def _dsv2_read_graph(gp):
+    """Worker for parallel corpus loading: read one graph JSON, derive ext-call list and merged internal callees."""
+    import json as _json, os as _os
+    if not _os.path.exists(gp):
+        return None
+    with open(gp) as fh:
+        graph = _json.load(fh)
+    ext = []
+    for cs in graph.get('call_sites', []):
+        if cs['kind'] == 'import' and cs['name'] not in ext:
+            ext.append(cs['name'])
+    graph['internal_callees'] = sorted(set(graph.get('internal_callees', [])) |
+                                       set(graph.get('internal_named_callees', [])))
+    return graph, ext
+
+
 class FunctionDatasetV2(FunctionDataset):
     def __init__(self,
                  match_index_path: str = 'data/match_index_v2.json',
@@ -196,21 +213,35 @@ class FunctionDatasetV2(FunctionDataset):
         self.samples = []
         self.token_counter = defaultdict(int)
         ext_counter = Counter()
-        for r in self.records:
-            gp = r['graph']
-            if not os.path.exists(gp):
-                self.filter_stats['graph_missing'] += 1; continue
-            with open(gp) as fh:
-                graph = json.load(fh)
-            binary, bap_name = r['binary'], r['bap_name']
-            # external calls in call order (unique), from import call sites
-            ext = []
-            for cs in graph.get('call_sites', []):
-                if cs['kind'] == 'import' and cs['name'] not in ext:
-                    ext.append(cs['name'])
-            # internal callees: sub_ + named (thunk aliases resolved at lookup time)
-            graph['internal_callees'] = sorted(set(graph.get('internal_callees', [])) |
-                                               set(graph.get('internal_named_callees', [])))
+        n_workers = int(os.environ.get('DATASETV2_WORKERS', '1'))
+        if n_workers > 1:
+            from multiprocessing import Pool
+            with Pool(n_workers) as pool:
+                loaded = list(pool.imap(_dsv2_read_graph, [r['graph'] for r in self.records], chunksize=256))
+        else:
+            loaded = None
+        for ri, r in enumerate(self.records):
+            if loaded is not None:
+                got = loaded[ri]
+                if got is None:
+                    self.filter_stats['graph_missing'] += 1; continue
+                graph, ext = got
+                binary, bap_name = r['binary'], r['bap_name']
+            else:
+                gp = r['graph']
+                if not os.path.exists(gp):
+                    self.filter_stats['graph_missing'] += 1; continue
+                with open(gp) as fh:
+                    graph = json.load(fh)
+                binary, bap_name = r['binary'], r['bap_name']
+                # external calls in call order (unique), from import call sites
+                ext = []
+                for cs in graph.get('call_sites', []):
+                    if cs['kind'] == 'import' and cs['name'] not in ext:
+                        ext.append(cs['name'])
+                # internal callees: sub_ + named (thunk aliases resolved at lookup time)
+                graph['internal_callees'] = sorted(set(graph.get('internal_callees', [])) |
+                                                   set(graph.get('internal_named_callees', [])))
             for b in graph['blocks']:
                 for t in b['tokens']:
                     self.token_counter[t] += 1
