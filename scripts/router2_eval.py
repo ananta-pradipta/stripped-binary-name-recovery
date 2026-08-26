@@ -90,10 +90,21 @@ yv = np.array([1 if x['fR'] >= x['fA'] else 0 for x in val]); Xv, Xt = X(val), X
 wv = np.abs(np.array([x['fR'] - x['fA'] for x in val])) + 1e-3   # weight rows by how much the choice matters
 lr = LogisticRegression(max_iter=2000, C=1.0).fit(Xv, yv, sample_weight=wv)
 gb = GradientBoostingClassifier(n_estimators=300, max_depth=3, learning_rate=0.05).fit(Xv, yv, sample_weight=wv)
+def routing_stats(rs, useR):
+    # oracle preference per row: R if fR > fA, A4 if fA > fR, tie otherwise (either choice is optimal)
+    n = len(rs); pref_R = sum(1 for r in rs if r['fR'] > r['fA']); pref_A = sum(1 for r in rs if r['fA'] > r['fR']); ties = n - pref_R - pref_A
+    correct = sum(1 for r, u in zip(rs, useR) if (r['fR'] == r['fA']) or (u and r['fR'] > r['fA']) or ((not u) and r['fA'] > r['fR']))
+    contested = [(r, u) for r, u in zip(rs, useR) if r['fR'] != r['fA']]
+    acc_contested = sum(1 for r, u in contested if (u and r['fR'] > r['fA']) or ((not u) and r['fA'] > r['fR'])) / max(1, len(contested))
+    regret = sum(max(r['fR'], r['fA']) - (r['fR'] if u else r['fA']) for r, u in zip(rs, useR)) / n
+    return {'oracle_prefers_R': round(pref_R / n, 3), 'oracle_prefers_A4': round(pref_A / n, 3), 'ties': round(ties / n, 3),
+            'routing_acc_all': round(correct / n, 3), 'routing_acc_contested': round(acc_contested, 3), 'mean_regret_F1': round(regret, 4)}
+rep['test']['routing_conf_sim1'] = routing_stats(test, [x['sim1'] >= tau for x in test])
 for name, m in (('logreg', lr), ('gbt', gb)):
     pv = m.predict_proba(Xv)[:, 1]; pt = m.predict_proba(Xt)[:, 1]
     rep['val'][f'learned_{name}'] = route(val, pv >= 0.5); rep['test'][f'learned_{name}'] = route(test, pt >= 0.5)
     rep['test'][f'learned_{name}_R_rate'] = round(float(np.mean(pt >= 0.5)), 3)
+    rep['test'][f'routing_{name}'] = routing_stats(test, pt >= 0.5)
 # abstention: regress expected F1 of the routed answer (GBT) on val, rank test by it
 useR_t = gb.predict_proba(Xt)[:, 1] >= 0.5; useR_v = gb.predict_proba(Xv)[:, 1] >= 0.5
 Fv = np.hstack([Xv, useR_v[:, None]]); Ft = np.hstack([Xt, useR_t[:, None]])
