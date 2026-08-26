@@ -14,7 +14,9 @@ WS = '/project/hz79/_shared/cs785/dh2'
 ap = argparse.ArgumentParser(); ap.add_argument('--router', default=f'{WS}/results/router_p3a_features.tsv')
 ap.add_argument('--a4', default=f'{WS}/results/a4_codet5p220m_v1/val_test_symgen_holdout_preds.tsv')
 ap.add_argument('--regime-dump', default=f'{WS}/results/p3a_preds_greedy.tsv')
-ap.add_argument('--out', default=f'{WS}/results/union_a1a_a4v1.json'); args = ap.parse_args()
+ap.add_argument('--out', default=f'{WS}/results/union_a1a_a4v1.json')
+ap.add_argument('--drop-missing-a4', action='store_true', help='exclude rows with no A4 prediction (e.g. v3-only holdout rows) so the union is scored on the A4-covered population')
+args = ap.parse_args()
 
 def demangle_many(names):
     todo = sorted({n for n in names if n and n.startswith('_Z')}); out = {}
@@ -53,6 +55,8 @@ for l in open(args.router):
     if p4 is None:
         p4 = a4_name.get((tier, d['binary'], d['true']))
         miss['byname' if p4 is not None else 'MISSING'] += 1
+        if p4 is None and args.drop_missing_a4:
+            continue
     rows.append({'tier': tier, 'pkg': d['binary'].split('_')[0], 'true': d['true'], 'R': d['r_pred'], 'D': d['d_pred'], 'A4': p4 or '',
                  'sim1': float(d['sim1']), 'margin': float(d['margin']), 'regime': regime.get((tier, d['binary'], d['bap']), '?')})
 print('join:', dict(miss), 'rows', len(rows))

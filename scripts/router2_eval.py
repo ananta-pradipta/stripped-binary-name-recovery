@@ -13,7 +13,9 @@ from src.evaluation.metrics import compute_subtoken_f1
 WS = '/project/hz79/_shared/cs785/dh2'
 ap = argparse.ArgumentParser(); ap.add_argument('--router', default=f'{WS}/results/router_p3a_features.tsv')
 ap.add_argument('--a4', required=True); ap.add_argument('--regime-dump', default=f'{WS}/results/p3a_preds_greedy.tsv')
-ap.add_argument('--out', required=True); args = ap.parse_args()
+ap.add_argument('--out', required=True)
+ap.add_argument('--drop-missing-a4', action='store_true', help='exclude rows with no A4 prediction (v3-only holdout rows)')
+args = ap.parse_args()
 
 def demangle_many(names):
     todo = sorted({n for n in names if n and n.startswith('_Z')}); out = {}
@@ -46,7 +48,10 @@ for l in open(args.router):
         for da in (0, -4, 4):
             p4 = a4_addr.get((tier, d['binary'], a + da))
             if p4: break
-    if p4 is None: p4 = a4_name.get((tier, d['binary'], d['true']), ('', 0.0))
+    if p4 is None: p4 = a4_name.get((tier, d['binary'], d['true']))
+    if p4 is None:
+        if args.drop_missing_a4: continue
+        p4 = ('', 0.0)
     x = {'tier': tier, 'pkg': d['binary'].split('_')[0], 'true': d['true'], 'R': d['r_pred'], 'A4': p4[0], 'a4_conf': p4[1],
          'regime': regime.get((tier, d['binary'], d['bap']), '?')}
     for f in FEATS: x[f] = float(d[f])
