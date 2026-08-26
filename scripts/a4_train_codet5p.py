@@ -24,8 +24,20 @@ def f1_pair(pred, gold):
     return 2 * pr * rc / (pr + rc)
 
 class A4Set(Dataset):
-    def __init__(self, path, tok, max_src, max_tgt, limit=None, seed=0):
+    def __init__(self, path, tok, max_src, max_tgt, limit=None, seed=0, extra=(), extra_cap=None):
         self.rows = [json.loads(l) for l in open(path)]
+        rng0 = random.Random(seed + 1)
+        for ep in extra:
+            rows = [json.loads(l) for l in open(ep)]
+            if extra_cap:
+                by = {}
+                for r in rows: by.setdefault(r['package'], []).append(r)
+                rows = []
+                for pkg, rs in sorted(by.items()):
+                    if len(rs) > extra_cap: rng0.shuffle(rs); rs = rs[:extra_cap]
+                    rows += rs
+            print(f'extra train {ep}: {len(rows)} rows (cap {extra_cap})', flush=True)
+            self.rows += rows
         if limit and limit < len(self.rows):
             rng = random.Random(seed); rng.shuffle(self.rows); self.rows = self.rows[:limit]
         self.tok, self.max_src, self.max_tgt = tok, max_src, max_tgt
@@ -61,7 +73,7 @@ def evaluate(model, tok, loader, device, max_tgt, out_path=None, amp_dtype=torch
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--model', default='/project/hz79/_shared/cs785/baselines/hf_local/codet5p-220m')
+    ap.add_argument('--model', default='Salesforce/codet5p-220m')
     ap.add_argument('--tag', required=True)
     ap.add_argument('--max-src', type=int, default=1024)
     ap.add_argument('--max-tgt', type=int, default=24)
@@ -72,6 +84,8 @@ def main():
     ap.add_argument('--eval-every', type=int, default=2000)
     ap.add_argument('--val-limit', type=int, default=4000, help='val subset for periodic eval (full val at the end)')
     ap.add_argument('--train-limit', type=int, default=None)
+    ap.add_argument('--extra-train', nargs='*', default=[], help='additional jsonl files (e.g. SymGen corpus rows)')
+    ap.add_argument('--extra-cap', type=int, default=None, help='max rows per package from extra files (B3 domain balance)')
     ap.add_argument('--seed', type=int, default=42)
     ap.add_argument('--bf16', action='store_true')
     ap.add_argument('--smoke', action='store_true')
@@ -84,7 +98,8 @@ def main():
     nparams = sum(p.numel() for p in model.parameters())
     if args.smoke:
         args.train_limit = args.train_limit or 512; args.val_limit = 256; args.epochs = 1; args.eval_every = 16
-    train = A4Set(f'{WS}/results/a4_ft/train.jsonl', tok, args.max_src, args.max_tgt, args.train_limit, args.seed)
+    train = A4Set(f'{WS}/results/a4_ft/train.jsonl', tok, args.max_src, args.max_tgt, args.train_limit, args.seed,
+                  extra=args.extra_train, extra_cap=args.extra_cap)
     val_full = A4Set(f'{WS}/results/a4_ft/val.jsonl', tok, args.max_src, args.max_tgt)
     val_sub = A4Set(f'{WS}/results/a4_ft/val.jsonl', tok, args.max_src, args.max_tgt, args.val_limit, args.seed)
     tl = DataLoader(train, batch_size=args.bs, shuffle=True, collate_fn=train.collate, num_workers=4, drop_last=True)
