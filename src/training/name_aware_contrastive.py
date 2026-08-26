@@ -118,6 +118,11 @@ class NameAwareBatchSampler(Sampler):
     def __len__(self):
         return (len(self.anchors) + self.anchor_count - 1) // self.anchor_count
 
+    @property
+    def pair_names(self):
+        # legacy interface used by train.py's log line: names with at least one positive
+        return [n for n in self.by_name if self.pos_names[n] or len(self.by_name[n]) > 1]
+
 
 def soft_contrastive_loss(z, names, pkgs, temperature=0.1, beta=1.0, exact_only=False):
     """Soft-label InfoNCE over the batch (see module doc). z: (B, D); names/pkgs: lists of B strings."""
