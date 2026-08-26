@@ -151,3 +151,10 @@ Reading: routing is driven by retrieval similarity (largest drop when removed); 
 
 ## PENDING — C1 name-aware contrastive sweep (v2 corpus; jobs 1197461 soft λ0.3 / 1197462 soft λ1.0 / 1197463 exact-name control) and BAP v3 retrain (job 1197330)
 Gates (val_xproj, eval_v2): retrieval top-1 > 0.1543 and +rerank > 0.1556 (A1a); decoder per-regime ≥ A1a (FT 0.0693 / NCT 0.6894); novel stratum ≥ 0.06 (C1 target); router selective F1 @10% ≥ 0.754. Test reference: retrieval 0.1147/0.3797 (+rerank 0.1176/0.3814), decoder 0.1000/0.3394, router 0.754@10%/0.448@20%. Interim: BAP v3 retrain ep10 train-time val 0.1357 (A1a ep10 0.1127 / final 0.1333; val scored 10,373 vs 10,617). Rows to be filled from results/c1<tag>_eval_greedy.json, emb_c1<tag>, router_c1<tag>.json, and results/p4sg_* for the v3 retrain.
+
+## C1 INTERIM — soft-label InfoNCE λ=1.0, EPOCH-7 checkpoint (job 1198233/1198234; v2 corpus; retrieval = kNN top-1 on the encoder embedding, + string rerank α=0.8)
+| encoder | val top-1 | val +rerank | test top-1 micro / macro | test +rerank | test +rerank+emit |
+|---|---|---|---|---|---|
+| A1a (final, ep41) | 0.1543 | 0.1556 | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.1176 / 0.3814 |
+| **C1 soft λ1.0 @ ep7** | **0.1593** | **0.1617** | **0.1255 / 0.3850** | **0.1278 / 0.3856** | 0.1301 / 0.3864 (thr 0.4) |
+Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrastive term trades decoder CE for embedding quality, as designed). Runs continue; final read on the finished checkpoints.
