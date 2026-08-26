@@ -86,24 +86,29 @@ def main():
         dec_cache.clear()
         # sort by length for efficient batching, keep original order via index
         order = sorted(range(len(items)), key=lambda i: len(items[i][1] or ''))
-        preds = [''] * len(items); t0 = time.time()
+        preds = [''] * len(items); confs = [0.0] * len(items); t0 = time.time()
         todo = [i for i in order if items[i][1] is not None]
         for s in range(0, len(todo), args.bs):
             idx = todo[s:s+args.bs]
             enc = tok([items[i][1] for i in idx], max_length=args.max_src, truncation=True, padding=True, return_tensors='pt')
             with torch.no_grad(), torch.autocast(device, dtype=torch.bfloat16 if (args.bf16 or device == 'cpu') else torch.float16, enabled=(device == 'cuda')):
                 gen = model.generate(input_ids=enc.input_ids.to(device), attention_mask=enc.attention_mask.to(device),
-                                     max_new_tokens=args.max_tgt, num_beams=args.beams)
-            for i, p in zip(idx, tok.batch_decode(gen, skip_special_tokens=True)):
+                                     max_new_tokens=args.max_tgt, num_beams=args.beams, output_scores=True, return_dict_in_generate=True)
+                # sequence confidence: mean token log-prob of the generated tokens (greedy) -> exp = geometric-mean prob
+                tr = model.compute_transition_scores(gen.sequences, gen.scores, normalize_logits=True, beam_indices=getattr(gen, 'beam_indices', None))
+                seq = gen.sequences
+            for k, (i, p) in enumerate(zip(idx, tok.batch_decode(seq, skip_special_tokens=True))):
                 preds[i] = '_'.join(p.strip().split())
+                valid = tr[k][tr[k] > -1e4]
+                confs[i] = float(torch.exp(valid.mean()).item()) if len(valid) else 0.0
             if (s // args.bs) % 200 == 0:
                 print(f'{tier}: {s}/{len(todo)} {(time.time()-t0)/60:.1f}m', flush=True)
         dem = demangle_many([r['name'] for r, _ in items] + preds)
         scored = []
-        for (r, code), p in zip(items, preds):
+        for (r, code), p, cf in zip(items, preds, confs):
             t = r['name']; cp, ct = canon(p, dem), canon(t, dem)
             scored.append({'tier': tier, 'binary': r['binary'], 'addr': r['entry_addr'], 'pkg': r['package'],
-                           'true': t, 'pred': p, 'regime': r.get('regime', '?'), 'name_seen': bool(r.get('name_seen_in_train')),
+                           'true': t, 'pred': p, 'conf': cf, 'regime': r.get('regime', '?'), 'name_seen': bool(r.get('name_seen_in_train')),
                            'f1_raw': compute_subtoken_f1(p, t), 'f1_v2': compute_subtoken_f1(cp, ct), 'em': 1.0 if cp == ct else 0.0,
                            'has_decomp': code is not None})
         mac, per_pkg = macro(scored, 'f1_v2')
@@ -125,9 +130,9 @@ def main():
     stem = '_'.join([t for t, _, _ in jobs])
     json.dump(report, open(f'{outdir}/{stem}_eval.json', 'w'), indent=1)
     with open(f'{outdir}/{stem}_preds.tsv', 'w') as fh:
-        fh.write('tier\tbinary\tentry_addr\ttrue\tpred\tregime\tname_seen\tf1_raw\tf1_v2\n')
+        fh.write('tier\tbinary\tentry_addr\ttrue\tpred\tregime\tname_seen\tf1_raw\tf1_v2\tconf\n')
         for x in dump:
-            fh.write(f"{x['tier']}\t{x['binary']}\t{x['addr']}\t{x['true']}\t{x['pred']}\t{x['regime']}\t{int(x['name_seen'])}\t{x['f1_raw']:.3f}\t{x['f1_v2']:.3f}\n")
+            fh.write(f"{x['tier']}\t{x['binary']}\t{x['addr']}\t{x['true']}\t{x['pred']}\t{x['regime']}\t{int(x['name_seen'])}\t{x['f1_raw']:.3f}\t{x['f1_v2']:.3f}\t{x['conf']:.4f}\n")
     print('EFFECT: a4_predict done', {t: (d['scored']['n'], round(d['scored']['f1'], 4)) for t, d in report['tiers'].items()}, flush=True)
 
 if __name__ == '__main__':
