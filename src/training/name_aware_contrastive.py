@@ -32,8 +32,9 @@ def name_f1(a, b):
 
 class NameAwareBatchSampler(Sampler):
     def __init__(self, dataset, train_indices, batch_size=64, anchor_count=16, jacc_min=0.5, df_cap=3000,
-                 hard_neg=None, hard_neg_max_f1=0.2, seed=42):
+                 hard_neg=None, hard_neg_max_f1=0.2, seed=42, anchors_per_epoch=None):
         self.batch_size, self.anchor_count = batch_size, anchor_count
+        self.anchors_per_epoch = anchors_per_epoch   # cap so an epoch stays ~ the plain-loader size; None = all anchors
         self.train_indices = list(train_indices)
         self.rng = random.Random(seed)
         S = dataset.samples
@@ -96,6 +97,8 @@ class NameAwareBatchSampler(Sampler):
 
     def __iter__(self):
         anchors = self.anchors[:]; self.rng.shuffle(anchors)
+        if self.anchors_per_epoch:
+            anchors = anchors[:self.anchors_per_epoch]
         fills = self.train_indices[:]; self.rng.shuffle(fills)
         fi = 0
         for k in range(0, len(anchors), self.anchor_count):
@@ -116,7 +119,8 @@ class NameAwareBatchSampler(Sampler):
                 yield batch[:self.batch_size]
 
     def __len__(self):
-        return (len(self.anchors) + self.anchor_count - 1) // self.anchor_count
+        n = min(len(self.anchors), self.anchors_per_epoch) if self.anchors_per_epoch else len(self.anchors)
+        return (n + self.anchor_count - 1) // self.anchor_count
 
     @property
     def pair_names(self):
