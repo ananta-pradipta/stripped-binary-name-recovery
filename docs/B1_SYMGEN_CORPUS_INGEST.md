@@ -62,6 +62,8 @@ Ingestible: **24 projects, x86_64, O0–O3**. Version differences (e.g. grep-3.8
 ## Audit notes
 - 2026-08-26: ET_REL object files (132 ids, readline/bash builtin `.so` objects) → exclude at split (label_cov median 0.31, no eh_frame). Large DYN shared libraries show label_cov 0.62–0.66 (libmailutils, libfreeipmi) — cause under investigation before ingest; executables median 0.99.
 
+- 2026-08-26: pruned 216 statically-linked openssl test programs from ingest (libcrypto clones, 1h BAP timeouts); 818 smaller openssl tests already lifted are kept. Final ingest ≈ 2,188 binaries.
+
 ## Status log
 - 2026-08-25 23:15 UTC: audit done; downloads of source/decomp tarballs running; job 1195865 extracting x86_64 ELFs
   + decomp function census.
