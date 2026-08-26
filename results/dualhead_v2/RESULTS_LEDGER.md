@@ -61,3 +61,9 @@ Note: the retrieval-head VAL already showed the drop (0.156→0.144) while the d
 | BAP retrieval A1a + rerank | 0.1556 | — | — |
 | **A4 run 1 (greedy)** | **0.2004** | **0.1470** | 0.6691 |
 Test + SymGen-holdout pending (job 1196560).
+**Correction (audit 2026-08-26):** the A3+ retrieval/router rows above were computed on UN-ENRICHED inputs (dump/router scripts lacked `enrich_a3`; fixed 98a935a1) and are superseded by the enriched rerun (jobs 1196472/1196473/1196474, enrichment verified in logs):
+| head | test retrieval micro/macro | + string rerank | router selective F1 @5/10/20% |
+|---|---|---|---|
+| A1a | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.954 / 0.754 / 0.448 |
+| A3+ (enriched, valid) | 0.1068 / 0.3572 | 0.1091 / 0.3578 (+emit 0.1101 / 0.3581) | 0.956 / 0.706 / 0.415 |
+A3+ negative holds on decoder, retrieval and router. CLOSED.
