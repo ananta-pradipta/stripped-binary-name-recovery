@@ -158,3 +158,12 @@ Gates (val_xproj, eval_v2): retrieval top-1 > 0.1543 and +rerank > 0.1556 (A1a);
 | A1a (final, ep41) | 0.1543 | 0.1556 | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.1176 / 0.3814 |
 | **C1 soft λ1.0 @ ep7** | **0.1593** | **0.1617** | **0.1255 / 0.3850** | **0.1278 / 0.3856** | 0.1301 / 0.3864 (thr 0.4) |
 Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrastive term trades decoder CE for embedding quality, as designed). Runs continue; final read on the finished checkpoints.
+
+## C1 RETRIEVAL READS (v2 corpus; kNN top-1 on encoder embedding; + string rerank; metric v2). A1a = standing BAP encoder.
+| encoder | training state | val top-1 | val +rerank | test top-1 micro / macro | test +rerank | router selective @10% / @20% (test) |
+|---|---|---|---|---|---|---|
+| A1a | final (ep41) | 0.1543 | 0.1556 | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.754 / 0.448 |
+| C1 exact-name control λ0.3 (legacy sampler) | final (ep41) | 0.1595 | 0.1604 | 0.1168 / 0.3861 | 0.1186 / 0.3856 | 0.770 / 0.456 |
+| C1 soft λ0.3 (name-aware sampler + hard negs) | **interim ep8** | 0.1595 | 0.1609 | 0.1234 / 0.3859 | 0.1253 / 0.3875 | — |
+| **C1 soft λ1.0** (same sampler) | **interim ep7** | 0.1593 | 0.1617 | **0.1255 / 0.3850** | **0.1278 / 0.3856** | — |
+Val is saturated (~0.1595 for all three) and cannot separate the variants; test does: graded positives + hard negatives give +0.009–0.011 micro over A1a vs +0.002 for exact-name. Jobs 1198229/1198249/1198234/1198260. Final soft checkpoints pending.
