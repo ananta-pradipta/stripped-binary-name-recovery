@@ -92,15 +92,18 @@ def main():
             idx = todo[s:s+args.bs]
             enc = tok([items[i][1] for i in idx], max_length=args.max_src, truncation=True, padding=True, return_tensors='pt')
             with torch.no_grad(), torch.autocast(device, dtype=torch.bfloat16 if (args.bf16 or device == 'cpu') else torch.float16, enabled=(device == 'cuda')):
-                gen = model.generate(input_ids=enc.input_ids.to(device), attention_mask=enc.attention_mask.to(device),
-                                     max_new_tokens=args.max_tgt, num_beams=args.beams, output_scores=True, return_dict_in_generate=True)
-                # sequence confidence: mean token log-prob of the generated tokens (greedy) -> exp = geometric-mean prob
-                tr = model.compute_transition_scores(gen.sequences, gen.scores, normalize_logits=True, beam_indices=getattr(gen, 'beam_indices', None))
-                seq = gen.sequences
+                seq = model.generate(input_ids=enc.input_ids.to(device), attention_mask=enc.attention_mask.to(device),
+                                     max_new_tokens=args.max_tgt, num_beams=args.beams)
+                # exact sequence confidence: teacher-forced re-score of the generated tokens (float32 log-softmax)
+                labels = seq[:, 1:].clone(); labels[labels == tok.pad_token_id] = -100
+                out = model(input_ids=enc.input_ids.to(device), attention_mask=enc.attention_mask.to(device), labels=labels)
+                lp = torch.log_softmax(out.logits.float(), dim=-1)
+                tgt = labels.clone(); tgt[tgt == -100] = 0
+                tok_lp = lp.gather(-1, tgt.unsqueeze(-1)).squeeze(-1); mask = (labels != -100).float()
+                mean_lp = (tok_lp * mask).sum(1) / mask.sum(1).clamp(min=1)
+                conf_b = torch.exp(mean_lp).cpu().tolist()
             for k, (i, p) in enumerate(zip(idx, tok.batch_decode(seq, skip_special_tokens=True))):
-                preds[i] = '_'.join(p.strip().split())
-                valid = tr[k][tr[k] > -1e4]
-                confs[i] = float(torch.exp(valid.mean()).item()) if len(valid) else 0.0
+                preds[i] = '_'.join(p.strip().split()); confs[i] = float(conf_b[k])
             if (s // args.bs) % 200 == 0:
                 print(f'{tier}: {s}/{len(todo)} {(time.time()-t0)/60:.1f}m', flush=True)
         dem = demangle_many([r['name'] for r, _ in items] + preds)
