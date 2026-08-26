@@ -75,3 +75,16 @@ A3+ negative holds on decoder, retrieval and router. CLOSED.
 | BAP retrieval A1a + rerank | 0.1176 | 0.3814 | — | — | — | — | — | — |
 | **A4 gen head (220m, ours only)** | **0.1852** | 0.3680 | 0.055 | **0.1214 (0.1437)** | 0.5042 (0.6314) | 0.6205 | **0.1231** | **0.2231 / 0.1887** |
 Val_xproj: 0.2003 (FT 0.147 / NCT 0.668; macro 0.361). Pred-uniqueness test 0.155; no_decomp 40/268K. Files: results/a4_codet5p220m_v1/val_test_symgen_holdout_{eval.json,preds.tsv}.
+
+## HEAD UNION — A1a retrieval (R) + A1a decoder (D) + A4 gen head (job 1196617, `scripts/union_eval.py`, metric v2, test 268,178 / val 10,617; τ tuned on val)
+| system | test micro | test macro | test FT | test NCT | val micro | val macro |
+|---|---|---|---|---|---|---|
+| R (retrieval top-1, A1a) | 0.1163 | 0.3800 | 0.0289 | 0.5529 | 0.1543 | 0.3325 |
+| D (decoder, A1a) | 0.1001 | 0.3394 | 0.0271 | 0.4650 | 0.1327 | 0.2864 |
+| A4 (gen head, run 1) | 0.1852 | 0.3680 | 0.1214 | 0.5042 | 0.2003 | 0.3606 |
+| regime router (NCT→R, FT→A4) | 0.1933 | 0.4237 | 0.1214 | 0.5529 | 0.2179 | 0.3985 |
+| **conf router sim1 ≥ 0.635 → R else A4** | **0.1983** | **0.4300** | 0.1162 | 0.6090 | 0.2127 | 0.3950 |
+| conf router margin ≥ 0.07 | 0.1989 | 0.4189 | 0.1187 | 0.5998 | 0.2157 | 0.3984 |
+| oracle R∪A4 | 0.2223 | 0.4692 | 0.1327 | 0.6707 | 0.2435 | 0.4367 |
+| oracle R∪D∪A4 | 0.2283 | 0.4762 | 0.1386 | 0.6772 | 0.2526 | 0.4459 |
+Standing best before A4: R + string rerank 0.1176 / 0.3814. Join: 278,204 rows by (binary, entry addr), 591 by name, 0 missing.
