@@ -114,3 +114,12 @@ A4 confidence quintiles on test (F1): 0.048 / 0.068 / 0.084 / 0.143 / 0.583. Pre
 | **ours learned GBT router (R ∪ A4)** | 0.1123 / 0.1201 / 0.035 | **0.7797 / 0.7811** / 0.679 |
 | oracle R ∪ A4 | 0.1297 / 0.1387 / 0.037 | 0.8273 / 0.8281 / 0.738 |
 61 FT / 77 NCT sample keys had no row in our router features (dropped by split policy v3 body-dedup) and are excluded for all systems.
+
+## A4 RUN 2 (ours 190K + SymGen 254K capped, 2 ep; job 1196561 / predict 1197243 / union+router 1197244) — vs run 1
+| | val micro (FT/NCT) | test micro / macro | test FT | test NCT | novel | SymGen holdout micro/macro | GBT union test | oracle test | GBT selective 5/10/20% |
+|---|---|---|---|---|---|---|---|---|---|
+| A4 run 1 | 0.2003 (0.147/0.668) | 0.1852 / 0.3680 | 0.1214 | 0.5042 | 0.1231 | 0.2231 / 0.1887 | **0.2044 / 0.4386** | 0.2223 / 0.4692 | 0.958 / 0.881 / 0.686 |
+| A4 run 2 | **0.2368 (0.190/0.645)** | 0.1776 / 0.3477 | 0.1185 | 0.4729 | 0.1195 | **0.2331 / 0.1993** | 0.1998 / 0.4309 | 0.2188 / 0.4668 | 0.929 / 0.853 / 0.653 |
+Val and the external holdout prefer run 2; our test tier prefers run 1 (per-package: NCT GNU version-pairs lose up to −0.13, FT packages gain ≤ +0.03). Protocol selection (val) → run 2; both reported.
+Routing stats (test; heads disagree on 31.6% of functions, ties 68.4%): oracle prefers A4 22.8% / R 8.7% (run 1); GBT routing accuracy on contested rows **82.1%** (run 1) / 82.0% (run 2), overall 94.3%; mean regret 0.018 / 0.019 F1; conf_sim1 76.8% / 75.9%; logreg 80.2% / 79.6%.
+Matched-key (run 2): FT sample A4 0.1185/0.1221 EM 3.75% (SymGen 0.120/0.137, 2.8%); NCT sample GBT 0.765/0.767 (R 0.744, SymGen 0.236).
