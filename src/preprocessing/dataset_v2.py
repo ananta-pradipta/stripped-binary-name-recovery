@@ -63,7 +63,9 @@ class FunctionDatasetV2(FunctionDataset):
                  cache_path: Optional[str] = None,
                  rodata_consts_dir: Optional[str] = None,
                  enrich_a3: bool = False,
+                 train_pkg_cap: Optional[int] = None,
                  quiet: bool = False):
+        self.train_pkg_cap = train_pkg_cap   # B3 domain balance: max train samples per package (after dedup)
         # NOTE: deliberately not calling FunctionDataset.__init__ (legacy corpus loader).
         self.max_blocks = max_blocks
         self.max_tokens = max_tokens
@@ -343,6 +345,20 @@ class FunctionDatasetV2(FunctionDataset):
                     seen.add(k); kept.append(i)
             train_idx = kept
         stats['train_kept'] = len(train_idx)
+        cap = self.train_pkg_cap
+        if cap:
+            import random as _rnd
+            by_pkg = {}
+            for i in train_idx:
+                by_pkg.setdefault(S[i]['binary'].split('_')[0], []).append(i)
+            rng = _rnd.Random(42); kept = []; capped = {}
+            for pkg in sorted(by_pkg):
+                idx = by_pkg[pkg]
+                if len(idx) > cap:
+                    idx = sorted(rng.sample(idx, cap)); capped[pkg] = len(by_pkg[pkg])
+                kept.extend(idx)
+            train_idx = sorted(kept)
+            stats['train_pkg_cap'] = cap; stats['train_after_cap'] = len(train_idx); stats['capped_pkgs'] = capped
         self.policy_dropped = {}
         out = []
         for tier, idx in (('val', val_idx), ('test', test_idx)):
