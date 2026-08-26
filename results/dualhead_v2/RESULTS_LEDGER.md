@@ -47,3 +47,9 @@ Final baseline retrains on the frozen final corpus: deferred to end of redesign 
 | A1a | 0.1327 | 0.2864 | 0.1000 | 0.0613 | 0.3394 | 0.0270 | 0.4650 | 0.6353 | 0.0236 |
 | A3+ | 0.1324 | 0.3002 | 0.0912 | 0.0551 | 0.2937 | 0.0258 | 0.4178 | 0.5764 | 0.0219 |
 Per-package test (A1a→A3+): units2 0.741→0.416, gzip2 0.785→0.519, tar2 0.791→0.614, patch2 0.782→0.623, sed2 0.763→0.620, diffutils2 0.822→0.682, grep2 0.819→0.690; better: bsdtar 0.703→0.742, coreutils4 0.719→0.725. 12 better / 37 worse.
+Retrieval (emb dump, kNN top-1, metric v2) and router — A1a vs A3+:
+| head | val micro/macro | test micro/macro | test +string rerank (α=0.8) | router selective F1 @5/10/20% (test) |
+|---|---|---|---|---|
+| A1a | 0.1556 / 0.3298 (rerank) | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.954 / 0.754 / 0.448 |
+| A3+ | 0.1436 / 0.3150 (rerank) | 0.1039 / 0.3588 | 0.1067 / 0.3591 | 0.954 / 0.695 / 0.407 |
+Note: the retrieval-head VAL already showed the drop (0.156→0.144) while the decoder val did not — gate BAP-side changes on retrieval val + per-regime decoder val. A3+ CLOSED (negative).
