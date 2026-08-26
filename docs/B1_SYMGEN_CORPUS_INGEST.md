@@ -59,6 +59,9 @@ Ingestible: **24 projects, x86_64, O0–O3**. Version differences (e.g. grep-3.8
 - `relift_v2.py discover()` gained source `symgen` → corpus tag `symgen_zenodo`. Relift job: `relift_ws/relift_symgen_cpu.sbatch`
   (16 CPU / 96 G / 24 h, ascending size, --no-assert; heal pass afterwards as for dataset v2).
 
+## Audit notes
+- 2026-08-26: ET_REL object files (132 ids, readline/bash builtin `.so` objects) → exclude at split (label_cov median 0.31, no eh_frame). Large DYN shared libraries show label_cov 0.62–0.66 (libmailutils, libfreeipmi) — cause under investigation before ingest; executables median 0.99.
+
 ## Status log
 - 2026-08-25 23:15 UTC: audit done; downloads of source/decomp tarballs running; job 1195865 extracting x86_64 ELFs
   + decomp function census.
