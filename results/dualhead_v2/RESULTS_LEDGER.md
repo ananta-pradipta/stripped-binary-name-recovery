@@ -101,3 +101,16 @@ Selective F1 @ coverage (test): | 5% | 10% | 20% | 30% | 50% | 100% |
 | conf router, ranked by max(sim1, A4conf) | 0.705 | 0.657 | 0.559 | 0.471 | 0.333 | 0.198 |
 | **GBT router, ranked by GBT-regressed expected F1** | **0.958** | **0.881** | **0.686** | **0.529** | **0.361** | 0.204 |
 A4 confidence quintiles on test (F1): 0.048 / 0.068 / 0.084 / 0.143 / 0.583. Previous best selective (retrieval-only router_v2, A1a): 0.954 @5% / 0.754 @10% / 0.448 @20%.
+
+## MATCHED-KEY BASELINE COMPARISON (job 1197222, `scripts/matched_baselines.py`; P4 sample keys; metric v2 for every system; GBT router refit on val)
+| system | FT sample (7,471 joined / 24 pkgs) micro / macro / EM | NCT sample (6,986 / 23 pkgs) micro / macro / EM |
+|---|---|---|
+| SymGen (CodeLlama-34B + LoRA) | **0.1200 / 0.1374** / 0.028 | 0.2358 / 0.2339 / 0.073 |
+| BLens (retrained; from P4 interim, same FT keys) | 0.026 / 0.030 / — | — |
+| ours A1a retrieval R | 0.0386 / 0.0467 / 0.014 | 0.7440 / 0.7466 / 0.688 |
+| ours A1a decoder D | 0.0344 / 0.0442 / 0.012 | 0.6598 / 0.6592 / 0.578 |
+| ours A4 gen head (220m, run 1) | 0.1152 / 0.1236 / **0.033** | 0.6329 / 0.6331 / 0.440 |
+| ours conf router | 0.1060 / 0.1152 / 0.034 | 0.7672 / 0.7701 / 0.675 |
+| **ours learned GBT router (R ∪ A4)** | 0.1123 / 0.1201 / 0.035 | **0.7797 / 0.7811** / 0.679 |
+| oracle R ∪ A4 | 0.1297 / 0.1387 / 0.037 | 0.8273 / 0.8281 / 0.738 |
+61 FT / 77 NCT sample keys had no row in our router features (dropped by split policy v3 body-dedup) and are excluded for all systems.
