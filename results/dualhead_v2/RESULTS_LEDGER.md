@@ -6,7 +6,7 @@
 | same with A4 run 2 (val-selected head) | 0.200 | 0.431 | 0.117 | 0.612 | — | 0.93 / 0.85 / 0.65 / 0.50 |
 | oracle union (upper bound) | 0.222 | 0.469 | 0.133 | 0.671 | — | — |
 | A4 gen head alone (run 1 / run 2) | 0.185 / 0.178 | 0.368 / 0.348 | 0.121 / 0.119 | 0.504 / 0.473 | 0.123 / 0.120 | — |
-External: SymGen 5-pkg holdout (9,991 fns) A4 run 1 0.223 / run 2 0.233 micro. Matched-key vs SymGen-34B (FT sample): A4-220m 0.115–0.119 vs 0.120; union NCT sample 0.765–0.780 vs 0.236. Router accuracy on contested rows 82%. Details in the sections below.
+Retrieval head alone: A1a 0.115/0.380 → **C1 soft λ1.0 (ep7) 0.126/0.385 (+rerank 0.128/0.386)**; in the routed union the gain is +0.001 (0.205/0.439). External: SymGen 5-pkg holdout (9,991 fns) A4 run 1 0.223 / run 2 0.233 micro. Matched-key vs SymGen-34B (FT sample): A4-220m 0.115–0.119 vs 0.120; union NCT sample 0.765–0.780 vs 0.236. Router accuracy on contested rows 82%. Details in the sections below.
 
 # Dual-Head v2 — results ledger (numbers only; prose comes after experiments per workflow rule)
 All numbers: dataset v2 split policy v3 (package-disjoint, body-dedup eval), metric v2
