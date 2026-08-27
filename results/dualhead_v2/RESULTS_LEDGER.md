@@ -189,3 +189,11 @@ Reading: C1's +0.011 on the retrieval head becomes +0.001 in the routed union �
 | router selective @10/20% (own population) | — | 0.754/0.448 → 0.720/0.426 | v3 population includes 19,559 sg-holdout rows |
 Third val/test disagreement for GNU-heavy data additions (A3+, A4 run 2, v3). Union with A4 (job 1198874) decides the system-level effect.
 Union with A4 run 1 (job 1198874, A4-covered rows 276,432 incl. val; 19,559 sg-holdout rows dropped): test GBT **0.2039 / 0.4388** (A1a encoder: 0.2044 / 0.4386), oracle 0.2225 / 0.4694 (0.2223 / 0.4692), conf router 0.1974 / 0.4284, routing acc 0.806, selective 0.949 / 0.881 / 0.681 / 0.523 (A1a: 0.958 / 0.881 / 0.686 / 0.529). **VERDICT: v3 retrain = WASH on test at every level; A1a (or C1) stays the BAP encoder. The SymGen corpus is used as A4 training data (run 2) and as the external benchmark only.** Val is not a usable selector for GNU-heavy data additions (three cases now).
+
+## C1 SYSTEM-LEVEL SUMMARY (encoder ∪ A4 run 1, learned GBT router fit on val; test, A4-covered rows)
+| encoder | retrieval alone micro / macro (FT / NCT) | GBT union micro / macro (NCT) | oracle union | routing acc | selective @5/10/20/30% |
+|---|---|---|---|---|---|
+| A1a (standing) | 0.1163 / 0.3800 (0.029 / 0.553) | 0.2044 / 0.4386 (0.627) | 0.2223 / 0.4692 | 0.821 | 0.958 / 0.881 / 0.686 / 0.529 |
+| C1 soft λ0.3 (ep8) | 0.1249 / 0.3865 (0.038 / 0.562) | **0.2053 / 0.4388** (0.631) | **0.2249 / 0.4731** | 0.804 | 0.950 / 0.879 / **0.696** / 0.536 |
+| C1 soft λ1.0 (ep7, final) | **0.1269 / 0.3853** (0.040 / 0.564) | 0.2052 / 0.4387 (0.633) | 0.2241 / 0.4713 | 0.805 | 0.943 / 0.880 / 0.690 / 0.534 |
+Verdict: C1 = +0.009–0.011 micro on the retrieval head (both λ), ≈ +0.001 on the routed system, +0.002–0.003 on the oracle, +0.01 on selective F1 @20% (λ0.3). Final BAP retrieval encoder for the paper: **C1 soft λ1.0** (best retrieval-head metric — the quantity C1 optimises); system rows reported for all three. Jobs: λ0.3 chain 1199194–96; λ1.0 chain 1198275–77.
