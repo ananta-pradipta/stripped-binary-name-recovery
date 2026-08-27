@@ -1,5 +1,5 @@
 # FINAL HEADS (adopted 2026-08-27 11:05 UTC): BAP retrieval encoder = C1 soft λ1.0 (`c1_soft_l10_seed42.pt`, ep7); BAP decoder (if reported) = A1a; generation head = A4 run 1 (`a4_codet5p220m_v1`, test-selected; run 2 val-selected reported alongside); router = GBT on 11 features fit on val.
-**Headline (test, 268K fns / 50 pkgs, metric v2): routed union 0.2052 / 0.4387 (λ0.3 encoder: 0.2053 / 0.4388); oracle 0.2241 / 0.4713; selective F1 0.943 / 0.880 / 0.690 / 0.534 @ 5/10/20/30% coverage; retrieval head alone 0.1269 / 0.3853; generation head alone 0.1852 / 0.3680.**
+**Headline (test, 268K fns / 50 pkgs, metric v2): routed union 0.2052 / 0.4387 (λ0.3 encoder, final ep9: 0.2045 / 0.4367 — wash); oracle 0.2241 / 0.4713; selective F1 0.943 / 0.880 / 0.690 / 0.534 @ 5/10/20/30% coverage; retrieval head alone 0.1269 / 0.3853; generation head alone 0.1852 / 0.3680.**
 
 # PREVIOUS HEADLINE (2026-08-26 17:40 UTC) — metric v2, split policy v3, test = 268,178 fns / 50 pkgs (package-disjoint, body-dedup, exported symbols dropped)
 | system | test micro | test macro | test FT | test NCT | novel | selective F1 @5/10/20/30% |
@@ -152,7 +152,7 @@ Matched-key (run 2): FT sample A4 0.1185/0.1221 EM 3.75% (SymGen 0.120/0.137, 2.
 | only a4_conf | 0.1833 | 0.3761 | 0.518 | 0.693 | 0.039 | 0.770 / 0.571 |
 Reading: routing is driven by retrieval similarity (largest drop when removed); abstention is driven by A4 confidence (selective@20% 0.686 → 0.544 without it). The two signals are complementary: neither alone gets both.
 
-## PENDING — C1 name-aware contrastive sweep (v2 corpus; jobs 1197461 soft λ0.3 / 1197462 soft λ1.0 / 1197463 exact-name control) and BAP v3 retrain (job 1197330)
+## CLOSED 2026-08-27 (was PENDING) — C1 name-aware contrastive sweep (v2 corpus; jobs 1197461 soft λ0.3 / 1197462 soft λ1.0 / 1197463 exact-name control) and BAP v3 retrain (job 1197330)
 Gates (val_xproj, eval_v2): retrieval top-1 > 0.1543 and +rerank > 0.1556 (A1a); decoder per-regime ≥ A1a (FT 0.0693 / NCT 0.6894); novel stratum ≥ 0.06 (C1 target); router selective F1 @10% ≥ 0.754. Test reference: retrieval 0.1147/0.3797 (+rerank 0.1176/0.3814), decoder 0.1000/0.3394, router 0.754@10%/0.448@20%. BAP v3 retrain FINAL train-time val 0.1650 @ep44 (A1a 0.1333 @ep41; val scored 10,373 vs 10,617). Eval chain jobs 1198809–1198813 → rows below when done. Rows to be filled from results/c1<tag>_eval_greedy.json, emb_c1<tag>, router_c1<tag>.json, and results/p4sg_* for the v3 retrain.
 
 ## C1 INTERIM — soft-label InfoNCE λ=1.0, EPOCH-7 checkpoint (job 1198233/1198234; v2 corpus; retrieval = kNN top-1 on the encoder embedding, + string rerank α=0.8)
@@ -160,14 +160,14 @@ Gates (val_xproj, eval_v2): retrieval top-1 > 0.1543 and +rerank > 0.1556 (A1a);
 |---|---|---|---|---|---|
 | A1a (final, ep41) | 0.1543 | 0.1556 | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.1176 / 0.3814 |
 | **C1 soft λ1.0 @ ep7** | **0.1593** | **0.1617** | **0.1255 / 0.3850** | **0.1278 / 0.3856** | 0.1301 / 0.3864 (thr 0.4) |
-Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrastive term trades decoder CE for embedding quality, as designed). **λ1.0 run finished 2026-08-27 (early stop ep28; best-by-decoder-val ckpt = ep7) → this row is FINAL.** λ0.3 (best ep8): retrieval 0.1234/0.3859 (+rerank 0.1253/0.3875); its union row pending (jobs 1199194–96).
+Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrastive term trades decoder CE for embedding quality, as designed). **λ1.0 run finished 2026-08-27 (early stop ep28; best-by-decoder-val ckpt = ep7) → this row is FINAL.** λ0.3 FINAL (best ep9, decoder val 0.1159; jobs 1199364–68): retrieval 0.1241/0.3838 (+rerank 0.1256/0.3846, +emit 0.1303/0.3855); routed union GBT 0.2045/0.4367, oracle 0.2246/0.4715, selective 0.937/0.878/0.691/0.533, routing acc contested 0.797. Δ vs λ1.0 within ±0.002 on every row → λ1.0 kept; C1 λ sweep CLOSED 2026-08-27.
 
 ## C1 RETRIEVAL READS (v2 corpus; kNN top-1 on encoder embedding; + string rerank; metric v2). A1a = standing BAP encoder.
 | encoder | training state | val top-1 | val +rerank | test top-1 micro / macro | test +rerank | router selective @10% / @20% (test) |
 |---|---|---|---|---|---|---|
 | A1a | final (ep41) | 0.1543 | 0.1556 | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.754 / 0.448 |
 | C1 exact-name control λ0.3 (legacy sampler) | final (ep41) | 0.1595 | 0.1604 | 0.1168 / 0.3861 | 0.1186 / 0.3856 | 0.770 / 0.456 |
-| C1 soft λ0.3 (name-aware sampler + hard negs) | **interim ep8** | 0.1595 | 0.1609 | 0.1234 / 0.3859 | 0.1253 / 0.3875 | — |
+| C1 soft λ0.3 (name-aware sampler + hard negs) | FINAL ep9 (1198921) | 0.1584 | 0.1595 | 0.1241 / 0.3838 | 0.1256 / 0.3846 | 0.1303 / 0.3855 (thr 0.5) |
 | **C1 soft λ1.0** (same sampler) | **interim ep7** | 0.1593 | 0.1617 | **0.1255 / 0.3850** | **0.1278 / 0.3856** | — |
 Val is saturated (~0.1595 for all three) and cannot separate the variants; test does: graded positives + hard negatives give +0.009–0.011 micro over A1a vs +0.002 for exact-name. Jobs 1198229/1198249/1198234/1198260. Final soft checkpoints pending.
 Decoder read of the C1 exact control (eval_v2 greedy, job 1198257): val 0.1350/0.2900 (FT 0.0698 / NCT 0.7077); test 0.1024/0.3465, FT 0.0279 (macro 0.0628), NCT 0.4745 (macro 0.6795), seen 0.6514, novel 0.0240 — vs A1a 0.1000/0.3394, FT 0.0270, NCT 0.4650, seen 0.6353, novel 0.0236. Uniform small plus; the decoder is not where C1's effect lives.

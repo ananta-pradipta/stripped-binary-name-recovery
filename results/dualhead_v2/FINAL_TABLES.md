@@ -52,7 +52,7 @@ Caveat: SymGen's LoRA was trained on its own corpus, which overlaps 9 of our tes
 | BAP v3 retrain: retrieval | 0.193 (A1a 0.154) | 0.115 / 0.377 (A1a 0.117 / 0.380) | wash |
 | BAP v3 retrain: union | 0.264 (0.232) | 0.204 / 0.439 (= A1a) | wash |
 | C1 exact-name contrastive (control) | 0.160 | retrieval 0.117 / 0.386 | +0.002 |
-| C1 soft λ0.3 / λ1.0 | 0.160 / 0.159 | retrieval 0.125 / 0.387  ·  0.127 / 0.385 | +0.009 / +0.011 |
+| C1 soft λ0.3 / λ1.0 (final ckpts) | 0.158 / 0.159 | retrieval 0.124 / 0.384  ·  0.126 / 0.385; union 0.2045 / 0.4367  ·  0.2052 / 0.4387 | +0.009 / +0.011 retrieval; union wash → λ1.0 kept |
 Finding: val_xproj (GNU-heavy FT packages) cannot arbitrate GNU-heavy data additions — three cases.
 
 ## T6. Per-package (2-head GBT union, C1 λ1.0 ∪ A4; largest packages)
