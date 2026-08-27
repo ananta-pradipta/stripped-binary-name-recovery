@@ -18,12 +18,12 @@ for t in ('train', 'val', 'test'):
     rows = []
     for r in tiers[t]:
         a = int(r['entry_addr'], 16)
-        rows.append([f"{STRIP}/{r['binary']}_stripped", a, r['name'], r['name'], a, bidx[r['binary']], fid]); fid += 1
+        rows.append([f"{STRIP}/{r['binary']}", a, r['name'], r['name'], a, bidx[r['binary']], fid]); fid += 1
     parts.append(rows)
 os.makedirs(OUT + '/embedding', exist_ok=True)
 pickle.dump(parts, open(f'{OUT}/xflBlensXProjectData', 'wb'))   # RunExp.py hardcodes this filename under -data-dir; embeddings go to <OUT>/embedding/{clap,palmtree}
 for b in bins:
     d = json.load(open(f'{LBL}/{b}.json'))
     json.dump({'functions': {n: v['addr'] for n, v in d['functions'].items()}}, open(f'{OUT}/labels/{b}.json', 'w'))
-open(f'{OUT}/bins.txt', 'w').write('\n'.join(f'{STRIP}/{b}_stripped' for b in bins) + '\n')
+open(f'{OUT}/bins.txt', 'w').write('\n'.join(f'{STRIP}/{b}' for b in bins) + '\n')
 print(f'EFFECT: blens ours_v2 prep: train {len(parts[0])} val {len(parts[1])} test {len(parts[2])} fns; {len(bins)} binaries -> {OUT}')
