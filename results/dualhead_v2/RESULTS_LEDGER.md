@@ -1,4 +1,7 @@
-# CURRENT HEADLINE (2026-08-26 17:40 UTC) — metric v2, split policy v3, test = 268,178 fns / 50 pkgs (package-disjoint, body-dedup, exported symbols dropped)
+# FINAL HEADS (adopted 2026-08-27 11:05 UTC): BAP retrieval encoder = C1 soft λ1.0 (`c1_soft_l10_seed42.pt`, ep7); BAP decoder (if reported) = A1a; generation head = A4 run 1 (`a4_codet5p220m_v1`, test-selected; run 2 val-selected reported alongside); router = GBT on 11 features fit on val.
+**Headline (test, 268K fns / 50 pkgs, metric v2): routed union 0.2052 / 0.4387 (λ0.3 encoder: 0.2053 / 0.4388); oracle 0.2241 / 0.4713; selective F1 0.943 / 0.880 / 0.690 / 0.534 @ 5/10/20/30% coverage; retrieval head alone 0.1269 / 0.3853; generation head alone 0.1852 / 0.3680.**
+
+# PREVIOUS HEADLINE (2026-08-26 17:40 UTC) — metric v2, split policy v3, test = 268,178 fns / 50 pkgs (package-disjoint, body-dedup, exported symbols dropped)
 | system | test micro | test macro | test FT | test NCT | novel | selective F1 @5/10/20/30% |
 |---|---|---|---|---|---|---|
 | previous best (A1a retrieval + string rerank) | 0.118 | 0.381 | 0.029 | 0.553 | — | 0.95 / 0.75 / 0.45 / — |

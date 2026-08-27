@@ -4090,7 +4090,7 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Next: emb dump on A1a encoder (1195024) → retrieval + string-rerank on new space.
 - A1a retrieval head (emb dump 1195024, zero-train eval 1195025): TEST micro 0.1147 / macro 0.3797 (old encoder: 0.1030/0.3544) — the string channel also improved the embedding geometry (+0.012/+0.025). String rerank on top: 0.1176/0.3814 (α=0.8; smaller add-on — signal partly internalized). Best current system: **A1a retrieval+rerank 0.118 micro / 0.381 macro** vs P2-era best 0.108/0.369.
 
-## STATE POINTER (2026-08-27 05:15 UTC): standing system = A1a retrieval ∪ A4 run 1, learned GBT router, test 0.2044/0.4386, selective 0.881@10%; see results/dualhead_v2/RESULTS_LEDGER.md headline. Running: C1 soft λ1.0 (1198251) and λ0.3 (1198921) resumes only.
+## STATE POINTER (2026-08-27 11:05 UTC): FINAL HEADS adopted — C1 λ1.0 retrieval encoder ∪ A4 run 1, GBT router: test 0.2052/0.4387, oracle 0.2241, selective 0.880@10% / 0.690@20%. See RESULTS_LEDGER.md 'FINAL HEADS'. Only C1 λ0.3 training (1198921) still running out its patience; experiment ladder complete except user-deferred baseline retrains.
 
 ## 2026-08-25 — A3+ chain + wait-time prep (dualhead-hydra)
 - A3+ rodata constant matcher (job 1195198): 1,890/1,890 bins, 4,375 tagged fns in 287 bins (BASE64 1756, CRC32 1128, ZLIB_LEN 531, SHA256 307, AES_SBOX 216, SHA512 212, CHACHA 201, …). Smoke 1195199 PASSED (70 A3 tokens in vocab). Retrain 1195200 (`dualhead_v2_a3`) queued; gate val > A1a 0.1310.
