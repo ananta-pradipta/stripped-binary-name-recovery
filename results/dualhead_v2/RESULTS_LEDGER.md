@@ -157,7 +157,7 @@ Gates (val_xproj, eval_v2): retrieval top-1 > 0.1543 and +rerank > 0.1556 (A1a);
 |---|---|---|---|---|---|
 | A1a (final, ep41) | 0.1543 | 0.1556 | 0.1147 / 0.3797 | 0.1176 / 0.3814 | 0.1176 / 0.3814 |
 | **C1 soft λ1.0 @ ep7** | **0.1593** | **0.1617** | **0.1255 / 0.3850** | **0.1278 / 0.3856** | 0.1301 / 0.3864 (thr 0.4) |
-Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrastive term trades decoder CE for embedding quality, as designed). Runs continue; final read on the finished checkpoints.
+Gates G1/G2 passed at epoch 7 (decoder val of this ckpt: 0.1053 — the contrastive term trades decoder CE for embedding quality, as designed). **λ1.0 run finished 2026-08-27 (early stop ep28; best-by-decoder-val ckpt = ep7) → this row is FINAL.** λ0.3 (best ep8): retrieval 0.1234/0.3859 (+rerank 0.1253/0.3875); its union row pending (jobs 1199194–96).
 
 ## C1 RETRIEVAL READS (v2 corpus; kNN top-1 on encoder embedding; + string rerank; metric v2). A1a = standing BAP encoder.
 | encoder | training state | val top-1 | val +rerank | test top-1 micro / macro | test +rerank | router selective @10% / @20% (test) |
