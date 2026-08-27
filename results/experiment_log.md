@@ -4171,3 +4171,12 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - AUDIT of FINAL_TABLES.md against source JSONs (2026-08-27): 3 transcription errors fixed (regime/conf router rows had carried A1a-encoder values under the C1 λ1.0 heading; oracle-3-heads given exactly: 0.230/0.478 C1, 0.228/0.476 A1a). All other cells verified (65f9b4a1).
 - P5 3-head router (1199208): GBT 3-head 0.2028/0.4301 (route share A4 88.1% / R 11.4% / D 0.5%) < 2-head 0.2052/0.4387 although oracle-3 0.2297 > oracle-2 0.2241 → decoder head dropped from the final system (ablation only). Per-package table dumped (results/router3_c1l10_a4v1.json).
 - AUDIT: FINAL_TABLES T6 per-package rows verified cell-for-cell against results/router3_c1l10_a4v1.json; headline (0.2052/0.4387, selective 0.943/0.880/0.690/0.534) consistent across RESULTS_LEDGER.md and FINAL_TABLES.md.
+
+## SPRINT SUMMARY 2026-08-25 → 2026-08-27 (redesign directive of 2026-08-24)
+- Inputs: A1a strings WIN (kept); A3+ literal/ABI/rodata NEGATIVE on test (closed).
+- Generation head A4 (CodeT5+ 220M on masked Ghidra decomp): test 0.185/0.368, FT 0.121, novel 0.123; matched-key FT 0.115–0.119 vs SymGen-34B 0.120; SymGen 5-pkg holdout 0.223 (run 1) / 0.233 (run 2). Run 2 (+SymGen rows) wins val/holdout, loses our test (−0.008).
+- Retrieval head: C1 name-aware contrastive +0.011 (0.1269/0.3853); v3 corpus retrain WASH on test.
+- System: 2-head union with learned GBT router = **test 0.2052/0.4387, oracle 0.2241/0.4713, selective F1 0.880@10% / 0.690@20%**; routing accuracy 82% on contested rows; 3-head (+decoder) worse when routed.
+- Data: SymGen corpus ingested (relift 2,024/2,024 bins, dataset v3, 5-pkg external holdout); B3 cap implemented.
+- Method lessons: val_xproj cannot arbitrate GNU-heavy data additions (3 cases); audit-every-job rule caught 2 invalid reads (A3+ unenriched retrieval, A4 conf column) and a metric artifact (relift coverage).
+- Files: results/dualhead_v2/FINAL_TABLES.md (numbers), RESULTS_LEDGER.md (job ids), docs/C1_NAME_AWARE_CONTRASTIVE_DESIGN.md, docs/B1_SYMGEN_CORPUS_INGEST.md.
