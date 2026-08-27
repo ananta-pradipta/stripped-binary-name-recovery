@@ -180,3 +180,11 @@ Decoder read of the C1 exact control (eval_v2 greedy, job 1198257): val 0.1350/0
 | oracle R∪A4 | 0.2241 | 0.4713 | 0.1340 | 0.6746 | — | — |
 | (reference: same with A1a encoder) | 0.2044 | 0.4386 | 0.1199 | 0.6269 | 0.821 | 0.958 / 0.881 / 0.686 / 0.529 |
 Reading: C1's +0.011 on the retrieval head becomes +0.001 in the routed union — the router already prefers A4 on most contested rows and C1's gains largely overlap A4's. Oracle +0.002. Final C1 checkpoints may move this slightly.
+
+## BAP v3 RETRAIN (A1a config on dataset v3 = ours + SymGen corpus, 40K/pkg cap; job 1197330) — verdict pending union
+| head | val (v3 scored set 10,373) | test, population-matched to v2 (266,059 rows) | note |
+|---|---|---|---|
+| decoder: A1a → v3 | 0.1327 → **0.1637** | 0.1001/0.3395 → 0.0979/0.3294 (FT 0.0269→0.0288, NCT 0.4649→0.4422) | val +0.031, test −0.002/−0.010 |
+| retrieval top-1: A1a → v3 | 0.1543 → **0.1926** | 0.1165/0.3802 → 0.1153/0.3765 (FT 0.0289→0.0284, NCT 0.5530→0.5481) | val +0.038, test −0.001/−0.004 |
+| router selective @10/20% (own population) | — | 0.754/0.448 → 0.720/0.426 | v3 population includes 19,559 sg-holdout rows |
+Third val/test disagreement for GNU-heavy data additions (A3+, A4 run 2, v3). Union with A4 (job 1198874) decides the system-level effect.
