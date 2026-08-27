@@ -128,3 +128,21 @@ code↔name alignment (CLIP-style); at inference it scores evidence-assembled ca
 instead of generating them. C1 is a prerequisite: C2's negatives and positives use the same
 `s_ij` and sampler. A4 (decompiled-text generation head) is orthogonal — it feeds the
 generation head; C1/C2 feed retrieval/scoring. Router logic unchanged either way.
+
+## Addendum (2026-08-27): val_xproj cannot arbitrate data-side changes — proposal for a non-GNU dev slice
+
+Three experiments moved val_xproj and not the test tier: A3+ (val ≈, test −0.009), A4 run 2 (+SymGen rows: val +0.037,
+test −0.008), BAP v3 retrain (+SymGen corpus: val +0.03–0.04 on decoder and retrieval, test ±0.00). Val's far-transfer
+packages (direvent, rush, wdiff, spell, cppi, csplit2, iotop, tig, zstd) are 7/10 GNU/gnulib-flavoured; the additions
+were gnulib-heavy. The test tier's mass is non-GNU (icu, libsodium, mbedtls, tinycc, tcsh, cvs, sysstat…).
+
+Options (none free of cost):
+1. **Non-GNU dev slice from the train pool** — move 3–4 non-GNU train packages (candidates: lmdb, jansson, lighttpd
+   are already test; from train: e.g. `lz4`, `xz`, `libyaml`, `expat`… need the roles list) into a second dev tier.
+   Cost: they leave training; every checkpoint would need retraining for strict comparability. Only worth it for the
+   final frozen runs.
+2. **Report per-regime val and gate on retrieval val** (adopted 2026-08-26) — catches representation regressions
+   (A3+) but not GNU-domain overfitting of data additions.
+3. **State it as a finding**: model selection on a domain-skewed dev set selects for the dev domain; report test for all
+   variants with the dev-selected one marked. This is what the results ledger does now.
+Recommendation for the paper: (3) now, (1) if a final re-run pass happens after the heads are frozen.
