@@ -20,7 +20,8 @@ for t in ('train', 'val', 'test'):
         a = int(r['entry_addr'], 16)
         rows.append([f"{STRIP}/{r['binary']}_stripped", a, r['name'], r['name'], a, bidx[r['binary']], fid]); fid += 1
     parts.append(rows)
-pickle.dump(parts, open(f'{OUT}/xflBlensXProjectData_ours_v2', 'wb'))
+os.makedirs(OUT + '/embedding', exist_ok=True)
+pickle.dump(parts, open(f'{OUT}/xflBlensXProjectData', 'wb'))   # RunExp.py hardcodes this filename under -data-dir; embeddings go to <OUT>/embedding/{clap,palmtree}
 for b in bins:
     d = json.load(open(f'{LBL}/{b}.json'))
     json.dump({'functions': {n: v['addr'] for n, v in d['functions'].items()}}, open(f'{OUT}/labels/{b}.json', 'w'))
