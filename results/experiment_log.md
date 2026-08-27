@@ -4180,3 +4180,4 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - Data: SymGen corpus ingested (relift 2,024/2,024 bins, dataset v3, 5-pkg external holdout); B3 cap implemented.
 - Method lessons: val_xproj cannot arbitrate GNU-heavy data additions (3 cases); audit-every-job rule caught 2 invalid reads (A3+ unenriched retrieval, A4 conf column) and a metric artifact (relift coverage).
 - Files: results/dualhead_v2/FINAL_TABLES.md (numbers), RESULTS_LEDGER.md (job ids), docs/C1_NAME_AWARE_CONTRASTIVE_DESIGN.md, docs/B1_SYMGEN_CORPUS_INGEST.md.
+- Fairness prep (2026-08-27): SymGen fine-tune input for OUR frozen train tier built (job 1199211): dh2/symgen_v2/full_input.json = 190,133 alpaca rows (instruction/input/output; 18 skipped), metadata all tier=train. `dh2/symgen_ft_ours.sbatch` staged (April config, cutoff 256, 4×A100, 1 epoch, output baselines/SymGen/lora_weights_ours_v2). Not launched (user gate).
