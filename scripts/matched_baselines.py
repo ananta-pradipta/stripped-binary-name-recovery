@@ -10,7 +10,10 @@ WS = '/project/hz79/_shared/cs785/dh2'
 ap = argparse.ArgumentParser()
 ap.add_argument('--a4', default=f'{WS}/results/a4_codet5p220m_v1/val_test_symgen_holdout_preds.tsv')
 ap.add_argument('--a4tag', default='A4 run1'); ap.add_argument('--blens', default=None)
-ap.add_argument('--out', default=f'{WS}/results/matched_baselines_a4v1.json'); args = ap.parse_args()
+ap.add_argument('--out', default=f'{WS}/results/matched_baselines_a4v1.json')
+ap.add_argument('--sg-c', default=f'{WS}/symgen_v2/results_c/predicted_function_name.json', help='SymGen preds for the FT sample')
+ap.add_argument('--sg-nct', default=f'{WS}/symgen_v2/results_nct/predicted_function_name.json', help='SymGen preds for the NCT sample')
+args = ap.parse_args()
 def demangle_many(names):
     todo = sorted({n for n in names if n and n.startswith('_Z')}); out = {}
     for i in range(0, len(todo), 5000):
@@ -65,8 +68,8 @@ def load_sample(meta_path, sg_path, tag):
                      'A4': a[0], 'a4c': a[1], 'sim1': float(d['sim1']), 'x': X(d, a[1]), 'seen': m.get('name_seen')})
     print(f'{tag}: {len(meta)} keys, joined {len(rows)}, missing {dict(miss)}')
     return rows
-samples = {'FT_sample': load_sample(f'{WS}/symgen_v2/interim_c_metadata.json', f'{WS}/symgen_v2/results_c/predicted_function_name.json', 'FT'),
-           'NCT_sample': load_sample(f'{WS}/symgen_v2/nct_seen_metadata.json', f'{WS}/symgen_v2/results_nct/predicted_function_name.json', 'NCT')}
+samples = {'FT_sample': load_sample(f'{WS}/symgen_v2/interim_c_metadata.json', args.sg_c, 'FT'),
+           'NCT_sample': load_sample(f'{WS}/symgen_v2/nct_seen_metadata.json', args.sg_nct, 'NCT')}
 if args.blens:
     bl = json.load(open(args.blens)); meta = json.load(open(f'{WS}/symgen_v2/interim_c_metadata.json'))
     if isinstance(bl, list) and len(bl) == len(meta) and isinstance(bl[0], dict) and 'pred' in bl[0]:
