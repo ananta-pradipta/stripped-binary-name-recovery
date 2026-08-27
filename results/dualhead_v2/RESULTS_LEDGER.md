@@ -200,3 +200,12 @@ Union with A4 run 1 (job 1198874, A4-covered rows 276,432 incl. val; 19,559 sg-h
 | C1 soft λ0.3 (ep8) | 0.1249 / 0.3865 (0.038 / 0.562) | **0.2053 / 0.4388** (0.631) | **0.2249 / 0.4731** | 0.804 | 0.950 / 0.879 / **0.696** / 0.536 |
 | C1 soft λ1.0 (ep7, final) | **0.1269 / 0.3853** (0.040 / 0.564) | 0.2052 / 0.4387 (0.633) | 0.2241 / 0.4713 | 0.805 | 0.943 / 0.880 / 0.690 / 0.534 |
 Verdict: C1 = +0.009–0.011 micro on the retrieval head (both λ), ≈ +0.001 on the routed system, +0.002–0.003 on the oracle, +0.01 on selective F1 @20% (λ0.3). Final BAP retrieval encoder for the paper: **C1 soft λ1.0** (best retrieval-head metric — the quantity C1 optimises); system rows reported for all three. Jobs: λ0.3 chain 1199194–96; λ1.0 chain 1198275–77.
+
+## P5 — 3-HEAD ROUTED SYSTEM and PER-PACKAGE (job 1199208, `scripts/router3_eval.py`, C1 λ1.0 encoder, A4 run 1; test)
+| system | micro | macro | FT | NCT |
+|---|---|---|---|---|
+| decoder alone (A1a decoder on C1 encoder features' rows) | 0.0773 | 0.2436 | 0.0302 | 0.3132 |
+| GBT 2-head (R ∪ A4) | **0.2052** | **0.4387** | 0.1196 | 0.6331 |
+| GBT 3-head (R ∪ D ∪ A4), route share A4 88.1% / R 11.4% / D 0.5% | 0.2028 | 0.4301 | 0.1200 | 0.6167 |
+| oracle 2-head / 3-head | 0.2241 / 0.2297 | 0.4713 / 0.4779 | 0.1340 / 0.1399 | 0.6746 / 0.6790 |
+Verdict: the decoder head adds +0.006 to the oracle but −0.002 when routed (harder 3-way choice, decoder almost never selected) → **final system = 2 heads (retrieval ∪ generation); decoder reported as an ablation only.** Per-package 2-head table in results/router3_c1l10_a4v1.json (`per_package_2head`): e.g. bdb (96,210 fns, FT) R 0.038 / A4 0.155 / union 0.153 / oracle 0.162; icu 0.022 / 0.042 / 0.042 / 0.058; fossil (NCT) 0.282 / 0.249 / 0.366 / 0.409; nginx118 0.763 / 0.715 / 0.853 / 0.891; angie 0.685 / 0.677 / 0.788 / 0.831; openresty 0.477 / 0.564 / 0.636 / 0.668.

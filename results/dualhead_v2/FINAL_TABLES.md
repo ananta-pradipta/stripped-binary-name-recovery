@@ -14,6 +14,7 @@ All F1 = metric v2 (camelCase-aware sub-token F1, C++ demangled). Test = 268,178
 | **learned GBT router, C1 λ1.0 ∪ A4** | **0.205** | **0.439** | 0.120 | 0.633 | — | **0.943 / 0.880 / 0.690 / 0.534** |
 | learned GBT router, A1a ∪ A4 | 0.204 | 0.439 | 0.120 | 0.627 | — | 0.958 / 0.881 / 0.686 / 0.529 |
 | oracle head choice (C1 λ1.0 ∪ A4) | 0.224 | 0.471 | 0.134 | 0.675 | — | — |
+| learned GBT 3-head router (R ∪ D ∪ A4), C1 λ1.0 | 0.203 | 0.430 | 0.120 | 0.617 | — | — |
 | oracle 3 heads (+ decoder), C1 λ1.0 / A1a | 0.230 / 0.228 | 0.478 / 0.476 | — | — | — | — |
 
 ## T2. Router
@@ -53,5 +54,22 @@ Caveat: SymGen's LoRA was trained on its own corpus, which overlaps 9 of our tes
 | C1 exact-name contrastive (control) | 0.160 | retrieval 0.117 / 0.386 | +0.002 |
 | C1 soft λ0.3 / λ1.0 | 0.160 / 0.159 | retrieval 0.125 / 0.387  ·  0.127 / 0.385 | +0.009 / +0.011 |
 Finding: val_xproj (GNU-heavy FT packages) cannot arbitrate GNU-heavy data additions — three cases.
+
+## T6. Per-package (2-head GBT union, C1 λ1.0 ∪ A4; largest packages)
+| package | regime | n | retrieval | A4 | union | oracle |
+|---|---|---|---|---|---|---|
+| bdb | FT | 96,210 | 0.038 | 0.155 | 0.153 | 0.162 |
+| icu | FT | 48,369 | 0.022 | 0.042 | 0.042 | 0.058 |
+| mbedtls | FT | 30,322 | 0.030 | 0.104 | 0.099 | 0.114 |
+| fossil | NCT | 16,196 | 0.282 | 0.249 | 0.366 | 0.409 |
+| libsodium | FT | 9,363 | 0.025 | 0.079 | 0.083 | 0.096 |
+| gettext | FT | 6,713 | 0.124 | 0.191 | 0.196 | 0.223 |
+| openresty | NCT | 5,028 | 0.477 | 0.564 | 0.636 | 0.668 |
+| mutt | FT | 4,587 | 0.031 | 0.105 | 0.100 | 0.117 |
+| cvs | FT | 4,096 | 0.150 | 0.330 | 0.340 | 0.371 |
+| recutils | FT | 3,577 | 0.182 | 0.266 | 0.253 | 0.300 |
+| angie | NCT | 3,467 | 0.685 | 0.677 | 0.788 | 0.831 |
+| nginx118 | NCT | 3,438 | 0.763 | 0.715 | 0.853 | 0.891 |
+Full table: results/router3_c1l10_a4v1.json → per_package_2head.
 
 Sources: results/dualhead_v2/RESULTS_LEDGER.md (job ids per row), results/*.json.
