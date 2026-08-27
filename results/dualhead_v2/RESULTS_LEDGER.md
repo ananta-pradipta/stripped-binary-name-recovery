@@ -209,3 +209,10 @@ Verdict: C1 = +0.009–0.011 micro on the retrieval head (both λ), ≈ +0.001 o
 | GBT 3-head (R ∪ D ∪ A4), route share A4 88.1% / R 11.4% / D 0.5% | 0.2028 | 0.4301 | 0.1200 | 0.6167 |
 | oracle 2-head / 3-head | 0.2241 / 0.2297 | 0.4713 / 0.4779 | 0.1340 / 0.1399 | 0.6746 / 0.6790 |
 Verdict: the decoder head adds +0.006 to the oracle but −0.002 when routed (harder 3-way choice, decoder almost never selected) → **final system = 2 heads (retrieval ∪ generation); decoder reported as an ablation only.** Per-package 2-head table in results/router3_c1l10_a4v1.json (`per_package_2head`): e.g. bdb (96,210 fns, FT) R 0.038 / A4 0.155 / union 0.153 / oracle 0.162; icu 0.022 / 0.042 / 0.042 / 0.058; fossil (NCT) 0.282 / 0.249 / 0.366 / 0.409; nginx118 0.763 / 0.715 / 0.853 / 0.891; angie 0.685 / 0.677 / 0.788 / 0.831; openresty 0.477 / 0.564 / 0.636 / 0.668.
+
+## FAIRNESS TODO (2026-08-27; from the baseline-comparison review)
+1. Retrain SymGen (CodeLlama-34B + LoRA) and BLens on OUR frozen train tier (v2 protocol) — inputs ready (dh2/results/baseline_protocol_v2, symgen_v2/build_symgen_input.py --mode full --tiers train; blens_v2 chain). ~20 h 4×A100 + ~14 h.
+2. Present the matched-key table (T3) as the baseline comparison; full-tier numbers are ours-only.
+3. Same-size ablation: A4 at CodeT5+ 770M (cached) ~10 h.
+4. BLens on the NCT sample (rerun needed).
+5. Second seeds for A4 and the C1 encoder (~13 h).
