@@ -5,4 +5,4 @@ State: experiment ladder complete except user-deferred baseline retrains; paper 
 - Headline: test 0.2052/0.4387 (micro/macro), oracle 0.2241/0.4713, selective F1 0.880@10% / 0.690@20%.
 - Wulver workspace: /project/hz79/_shared/cs785/dh2 (scripts mirrored here under scripts/, sbatch templates under scripts/dh2_sbatch/). Data v3: /project/hz79/_shared/cs785/relift_ws/data (match_index_v3, split_v3, votes_v3); cache dh2/data_cache/corpus_v3.pkl.
 - Memory (auto): ~/.claude/projects/-home-apradipta-cs785-project/memory/project_fundamental_redesign_20260824.md (READ FIRST), feedback_audit_completed_jobs.md, feedback_wulver_job_config.md (node/memory traps).
-- Only job that may still be running: C1 λ0.3 training (1198921); if its best epoch moved off 8, rerun eval/embdump/a1zt/router_c1soft_l03.sbatch + union (recipe in memory). Otherwise nothing is running.
+- Only job running: C1 λ0.3 training (1198921). Its best epoch moved to 9 → when it ends, run the final chain (eval/embdump/a1zt/router_c1soft_l03.sbatch + union_c1soft_l03.sbatch; exact commands in memory project_fundamental_redesign_20260824.md).
