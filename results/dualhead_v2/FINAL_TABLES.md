@@ -8,12 +8,17 @@ All F1 = metric v2 (camelCase-aware sub-token F1, C++ demangled). Test = 268,178
 | BAP retrieval + string rerank (A1a) *(prev. best)* | 0.118 | 0.381 | — | — | — | 0.954 / 0.754 / 0.448 / — |
 | BAP retrieval, C1 name-aware contrastive (λ1.0) | 0.127 | 0.385 | 0.040 | 0.564 | — | — |
 | generation head A4 (CodeT5+ 220M, our data) | 0.185 | 0.368 | 0.121 | 0.504 | 0.123 | — |
+| A4 seed 43 (same recipe) | 0.185 | 0.370 | 0.121 | 0.506 | 0.123 | — |
+| A4 mean ± half-range over seeds {42, 43} | 0.185 ± 0.000 | 0.369 ± 0.001 | 0.121 ± 0.000 | 0.505 ± 0.001 | 0.123 ± 0.000 | — |
 | regime router (NCT→retrieval, FT→A4), C1 λ1.0 ∪ A4 | 0.195 | 0.424 | 0.121 | 0.564 | — | — |
 | conf router (kNN sim threshold), C1 λ1.0 ∪ A4 | 0.196 | 0.429 | 0.112 | 0.617 | — | 0.656 / 0.645 / 0.560 / 0.468 |
 | conf router, A1a ∪ A4 | 0.198 | 0.430 | 0.116 | 0.609 | — | 0.705 / 0.657 / 0.559 / 0.471 |
 | **learned GBT router, C1 λ1.0 ∪ A4** | **0.205** | **0.439** | 0.120 | 0.633 | — | **0.943 / 0.880 / 0.690 / 0.534** |
+| learned GBT router, C1 λ1.0 ∪ A4 seed 43 | 0.204 | 0.436 | 0.119 | 0.630 | — | 0.946 / 0.877 / 0.688 / 0.527 |
+| routed union, mean ± half-range over A4 seeds | 0.205 ± 0.001 | 0.438 ± 0.001 | 0.119 ± 0.001 | 0.632 ± 0.002 | — | 0.944 / 0.879 / 0.689 / 0.531 (±≤0.004) |
 | learned GBT router, A1a ∪ A4 | 0.204 | 0.439 | 0.120 | 0.627 | — | 0.958 / 0.881 / 0.686 / 0.529 |
 | oracle head choice (C1 λ1.0 ∪ A4) | 0.224 | 0.471 | 0.134 | 0.675 | — | — |
+| oracle head choice, A4 seed 43 | 0.224 | 0.470 | 0.134 | 0.673 | — | — |
 | learned GBT 3-head router (R ∪ D ∪ A4), C1 λ1.0 | 0.203 | 0.430 | 0.120 | 0.617 | — | — |
 | oracle 3 heads (+ decoder), C1 λ1.0 / A1a | 0.230 / 0.228 | 0.478 / 0.476 | — | — | — | — |
 
