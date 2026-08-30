@@ -56,6 +56,14 @@ Fair retraining moves SymGen by +0.004 (FT) / +0.025 (NCT): the 34B model with o
 | oracle union | 0.223 / 0.463 / 11.1% | 0.133 / 0.151 / 2.6% | 0.673 / 0.829 / 54.1% | 0.849 / 0.635 / 76.3% | 0.135 / 0.218 / 2.0% |
 BLens caveats (report them): (i) it abstains on 46.0% of rows (LORD confidence threshold; empty output = F1 0, EM 0); (ii) it emits its own expanded name vocabulary (init→initialise, dir→directory, mbedtls→mb_ed_tls, 20-token cap) while every system is scored against the raw truth — scored against BLens's *own* canonical targets it reaches 0.090 micro over all rows / 0.167 on the 54% it answers, still below our retrieval head alone (0.126); (iii) its COMBO validation loss rose monotonically on our package-disjoint val (11.3→13.8) while train loss fell (10.3→3.6) — the recipe was run as published. The April-model row (BLens 0.026 on the FT sample) is retired.
 
+**T3c. BLens on the SymGen sample keys (same 7,471 / 6,986 functions as T3a; C1 λ1.0 encoder for R/D; job 1204664)** — micro / macro / EM
+| system | FT sample | NCT sample |
+|---|---|---|
+| BLens (retrained on our tier) | 0.019 / 0.017 / 0.2% | 0.359 / 0.348 / 11.7% |
+| ours: R (C1) / D (C1 ckpt) | 0.046 / 0.056 / 1.4%  ·  0.032 / 0.040 / 0.7% | 0.750 / 0.749 / 69.3%  ·  0.456 / 0.462 / 29.6% |
+| ours: A4 / GBT union / oracle | 0.115 / 0.124 / 3.3%  ·  0.112 / 0.120 / 3.5%  ·  0.132 / 0.142 / 3.8% | 0.633 / 0.633 / 44.0%  ·  0.787 / 0.785 / 68.7%  ·  0.829 / 0.828 / 74.1% |
+Merged one-table view (T3a + T3b + T3c): `results/dualhead_v2/baselines_table_merged.png`.
+
 ## T4. External benchmark — SymGen 5-package holdout (gmp, libpng, libmicrohttpd, poke, libredwg; 9,991 scorable fns, exported symbols dropped)
 | head | micro | macro | EM |
 |---|---|---|---|
