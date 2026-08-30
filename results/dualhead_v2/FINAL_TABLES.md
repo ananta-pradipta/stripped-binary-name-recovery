@@ -30,17 +30,31 @@ All F1 = metric v2 (camelCase-aware sub-token F1, C++ demangled). Test = 268,178
 | GBT (11 feats) | 82.1% | 0.018 | 16.3% | 0.204 / 0.439 |
 Feature ablation (GBT, A1a∪A4): −kNN-sim → 0.201/0.433, acc 80.2%; −A4-conf → 0.203/0.433 but selective@20% 0.686→0.544; only sim1 → 0.196/0.423; only a4_conf → 0.183/0.376.
 
-## T3. Baselines on matched keys (same functions for every system)
-| system | FT sample (7,471 fns, 24 pkgs) micro / macro / EM | NCT sample (6,986 fns, 23 pkgs) micro / macro / EM |
+## T3. Baselines on matched keys — every system trained on OUR train tier (v2 protocol, 190,151 fns)
+Same functions for every system; metric v2 (c++filt, template/arg stripping). Baseline retrains 2026-08-27→30: SymGen = CodeLlama-34B + LoRA on our train tier (1 ep, 1,485 steps, 4×A100-40G, job 1201270 → infer 1201284/1201285); BLens = CLAP+PalmTree "ablation-c+p" recipe, COMBO 80 ep + LORD 80 ep, inferBest = epoch 67 (jobs 1200059 → 1202627). Scorers: `results/matched_baselines_sgours_a4v1.json` (1204611), `results/blens_ours_v2_matched.json` (1204612).
+
+**T3a. SymGen samples (FT 7,471 fns / 24 pkgs; NCT 6,986 fns / 23 pkgs)** — micro / macro / EM
+| system | FT sample | NCT sample |
 |---|---|---|
-| SymGen (CodeLlama-34B + LoRA) | 0.120 / 0.137 / 2.8% | 0.236 / 0.234 / 7.3% |
-| BLens (retrained) | 0.026 / 0.030 / — | — |
+| SymGen, LoRA retrained on our tier | 0.124 / 0.138 / 2.7% | 0.260 / 0.258 / 7.7% |
+| SymGen, original LoRA (own corpus; overlaps 9 test pkgs) — legacy | 0.120 / 0.137 / 2.8% | 0.236 / 0.234 / 7.3% |
 | ours: BAP retrieval (A1a) | 0.039 / 0.047 / 1.4% | 0.744 / 0.747 / 68.8% |
 | ours: BAP decoder (A1a) | 0.034 / 0.044 / 1.2% | 0.660 / 0.659 / 57.8% |
 | ours: A4 gen head (run 1 / run 2) | 0.115 / 0.124 / 3.3%  ·  0.119 / 0.122 / 3.8% | 0.633 / 0.633 / 44.0%  ·  0.591 / 0.590 / 38.3% |
 | ours: GBT union (run 1 / run 2) | 0.112 / 0.120 / 3.5%  ·  0.114 / 0.118 / 3.7% | 0.780 / 0.781 / 67.9%  ·  0.765 / 0.767 / 65.6% |
 | oracle union | 0.130 / 0.139 / 3.7% | 0.827 / 0.828 / 73.8% |
-Caveat: SymGen's LoRA was trained on its own corpus, which overlaps 9 of our test packages; BLens per-row preds unavailable beyond the FT sample.
+Fair retraining moves SymGen by +0.004 (FT) / +0.025 (NCT): the 34B model with our train tier still reads FT at 0.124 vs A4-220m 0.115 (A4 has the higher EM, 3.3% vs 2.7%), and NCT at 0.260 vs our retrieval 0.744.
+
+**T3b. BLens on ALL matched test keys (267,668 fns, 50 pkgs; C1 λ1.0 retrieval encoder, A4 run 1)** — micro / macro / EM
+| system | all | FT (223,158; 27 pkgs) | NCT (44,510; 23 pkgs) | seen-name (32,996) | novel-name (234,672) |
+|---|---|---|---|---|---|
+| BLens (retrained on our tier) | 0.059 / 0.171 / 1.3% | 0.013 / 0.021 / 0.2% | 0.287 / 0.346 / 7.1% | 0.382 / 0.223 / 10.7% | 0.013 / 0.044 / 0.0% |
+| ours: retrieval (R) | 0.126 / 0.378 / 8.8% | 0.039 / 0.061 / 0.7% | 0.562 / 0.750 / 49.4% | 0.769 / 0.530 / 70.8% | 0.035 / 0.098 / 0.0% |
+| ours: BAP decoder (D) | 0.076 / 0.236 / 3.0% | 0.029 / 0.045 / 0.3% | 0.311 / 0.461 / 16.5% | 0.426 / 0.333 / 24.5% | 0.027 / 0.057 / 0.0% |
+| ours: A4 gen head | 0.184 / 0.359 / 6.5% | 0.121 / 0.132 / 2.4% | 0.502 / 0.626 / 27.3% | 0.618 / 0.493 / 39.2% | 0.123 / 0.181 / 1.9% |
+| ours: GBT union (R ∪ A4) | 0.204 / 0.431 / 10.2% | 0.119 / 0.128 / 2.5% | 0.632 / 0.786 / 49.1% | 0.796 / 0.576 / 69.2% | 0.121 / 0.178 / 1.9% |
+| oracle union | 0.223 / 0.463 / 11.1% | 0.133 / 0.151 / 2.6% | 0.673 / 0.829 / 54.1% | 0.849 / 0.635 / 76.3% | 0.135 / 0.218 / 2.0% |
+BLens caveats (report them): (i) it abstains on 46.0% of rows (LORD confidence threshold; empty output = F1 0, EM 0); (ii) it emits its own expanded name vocabulary (init→initialise, dir→directory, mbedtls→mb_ed_tls, 20-token cap) while every system is scored against the raw truth — scored against BLens's *own* canonical targets it reaches 0.090 micro over all rows / 0.167 on the 54% it answers, still below our retrieval head alone (0.126); (iii) its COMBO validation loss rose monotonically on our package-disjoint val (11.3→13.8) while train loss fell (10.3→3.6) — the recipe was run as published. The April-model row (BLens 0.026 on the FT sample) is retired.
 
 ## T4. External benchmark — SymGen 5-package holdout (gmp, libpng, libmicrohttpd, poke, libredwg; 9,991 scorable fns, exported symbols dropped)
 | head | micro | macro | EM |

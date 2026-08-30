@@ -211,6 +211,12 @@ Verdict: C1 = +0.009–0.011 micro on the retrieval head (both λ), ≈ +0.001 o
 | oracle 2-head / 3-head | 0.2241 / 0.2297 | 0.4713 / 0.4779 | 0.1340 / 0.1399 | 0.6746 / 0.6790 |
 Verdict: the decoder head adds +0.006 to the oracle but −0.002 when routed (harder 3-way choice, decoder almost never selected) → **final system = 2 heads (retrieval ∪ generation); decoder reported as an ablation only.** Per-package 2-head table in results/router3_c1l10_a4v1.json (`per_package_2head`): e.g. bdb (96,210 fns, FT) R 0.038 / A4 0.155 / union 0.153 / oracle 0.162; icu 0.022 / 0.042 / 0.042 / 0.058; fossil (NCT) 0.282 / 0.249 / 0.366 / 0.409; nginx118 0.763 / 0.715 / 0.853 / 0.891; angie 0.685 / 0.677 / 0.788 / 0.831; openresty 0.477 / 0.564 / 0.636 / 0.668.
 
+## FAIRNESS — DONE items (2026-08-30)
+- Item 1 DONE: SymGen retrained on our tier (1201270, adapter `baselines/SymGen/lora_weights_ours_v2`, train_loss 0.132) → FT 0.124/0.138/2.7%, NCT 0.260/0.258/7.7% (`results/matched_baselines_sgours_a4v1.json`). BLens retrained on our tier (COMBO 80 ep + LORD 80 ep, inferBest ep67; 1200059/1202627) → all-test 0.059/0.171/1.3%, FT 0.013, NCT 0.287, 46.0% abstention (`results/blens_ours_v2_matched.json`). Both audited: rc=0, row counts exact (7,532/7,063 preds; 268,178 log pairs = test rows), log↔row alignment verified by sampling (mismatched `target:` strings are BLens's own name preprocessing of the same row). Tables in FINAL_TABLES T3a/T3b.
+- Item 4 DONE by construction (BLens scored on all 267,668 matched keys incl. the NCT regime).
+- Item 5 DONE for A4 (seed 43, 2026-08-28: ±0.001). C1 second seed not run.
+- Incident: 1200059's LORD stage OOM'd on a MIG a100_40g slice; follow-on 1200835 exited 0 on a 3 KB traceback stub because its EFFECT check tested file existence only — fixed to require ≥1000 `target:` lines (scripts/dh2_sbatch/blens_train_resume.sbatch).
+
 ## FAIRNESS TODO (2026-08-27; from the baseline-comparison review)
 1. Retrain SymGen (CodeLlama-34B + LoRA) and BLens on OUR frozen train tier (v2 protocol) — LAUNCH-READY (user-gated): SymGen `dh2/symgen_ft_ours.sbatch` (input built, 190,133 rows; ~20 h 4×A100) + `symgen_v2/infer_{c,nct}_oursv2.sbatch`; BLens `scripts/prep_blens_ours_v2.py` → `dh2/blens_ours_v2/{ghidra_array,encode}.sbatch` (~1.5–2 d) → RunExp -pretrain -train -inferBest (~10 h).
 2. Present the matched-key table (T3) as the baseline comparison; full-tier numbers are ours-only.
