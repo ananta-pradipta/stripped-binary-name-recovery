@@ -100,3 +100,15 @@ Finding: val_xproj (GNU-heavy FT packages) cannot arbitrate GNU-heavy data addit
 Full table: results/router3_c1l10_a4v1.json → per_package_2head.
 
 Sources: results/dualhead_v2/RESULTS_LEDGER.md (job ids per row), results/*.json.
+
+## T7. Compiler breakdown on the test tier (C1 λ1.0 ∪ A4 run 1; job 1204677, results/compiler_breakdown_c1l10_a4v1.json)
+Dataset v2 is mixed-compiler: train 539 of 997 binaries are Clang builds; test has 558 GCC + 52 Clang binaries (Clang in 9 packages: angie, dash, expat, gettext, libsodium, nginx118, psmisc, recutils, tengine). This is in-distribution compiler robustness (both compilers in train), NOT zero-shot compiler transfer.
+| slice | n / pkgs | R | D | A4 | GBT union | oracle |
+|---|---|---|---|---|---|---|
+| GCC, all | 248,370 / 50 | 0.118 / 0.377 | 0.072 / 0.238 | 0.176 / 0.357 | 0.196 / 0.430 | 0.214 / 0.462 |
+| Clang, all | 19,298 / 9 | 0.230 / 0.302 | 0.130 / 0.152 | 0.286 / 0.354 | 0.307 / 0.391 | 0.339 / 0.434 |
+| GCC, same 9 packages (paired) | 12,835 / 9 | 0.311 / 0.318 | 0.175 / 0.180 | 0.311 / 0.344 | 0.374 / 0.405 | 0.404 / 0.442 |
+| GCC FT / NCT | 208,940 / 39,430 | 0.034 / 0.558 | 0.026 / 0.313 | 0.118 / 0.486 | 0.116 / 0.622 | 0.129 / 0.662 |
+| Clang FT / NCT | 14,218 / 5,080 | 0.099 / 0.594 | 0.073 / 0.291 | 0.164 / 0.626 | 0.164 / 0.707 | 0.189 / 0.760 |
+Paired per package (union F1, GCC → Clang): angie 0.822→0.744, nginx118 0.902→0.781, dash 0.273→0.164, tengine 0.635→0.765, psmisc 0.457→0.451, recutils 0.251→0.252, libsodium 0.079→0.086, expat 0.118→0.068, gettext 0.105→0.211 (Clang gettext statically links libtextstyle/libxml2: 5,594 vs 1,104 fns — composition, not compiler). Retrieval is the compiler-sensitive head on near-clone code (angie R 0.744→0.618, nginx118 0.836→0.657) while the decompiled-text head holds (0.684→0.669, 0.728→0.695); on far transfer both compilers are flat. Paired macro 0.405 vs 0.391.
+
