@@ -43,7 +43,7 @@ def macro(rows, key):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('ckpt')
-    ap.add_argument('--tiers', nargs='+', default=['test'])
+    ap.add_argument('--tiers', nargs='*', default=['test'])
     ap.add_argument('--rows', nargs='*', default=[], help='extra jsonl files with prebuilt masked code (e.g. results/a4_ft/symgen_holdout.jsonl); in_dynsym rows are dropped from scoring')
     ap.add_argument('--tag', required=True)
     ap.add_argument('--max-src', type=int, default=1024)
