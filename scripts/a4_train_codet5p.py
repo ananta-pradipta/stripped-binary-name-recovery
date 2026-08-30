@@ -87,6 +87,7 @@ def main():
     ap.add_argument('--extra-train', nargs='*', default=[], help='additional jsonl files (e.g. SymGen corpus rows)')
     ap.add_argument('--extra-cap', type=int, default=None, help='max rows per package from extra files (B3 domain balance)')
     ap.add_argument('--seed', type=int, default=42)
+    ap.add_argument('--data-dir', default=f'{WS}/results/a4_ft', help='dir with train.jsonl/val.jsonl (rows: code,name,key,package); e.g. results/a4_baptext for the BAP-text control')
     ap.add_argument('--bf16', action='store_true')
     ap.add_argument('--smoke', action='store_true')
     args = ap.parse_args()
@@ -98,10 +99,10 @@ def main():
     nparams = sum(p.numel() for p in model.parameters())
     if args.smoke:
         args.train_limit = args.train_limit or 512; args.val_limit = 256; args.epochs = 1; args.eval_every = 16
-    train = A4Set(f'{WS}/results/a4_ft/train.jsonl', tok, args.max_src, args.max_tgt, args.train_limit, args.seed,
+    train = A4Set(f'{args.data_dir}/train.jsonl', tok, args.max_src, args.max_tgt, args.train_limit, args.seed,
                   extra=args.extra_train, extra_cap=args.extra_cap)
-    val_full = A4Set(f'{WS}/results/a4_ft/val.jsonl', tok, args.max_src, args.max_tgt)
-    val_sub = A4Set(f'{WS}/results/a4_ft/val.jsonl', tok, args.max_src, args.max_tgt, args.val_limit, args.seed)
+    val_full = A4Set(f'{args.data_dir}/val.jsonl', tok, args.max_src, args.max_tgt)
+    val_sub = A4Set(f'{args.data_dir}/val.jsonl', tok, args.max_src, args.max_tgt, args.val_limit, args.seed)
     tl = DataLoader(train, batch_size=args.bs, shuffle=True, collate_fn=train.collate, num_workers=4, drop_last=True)
     vl_sub = DataLoader(val_sub, batch_size=args.bs * 2, collate_fn=val_sub.collate, num_workers=2)
     vl_full = DataLoader(val_full, batch_size=args.bs * 2, collate_fn=val_full.collate, num_workers=2)
