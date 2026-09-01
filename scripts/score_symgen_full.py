@@ -12,7 +12,7 @@ whatever rows exist so far (interim read); the final run must see every shard co
 import argparse, collections, json, os, pickle, re, subprocess, sys
 import numpy as np
 sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
-from src.evaluation.metrics import compute_subtoken_f1
+from src.evaluation.metrics import compute_subtoken_f1, split_name
 WS = '/project/hz79/_shared/cs785/dh2'
 ap = argparse.ArgumentParser()
 ap.add_argument('--shards', type=int, default=34)
@@ -24,8 +24,30 @@ ap.add_argument('--blens-log', default=None, help='LORD-inference-logs-test-*.tx
 ap.add_argument('--nlp', default=f'{WS}/blens_ours_v2/xflBlensXProjectData')
 ap.add_argument('--extra-head', action='append', default=[], help='NAME=preds.tsv in a4_predict format')
 ap.add_argument('--partial', action='store_true', help='score incomplete shards (interim read)')
+ap.add_argument('--word-cluster', default=None,
+                help='SymLM CodeWordNet word_cluster.json; adds a semantic-F1 column (predicted token '
+                     'counts as correct when it shares a cluster with a target token, per SymLM CCS22 eval)')
 ap.add_argument('--out', default=f'{WS}/results/score_symgen_full.json')
 args = ap.parse_args()
+WC = json.load(open(args.word_cluster)) if args.word_cluster else None
+
+def semantic_f1(cp, ct):
+    """SymLM-style cluster-replacement F1 on canonicalized names (same split as compute_subtoken_f1)."""
+    pt, tt = split_name(cp), split_name(ct)
+    if not pt and not tt: return 1.0
+    if not pt or not tt: return 0.0
+    tset = set(tt)
+    rep = []
+    for p in pt:
+        if p not in tset and p in WC:
+            pc = set(WC[p])
+            for t in tt:
+                if t in WC and pc.intersection(WC[t]): p = t; break
+        rep.append(p)
+    pc_, tc_ = collections.Counter(rep), collections.Counter(tt)
+    tp = sum((pc_ & tc_).values())
+    prec = tp / sum(pc_.values()); rec = tp / sum(tc_.values())
+    return 2 * prec * rec / (prec + rec) if prec + rec else 0.0
 
 def demangle_many(names):
     todo = sorted({n for n in names if n and n.startswith('_Z')}); out = {}
@@ -125,9 +147,15 @@ HEADS = ['SymGen', 'R', 'D', 'A4'] + (['BLens'] if blens is not None else []) + 
 dem = demangle_many([r['true'] for r in rows] + [r[h] for r in rows for h in HEADS])
 for r in rows:
     ct = canon(r['true'], dem)
-    for h in HEADS: r['f_' + h] = compute_subtoken_f1(canon(r[h], dem), ct) if r[h] else 0.0
+    for h in HEADS:
+        cp = canon(r[h], dem) if r[h] else ''
+        r['f_' + h] = compute_subtoken_f1(cp, ct) if r[h] else 0.0
+        if WC: r['s_' + h] = semantic_f1(cp, ct) if r[h] else 0.0
 pr = gb.predict_proba(np.array([r['x'] for r in rows]))[:, 1]
-for r, p in zip(rows, pr): r['f_gbt'] = r['f_R'] if p >= 0.5 else r['f_A4']; r['f_oracle'] = max(r['f_R'], r['f_A4'])
+for r, p in zip(rows, pr):
+    r['f_gbt'] = r['f_R'] if p >= 0.5 else r['f_A4']; r['f_oracle'] = max(r['f_R'], r['f_A4'])
+    if WC:
+        r['s_gbt'] = r['s_R'] if p >= 0.5 else r['s_A4']; r['s_oracle'] = max(r['s_R'], r['s_A4'])
 ALL = HEADS + ['gbt', 'oracle']
 
 def table(rs):
@@ -139,6 +167,11 @@ def table(rs):
         T[h] = {'micro': round(sum(r[key] for r in rs) / n, 4) if n else None,
                 'macro': round(sum(sum(v)/len(v) for v in g.values()) / len(g), 4) if g else None,
                 'EM': round(sum(1 for r in rs if r[key] == 1.0) / n, 4) if n else None, 'n': n, 'pkgs': len(g)}
+        if WC and n:
+            sg_ = collections.defaultdict(list)
+            for r in rs: sg_[r['pkg']].append(r['s_' + h])
+            T[h]['sem_micro'] = round(sum(r['s_' + h] for r in rs) / n, 4)
+            T[h]['sem_macro'] = round(sum(sum(v)/len(v) for v in sg_.values()) / len(sg_), 4)
     return T
 report = {'partial': bool(incomplete), 'incomplete_shards': incomplete, 'joined': len(rows), 'missing': dict(miss),
           'strata': {}}
@@ -148,6 +181,8 @@ for name, rs in strata:
     report['strata'][name] = table(rs)
     print(f'=== {name} (n={len(rs)}) ===')
     for h, v in report['strata'][name].items():
-        if v['n']: print(f"  {h:<8} micro {v['micro']:.4f} macro {v['macro']:.4f} EM {v['EM']:.4f} ({v['pkgs']} pkgs)")
+        if v['n']:
+            sem = f" | sem {v['sem_micro']:.4f}/{v['sem_macro']:.4f}" if 'sem_micro' in v else ''
+            print(f"  {h:<8} micro {v['micro']:.4f} macro {v['macro']:.4f} EM {v['EM']:.4f} ({v['pkgs']} pkgs){sem}")
 json.dump(report, open(args.out, 'w'), indent=1)
 print('EFFECT: score_symgen_full done ->', args.out)

@@ -4276,3 +4276,11 @@ BAP text reaches FT/novel ≈ 0.109 — ~4x the old GRU decoder (0.030/0.024) �
 LM pretraining + seq2seq capacity, not the IR. BAP-only novel/FT 0.109 sits at the user's 0.10–0.12
 "BAP-only viable" threshold. Files: results/union_c1l10_a4baptext.json, router2_c1l10_a4baptext.json,
 a4_codet5p220m_baptext_v1/val_test_{eval.json,preds.tsv} (Wulver dh2).
+
+## 2026-09-01 — SymLM-style semantic F1 (CodeWordNet clusters) on full test (job 1210146)
+word_cluster.json from the SymLM checkout (18,379 words); pred token matches when it shares a cluster
+with a target token (their CCS'22 eval), applied identically to all 8 systems on the T3d population.
+Result: uniform lift of +0.01–0.02 F1, ordering unchanged. Union 0.2040/0.4305 → sem 0.2198/0.4450;
+SymGen 0.1445/0.1957 → 0.1616/0.2169; novel-name union 0.121→0.138. Conclusion: exact sub-token F1 is
+not materially under-crediting synonyms — low absolute scores are task difficulty, not metric harshness.
+File: results/score_symgen_full_sem.json (has exact + sem for every head × stratum).
