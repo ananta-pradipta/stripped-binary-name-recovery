@@ -4284,3 +4284,16 @@ Result: uniform lift of +0.01–0.02 F1, ordering unchanged. Union 0.2040/0.4305
 SymGen 0.1445/0.1957 → 0.1616/0.2169; novel-name union 0.121→0.138. Conclusion: exact sub-token F1 is
 not materially under-crediting synonyms — low absolute scores are task difficulty, not metric harshness.
 File: results/score_symgen_full_sem.json (has exact + sem for every head × stratum).
+
+## 2026-09-01 — Novel-name deep analysis: A4-220m vs SymGen-34B (job 1210169)
+234,651 novel rows. SG 0.1276 / A4 0.1231 / R 0.0352; oracle(A4,SG) 0.1707 (+34% over best single).
+EM overlap: both 2,769, SG-only 4,049, A4-only 1,780 → complementary. Pkg wins SG 22 / A4 15 / tie 11.
+KEY (evidence cut, 6K sample): GT-token coverage in the shared input decomp text →
+  full evidence (6.8%): A4 0.550 > SG 0.464 — our 220m BEATS the 34B when the name is derivable;
+  partial (7.8%): 0.467 vs 0.482 ≈ tie; weak (20.7%): 0.129 vs 0.144; zero (64.7%): 0.035 vs 0.040.
+SG's entire edge lives in weak/zero-evidence rows + pretraining-familiar projects (SG-only EMs are
+angie ngx_* [nginx fork], fossil sqlite3_* internals; SG top tokens: sqlite3/btree/bfd/elf = memorized).
+VERDICT: gap is pretraining prior (borderline contamination), not composition ability. A4 artifacts:
+mangled-name fragments (epns/epkns/7board) on icu → C++ demangling in A4 targets is a fixable weakness
+(icu 48K rows, 0.041 vs SG 0.054). 65% zero-evidence rows cap all systems ~0.04 — representation limit.
+File: results/novel_head_analysis.json (per-pkg table, examples, char stats).
