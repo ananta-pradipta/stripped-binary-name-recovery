@@ -58,6 +58,14 @@ evidence; (2) systems not retrained (SymLM 0.277 via BLens's measurement, XFL, A
 positionable via published numbers; (3) SymGen own-adapter vs our-tier adapter (0.120 vs 0.124 FT)
 shows our retraining didn't cripple it.
 
+## Novel-name evidence-stratified claim (2026-09-01, results/novel_head_analysis.json)
+"The 34B LLM's novel-name advantage disappears once input evidence is controlled for": on rows where
+GT tokens are present in the shared decomp input, A4-220m ≥ SymGen-34B (full-evidence 0.550 vs 0.464);
+SymGen's aggregate edge lives entirely in weak/zero-evidence rows (65% of novel mass, everyone ~0.04)
+and pretraining-familiar projects (angie ngx_*, fossil sqlite3 internals) → corpus prior / borderline
+contamination, not composition. Heads complementary (oracle +34%). A4 defect: C++ targets not demangled
+(icu mangled fragments) — fix candidate.
+
 ## Other queued paper points (from earlier sessions)
 - Ghidra-vs-BAP ablation reading (FINAL_TABLES T3d): decompiled text worth +0.029 head / +0.017
   system micro; code-LM on raw BAP-IR ≈4× the GRU decoder on FT/novel → FT gap was LM pretraining +
