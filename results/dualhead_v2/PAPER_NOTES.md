@@ -31,6 +31,17 @@ Sources: memory research_dataset_distributions.md (paper details verified 2026-0
 project_leakage_table_v2 (old 89.5% tok-identical test → why hygiene matters), split policy v3 in
 data/split_v2.json + docs/DATASET_V2_CARD.md.
 
+## Metric presentation (user directive 2026-09-01)
+- **Macro (per-package mean F1) = the default metric in the paper body.** The terms "micro/macro"
+  are considered confusing/non-principled — do not use them in the body; call the default simply
+  "F1 (averaged per package)" or "per-package F1". Function-weighted (micro) numbers +
+  the micro-vs-macro comparison go to the **appendix as an ablation**.
+- Caveats raised at note time (user to decide during writing): (1) published baseline numbers
+  (SymGen 0.38, BLens 0.46/0.32, SymLM 0.277) are function-level — any table citing them must
+  use the matching aggregation or footnote the difference; (2) selective-prediction/router
+  numbers are currently function-level — recompute per-package variants or scope the claim.
+  All per-package numbers already exist in every results JSON (macro_pkg fields) — no reruns needed.
+
 ## Other queued paper points (from earlier sessions)
 - Ghidra-vs-BAP ablation reading (FINAL_TABLES T3d): decompiled text worth +0.029 head / +0.017
   system micro; code-LM on raw BAP-IR ≈4× the GRU decoder on FT/novel → FT gap was LM pretraining +

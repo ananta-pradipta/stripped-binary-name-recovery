@@ -8,12 +8,12 @@
 cd /project/hz79/_shared/cs785/baselines/SymGen/scripts/model_training
 module load CUDA/12.6.0
 source /project/hz79/_shared/cs785/baselines/symgen_ft_env/bin/activate
-export HF_HOME=/project/hz79/_shared/cs785/baselines/hf_cache TRANSFORMERS_CACHE=/project/hz79/_shared/cs785/baselines/hf_cache HF_HUB_OFFLINE=1 WANDB_DISABLED=true TORCHINDUCTOR_COMPILE_THREADS=1 OMP_NUM_THREADS=4
+export HF_HOME=/project/hz79/_shared/cs785/baselines/hf_cache TRANSFORMERS_CACHE=/project/hz79/_shared/cs785/baselines/hf_cache HF_HUB_OFFLINE=1 WANDB_DISABLED=true TORCHINDUCTOR_COMPILE_THREADS=1 OMP_NUM_THREADS=4 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 DATA=/project/hz79/_shared/cs785/dh2/symgen_v2/full_input.json
 OUT=/project/hz79/_shared/cs785/baselines/SymGen/lora_weights_ours_v2
 if [ -s $OUT/adapter_model.bin ] || [ -s $OUT/adapter_model.safetensors ]; then echo "EFFECT: final adapter already present in $OUT, nothing to resume"; exit 0; fi
 CKPT=""
-for d in $(ls -d $OUT/checkpoint-* 2>/dev/null | sort -t- -k2,2n -r); do
+for n in $(ls -d $OUT/checkpoint-* 2>/dev/null | sed -E "s/.*checkpoint-//" | sort -nr); do d=$OUT/checkpoint-$n;
   if [ -s $d/trainer_state.json ] && [ -s $d/optimizer.pt ] && { [ -s $d/adapter_model.bin ] || [ -s $d/adapter_model.safetensors ]; }; then CKPT=$d; break; else echo "skip incomplete $d"; fi
 done
 test -n "$CKPT" || { echo "FATAL: no complete checkpoint under $OUT"; ls -la $OUT; exit 1; }
