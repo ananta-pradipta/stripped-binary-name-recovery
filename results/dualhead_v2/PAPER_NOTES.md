@@ -42,6 +42,14 @@ data/split_v2.json + docs/DATASET_V2_CARD.md.
   numbers are currently function-level — recompute per-package variants or scope the claim.
   All per-package numbers already exist in every results JSON (macro_pkg fields) — no reruns needed.
 
+## Published baseline numbers — placement (discussed 2026-09-01)
+Main comparison table = same-data same-metric retrained systems ONLY. Published numbers appear only in
+related-work prose or a separated "original paper, different data — not comparable" block, for three
+purposes: (1) preempt "SymGen says 0.38, you show 0.196" — the delta IS the protocol-strictness
+evidence; (2) systems not retrained (SymLM 0.277 via BLens's measurement, XFL, AsmDepictor) are only
+positionable via published numbers; (3) SymGen own-adapter vs our-tier adapter (0.120 vs 0.124 FT)
+shows our retraining didn't cripple it.
+
 ## Other queued paper points (from earlier sessions)
 - Ghidra-vs-BAP ablation reading (FINAL_TABLES T3d): decompiled text worth +0.029 head / +0.017
   system micro; code-LM on raw BAP-IR ≈4× the GRU decoder on FT/novel → FT gap was LM pretraining +
