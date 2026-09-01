@@ -4297,3 +4297,14 @@ VERDICT: gap is pretraining prior (borderline contamination), not composition ab
 mangled-name fragments (epns/epkns/7board) on icu → C++ demangling in A4 targets is a fixable weakness
 (icu 48K rows, 0.041 vs SG 0.054). 65% zero-evidence rows cap all systems ~0.04 — representation limit.
 File: results/novel_head_analysis.json (per-pkg table, examples, char stats).
+
+## 2026-09-01 — Zero-evidence census: where the missing evidence lives (job 1210177)
+12K novel-row sample, 353 binaries. Self-evidence buckets: zero 66% / weak 14% / has 20% (matches analysis).
+For ZERO-self-evidence functions, GT-token coverage elsewhere in the SAME stripped binary:
+  ±10 address neighbors (TU locality): mean 0.315, ≥1 token 65.2%, full 6.9%, PREFIX token 42.2%
+  direct callees/callers text:          mean 0.170, ≥1 token 36.4%
+  whole-binary decomp pool:             mean 0.727, ≥1 token 94.4%, full 44.9%, prefix 69.8%
+Upper bounds (generic tokens inflate whole-binary numbers), but the locality gradient + prefix
+recoverability are real: the naming-convention token is in the ±10 neighborhood for 42% of the
+functions that look hopeless today. Grounds composition-from-context ideas (module pooling,
+name propagation, project lexicon). File: results/zero_evidence_census.json.
