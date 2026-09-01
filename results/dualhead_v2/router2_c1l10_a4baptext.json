@@ -1,0 +1,155 @@
+{
+ "val": {
+  "retrieval": {
+   "n": 10617,
+   "micro": 0.1595,
+   "macro": 0.3398,
+   "FT": 0.0825,
+   "NCT": 0.8353
+  },
+  "A4": {
+   "n": 10617,
+   "micro": 0.1619,
+   "macro": 0.2969,
+   "FT": 0.1096,
+   "NCT": 0.6212
+  },
+  "oracle": {
+   "n": 10617,
+   "micro": 0.2222,
+   "macro": 0.4013,
+   "FT": 0.149,
+   "NCT": 0.8651
+  },
+  "conf_sim1": {
+   "n": 10617,
+   "micro": 0.196,
+   "macro": 0.3625,
+   "FT": 0.1271,
+   "NCT": 0.8015,
+   "tau": 0.687
+  },
+  "learned_logreg": {
+   "n": 10617,
+   "micro": 0.2003,
+   "macro": 0.369,
+   "FT": 0.1286,
+   "NCT": 0.8301
+  },
+  "learned_gbt": {
+   "n": 10617,
+   "micro": 0.2108,
+   "macro": 0.3841,
+   "FT": 0.1375,
+   "NCT": 0.8548
+  }
+ },
+ "test": {
+  "retrieval": {
+   "n": 268178,
+   "micro": 0.1269,
+   "macro": 0.3853,
+   "FT": 0.0395,
+   "NCT": 0.5638
+  },
+  "A4": {
+   "n": 268178,
+   "micro": 0.1561,
+   "macro": 0.3022,
+   "FT": 0.1089,
+   "NCT": 0.3925
+  },
+  "oracle": {
+   "n": 268178,
+   "micro": 0.2078,
+   "macro": 0.4407,
+   "FT": 0.1235,
+   "NCT": 0.6297
+  },
+  "conf_sim1": {
+   "n": 268178,
+   "micro": 0.1843,
+   "macro": 0.403,
+   "FT": 0.1071,
+   "NCT": 0.5705,
+   "tau": 0.687
+  },
+  "conf_sim1_selective_R_only": {
+   "5%": 0.5107,
+   "10%": 0.5019,
+   "20%": 0.4061,
+   "30%": 0.3185,
+   "50%": 0.2205,
+   "100%": 0.1269
+  },
+  "conf_sim1_selective": {
+   "5%": 0.6485,
+   "10%": 0.6109,
+   "20%": 0.5261,
+   "30%": 0.4371,
+   "50%": 0.3093,
+   "100%": 0.1843
+  },
+  "routing_conf_sim1": {
+   "oracle_prefers_R": 0.11,
+   "oracle_prefers_A4": 0.183,
+   "ties": 0.707,
+   "routing_acc_all": 0.931,
+   "routing_acc_contested": 0.765,
+   "mean_regret_F1": 0.0235
+  },
+  "learned_logreg": {
+   "n": 268178,
+   "micro": 0.188,
+   "macro": 0.4085,
+   "FT": 0.1095,
+   "NCT": 0.5803
+  },
+  "learned_logreg_R_rate": 0.331,
+  "routing_logreg": {
+   "oracle_prefers_R": 0.11,
+   "oracle_prefers_A4": 0.183,
+   "ties": 0.707,
+   "routing_acc_all": 0.939,
+   "routing_acc_contested": 0.791,
+   "mean_regret_F1": 0.0199
+  },
+  "learned_gbt": {
+   "n": 268178,
+   "micro": 0.1886,
+   "macro": 0.41,
+   "FT": 0.1091,
+   "NCT": 0.5864
+  },
+  "learned_gbt_R_rate": 0.297,
+  "routing_gbt": {
+   "oracle_prefers_R": 0.11,
+   "oracle_prefers_A4": 0.183,
+   "ties": 0.707,
+   "routing_acc_all": 0.937,
+   "routing_acc_contested": 0.785,
+   "mean_regret_F1": 0.0192
+  },
+  "learned_gbt_selective": {
+   "5%": 0.9491,
+   "10%": 0.852,
+   "20%": 0.6419,
+   "30%": 0.4974,
+   "50%": 0.3411,
+   "100%": 0.1886
+  },
+  "router_features": [
+   "sim1",
+   "margin",
+   "ext_jacc",
+   "str_jacc",
+   "d_conf",
+   "d_len",
+   "n_ext",
+   "n_str",
+   "n_blocks",
+   "a4_conf",
+   "sim1-a4_conf"
+  ]
+ }
+}

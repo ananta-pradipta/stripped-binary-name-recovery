@@ -64,6 +64,19 @@ BLens caveats (report them): (i) it abstains on 46.0% of rows (LORD confidence t
 | ours: A4 / GBT union / oracle | 0.115 / 0.124 / 3.3%  ·  0.112 / 0.120 / 3.5%  ·  0.132 / 0.142 / 3.8% | 0.633 / 0.633 / 44.0%  ·  0.787 / 0.785 / 68.7%  ·  0.829 / 0.828 / 74.1% |
 Merged one-table view (T3a + T3b + T3c): `results/dualhead_v2/baselines_table_merged.png`.
 
+**T3d. SymGen-34B on the FULL test tier (267,626 joined fns, 50 pkgs; sharded inference array 1204694, scorer job 1205238, `results/score_symgen_full.json`)** — micro / macro / EM. SymGen = LoRA retrained on our train tier; BLens per-row preds from the T3b run; A4bap = the BAP-text control head (same CodeT5+ 220m as A4, linearized BAP-IR input instead of Ghidra text).
+| system | all | FT (223,141; 27 pkgs) | NCT (44,485; 23 pkgs) | seen-name (32,975) | novel-name (234,651) |
+|---|---|---|---|---|---|
+| SymGen-34B (retrained) | 0.145 / 0.196 / 3.4% | 0.118 / 0.144 / 2.8% | 0.276 / 0.257 / 6.9% | 0.265 / 0.240 / 7.2% | 0.128 / 0.180 / 2.9% |
+| BLens (retrained) | 0.059 / 0.171 / 1.3% | 0.013 / 0.021 / 0.2% | 0.287 / 0.346 / 7.1% | 0.382 / 0.223 / 10.7% | 0.013 / 0.044 / 0.0% |
+| ours: retrieval (R, C1 λ1.0) | 0.126 / 0.378 / 8.8% | 0.039 / 0.061 / 0.7% | 0.562 / 0.750 / 49.3% | 0.769 / 0.530 / 70.8% | 0.035 / 0.098 / 0.0% |
+| ours: BAP decoder (D) | 0.076 / 0.236 / 3.0% | 0.029 / 0.045 / 0.3% | 0.311 / 0.460 / 16.5% | 0.426 / 0.333 / 24.5% | 0.027 / 0.057 / 0.0% |
+| ours: A4 gen head (Ghidra text) | 0.184 / 0.360 / 6.5% | 0.121 / 0.132 / 2.4% | 0.503 / 0.627 / 27.4% | 0.618 / 0.494 / 39.2% | 0.123 / 0.181 / 1.9% |
+| ours: A4bap (BAP text control) | 0.155 / 0.295 / 5.3% | 0.108 / 0.110 / 2.3% | 0.390 / 0.512 / 20.3% | 0.484 / 0.403 / 28.3% | 0.109 / 0.143 / 2.0% |
+| ours: GBT union (R ∪ A4) | 0.204 / 0.431 / 10.2% | 0.119 / 0.128 / 2.5% | 0.632 / 0.785 / 49.1% | 0.796 / 0.576 / 69.2% | 0.121 / 0.178 / 1.9% |
+| oracle union | 0.223 / 0.463 / 11.1% | 0.133 / 0.151 / 2.6% | 0.673 / 0.829 / 54.1% | 0.849 / 0.635 / 76.3% | 0.135 / 0.218 / 2.0% |
+Reading: on the full test tier the 34B decompiled-code LLM and our 220M A4 head are tied on FT (0.118 vs 0.121) and on novel names (0.128 vs 0.123); our system beats SymGen by +0.36 micro on NCT and +0.24 macro overall. Ghidra-vs-BAP ablation: swapping A4's input from Ghidra text to BAP text costs 0.029 head micro and 0.017 system micro (GBT union with A4bap = 0.189 / 0.410, `results/union_c1l10_a4baptext.json`, `router2_c1l10_a4baptext.json`); the BAP-text head still reaches FT/novel ≈ 0.109, ~4× the GRU decoder — the FT gap was mostly LM pretraining + capacity, not the IR.
+
 ## T4. External benchmark — SymGen 5-package holdout (gmp, libpng, libmicrohttpd, poke, libredwg; 9,991 scorable fns, exported symbols dropped)
 | head | micro | macro | EM |
 |---|---|---|---|

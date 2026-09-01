@@ -223,3 +223,9 @@ Verdict: the decoder head adds +0.006 to the oracle but −0.002 when routed (ha
 3. Same-size ablation: A4 at CodeT5+ 770M (cached) ~10 h.
 4. BLens on the NCT sample (rerun needed).
 5. Second seeds for A4 and the C1 encoder (~13 h).
+
+## 2026-09-01 — Full-test SymGen comparison + Ghidra-vs-BAP ablation COMPLETE
+- SymGen full-test inference: array 1204694 (34 shards × ~7.9K fns, all complete, 0 gt mismatches); scorer 1205238 rc=0, joined 267,626/268,136 (510 rows lack our features).
+- T3d added to FINAL_TABLES: SymGen-34B (retrained) full-test 0.145/0.196 vs our GBT union 0.204/0.431; FT tied (0.118 vs union 0.119, A4 0.121); NCT ours 0.632 vs 0.276; novel-name SymGen 0.128 ≈ A4 0.123.
+- Ghidra-vs-BAP: BAP-text head (train 1204705, predict 1205233) test 0.155/0.295, FT 0.108, novel 0.109; union with it 0.189/0.410 vs Ghidra 0.205/0.439 → Ghidra text worth +0.029 head / +0.017 system micro; BAP-text ≈4× GRU decoder on FT/novel.
+- Files: results/score_symgen_full.json, union_c1l10_a4baptext.json, router2_c1l10_a4baptext.json, a4_codet5p220m_baptext_v1/ (Wulver + copied to results/dualhead_v2/).

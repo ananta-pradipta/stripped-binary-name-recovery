@@ -4255,3 +4255,24 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 ### 2026-08-30 — Compiler breakdown of the final system (job 1204677) + Ghidra-vs-BAP ablation status
 - Dataset v2 is mixed-compiler (train 539/997 Clang bins; test 52 Clang bins in 9 pkgs) — earlier "GCC only" note was wrong. Test union: GCC 0.196/0.430 (248,370 fns) vs Clang 0.307/0.391 (19,298); paired on the 9 shared packages GCC 0.374/0.405 vs Clang 0.307/0.391. NCT retrieval drops under Clang (angie R 0.744→0.618, nginx118 0.836→0.657) while A4 holds; FT flat. FINAL_TABLES T7. Zero-shot compiler transfer (GCC-only training) NOT run under the honest protocol.
 - Ghidra-vs-BAP: modality ablation exists on identical functions (BAP-only best = C1 retrieval 0.127/0.385; Ghidra-only A4 0.185/0.368; both 0.205/0.438; novel-name 0.035 vs 0.123) but confounds representation with model class/pretraining (34M from scratch vs 220M pretrained code LM). Control not run: CodeT5+ 220M on linearized BAP-IR tokens.
+
+## 2026-08-31 — Ghidra-vs-BAP generation-head ablation (BAP-text control)
+Same CodeT5+ 220m, same masked-name FT recipe, only the input differs (Ghidra decompiled C vs linearized BAP-IR text, max_src 1536 covering 92%).
+Train job 1204705 (8h16m), predict 1205233, union/router2 run 2026-08-31.
+
+| Head (test) | micro | macro | FT | NCT | novel |
+|---|---|---|---|---|---|
+| A4 Ghidra text (run1) | 0.1852 | 0.368 | 0.121 | 0.504 | 0.123 |
+| A4bap BAP text | 0.1561 | 0.3022 | 0.1089 | 0.3925 | 0.1088 |
+| (old BAP GRU decoder) | 0.100 | 0.339 | 0.030 | 0.465 | 0.024 |
+
+| System (GBT union, test) | micro | macro |
+|---|---|---|
+| R(C1 λ1.0) + Ghidra A4 | 0.2052 | 0.4387 |
+| R(C1 λ1.0) + BAP-text A4 | 0.1886 | 0.4100 |
+
+Reading: Ghidra decompilation itself buys +0.029 head / +0.017 system micro. A pretrained code-LM on raw
+BAP text reaches FT/novel ≈ 0.109 — ~4x the old GRU decoder (0.030/0.024) — so most of the FT gap was
+LM pretraining + seq2seq capacity, not the IR. BAP-only novel/FT 0.109 sits at the user's 0.10–0.12
+"BAP-only viable" threshold. Files: results/union_c1l10_a4baptext.json, router2_c1l10_a4baptext.json,
+a4_codet5p220m_baptext_v1/val_test_{eval.json,preds.tsv} (Wulver dh2).
