@@ -42,6 +42,14 @@ data/split_v2.json + docs/DATASET_V2_CARD.md.
   numbers are currently function-level — recompute per-package variants or scope the claim.
   All per-package numbers already exist in every results JSON (macro_pkg fields) — no reruns needed.
 
+## Balanced 50/50 seen/novel view (user request 2026-09-01)
+Derived (no resampling): each cell = mean(seen-name, novel-name score) from score_symgen_full_sem.json.
+Union bal-macro 0.377 / bal-micro 0.458 / bal-EM 35.6%; SymGen 0.210/0.197/5.1%; retrieval 0.314/0.402.
+Balanced lens rewards dual capability (union leads SymGen +0.17 macro) but reweights a 12/88 reality
+50/50 — label loudly; suggested placement: appendix next to strata table; body keeps blended + strata.
+Also: SymLM-style semantic F1 (CodeWordNet) computed for everything — uniform +0.01–0.02, ordering
+unchanged → cite as evidence low scores are task difficulty, not metric harshness.
+
 ## Published baseline numbers — placement (discussed 2026-09-01)
 Main comparison table = same-data same-metric retrained systems ONLY. Published numbers appear only in
 related-work prose or a separated "original paper, different data — not comparable" block, for three
