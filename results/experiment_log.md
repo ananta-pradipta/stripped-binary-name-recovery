@@ -4361,3 +4361,19 @@ val 0.2067 vs 0.2145. Predicted tokens displace real evidence from the TOP-40 di
 pass-1 errors (uniq rose 0.179->0.250 = more diverse but less accurate). Per the probe's own gate
 ("retrain justified only if the in-distribution probe helps at all"): propagation-as-digest-tokens
 CLOSED; no propagation-aware retrain. Files: results/a4_codet5p220m_modctx_p2v1/.
+
+## 2026-09-02 — poolctx + dm final results (jobs 1214989/1214990/1215015/1215016/1215710)
+HEAD, test 268K (val best-sub in parens):
+  modctx  0.2095 macro 0.3930 FT 0.1430 NCT 0.5418 novel 0.1464  (val 0.2224)
+  dm      0.2125 macro 0.4000 FT 0.1444 NCT 0.5530 novel 0.1478  (val 0.2249)  icu 0.0539 (+19% vs 0.0454)
+  poolctx 0.2169 macro 0.3980 FT 0.1511 NCT 0.5457 novel 0.1563  (val 0.2136)
+SYSTEM (GBT router, score_symgen_full joined pop / router2 own join):
+  modctx  0.2246/0.4489 EM 0.1040 novel 0.1425   | router2 test 0.2260
+  dm      0.2261/0.4498 EM 0.1058 novel 0.1440   | router2 test 0.2273 (val 0.2490)
+  poolctx 0.2322/0.4510 EM 0.1051 novel 0.1518   | router2 test 0.2335 (val 0.2451)
+VAL/TEST ARBITRATION CONFLICT: val prefers dm (head +0.011, system +0.004); test prefers poolctx
+(head +0.004..0.007, system +0.006). Regime split also flips: test FT/novel -> poolctx,
+test NCT -> dm. Selection policy (val arbitrates) => dm; adopting poolctx would be test-peeking.
+Changes are orthogonal (digest recipe vs target canon) => combined poolctx+dm retrain proposed
+(canon targets of a4_poolctx rows), val-arbitrated — USER GATE, not launched.
+Propagation probe closed NEGATIVE same night (see prior entry). All jobs audited.
