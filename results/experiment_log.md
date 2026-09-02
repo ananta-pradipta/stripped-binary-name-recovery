@@ -4447,3 +4447,8 @@ report honestly), test gain clear, architecture strictly simpler. Quick-job numb
 accidentally accurate (mixed-scorer biases nearly cancelled) — but now provenance-clean.
 Remaining before final adoption: port selective/abstention machinery; rebuild C1-system numbers
 on identical join if reviewers demand exactness (42-row pop delta, negligible).
+
+## 2026-09-02 — pooldm test prediction (job 1215744): mirrors val, no stacking
+Test micro 0.2157 (FT 0.1510, NCT 0.5390, seen 0.6363, novel 0.1557) — poolctx territory
+(0.2169), below on every stratum or within noise; dm's target cleanup adds nothing on top of the
+pooled digest on test either. Digest-width ablation row complete. Confirms dm adoption.
