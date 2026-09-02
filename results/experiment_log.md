@@ -4313,10 +4313,13 @@ name propagation, project lexicon). File: results/zero_evidence_census.json.
 Idea #1 from zero-evidence census executed end-to-end: prepend to each masked decomp function a
 40-token digest of string-literal + named-call identifiers mined from its ±10 address-adjacent
 neighbors in the same stripped binary (scripts/a4_build_modctx.py; no GT names touch the input).
-A4-modctx (CodeT5p-220m, same recipe as baptext run) vs A4-baptext, TEST (268K fns):
-  micro F1 0.2095 vs 0.1561 (+0.053) | macro 0.3930 vs 0.3022 | uniq preds 0.179 vs 0.084
-  FT 0.1430 vs 0.1089 — now BEATS SymGen-34B FT (0.120, was matched-at-best before)
-  NCT 0.5418 vs 0.3925 | seen-name 0.6517 vs 0.4876 | NOVEL-name 0.1464 vs 0.1088 (+35% rel)
+A4-modctx (CodeT5p-220m) TEST (268K fns). CORRECTION (same day): the like-for-like baseline is
+A4 run 1 (Ghidra decomp, adopted final head; joined-pop numbers from score_symgen_full.json),
+NOT the BAP-text control (0.1561) first quoted — true deltas are ~half the first-quoted ones:
+  micro F1 0.2095 vs 0.1841 (+0.025) | macro 0.3930 vs 0.3597 | uniq preds 0.179
+  FT 0.1430 vs 0.1206 — now clearly BEATS SymGen-34B FT (0.1183 joined-pop)
+  NCT 0.5418 vs 0.5026 | seen-name 0.6517 vs 0.6184 | NOVEL 0.1464 vs 0.1231 (+19% rel)
+  NOVEL now also beats SymGen-34B (0.1276) — first head to win novel-name stratum outright.
 Val arbitrates cleanly (val micro 0.2145 vs 0.1619), unlike the GNU-data additions.
 SYSTEM (C1-λ1.0 retrieval + A4-modctx, GBT router, job 1214773): test micro 0.2260 / macro 0.4570
 vs adopted final 0.2052/0.4387 (+0.021/+0.018); oracle 0.2451; selective 0.96@5% / 0.88@10% cov.
