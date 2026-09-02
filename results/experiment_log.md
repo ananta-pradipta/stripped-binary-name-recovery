@@ -4341,3 +4341,14 @@ Rerun with modctx as the system gen head (GBT refit on val, same recipe):
 Notes: router costs a little on FT (0.1389 vs head-alone 0.1423) and novel (0.1425 vs 0.1464)
 in exchange for NCT/seen gains — router optimizes overall, oracle headroom all 0.2439.
 System novel 0.1425 and head novel 0.1464 both beat SymGen-34B novel 0.1276.
+
+## 2026-09-01 — Demangling variant course-correction (job 1214995 FAILED smoke, by design)
+The inputs+targets demangling build revealed: (a) icu decomp text has ZERO C++ identifiers,
+mangled or demangled — the icu tools are static+stripped, everything is FUN_xxx, so input-side
+demangling is a no-op corpus-wide (inputs_with_mangled_ids=0); (b) my stricter canon (adding
+[^A-Za-z0-9_]->_ rewriting) changed 137K test targets incl. foo.part.0-style GCC suffixes,
+diverging from the scorers' canon (would forfeit EM on those rows) — wrong, reverted.
+Conclusion: the epns/7board mangled-fragment artifacts are imitation learned from the ~4K TRAIN
+rows with raw _Z targets, not input copying. Final dm design = targets-only with EXACT scorer
+canon (~38K test / 4K train / 636 val targets change). Modest intervention; icu is mostly
+zero-evidence-capped. Resubmitted chain: build 1215014 -> train 1215015 -> predict 1215016.
