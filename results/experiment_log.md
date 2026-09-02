@@ -4395,3 +4395,15 @@ mean regret 0.083 (4x GBT). Caveat: MLPClassifier has no sample_weight, so it la
 importance weighting logreg/GBT got; even so the failure mode (majority collapse on 10.6K rows,
 64% ties) matches the tabular-data literature (Grinsztajn et al. 2022). Router choice ladder now:
 MLP 0.164 < fixed rule 0.213 < threshold 0.215 < logreg 0.225 < GBT 0.227 (oracle 0.247).
+
+## 2026-09-02 — Scratch-ablation NaN root cause FOUND + fixed (diag job 1216281)
+Both scratch attempts (bf16 1215760, "fp32" 1215859) NaN'd from step 100. Root cause: the
+codet5p-220m checkpoint CONFIG declares torch_dtype=float16, and from_config honors it — the
+model was instantiated with fp16 WEIGHTS, so AdamW without a GradScaler NaN'd immediately,
+regardless of the autocast setting. Diagnostic (30 real steps, .float() forced): trains cleanly
+at lr 1e-5/5e-5/1e-4, loss 11.4->4.9, finite grads. Fixes: (a) .float() after from_config in
+a4_train_codet5p.py; (b) fail-fast guard (abort after >20 consecutive non-finite losses);
+(c) process lesson — the earlier smoke gate was VACUOUS (grepped "loss nan" in a 16-step run
+that logs loss every 100 steps; nothing to grep, PASS on nothing). Assert-on-effect means the
+asserted line must be PROVEN PRESENT in the happy path. ~5.3h GPU wasted across two attempts.
+Resubmitted: train 1216284 -> predict 1216285 (fp32 weights, standard recipe).
