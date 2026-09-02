@@ -4428,3 +4428,22 @@ ALL-LM SYSTEM (lmemb R + dm A4, GBT router on just 4 features sim1/margin/a4_con
    (lmemb preds scored with plain subtoken F1, no canon — redo through score_symgen_full for
    parity); (b) C1 head also feeds ext_jacc/str_jacc router features + selective machinery —
    port or re-derive. Scripts: scripts/c_lmemb_knn.py, dh2/lmemb_router.py.
+
+## 2026-09-02 — Single-backbone VERIFICATION (jobs 1216637 unified rescore + 1216640 definitive)
+Threats audited: mixed scorers in the quick jobs (lmemb plain-F1 vs dm canon-F1/canon targets),
+population parity, kNN provenance, duplicate-input share, name-visible-in-input channel.
+SANITY (all pass): train/test binary overlap 0; joined pop 278,753 (val+test) exact across heads;
+sim>=0.999 only 0.40% of test (few exact-duplicate inputs); canon(true) visible in masked input
+only 3.2% overall / 5.9% among lmemb EM-hits => seen-EM 0.818 NOT driven by name-in-input;
+spot-checked EM-hits are legit cross-package gnulib/nginx-family clones.
+UNIFIED (canon both heads vs protocol raw truth, same pop): lmemb R test 0.1382/0.4194 EM 0.1023
+(seen-EM 0.8176, NCT 0.6432, novel-EM 0.0002) vs C1 0.1269/0.3853 — HEAD CLAIM VERIFIED.
+Intermediate scare: 3-feature router under unified scoring gave val 0.2454 < current 0.2490
+(missing margin feature). DEFINITIVE 4-feature (sim1/margin/a4_conf/sim1-a4_conf) unified run:
+  val 0.2502 (vs current 0.2490, thin +0.0012) | TEST 0.2355 micro / 0.4715 macro
+  (vs current 0.2273/0.4578, +0.008/+0.014) | oracle 0.2551 | R_rate 0.162.
+VERDICT: single-backbone system claim SURVIVES verification; val preference is thin (+0.001,
+report honestly), test gain clear, architecture strictly simpler. Quick-job numbers were
+accidentally accurate (mixed-scorer biases nearly cancelled) — but now provenance-clean.
+Remaining before final adoption: port selective/abstention machinery; rebuild C1-system numbers
+on identical join if reviewers demand exactness (42-row pop delta, negligible).
