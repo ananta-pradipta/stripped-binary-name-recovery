@@ -76,3 +76,31 @@ contamination, not composition. Heads complementary (oracle +34%). A4 defect: C+
   owns seen/NCT, generation owns novel/FT, no system has both; router captures ~92% of 2-head oracle.
 - "votes" tokenizer naming: consider renaming in paper (frequency-voting ≠ Epitome's multi-model
   voting) — old CLAUDE.md note.
+
+## Why CodeT5p-220m as the generation head (2026-09-02, for Design/Discussion section)
+Justification ladder (strongest first):
+1. EMPIRICAL ON OUR PROTOCOL: SymGen (NDSS'25) = CodeLlama-34B + LoRA on decomp; our fully
+   fine-tuned 220m + evidence digest beats it overall (0.212-0.217 vs 0.145 micro), on FT
+   (0.144-0.151 vs 0.118) and on novel names (0.148-0.156 vs 0.128) with 150x fewer params.
+   Evidence-cut analysis: with full input evidence 220m 0.550 > 34B 0.464; the 34B's edge is
+   confined to zero-evidence rows + pretraining-familiar projects (sqlite3/bfd/ngx memorized).
+2. FULL FINE-TUNE VS LORA: stripped-binary decomp is far OOD from LLM pretraining text; 220m
+   permits full-weight adaptation on 190K rows, 1xA100-40G, 6.5h. LoRA on 34B adapts a
+   rank-limited subspace (SymGen's own choice, forced by scale).
+3. ARCHITECTURE FIT: encoder-decoder; bidirectional encoding of 1280-token input -> ~5-subtoken
+   name. CodeT5+ pretrains with span denoising (mask-filling identifiers) — near-isomorphic to
+   our [MASK]-the-name formulation. Decoder-only chat LLMs are tuned for long-form generation.
+4. INFERENCE ECONOMICS: 268K-function eval sweeps in ~3h on one A100 enable daily ablation
+   cycles (9 full-test sweeps this week). SymGen-34B full-test required 34 shards over days.
+5. CONTAMINATION HYGIENE: big code LLMs saw our test packages' source on GitHub (SymGen novel-EM
+   concentrated in nginx-fork/sqlite internals). REFORGE (arXiv 2607.07738) and REBench
+   (arXiv 2604.27319) both name pretraining leakage as the central confound in LLM binary-naming
+   evals. A small, older-corpus model keeps our strict-eval story coherent.
+6. ATTRIBUTION: contribution = evidence construction + routing, not scale. Small LM keeps digest
+   deltas measurable; the from-scratch ablation (running) quantifies the LM prior itself.
+   Aside: the from-scratch 220m NaN'd under bf16 (T5 random-init instability) — pretrained
+   weights are load-bearing even for numerical stability.
+7. SCALE PATH: CodeT5p family 220m->16B; 770m sbatch prepared (dh2_sbatch/a4_train_770m.sbatch)
+   as a controlled scale ablation on the winning recipe. GenNm (NDSS'25) fine-tunes
+   CodeGemma-2B/CodeLlama-7B for the sibling task (variable names) — the "fine-tune small-ish,
+   don't prompt huge" pattern is now the literature consensus.
