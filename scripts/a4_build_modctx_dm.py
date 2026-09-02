@@ -10,10 +10,13 @@ by _). Do NOT add extra character rewriting: a stricter canon (e.g. '.'->'_') ch
 targets incl. foo.part.0-style GCC suffixes and diverges from what is scored (EM would be lost).
 Reads results/a4_modctx/{tier}.jsonl (digest inputs unchanged), writes results/a4_modctx_dm/;
 also writes the seen-flag under the key a4_predict.py reads (name_seen_in_train)."""
-import json, os, re, subprocess
+import argparse, json, os, re, subprocess
 WS = '/project/hz79/_shared/cs785/dh2'
-SRC = f'{WS}/results/a4_modctx'
-OUT = f'{WS}/results/a4_modctx_dm'
+ap = argparse.ArgumentParser()
+ap.add_argument('--src', default=f'{WS}/results/a4_modctx', help='row dir whose targets to canonize')
+ap.add_argument('--out', default=f'{WS}/results/a4_modctx_dm')
+args = ap.parse_args()
+SRC, OUT = args.src, args.out
 os.makedirs(OUT, exist_ok=True)
 
 def demangle_many(names):
@@ -40,5 +43,5 @@ for tier in ['train', 'val', 'test']:
             if 'name_seen' in r: r['name_seen_in_train'] = r.pop('name_seen')
             fh.write(json.dumps(r) + '\n')
     stats[tier] = {'rows': len(rows), 'targets_canonized': changed}
-    print(f'EFFECT: a4_modctx_dm {tier}: {len(rows)} rows, {changed} targets canonized', flush=True)
+    print(f'EFFECT: {os.path.basename(OUT)} {tier}: {len(rows)} rows, {changed} targets canonized', flush=True)
 json.dump(stats, open(f'{OUT}/stats.json', 'w'), indent=1)
