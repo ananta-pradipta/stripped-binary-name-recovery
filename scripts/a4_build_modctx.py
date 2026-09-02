@@ -75,7 +75,7 @@ for tier in ['train', 'val', 'test']:
                 row = {'key': f"{r['binary']}_{r['entry_addr']}", 'binary': r['binary'], 'package': r['package'],
                        'addr': r['entry_addr'], 'name': r['name'], 'code': src}
                 if 'regime' in r: row['regime'] = r['regime']
-                if 'name_seen_in_train' in r: row['name_seen'] = r['name_seen_in_train']
+                if 'name_seen_in_train' in r: row['name_seen_in_train'] = r['name_seen_in_train']
                 if 'in_dynsym' in r: row['in_dynsym'] = r['in_dynsym']
                 fh.write(json.dumps(row) + '\n'); kept += 1; lens.append(len(src))
     lens.sort()

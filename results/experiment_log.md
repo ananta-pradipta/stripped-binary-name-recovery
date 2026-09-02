@@ -4308,3 +4308,21 @@ Upper bounds (generic tokens inflate whole-binary numbers), but the locality gra
 recoverability are real: the naming-convention token is in the ±10 neighborhood for 42% of the
 functions that look hopeless today. Grounds composition-from-context ideas (module pooling,
 name propagation, project lexicon). File: results/zero_evidence_census.json.
+
+## 2026-09-01 — Module-context (TU-locality) A4 head: BIG WIN (jobs 1210202/1210204/1210206/1214773)
+Idea #1 from zero-evidence census executed end-to-end: prepend to each masked decomp function a
+40-token digest of string-literal + named-call identifiers mined from its ±10 address-adjacent
+neighbors in the same stripped binary (scripts/a4_build_modctx.py; no GT names touch the input).
+A4-modctx (CodeT5p-220m, same recipe as baptext run) vs A4-baptext, TEST (268K fns):
+  micro F1 0.2095 vs 0.1561 (+0.053) | macro 0.3930 vs 0.3022 | uniq preds 0.179 vs 0.084
+  FT 0.1430 vs 0.1089 — now BEATS SymGen-34B FT (0.120, was matched-at-best before)
+  NCT 0.5418 vs 0.3925 | seen-name 0.6517 vs 0.4876 | NOVEL-name 0.1464 vs 0.1088 (+35% rel)
+Val arbitrates cleanly (val micro 0.2145 vs 0.1619), unlike the GNU-data additions.
+SYSTEM (C1-λ1.0 retrieval + A4-modctx, GBT router, job 1214773): test micro 0.2260 / macro 0.4570
+vs adopted final 0.2052/0.4387 (+0.021/+0.018); oracle 0.2451; selective 0.96@5% / 0.88@10% cov.
+A4-modctx ALONE (0.2094) beats the entire previous routed system (0.2052).
+Bug found+fixed: a4_build_modctx.py wrote flag as `name_seen` but a4_predict.py reads
+`name_seen_in_train` → job 1210206's seen/novel strata were wrong (seen n=0); strata above
+recomputed by joining preds TSV with protocol flags (rescore_modctx.py on Wulver dh2/).
+Files: dh2/results/a4_codet5p220m_modctx_v1/, results/union_c1l10_a4modctx.json,
+results/router2_c1l10_a4modctx.json. Checkpoint: dh2/checkpoints/a4_codet5p220m_modctx_v1/best.
