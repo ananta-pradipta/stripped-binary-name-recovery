@@ -4377,3 +4377,12 @@ test NCT -> dm. Selection policy (val arbitrates) => dm; adopting poolctx would 
 Changes are orthogonal (digest recipe vs target canon) => combined poolctx+dm retrain proposed
 (canon targets of a4_poolctx rows), val-arbitrated — USER GATE, not launched.
 Propagation probe closed NEGATIVE same night (see prior entry). All jobs audited.
+
+## 2026-09-02 — Router feature ablation (job 1216184, router2_c1l10_a4dm_featabl.json)
+Added --feature-ablation to dh2/scripts/router2_eval.py (drop feature groups, refit GBT on val,
+score test; dm head). Full router 0.2273. Drops: retrieval_conf (sim1/margin/sim1-a4_conf)
+-0.0072 = the load-bearing group; overlap_evidence -0.0008, decoder_head -0.0002, size_counts
+-0.0003, a4_conf -0.0005 (individually near-redundant). Single-feature: only sim1 0.2170
+(-0.0103), only a4_conf 0.2069 (-0.0204). Router-helps evidence ladder (dm join): A4 alone
+0.2124/0.3996 -> fixed regime rule 0.2132 -> tuned threshold 0.2147 -> logreg 0.2228 -> GBT
+0.2273/0.4578 (oracle 0.2467/0.4894); routing acc 0.938 (contested 0.830), mean regret 0.019 F1.
