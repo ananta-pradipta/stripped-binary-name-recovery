@@ -4352,3 +4352,12 @@ Conclusion: the epns/7board mangled-fragment artifacts are imitation learned fro
 rows with raw _Z targets, not input copying. Final dm design = targets-only with EXACT scorer
 canon (~38K test / 4K train / 636 val targets change). Modest intervention; icu is mostly
 zero-evidence-capped. Resubmitted chain: build 1215014 -> train 1215015 -> predict 1215016.
+
+## 2026-09-02 — Two-pass propagation probe: NEGATIVE, closed (job 1214993)
+Pass-1 modctx predicted names folded back into the ±10 neighbor digests (weight 2, same format),
+re-predicted with the SAME checkpoint. Test micro 0.2010 vs pass-1 0.2095; down on every stratum:
+FT 0.1373 vs 0.1430, NCT 0.5197 vs 0.5418, seen 0.6143 vs 0.6517, novel 0.1421 vs 0.1464;
+val 0.2067 vs 0.2145. Predicted tokens displace real evidence from the TOP-40 digest and echo
+pass-1 errors (uniq rose 0.179->0.250 = more diverse but less accurate). Per the probe's own gate
+("retrain justified only if the in-distribution probe helps at all"): propagation-as-digest-tokens
+CLOSED; no propagation-aware retrain. Files: results/a4_codet5p220m_modctx_p2v1/.
