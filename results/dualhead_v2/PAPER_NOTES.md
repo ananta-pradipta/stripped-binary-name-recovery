@@ -140,3 +140,15 @@ TIER C — retrieval head choices:
     for both heads?". Eval-only GPU job (embed 190K train + 268K test, no training).
  C2 our encoder's pretraining: July 2x2 factorial (scale +0.104 dominates, pretrain needs
     capacity) — DONE on older setup, cite with caveat.
+
+## Tier-A dual-head argument, reader-facing 8-point order (2026-09-02, user-requested)
+1 task decomposes (12.5% seen-name vs 87.5% novel in test) -> 2 opposite mechanisms (lookup vs
+composition) -> 3 each fails on the other's territory (R: 70.8% seen-EM vs 0.02% novel-EM;
+A4: 0.15 novel-F1 vs 40.7% seen-EM) -> 4 external replication (SymGen-34B same profile) ->
+5 unified designs tested and failed (RAG-decoder, retrieve-and-edit, fusion, composition-as-
+scoring; all gate-closed) -> 6 instance-level complementarity, oracle 0.253 vs 0.217 best single
+(+17% rel headroom) -> 7 routing learnable from stripped-observable features (GBT 0.2335 > rules)
+-> 8 per-head confidence => calibrated abstention (0.96 F1 @ 5% coverage).
+Tier-B addendum: pretraining-x-architecture 2x2 has an impossible cell (no pretrained GRU exists
+— the prior is only AVAILABLE in transformer form; one-sentence paper point). GRU-on-decomp-text
+control decided after scratch lands. Tier-C lmemb-kNN control launched (job 1216157).
