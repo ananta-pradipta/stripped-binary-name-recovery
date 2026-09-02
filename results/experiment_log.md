@@ -4386,3 +4386,12 @@ score test; dm head). Full router 0.2273. Drops: retrieval_conf (sim1/margin/sim
 (-0.0103), only a4_conf 0.2069 (-0.0204). Router-helps evidence ladder (dm join): A4 alone
 0.2124/0.3996 -> fixed regime rule 0.2132 -> tuned threshold 0.2147 -> logreg 0.2228 -> GBT
 0.2273/0.4578 (oracle 0.2467/0.4894); routing acc 0.938 (contested 0.830), mean regret 0.019 F1.
+
+## 2026-09-02 — MLP router comparator (job 1216191, router2_c1l10_a4dm_featabl_mlp.json)
+Added sklearn MLPClassifier (64x32, standardized inputs, early stopping) to router2_eval learned
+routers. Test: MLP 0.1641 micro / 0.4105 macro — far below logreg 0.2251 and GBT 0.2273. MLP
+routed 92.2% of rows to retrieval (near-collapse to one head), contested-row accuracy 0.401,
+mean regret 0.083 (4x GBT). Caveat: MLPClassifier has no sample_weight, so it lacked the
+importance weighting logreg/GBT got; even so the failure mode (majority collapse on 10.6K rows,
+64% ties) matches the tabular-data literature (Grinsztajn et al. 2022). Router choice ladder now:
+MLP 0.164 < fixed rule 0.213 < threshold 0.215 < logreg 0.225 < GBT 0.227 (oracle 0.247).
