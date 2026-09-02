@@ -104,3 +104,39 @@ Justification ladder (strongest first):
    as a controlled scale ablation on the winning recipe. GenNm (NDSS'25) fine-tunes
    CodeGemma-2B/CodeLlama-7B for the sibling task (variable names) — the "fine-tune small-ish,
    don't prompt huge" pattern is now the literature consensus.
+
+## Ablation attribution matrix (2026-09-02, response to user's architecture-justification question)
+User's observation is CORRECT: the scratch run measures the PRETRAINING PRIOR, not "the code LM
+as an architecture choice". Full matrix:
+
+TIER A — why dual-head at all (evidence largely COMPLETE):
+ A1 heads-alone vs routed vs oracle: R 0.127 / A4 0.217 / GBT 0.2335 / oracle 0.2533 (test).
+ A2 complementarity: retrieval owns NCT+seen (NCT 0.564, seen-EM 0.708) with novel-EM 0.0002;
+    generation owns FT+novel (0.151/0.156) where retrieval collapses (FT 0.039). Cross-system:
+    SymGen-34B shows the same FT-strong/NCT-weak profile => regime split is task structure,
+    not our artifact. Instance-level: A4-only EMs 1,780 vs SG-only 4,049 vs shared 2,769.
+ A3 single-model alternatives FAILED with gates (2026-08): retrieval-augmented decoder,
+    retrieve-and-edit, learned fusion, composition-as-decoding — all closed negative.
+    Dual-head was arrived at BY ELIMINATION, not assumed (honest narrative for paper).
+ A4 router ablation: regime-rule 0.2132 < conf-threshold 0.2147-0.2228 < learned GBT 0.2335
+    (router2_eval) + calibrated abstention (0.96@5%).
+
+TIER B — generation head choices:
+ B1 input representation: BAP-IR text 0.155 vs Ghidra decomp 0.184 (same LM) — DONE.
+ B2 evidence digest: none 0.184 -> modctx 0.2095 -> poolctx 0.2169 — DONE (3 points).
+ B3 pretraining prior: scratch (random-init, same arch/data/recipe) — RUNNING.
+    Reading: if scratch ~= old GRU decoder (0.077), architecture w/o prior buys ~nothing at our
+    budget and the prior is the payload; if scratch >> 0.077, transformer+text contributes too.
+ B4 scale: 770m sbatch prepared, run on winning recipe — PENDING.
+ B5 enc-dec vs decoder-only: NOT CLEANLY ABLATABLE — no public checkpoint pair shares a
+    pretraining corpus across architectures; a dec-only run (e.g. small Qwen-Coder) would be a
+    "design alternative" comparison, not an ablation. Optional; state the confound if run.
+ NOTE architecture-vs-pretraining cannot be fully factorized with public checkpoints; B3's
+    scratch + comparison against old custom decoder brackets it honestly.
+
+TIER C — retrieval head choices:
+ C1 MISSING (cheap, high-value): kNN over LM-text embeddings (pool the fine-tuned A4 encoder)
+    vs our contrastive BAP-graph embeddings. Answers the reviewer question "why not one model
+    for both heads?". Eval-only GPU job (embed 190K train + 268K test, no training).
+ C2 our encoder's pretraining: July 2x2 factorial (scale +0.104 dominates, pretrain needs
+    capacity) — DONE on older setup, cite with caveat.
