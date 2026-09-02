@@ -4329,3 +4329,15 @@ Bug found+fixed: a4_build_modctx.py wrote flag as `name_seen` but a4_predict.py 
 recomputed by joining preds TSV with protocol flags (rescore_modctx.py on Wulver dh2/).
 Files: dh2/results/a4_codet5p220m_modctx_v1/, results/union_c1l10_a4modctx.json,
 results/router2_c1l10_a4modctx.json. Checkpoint: dh2/checkpoints/a4_codet5p220m_modctx_v1/best.
+
+## 2026-09-01 — Full strata for modctx system (job 1214944, score_symgen_full_modctx.json)
+Why EM/novel were missing: router2_eval.py reports only F1 routing/selective metrics; the
+full-strata scorer (score_symgen_full.py, joined pop n=267,626) had only been run with A4 run 1.
+Rerun with modctx as the system gen head (GBT refit on val, same recipe):
+  SYSTEM (R+A4modctx GBT): all 0.2246/0.4489 EM 0.1040 | FT 0.1389 | NCT 0.6548 EM 0.4977
+    seen 0.8090 EM 0.6978 | novel 0.1425 EM 0.0205
+  (union_eval's 0.2260/0.4570 is the same system on its own join; both valid, cite one source.)
+  A4-modctx head joined-pop: all 0.2085 | FT 0.1423 | NCT 0.5401 | novel 0.1464 EM 0.0208
+Notes: router costs a little on FT (0.1389 vs head-alone 0.1423) and novel (0.1425 vs 0.1464)
+in exchange for NCT/seen gains — router optimizes overall, oracle headroom all 0.2439.
+System novel 0.1425 and head novel 0.1464 both beat SymGen-34B novel 0.1276.
