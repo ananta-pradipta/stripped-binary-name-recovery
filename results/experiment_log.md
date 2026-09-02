@@ -4414,3 +4414,17 @@ pooldm (poolctx digest + demangled targets) best val 0.2114 (FT 0.1529, NCT 0.67
 (adopt only if val > dm 0.2249): ADOPTED HEAD = dm (modctx digest + canon targets), val 0.2249,
 test head 0.2125, system GBT 0.2273 (router2) / 0.2261 (joined). poolctx/pooldm test numbers
 become the digest-width ablation rows; val/test tension reported honestly.
+
+## 2026-09-02 — Tier-C verdict FLIPS the design: single-backbone system WINS (jobs 1216157/1216630)
+LM-embedding kNN (mean-pooled fine-tuned modctx T5 encoder, top-1 cosine over train):
+test micro 0.1383 vs C1 contrastive-BAP retrieval 0.1269; seen-EM 0.816 vs 0.708; NCT 0.643 vs
+0.564; novel-EM exactly 0.0 (structural). The LM encoder is the BETTER retriever, despite never
+being trained contrastively (name-generation fine-tuning shapes name-relevant geometry).
+ALL-LM SYSTEM (lmemb R + dm A4, GBT router on just 4 features sim1/margin/a4_conf/sim1-a4_conf):
+  test micro 0.2353 / macro 0.4718 (vs current C1+dm system 0.2273/0.4578) — VAL AGREES
+  (0.2509 vs 0.2490); oracle 0.2560/0.5051; R_rate 0.162.
+=> One fine-tuned CodeT5p backbone can serve BOTH heads (encoder->retrieval, decoder->generation),
+   simpler AND better than the BAP/GNN retrieval stack. Caveats before adoption: (a) unify scorer
+   (lmemb preds scored with plain subtoken F1, no canon — redo through score_symgen_full for
+   parity); (b) C1 head also feeds ext_jacc/str_jacc router features + selective machinery —
+   port or re-derive. Scripts: scripts/c_lmemb_knn.py, dh2/lmemb_router.py.
