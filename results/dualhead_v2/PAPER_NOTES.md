@@ -152,3 +152,26 @@ scoring; all gate-closed) -> 6 instance-level complementarity, oracle 0.253 vs 0
 Tier-B addendum: pretraining-x-architecture 2x2 has an impossible cell (no pretrained GRU exists
 — the prior is only AVAILABLE in transformer form; one-sentence paper point). GRU-on-decomp-text
 control decided after scratch lands. Tier-C lmemb-kNN control launched (job 1216157).
+
+## Tier-A RESTRUCTURED for reviewer-proofing (2026-09-02, after user critique)
+User critique (correct): leading with our heads' numbers invites "that is your model's failure";
+SymGen comparison invites "SymGen wasn't properly trained". Reordered defense, strongest class first:
+1 STRUCTURAL (no empirics needed): an index-based method cannot emit a name absent from its index
+  — novel-name EM is zero BY CONSTRUCTION for any retrieval system. (Our 2/234K = cross-package
+  name collisions, cite as footnote.) Not a model property; a mechanism property.
+2 EXTERNAL-STRONG: on seen/duplicate names even the strongest available generator loses to naive
+  lookup 10x in EM: SymGen-34B *LoRA-fine-tuned on OUR v2 corpus via their own pipeline*
+  (VERIFIED: infer_fulltest.sbatch uses lora_weights_ours_v2) scores seen-EM 0.072 vs pure
+  lookup 0.708. If generation could match lookup on duplicates, a 34B model adapted on the same
+  corpus would not lose 10x. => both ends of the spectrum pinned without referencing our heads.
+3 INPUT-INFORMATION STRATIFICATION (model-agnostic): F1 tracks measured GT-token coverage of the
+  input uniformly across 4 systems (full evidence 0.46-0.55; zero evidence 0.035-0.04, incl. the
+  34B). The cliff follows input information content, not model identity. (zero_evidence_census +
+  novel_head_analysis evidence-cut.)
+4 PUBLISHED-LITERATURE fault line on THEIR data/training: SymLM 43.8% "<Not in dataset>" (BLens
+  Table 3), GenNm's "hardest setup = names unseen in training", universal cross-project drops.
+  Immune to any objection about OUR training.
+5 SUPPORTING (ours): unification attempts failed gates; instance-level complementarity incl.
+  CROSS-SYSTEM oracle(A4,SymGen) +34% on novel => no current single system spans both regimes.
+Paper order: mechanism-structural -> external -> input-information -> literature -> ours-as-
+illustration. Our own numbers appear as ILLUSTRATION, never as the load-bearing premise.
