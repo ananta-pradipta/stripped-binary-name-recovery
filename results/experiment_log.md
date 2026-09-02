@@ -4407,3 +4407,10 @@ a4_train_codet5p.py; (b) fail-fast guard (abort after >20 consecutive non-finite
 that logs loss every 100 steps; nothing to grep, PASS on nothing). Assert-on-effect means the
 asserted line must be PROVEN PRESENT in the happy path. ~5.3h GPU wasted across two attempts.
 Resubmitted: train 1216284 -> predict 1216285 (fp32 weights, standard recipe).
+
+## 2026-09-02 — Combined pooldm val verdict: does NOT beat dm; dm ADOPTED (job 1215743)
+pooldm (poolctx digest + demangled targets) best val 0.2114 (FT 0.1529, NCT 0.679) — below dm
+0.2249 and below poolctx 0.2136. Changes did not stack on val. Per pre-registered rule
+(adopt only if val > dm 0.2249): ADOPTED HEAD = dm (modctx digest + canon targets), val 0.2249,
+test head 0.2125, system GBT 0.2273 (router2) / 0.2261 (joined). poolctx/pooldm test numbers
+become the digest-width ablation rows; val/test tension reported honestly.
