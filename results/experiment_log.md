@@ -4498,3 +4498,17 @@ outcome (both heads fail novel look-alikes; generation nearly matches retrieval 
 ambiguous-margin seen rows). Router ~solved; remaining gains must come from the HEADS
 (retrieval selection gap 0.47 on novel is the real frontier). CORRECTION of my earlier claim
 that misroutes "≈ most of the oracle gap" — they account for ~8% of it.
+
+## 2026-09-03 — Contrastive projection head: NEGATIVE, closed (job 1218416)
+Frozen-backbone MLP projection (768->512->256), soft SupCon weighted by name-token F1, 3K steps.
+Training loss FLAT (~6.0 throughout); val probe raw 0.3544 -> best 0.3596 (+0.005 only).
+Full eval: retrieval val 0.1859 (raw 0.1808), test 0.1408 (raw 0.1382); novel test 0.0379 vs
+0.0338 — moved 0.004 of the 0.47 selection gap. Seen 0.8617 vs 0.8672 (unchanged-ish).
+SYSTEM: val 0.2492 / test 0.2287-0.4656 vs adopted raw system 0.2502 / 0.2364-0.4717 — WORSE
+(over-routes to the weaker projected R, R_rate 0.273). VAL GATE FAILS -> not adopted.
+Interpretation: name-relative structure is not linearly extractable from the frozen POOLED
+generation embedding — the pooled vector collapses the token-level cues needed to match name
+relatives. Remaining options (both costlier, user-gated): (a) full-encoder contrastive fine-tune
+(risks seen-name geometry, GPU-day), (b) token-level late-interaction retrieval (ColBERT-style
+over encoder states, storage-heavy). Cost of this probe: ~30 min GPU. Raw-space single-backbone
+system stands as headline.
