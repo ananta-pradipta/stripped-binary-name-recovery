@@ -4452,3 +4452,21 @@ on identical join if reviewers demand exactness (42-row pop delta, negligible).
 Test micro 0.2157 (FT 0.1510, NCT 0.5390, seen 0.6363, novel 0.1557) — poolctx territory
 (0.2169), below on every stratum or within noise; dm's target cleanup adds nothing on top of the
 pooled digest on test either. Digest-width ablation row complete. Confirms dm adoption.
+
+## 2026-09-03 — Router-algorithm sweep + retrieval selection ceiling (job 1217189)
+ROUTER SWEEP (single-backbone features, unified scoring, test micro/macro):
+  always_A4 0.2125/0.400 | always_R 0.1382/0.419 | regime rule 0.2275/0.469
+  sim threshold 0.1573 | stump_d1 0.2319 | tree_d3 0.2354 | logreg 0.2166 | kNN25 0.2217
+  svm_rbf 0.2363 | MLP(weighted!) 0.2364/0.4717 | RF300 0.2367/0.4698 | GBT 0.2356/0.4716
+  | histGBT 0.2353 | oracle 0.2551/0.5051
+FINDING + CORRECTION: with proper instance weighting (weight-resampling), the MLP matches GBT
+(0.2364 vs 0.2356) — yesterday's "MLP collapses" (0.164) was an artifact of unweighted training,
+NOT an architecture property. Honest claim: above a depth-1 stump, ALL reasonable learners
+converge to 0.235-0.237; the routing signal lives in the 4 features + importance weighting, not
+the learner. GBT kept for zero-tuning/interpretability; RF marginally best (0.2367).
+RETRIEVAL SELECTION CEILING (20K test sample, best-possible-copy over all train names):
+  ceiling 0.5640 vs top-1 cosine actual 0.1352 -> selection gap 0.4288
+  novel: ceiling 0.5047 vs 0.0338 (gap 0.471!) | seen: ceiling 1.0 vs 0.8672 (gap 0.133)
+=> Retrieval is NOWHERE near optimal: half the novel-name token mass exists in SOME train name;
+the embedding fails to select it. Echoes SECC-era "selection=14-19% of oracle". Motivates a
+retrieval-specific fine-tune (name-supervised contrastive on the LM encoder) — USER GATE.
