@@ -4571,3 +4571,8 @@ user-gated: the probe trajectory predicts a val-gate failure; recommendation = c
 close "LoRA under the pooling bottleneck" as negative alongside the projection probe.
 Script patches kept for any future run: LORA_GC (checkpointing), LORA_OUT, LORA_FINAL_ONLY,
 adapter saved on probe improvement, enc.train() from step 1.
+**Update 2026-09-03 17:40 ET:** user decision = "cancel for now". Reruns 1221111 (40g hedge) and
+1220646 (80 GB backup) cancelled before starting; nothing running on Wulver. Status: LoRA
+contrastive adapter PARKED (not permanently closed) — evidence so far is 3 probes within noise of
+the raw reference. Artefacts retained on Wulver for a revisit: patched scripts/c_lora_contrastive.py
+(LORA_GC / LORA_OUT / LORA_FINAL_ONLY, per-probe adapter save), c_lora_40g.sbatch, c_lora_40g_v2.sbatch.
