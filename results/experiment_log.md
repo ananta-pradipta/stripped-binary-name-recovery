@@ -4553,3 +4553,21 @@ Tier-A "prior + evidence inputs are the payload" argument are now complete.
 Ops: original a100 job 1220176 was queued to 9/4; retargeted to a free a100_40g slice (started in
 <1 min, ran 3h00m). Lesson recorded in memory: retarget PENDING jobs in place with scontrol
 update, and untyped --gres=gpu:1 binds to a100 (80 GB) at submit; L40 is closed to QOS standard.
+
+## 2026-09-03 — LoRA contrastive retrieval adapter: INTERIM (job 1220645, CANCELLED at step 3000)
+Rank-16 LoRA on encoder q/v + learned attention pooling, name-grouped soft SupCon (24 groups×2),
+6000-step schedule, run on an a100_40g slice with gradient checkpointing (80 GB queue was 24 h out).
+Val probe (top-1 retrieval F1, 3K val queries vs fixed 30K train index; raw mean-pool reference on
+the SAME subsets = 0.1183, computed separately, job 1220984):
+  step 1000: 0.1201 | step 2000: 0.1255 | step 3000: 0.1152   (std err ≈ 0.005)
+=> No name-relative structure is being learned: probes straddle the raw reference within noise;
+best +0.007 at step 2000, then below reference. Training loss also flat-noisy (0.6–2.4, no trend).
+Compare frozen-projection probe (closed negative): +0.005 probe → system val 0.2492 < 0.2502 gate.
+Timing: 10.3 min/100 steps on the 40 GB slice ⇒ 11.6 h projected vs 11 h limit; the process held
+the best adapter in memory only ⇒ cancelled at 5h10m (would have timed out with no artefact).
+Queued reruns at time of writing: 1221111 (40g, patched script that saves adapter.pt per probe,
+separate OUT results/c_lora_contrastive_v2) and 1220646 (80 GB, unpatched). Continuation is
+user-gated: the probe trajectory predicts a val-gate failure; recommendation = cancel both and
+close "LoRA under the pooling bottleneck" as negative alongside the projection probe.
+Script patches kept for any future run: LORA_GC (checkpointing), LORA_OUT, LORA_FINAL_ONLY,
+adapter saved on probe improvement, enc.train() from step 1.
