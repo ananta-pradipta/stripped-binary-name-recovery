@@ -4482,3 +4482,19 @@ FULL SYSTEM: seen 33,479 F1 0.859 EM 77.5% | novel-known 81,830 F1 0.201 | novel
 (57% of test!) F1 0.120. Router error mode: 12,235 novel rows misrouted to retrieval (look-alike
 code, new names) ~= most of the oracle gap. OOV category def: >=1 subtoken absent from train
 names. Script: dh2/routed_r_breakdown.py. TODO: port abstention regressor to MLP router.
+
+## 2026-09-03 — Misrouting autopsy: router is effectively AT CEILING (job 1218151)
+Cells (test, MLP router): novel->R n=12,797: sim_med 0.960/mar 0.011 — feature signature nearly
+IDENTICAL to seen->R (0.990/0.011); regret tiny: mean(fA-fR)=0.0034, generation better on only
+18.2%. seen->G n=10,576: high sim but margin collapsed (0.0018 vs 0.011) = ambiguous neighbors;
+fR 0.642 vs fA 0.609, regret 0.033, retrieval better on only 25.5%.
+KEY NUMBERS: (a) seen-flag IS partially decodable from the 4 features (balanced acc 0.851), BUT
+(b) CHEATING router given the TRUE seen flag gains only +0.0017 micro (0.2381 vs 0.2364);
+(c) digest-overlap candidate feature HURTS (-0.0022); (d) total regret mass in the two "error"
+cells = ~0.0015 micro — the 0.019 oracle gap lives in instance-level near-ties spread across
+ALL cells, not in seen/novel confusion.
+VERDICT: NOT router capacity, NOT missing seen/novel signal. Misrouted rows are near-ties in
+outcome (both heads fail novel look-alikes; generation nearly matches retrieval on
+ambiguous-margin seen rows). Router ~solved; remaining gains must come from the HEADS
+(retrieval selection gap 0.47 on novel is the real frontier). CORRECTION of my earlier claim
+that misroutes "≈ most of the oracle gap" — they account for ~8% of it.
