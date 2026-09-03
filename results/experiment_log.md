@@ -4512,3 +4512,11 @@ relatives. Remaining options (both costlier, user-gated): (a) full-encoder contr
 (risks seen-name geometry, GPU-day), (b) token-level late-interaction retrieval (ColBERT-style
 over encoder states, storage-heavy). Cost of this probe: ~30 min GPU. Raw-space single-backbone
 system stands as headline.
+
+## 2026-09-03 — Code-LM pretraining ablation train COMPLETE (job 1216284)
+Scratch CodeT5p-220m (random init via .float() fix, fp32, same modctx data/recipe/steps):
+final val 0.0840 (FT 0.0617, NCT 0.262) vs pretrained modctx 0.2224 (FT 0.1665, NCT 0.6691).
+=> The pretrained code-LM prior accounts for ~62% of the head's val F1 (0.138 absolute), and the
+scratch transformer lands almost exactly at the old custom GRU decoder's level (~0.08) — at our
+data budget, architecture without the prior buys ~nothing; the prior + evidence inputs are the
+payload. Test prediction 1216285 queued.
