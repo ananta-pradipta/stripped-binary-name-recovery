@@ -138,3 +138,18 @@ with a published package manifest and sha256s.
 
 Files fetched for verification live in this directory: xfl.txt, blens.txt, symgen.txt, symlm.txt, epitome.txt,
 nero.txt, rebench.txt, emp.txt, agnomin.txt, sok.txt (pdftotext dumps).
+
+## Correction 2026-09-03 — Punstrip/XFL/BLens Debian corpus IS obtainable by rebuild
+The August entry marked the XFL/Punstrip corpus "not obtainable". Verified today: (1) `lmu-plai/xfl`
+ships `xfl/evaluation/dataset.txt` (manifest of all 10,047 binaries as Debian package + install
+path, 3,465 packages) and `dataset_eval_split.dill` (9,042/502/503 binary split); (2) the BLens
+Zenodo artifact (10.5281/zenodo.15119877, already at
+`baselines/blens_user_env/zenodo/data.tar.gz` on Wulver) contains the function-level ground truth
+for the cross-project setting (train 394,985 fns/9,042 bins/3,112 pkgs; val 18,081/367/173; test
+23,875/451/174; records = bin path, address, name, tokenised name), the cross-binary and strict
+splits, embeddings, and raw logs of BLens/XFL/SymLM/AsmDepictor/HexT5; (3) `punstrip/debian-unstripped`
+has the build scripts (apt download pkg + pkg-dbgsym from Debian Sid, eu-unstrip). Only the ELF
+files are withheld (BLens: GPL-3 redistribution; Punstrip: hosting space). Package versions are not
+pinned (Sid, ~2019-20) → rebuild from snapshot.debian.org and verify per binary against the
+(address, name) manifest. Estimated 1–2 weeks incl. Ghidra decompile of ~10K binaries and a
+CodeT5p fine-tune on the Punstrip train split. User-gated; not started.
