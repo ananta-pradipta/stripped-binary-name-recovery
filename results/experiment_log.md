@@ -4520,3 +4520,10 @@ final val 0.0840 (FT 0.0617, NCT 0.262) vs pretrained modctx 0.2224 (FT 0.1665, 
 scratch transformer lands almost exactly at the old custom GRU decoder's level (~0.08) — at our
 data budget, architecture without the prior buys ~nothing; the prior + evidence inputs are the
 payload. Test prediction 1216285 queued.
+
+## 2026-09-03 — Abstention ported to headline system (job 1219977, CPU)
+Selective prediction on single-backbone + MLP router (MLP regressor on [4 scaled features +
+routed-head flag], trained on val): test F1 0.9475@5% cov, 0.9042@10%, 0.7223@20%, 0.5606@30%,
+0.3894@50%, 0.2366@100%. Calibration ECE(10 bins) 0.0361, corr(pred,actual F1) 0.741.
+Comparable to the old system's curve (0.96@5%/0.88-0.89@10%) => capability fully migrated;
+single-backbone verification checklist COMPLETE. Script: dh2/abstention_port.py.
