@@ -4527,3 +4527,29 @@ routed-head flag], trained on val): test F1 0.9475@5% cov, 0.9042@10%, 0.7223@20
 0.3894@50%, 0.2366@100%. Calibration ECE(10 bins) 0.0361, corr(pred,actual F1) 0.741.
 Comparable to the old system's curve (0.96@5%/0.88-0.89@10%) => capability fully migrated;
 single-backbone verification checklist COMPLETE. Script: dh2/abstention_port.py.
+
+## 2026-09-03 — Code-LM pretraining ablation: scratch TEST prediction COMPLETE (job 1220637)
+Scratch (random-init) CodeT5p-220m, same modctx+dm data/recipe, greedy, max_src 1280, unified
+canon scorer (val_test_eval.json). Head-only, no retrieval, no router.
+| | scratch | pretrained (modctx dm) | prior share |
+|---|---|---|---|
+| val micro / macro | 0.0792 / 0.1314 | 0.2176 / 0.3594 | 64% |
+| test micro / macro | 0.0691 / 0.1588 | 0.2125 / 0.4000 | 67% micro / 60% macro |
+| test FT / NCT micro | 0.0314 / 0.2577 | 0.1444 / 0.5530 | 78% / 53% |
+| test seen / novel | 0.3160 / 0.0339 | 0.6659 / 0.1478 | 53% / 77% |
+| val seen / novel | 0.2507 / 0.0409 | 0.6330 / 0.1248 | 60% / 67% |
+(Training-time val F1 was 0.0840 vs 0.2224; the table uses the eval-protocol scorer.)
+Audit: rc=0, 10,617 val + 268,136 test rows (identical key set to the pretrained tsv); per-row
+f1_v2 means reproduce the json micro numbers. DEFECT: a4_predict wrote name_seen=0 for every row
+(scratch ckpt dir lacks the train-name list), so the json's seen/novel strata are empty; the
+seen/novel rows above are rebuilt by joining on the pretrained tsv's flags
+(results/a4_codet5p220m_scratch_v1/seen_novel_strata_joined.json on Wulver).
+Reading: the prior matters MOST where the head is weakest — 77% of novel-name F1 and 78% of FT
+F1 come from pretraining; on seen names/NCT the scratch model still recovers ~half (memorisation
+works without a prior). Scratch predictions are collapsed (pred uniqueness 0.06 vs 0.17; top pred
+`sqlite3_vdbe_mem_set` 4.4% of test rows) and score F1≈0.5 with EM≈0.003 on the nginx family —
+it learned namespace-prefix priors (`ngx_http_*`), not function semantics. Ablation strata for the
+Tier-A "prior + evidence inputs are the payload" argument are now complete.
+Ops: original a100 job 1220176 was queued to 9/4; retargeted to a free a100_40g slice (started in
+<1 min, ran 3h00m). Lesson recorded in memory: retarget PENDING jobs in place with scontrol
+update, and untyped --gres=gpu:1 binds to a100 (80 GB) at submit; L40 is closed to QOS standard.
