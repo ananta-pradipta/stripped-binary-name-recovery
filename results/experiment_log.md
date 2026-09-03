@@ -4470,3 +4470,15 @@ RETRIEVAL SELECTION CEILING (20K test sample, best-possible-copy over all train 
 => Retrieval is NOWHERE near optimal: half the novel-name token mass exists in SOME train name;
 the embedding fails to select it. Echoes SECC-era "selection=14-19% of oracle". Motivates a
 retrieval-specific fine-tune (name-supervised contrastive on the LM encoder) — USER GATE.
+
+## 2026-09-03 — MLP router ADOPTED (user preference) + routed-traffic breakdown (job 1217791)
+User chose MLP over GBT after the sweep (defensible: 0.2364~0.2356 tie; MLP = weighted-resample
++ standardize, 64x32, early stop). This run: system micro 0.2367. Routed-traffic analysis (test):
+Router -> RETRIEVAL 33,582 rows (12.5%): seen 21,347 (63.6%) F1 0.976 EM 95.2% | novel-known-tok
+3,904 F1 0.186 EM 1.0% | novel-OOV 8,331 F1 0.078 EM 0.0% (structural).
+Router -> GENERATION 234,554: seen 12,132 F1 0.654 EM 46.5% | novel-known 77,926 F1 0.202 EM 1.8%
+| novel-OOV 144,496 F1 0.122 EM 0.8%.
+FULL SYSTEM: seen 33,479 F1 0.859 EM 77.5% | novel-known 81,830 F1 0.201 | novel-OOV 152,827
+(57% of test!) F1 0.120. Router error mode: 12,235 novel rows misrouted to retrieval (look-alike
+code, new names) ~= most of the oracle gap. OOV category def: >=1 subtoken absent from train
+names. Script: dh2/routed_r_breakdown.py. TODO: port abstention regressor to MLP router.
