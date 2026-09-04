@@ -4590,3 +4590,14 @@ Stage 1 (rebuild from snapshot.debian.org, verified by (addr,name) symtab match 
   Job 1221475 (array 0-1, general partition): val+test = 347 pkgs / 818 bins. Script punstrip/scripts/punstrip_rebuild.py
   (ar+tar extraction; Wulver lacks dpkg-deb). Outputs punstrip/rebuild/{pkgs/<pkg>/status.json,bins/,dbg/}.
 Model inputs will come only from the shipped (stripped) Debian binaries; .debug used only for GT + boundaries.
+**Stage 2 smoke + Gate 4 pre-check (2026-09-03 ~20:30 ET, jobs 1221477 + login-node python):**
+- Ghidra decompile with GT boundaries (pre-script creates functions at manifest entries, then export): 3 binaries,
+  416/416 functions ok (PRECREATE created 202 / existed 3 per 4store binary). Module-context builder on those rows:
+  416 kept, mask applied 100%, name-in-input 3 (0.7%), in_dynsym 4 (1.0%), 93.8% of inputs ≤ 1280 tokens.
+- BLens scorer re-implemented (punstrip/scripts/blens_scorer.py) and validated on blens/evaluation/cross-project.csv
+  (22,928 rows). Paper Table 3 reproduced: FULL cross-project = no label/dup filters, crt "free" functions forced
+  correct → BLens 0.461 (paper 0.460), XFL 0.296 (0.295), AsmDepictor 0.198 (0.200), SymLM 0.265 (0.277; SymLM uses a
+  val-tuned confidence threshold the csv does not carry). STRICT = forbidden labels + projectHashFilterTest dups +
+  forbidden_functions + free dropped → BLens 0.293 (0.294), XFL 0.085 (0.085), AsmDepictor 0.076 (0.090), SymLM 0.133
+  (0.195). Gate 4 pre-check PASSED for BLens/XFL (±0.001); AsmDepictor strict off by 0.014 and SymLM threshold-
+  dependent — both documented; our comparison anchors on BLens/XFL and re-scores every column on the identical keys.
