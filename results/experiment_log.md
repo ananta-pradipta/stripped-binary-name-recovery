@@ -4662,3 +4662,10 @@ collectCSV from the Zenodo raw logs; its BLens column matches their cross-projec
 rows (99.4%; remainder = their forbidden-label stripping); the run dir carries 20 train/val optimisation logs (a model
 they trained in the cross-project setting). Their Table 3 reproduces to ±0.001. Baselines are fully trained on
 Punstrip-train; the interim comparison is fully-trained baselines vs our zero-shot head.
+Dataset breakdown (2026-09-04 04:15 ET, punstrip/scripts/dataset_breakdown.py): OUR test FT 223,483 (seen 2.0% /
+novel-known 26.8% / novel-OOV 71.2%), NCT 44,695 (64.9 / 20.6 / 14.5%); compiler gcc 92.8% clang 7.2%; O0-O3 ≈ 30/24/23/24%.
+PUNSTRIP test 23,873: seen 33.7% / novel-known 34.4% / novel-OOV 31.9%; BLens dup-body 15.6%; dynsym-visible 25.2%;
+val 18,036: 30.2 / 44.2 / 25.6%. COMPILER (read from dbgsym .comment; dh_strip removes it from shipped binaries):
+val gcc7 67.5% / gcc6 31.3% / gcc5 1.2%; test gcc7 70.5% / gcc6 26.2% / gcc5 3.2%; ZERO clang among the 814 val/test
+binaries — Reviewer B's "Punstrip includes both gcc and clang" is compiler-VERSION diversity in this 2018 snapshot
+(train to be checked after decompile). All val/test binaries are executables.
