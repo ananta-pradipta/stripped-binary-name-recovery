@@ -4678,3 +4678,11 @@ Training preflight (jobs 1226854 / 1226979): the exact train_punstrip.sbatch com
 --data-dir, bf16, max_src 1280) run in --smoke mode on 512 stand-in rows. First attempt OOM'd on a shared 40 GB slice at
 bs 16 (two foreign processes held 9 GB); rerun at bs 4 completed end-to-end (64 steps, val eval, checkpoint saved, rc=0).
 Code path verified; the real job requests an 80 GB a100 with the v2 recipe's bs 16×2. Smoke artifacts deleted.
+**GATE 3-pre PASSED + TRAINING LAUNCHED (2026-09-04 07:05 ET):** train decompile array 1222943 done (8,834/8,834 bins).
+Train rows 378,060 (100% of decompiled fns; 107 mask-not-applied + 22 decomp failures dropped), 3,071 pkgs, 175,520
+distinct names, package overlap with val/test = 0/0; name-in-input 7.2%, dynsym-visible 21.0%, 94.8% ≤ 1280 tokens.
+Training = a4_train_codet5p.py from the PUBLIC codet5p-220m base, --data-dir punstrip/data, max_src 1280, lr 5e-5,
+3 epochs, bf16, seed 42 (v2 recipe). 80 GB job 1232256 queued 36th (idle A100 node drained: hardware fault) →
+hedge job 1232257 on a free a100_40g slice with --bs 8 --accum 4 (same effective batch 32, same step count) STARTED
+immediately on n0001; the 80 GB duplicate is cancelled once 1232257 clears its first steps. Final hand-off armed:
+predict_punstrip → knn_punstrip → system_score_punstrip (router on val, two-scorer report, ALL_CSV=1).
