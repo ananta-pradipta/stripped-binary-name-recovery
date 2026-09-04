@@ -4653,3 +4653,6 @@ settings and beats BLens on STRICT (0.351 vs 0.289) — BLens's full-set lead is
 seen-name F1 0.77 vs novel 0.19 in our metric; ours is flat 0.26/0.23 because it has no Punstrip memory). The fair row
 (trained on Punstrip-train, + retrieval head + router) is still pending and is expected to add the seen-name component.
 Files: Wulver punstrip/results/zeroshot_v2dm/{system_preds.tsv,score_report.json}; local results/punstrip/zeroshot_v2dm_score_report.json.
+Key-set note: BLens's csv holds 22,928 of the 23,874 test functions; the 946 absent ones are exactly those whose canonical
+name has NO token in their 1024-label vocabulary (400/400 sampled: names like admonish, advise, pwd, adios — their
+evaluator drops rows with empty target). Our joined key set is therefore their key set minus the 4 excluded packages.
