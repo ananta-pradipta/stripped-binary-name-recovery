@@ -4628,3 +4628,28 @@ identifier (7.3% test / 10.6% val). Residual classified (test, first pass): stri
 naming the function — evidence legitimately present in the stripped binary, visible to every tool), digest tokens 93
 (single-token names), substring artifacts 482 (removed by the whole-identifier flag). Decision: name-in-input is NOT a
 pipeline leak; kept as a reported stratum (with/without) alongside dynsym-visible (25.2% of test). PLAN §2 amended.
+
+## 2026-09-04 — PUNSTRIP interim: ZERO-SHOT row (our v2 head, NOT trained on Punstrip) vs BLens baselines (job 1222367 + scorer)
+Head only (a4_codet5p220m_modctx_dm_v1 generation head, greedy; no retrieval, no router), inputs = Punstrip val/test rows
+built by the same pipeline; 4 packages overlapping our own train corpus excluded (binutils-avr, binutils-x86-64-linux-gnu,
+libxml-light-ocaml, patchutils; 381 fns). Key set = 22,547 test functions = 98.3% of BLens's csv keys (their csv has
+22,928 of the 23,875 test fns). Canonicaliser agreement with their groundtruth on this key set 98.4%.
+(a) THEIR scorer (label-set micro-F1, 1024-label vocab), identical keys:      full   / strict
+    ours zero-shot generation head                                              0.384  / 0.351
+    BLens                                                                       0.455  / 0.289
+    BL-A (BLens ablation)                                                       0.390  / 0.254
+    BL-S                                                                        0.344  / 0.205
+    XFL                                                                         0.289  / 0.081
+    SymLM                                                                       0.267  / 0.133
+    AsmDepictor                                                                 0.197  / 0.076
+    (paper numbers reproduce on their full key set: BLens 0.461/0.293, XFL 0.296/0.085, AsmDep 0.198/0.076)
+    NOTE: the "full" preset forces the crt free functions correct for every system → a floor of 0.120 (an empty
+    predictor scores 0.120 full / 0.000 strict). Strict is the informative setting.
+(b) OUR metric v2 (sub-token F1), same keys — ours on raw names; baselines in their canonical token space (approx.):
+    ours zero-shot: micro 0.241 / macro 0.246 / seen 0.261 / novel 0.231 / excl-dynsym 0.241
+    BLens 0.389 / 0.619 / seen 0.772 / novel 0.191 / excl-dynsym 0.312;  XFL 0.218 / novel 0.066;  SymLM 0.113;  AsmDep 0.152
+READING (interim, zero-shot): without ever seeing Punstrip-train, our head already beats XFL/SymLM/AsmDepictor on both
+settings and beats BLens on STRICT (0.351 vs 0.289) — BLens's full-set lead is carried by duplicated/seen names (its
+seen-name F1 0.77 vs novel 0.19 in our metric; ours is flat 0.26/0.23 because it has no Punstrip memory). The fair row
+(trained on Punstrip-train, + retrieval head + router) is still pending and is expected to add the seen-name component.
+Files: Wulver punstrip/results/zeroshot_v2dm/{system_preds.tsv,score_report.json}; local results/punstrip/zeroshot_v2dm_score_report.json.
