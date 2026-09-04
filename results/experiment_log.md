@@ -4576,3 +4576,17 @@ adapter saved on probe improvement, enc.train() from step 1.
 contrastive adapter PARKED (not permanently closed) — evidence so far is 3 probes within noise of
 the raw reference. Artefacts retained on Wulver for a revisit: patched scripts/c_lora_contrastive.py
 (LORA_GC / LORA_OUT / LORA_FINAL_ONLY, per-probe adapter save), c_lora_40g.sbatch, c_lora_40g_v2.sbatch.
+
+## 2026-09-03 — PUNSTRIP benchmark evaluation STARTED (user directive 23:45 ET; protocol in results/punstrip/PLAN.md)
+Deep research established the corpus is public by reference (XFL manifest 10,047 bins; BLens Zenodo function-level GT +
+splits + strict filters + per-function baseline predictions in blens/evaluation/cross-project.csv; Punstrip build scripts).
+Stage 0 (GT/splits): manifests dumped to Wulver punstrip/manifest/{train,val,test}_manifest.json — train 394,985 fns/
+9,042 bins/3,112 pkgs; val 18,081/367/173; test 23,875/451/174 (= paper). GATE 0 PASSED: package overlap 0/0/0.
+Stage 1 (rebuild from snapshot.debian.org, verified by (addr,name) symtab match against the manifest):
+  pilot coreutils/realpath → 8.28-1 matched 104/104 (all other 2018-22 versions ≤ 0.11); Wulver smoke 3270-common,
+  9base, libnfc-examples → 3/3 packages min-match 1.000 (versions first_seen 2017-02..2018-03; coreutils 8.30-1 of
+  2018-08-30 mismatched ⇒ corpus snapshot in (2018-03-03, 2018-08-30)). Selection rule: newest version first_seen
+  ≤ 2018-08-30 walking backwards, accept when every manifest binary of the package ≥ 0.98.
+  Job 1221475 (array 0-1, general partition): val+test = 347 pkgs / 818 bins. Script punstrip/scripts/punstrip_rebuild.py
+  (ar+tar extraction; Wulver lacks dpkg-deb). Outputs punstrip/rebuild/{pkgs/<pkg>/status.json,bins/,dbg/}.
+Model inputs will come only from the shipped (stripped) Debian binaries; .debug used only for GT + boundaries.
