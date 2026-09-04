@@ -4601,3 +4601,12 @@ Model inputs will come only from the shipped (stripped) Debian binaries; .debug 
   forbidden_functions + free dropped → BLens 0.293 (0.294), XFL 0.085 (0.085), AsmDepictor 0.076 (0.090), SymLM 0.133
   (0.195). Gate 4 pre-check PASSED for BLens/XFL (±0.001); AsmDepictor strict off by 0.014 and SymLM threshold-
   dependent — both documented; our comparison anchors on BLens/XFL and re-scores every column on the identical keys.
+**Stage 1/4 progress (2026-09-04 00:25 ET):** val+test rebuild 117/347 pkgs done, 114 exact, 0 errors (97%). The 4
+non-matches were binutils-*-linux-gnu (legacy `-dbg` packages, ELF debug files without `.debug` suffix): rebuild script
+now falls back dbgsym→dbg and discovers debug ELFs by magic; retry job 1221483 matched all 4 at 1.000 (2.31.1-1).
+Train rebuild LAUNCHED: job 1221487 (6 shards, 3,112 pkgs / 9,042 bins). BLens label space resolved: groundtruth =
+NLP.tristan_canonical_name restricted to the ORIGINAL 1024-label vocabulary (Zenodo data/tokenizer/Tokenizer-Debin-
+1024-Projects; the Wulver copy had been refit on our names in April). User-space env tools/mm (micromamba: enchant +
+hunspell en_US/en_GB + nltk) runs their canonicaliser; agreement with their groundtruth column 95.8% on 2,000 keys
+(without the vocabulary filter 60.6%; with the wrong tokenizer 57%). Scoring uses their groundtruth verbatim as target
+and canonicalises only our predictions (punstrip_score.py).
