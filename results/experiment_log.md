@@ -4610,3 +4610,13 @@ NLP.tristan_canonical_name restricted to the ORIGINAL 1024-label vocabulary (Zen
 hunspell en_US/en_GB + nltk) runs their canonicaliser; agreement with their groundtruth column 95.8% on 2,000 keys
 (without the vocabulary filter 60.6%; with the wrong tokenizer 57%). Scoring uses their groundtruth verbatim as target
 and canonicalises only our predictions (punstrip_score.py).
+**GATE 1 PASSED (2026-09-04 ~01:30 ET):** val+test rebuild job 1221475 complete (2 shards, ~70 min). First pass left 30
+matched binaries "not shipped" (test coverage 89.3%): mmh installs binaries renamed (usr/bin/mh/comp → mmh-comp) and two
+manifest entries are literally .debug file names (xdg-desktop-portal, xcwd). Fix: shipped ELF located by GNU build-id
+match against the matched .debug (readelf -n), path only as fallback; `--refetch-shipped` pass recovered 30/30.
+Coverage now: TEST 23,875/23,875 fns (100.0%) in 451/451 bins; VAL 18,047/18,081 (99.8%; f2fs-tools 34 fns
+unmatched at any version). Sampled 60 shipped binaries: 0 carry .symtab (all stripped as shipped). Strictness note for
+the paper: 6,013/23,875 test functions (25.2%) have their GT name present in the stripped binary's .dynsym (their key
+set keeps them; we report with/without). Seen-name rate (train names) 33.7% test / 30.2% val.
+Decompile array 1221522 (814 val+test binaries, GT boundaries, %24) SUBMITTED; auto hand-off → modctx rows → Gate 2.
+Train rebuild 1221487: 6 shards, ~1 pkg/min/shard, 0 errors; auto hand-off → retry → refetch → prep → train decompile.
