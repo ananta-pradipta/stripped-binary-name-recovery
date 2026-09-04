@@ -4656,3 +4656,9 @@ Files: Wulver punstrip/results/zeroshot_v2dm/{system_preds.tsv,score_report.json
 Key-set note: BLens's csv holds 22,928 of the 23,874 test functions; the 946 absent ones are exactly those whose canonical
 name has NO token in their 1024-label vocabulary (400/400 sampled: names like admonish, advise, pwd, adios — their
 evaluator drops rows with empty target). Our joined key set is therefore their key set minus the 4 excluded packages.
+Baseline provenance check (user question 2026-09-04 03:10 ET): blens/evaluation/cross-project.csv is produced by their
+collectCSV from the Zenodo raw logs; its BLens column matches their cross-project TEST inference log
+(V11-PROJECTS-NO+UNK-DECODER+MULTI-LONG++/LORD-inference-logs-test-159.txt, 23,875 target/output pairs) on 22,787/22,928
+rows (99.4%; remainder = their forbidden-label stripping); the run dir carries 20 train/val optimisation logs (a model
+they trained in the cross-project setting). Their Table 3 reproduces to ±0.001. Baselines are fully trained on
+Punstrip-train; the interim comparison is fully-trained baselines vs our zero-shot head.
