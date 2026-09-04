@@ -4674,3 +4674,7 @@ TRAIN gcc7 5,766 bins (69.8% fns) / gcc6 2,901 (28.8%) / gcc5 167 (1.4%); val/te
 section for the substring "clang" (which would appear even if only some objects were clang-built) found 0 files.
 => As reconstructed from the 2018 Sid snapshot, the Punstrip/XFL/BLens corpus is GCC-only (versions 5–7); its
 "mixture of compilers and compiler versions" is version/flag diversity. Our v2 test has 7.2% Clang functions (9 pkgs).
+Training preflight (jobs 1226854 / 1226979): the exact train_punstrip.sbatch command (public CodeT5p-220m base, Punstrip
+--data-dir, bf16, max_src 1280) run in --smoke mode on 512 stand-in rows. First attempt OOM'd on a shared 40 GB slice at
+bs 16 (two foreign processes held 9 GB); rerun at bs 4 completed end-to-end (64 steps, val eval, checkpoint saved, rc=0).
+Code path verified; the real job requests an 80 GB a100 with the v2 recipe's bs 16×2. Smoke artifacts deleted.
