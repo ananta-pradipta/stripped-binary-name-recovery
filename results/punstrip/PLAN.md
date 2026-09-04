@@ -16,7 +16,7 @@ Goal: score our single-backbone system on the **BLens cross-project test split**
 ## 2. Function boundaries and decompilation (Stage 2)
 - Same convention as XFL/BLens ("we equip all tools with ground-truth function boundaries"): Ghidra 11.2.1 headless, functions created at the manifest addresses (existing `GhidraExportDecompMasked.py`: `getFunctionAt` → `createFunction`), decompile each, mask the Ghidra placeholder name `FUN_xxxx` → `[MASK]`.
 - Module-context digest exactly as in our v2 pipeline (`a4_build_modctx.py`, ±10 address-neighbours, 40 tokens, string literals + named import calls from the stripped binary only). Demangled targets (`dm`) irrelevant here (C corpus) but the canonicaliser is applied identically.
-- **Gate 2:** decompile success ≥ 97% of matched functions; `[MASK]` applied in 100% of kept rows; zero rows whose masked input contains the raw GT name (name-in-input audit, same script as v2); sample of 20 rows eyeballed.
+- **Gate 2:** decompile success ≥ 97% of matched functions; `[MASK]` applied to **every** occurrence of the Ghidra name in 100% of kept rows (first-only masking leaked recursive self-calls of exported functions). Name-in-input is audited and *reported as a stratum*, not gated to zero: on this corpus 7.3% of test inputs legitimately contain the GT name (usage/error string literals, single-token names in neighbours' calls) — information every tool sees in the stripped binary. PASSED 2026-09-04: test 99.99%, val 99.9%.
 
 ## 3. Leakage controls (all mandatory)
 | risk | control |

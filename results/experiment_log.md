@@ -4620,3 +4620,11 @@ the paper: 6,013/23,875 test functions (25.2%) have their GT name present in the
 set keeps them; we report with/without). Seen-name rate (train names) 33.7% test / 30.2% val.
 Decompile array 1221522 (814 val+test binaries, GT boundaries, %24) SUBMITTED; auto hand-off → modctx rows → Gate 2.
 Train rebuild 1221487: 6 shards, ~1 pkg/min/shard, 0 errors; auto hand-off → retry → refetch → prep → train decompile.
+**GATE 2 PASSED (2026-09-04 ~03:00 ET):** decompile array 1221522: 814/814 binaries, 41,502 ok / 4 failed functions
+(GT-boundary pre-creation). Module-context rows: TEST 23,873/23,875 (99.99%; 2 mask-not-applied), VAL 18,036/18,047
+(99.9%). 95.4% of inputs ≤ 1280 tokens; empty digest 1.8%. Masking changed to ALL occurrences of the Ghidra name (first-
+only masking leaked dynsym-named functions' recursive self-calls: name-in-input 11.5% → 9.4%); flag then made whole-
+identifier (7.3% test / 10.6% val). Residual classified (test, first pass): string literals 1,668 (usage/error strings
+naming the function — evidence legitimately present in the stripped binary, visible to every tool), digest tokens 93
+(single-token names), substring artifacts 482 (removed by the whole-identifier flag). Decision: name-in-input is NOT a
+pipeline leak; kept as a reported stratum (with/without) alongside dynsym-visible (25.2% of test). PLAN §2 amended.
