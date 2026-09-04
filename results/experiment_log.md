@@ -4669,3 +4669,8 @@ val 18,036: 30.2 / 44.2 / 25.6%. COMPILER (read from dbgsym .comment; dh_strip r
 val gcc7 67.5% / gcc6 31.3% / gcc5 1.2%; test gcc7 70.5% / gcc6 26.2% / gcc5 3.2%; ZERO clang among the 814 val/test
 binaries — Reviewer B's "Punstrip includes both gcc and clang" is compiler-VERSION diversity in this 2018 snapshot
 (train to be checked after decompile). All val/test binaries are executables.
+Compiler census, FULL rebuilt Punstrip corpus (9,648 binaries: 8,834 train + 363 val + 451 test), from dbgsym .comment:
+TRAIN gcc7 5,766 bins (69.8% fns) / gcc6 2,901 (28.8%) / gcc5 167 (1.4%); val/test as above. A scan of every .comment
+section for the substring "clang" (which would appear even if only some objects were clang-built) found 0 files.
+=> As reconstructed from the 2018 Sid snapshot, the Punstrip/XFL/BLens corpus is GCC-only (versions 5–7); its
+"mixture of compilers and compiler versions" is version/flag diversity. Our v2 test has 7.2% Clang functions (9 pkgs).
