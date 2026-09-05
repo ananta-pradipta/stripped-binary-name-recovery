@@ -4686,3 +4686,8 @@ Training = a4_train_codet5p.py from the PUBLIC codet5p-220m base, --data-dir pun
 hedge job 1232257 on a free a100_40g slice with --bs 8 --accum 4 (same effective batch 32, same step count) STARTED
 immediately on n0001; the 80 GB duplicate is cancelled once 1232257 clears its first steps. Final hand-off armed:
 predict_punstrip → knn_punstrip → system_score_punstrip (router on val, two-scorer report, ALL_CSV=1).
+**Session handoff 2026-09-04 23:30 ET (user restarting):** training 1232257 at step 27,200/35,442 (epoch 3, val best 0.485
+@24k). Remaining chain (predict_punstrip → knn_punstrip → system_score_punstrip → optional punstrip_abstain_row) must be
+run manually by the next session (this session's monitors do not survive). Resume map: memory
+project_punstrip_eval_20260904.md; protocol results/punstrip/PLAN.md. Val curve to date: 0.433/0.451/0.455/0.459/0.467/
+0.471/0.471/0.480/0.478/0.481/0.482/0.485/0.485 (steps 2k..26k).
