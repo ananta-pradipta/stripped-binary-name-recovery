@@ -4789,3 +4789,10 @@ canonicaliser → final table will come from ONE run with PYTHONHASHSEED=0). BLe
 paper's no-DEXTER ablation under their scorer. 2b (raw-subtoken tokenizer refit) NOT run — approximation under our metric stays
 (~0.03 measured on our corpus in Aug) and is to be stated in the paper. Train leg to be chained afterok on palmtree_merge.
 SymGen 17:22 ET: step 32/2953, 118.7 s/step, loss 1.97. Ghidra 7,236/9,648, 3 FAIL.
+**BLens encode/train chain fully submitted (18:35 ET):** ghidra_array 1287979 COMPLETED (shards 42 min–2h17m): 9,645/9,648
+clap_jsons; 3 FAIL = starpu-examples sched_ctx_without_sched_policy (7 fns), tss2 tsseventextend (16), ncurses-examples inchs (8),
+ALL train split → test/val coverage unaffected. make_pt_chunks 48: 9,648 bins, 625,492 exported fns (all Ghidra fns; PalmTree
+embeds record fns only), load 13,027–13,035/chunk. Jobs: palmtree 1288554[0-47] (a100_10g) ∥ clap 1287980 (a100_40g, pending
+priority) → merge 1288555 (afterok both) → train 1288556 (a100 80 GB, 3-day wall, -d punstrip, original tokenizer, ablation-c+p)
+→ train_resume 1288557 (afterany). Output: punstrip/blens/data/xp/punstrip/LORD-inference-logs-test-<best>.txt → score via
+punstrip_score_extra.py --blens-log. SymGen 1287903 at step 59/2953, 118.8 s/step.
