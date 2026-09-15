@@ -4762,3 +4762,18 @@ checkpoint, no-ops if final adapter exists) → infer array 1287902[0-2] (aftero
 baselines/SymGen/lora_weights_punstrip → Wulver-side guard `punstrip/symgen/mutual_cancel.sh` (nohup, 45 s poll) cancels the
 losing chain when a leg-1 starts (log punstrip/symgen/mutual_cancel.log). Queue at submit: our priority 10602 below az328/hz54 block;
 n0111 (4x a100_40g) idle. Scoring plan: punstrip_score_extra (their scorer via patched canon + our metric) once preds land.
+**SymGen 40 GB hedge WON (15:58 ET):** 1287903 started on n0091 (4x a100_40g, micro 2, FRESH start, gpus 0-3); guard cancelled
+80 GB chain 1287899-1287902. Active chain: 1287903→1287904→1287905→1287906 → infer 1287907[0-2]. Step timing pending.
+**BLens-on-Punstrip recipe (delegated prep, 16:05 ET) — built in punstrip/blens/, audited, encode stage SUBMITTED:** records =
+ORIGINAL Zenodo xflBlensXProjectData verbatim with binPath re-pointed to rebuild/bins (keys (binPath, vaddr) as builder.py
+expects); kept train 378,189/394,985 (95.75%; 15,671 bin_unmatched + 1,125 pkg_not_rebuilt), val 18,047/18,081 (99.81%), test
+23,875/23,875 (100%); pkg overlap 0; tokenizer = ORIGINAL Tokenizer-Debin-1024-Projects (the Aug ours-v2 retrain had used a
+refit tokenizer sharing only 603/1024 labels). Rebuilt bins are PIE → new Ghidra pre-script CreateFunctionsRebased.py (the Aug
+pre-script silently did not rebase → 85% CLAP coverage). Smoke bcrelay: 79 s, 9/9 GT addrs present with delta 0x100000 (0/9
+without). Config ablation-c+p.json (dexter:false, COMBO 80 ep + LORD 80 ep, interval 4, batch 512); 80 GB A100 REQUIRED for
+train (Aug: 40 GB OOM at LORD step 0), est. 31 h + 21 h ≈ 53 h in one 72 h leg (QOS MaxWall 3 d); COMBO has no resume.
+FINDING: BL-S / BL-A columns are NOT feature ablations (evaluator_c1.py: BLens scored in the SymLM / AsmDepictor comparison
+settings) — earlier table labels "(BLens ablation)" were wrong; our retrain row = "BLens, CLAP+PalmTree, no DEXTER, ablation
+schedule" and must be compared with the paper's no-DEXTER ablation. Jobs: ghidra_array 1287979[0-5] (6 CPU shards x14 Ghidra,
+~1.5 h) → encode_clap 1287980 (afterok, a100_40g, ~5 h). Next after ghidra: make_pt_chunks.py 48 → palmtree_array (48x a100_10g)
+→ palmtree_merge → train (USER-GATED: 2a original tokenizer / 2b raw-subtoken refit / both / skip; asked on Discord 16:35 ET).
