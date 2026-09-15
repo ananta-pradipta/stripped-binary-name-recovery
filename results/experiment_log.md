@@ -4738,3 +4738,9 @@ training added the seen component without hurting novel (0.231→0.284). Router 
 val (Gate 3). Macro tie (0.626 vs 0.622). Caveat: BLens abstains (LORD threshold); ours always emits — '+ val-tuned abstention'
 row (job 1286556, punstrip_abstain_row.py, digit-run patch applied too) reported separately. Files: Wulver
 punstrip/results/system/{system_preds.tsv,score_report.json}; local results/punstrip/fair_row_score_report.json.
+**Abstention row (job 1286556, punstrip_abstain_row.py, 107 s, no canon timeouts) — SEPARATE, never headline:** per-head
+thresholds tuned on Punstrip-VAL only under BLens full preset: R ≥ 0.88, A ≥ 0.48 (val full 0.5936 → 0.6115, val abstention
+21.2%). TEST (their scorer, 22,926 keys): no-abstention 0.5484 full / 0.4652 strict (0.0% abstained) → + val-tuned abstention
+**0.5647 / 0.4762 at 25.9% abstained**. BLens abstains ~46% by design and scores 0.461 / 0.293 ⇒ lead is not an always-emit
+artifact; always-emit headline is the conservative number. Local: results/punstrip/fair_row_abstain_row.json. Chain COMPLETE;
+Wulver queue empty. User-gated next: SymGen-34B LoRA on Punstrip-train; BLens retrain (exact our-metric table); 770m; tables.
