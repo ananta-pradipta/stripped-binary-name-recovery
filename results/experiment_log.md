@@ -4691,3 +4691,8 @@ predict_punstrip → knn_punstrip → system_score_punstrip (router on val, two-
 run manually by the next session (this session's monitors do not survive). Resume map: memory
 project_punstrip_eval_20260904.md; protocol results/punstrip/PLAN.md. Val curve to date: 0.433/0.451/0.455/0.459/0.467/
 0.471/0.471/0.480/0.478/0.481/0.482/0.485/0.485 (steps 2k..26k).
+**Resume 2026-09-14 22:40 ET:** training 1232257 COMPLETED 2026-09-05 00:31 ET (21.5 h, rc=0). Final EVAL step 35,442 val_sub F1
+0.4863; EFFECT line: FULL val_xproj F1 0.4901 (best sub 0.4876); checkpoint dh2/checkpoints/a4_punstrip_modctx_v1/best
+(model.safetensors 892 MB, 222.9M params). Zero-shot head scored 0.290 on the same val → +0.20 from Punstrip-train fine-tuning.
+Downstream chain had NOT been run (nothing queued for 10 days). Launched: predict 1286042 (n0091) ∥ knn 1286043 (n0001), both
+a100_40g, started immediately; system_score 1286044 (general, CPU) with --dependency=afterok on both. Results pending.
