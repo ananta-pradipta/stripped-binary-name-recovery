@@ -4744,3 +4744,21 @@ thresholds tuned on Punstrip-VAL only under BLens full preset: R ≥ 0.88, A ≥
 **0.5647 / 0.4762 at 25.9% abstained**. BLens abstains ~46% by design and scores 0.461 / 0.293 ⇒ lead is not an always-emit
 artifact; always-emit headline is the conservative number. Local: results/punstrip/fair_row_abstain_row.json. Chain COMPLETE;
 Wulver queue empty. User-gated next: SymGen-34B LoRA on Punstrip-train; BLens retrain (exact our-metric table); 770m; tables.
+
+## 2026-09-15 — PUNSTRIP baselines: SymGen-34B LoRA on Punstrip-train LAUNCHED; BLens retrain prep (user "Go for 1 and 2", 15:48 ET)
+Corrected costs vs. last night's estimate: Punstrip-train = 378K rows (2x our corpus) → SymGen 1 epoch = 2,954 steps at batch 128
+≈ 40 h on 4x80 GB (micro 8) or ≈ 98 h on 4x40 GB (micro 2, 119 s/step measured Aug) → checkpoint-resume chain required. BLens Zenodo
+artifact has NO embeddings (only records/tokenizer/logs/strict_setting) → retrain needs Ghidra→CLAP→PalmTree on all 9,648 bins
+(~1 day) + COMBO 80 ep + LORD 80 ep on 2x rows (~3 GPU-days); DEXTER not reproducible → CLAP+PalmTree ablation only; label space
+choice (their canonical 1024 vs raw-subtoken refit) put to user as 2a/2b/2c (Discord 16:10 ET). BLens recipe prep delegated (no GPU).
+SymGen inputs (punstrip/scripts/build_symgen_punstrip.py, local copy scripts/punstrip/): rows = punstrip/data/{train,test}.jsonl,
+code = raw Ghidra decomp (decomp/json, NO module-context digest), Ghidra name masked at every occurrence (word-boundary; first
+build wrongly dropped 4,079/275 rows whose Ghidra name survived as a substring of a longer identifier — fixed), output = raw GT name.
+EFFECT: train 378,060 inputs (0 skipped, 3,071 pkgs, GT-name-in-input 6.9% vs row flag 7.2%), test 23,873 (0 skipped, 174 pkgs,
+7.0% vs 7.3%) → symgen/train_input.json (583 MB), symgen/test_shards/shard_{0,1,2}.json (8,000/8,000/7,873) + meta.
+Jobs: 80 GB chain 1287899→1287900→1287901 (symgen_ft_punstrip.sbatch, a100:4, micro 8, self-resuming: picks latest complete
+checkpoint, no-ops if final adapter exists) → infer array 1287902[0-2] (afterok, symgen_infer_punstrip.sbatch, a100:1, 10 h/shard).
+40 GB hedge chain 1287903→…→1287906 (symgen_ft_punstrip_40g.sbatch, a100_40g:4, micro 2) → infer 1287907[0-2]. Both write
+baselines/SymGen/lora_weights_punstrip → Wulver-side guard `punstrip/symgen/mutual_cancel.sh` (nohup, 45 s poll) cancels the
+losing chain when a leg-1 starts (log punstrip/symgen/mutual_cancel.log). Queue at submit: our priority 10602 below az328/hz54 block;
+n0111 (4x a100_40g) idle. Scoring plan: punstrip_score_extra (their scorer via patched canon + our metric) once preds land.
