@@ -4696,3 +4696,17 @@ project_punstrip_eval_20260904.md; protocol results/punstrip/PLAN.md. Val curve 
 (model.safetensors 892 MB, 222.9M params). Zero-shot head scored 0.290 on the same val → +0.20 from Punstrip-train fine-tuning.
 Downstream chain had NOT been run (nothing queued for 10 days). Launched: predict 1286042 (n0091) ∥ knn 1286043 (n0001), both
 a100_40g, started immediately; system_score 1286044 (general, CPU) with --dependency=afterok on both. Results pending.
+**2026-09-15 chain audit:** predict 1286042 COMPLETED 18 min (41,909 rows = 18,036 val + 23,873 test, no_decomp 0, 0 empty preds,
+test uniq 0.425 > Gate-3 0.1; head-alone test v2 micro 0.4013 / EM 14.2% / macro 0.6012 vs zero-shot head 0.241). knn 1286043
+COMPLETED 4h17m (index 378,060 train / 3,071 pkgs, pkg overlap 0; retrieval alone val 0.3045 [seen 0.760 / novel 0.108], test
+0.3012 [seen 0.747 / novel 0.075, EM novel 0.0 structural]). system_score 1286044: punstrip_system.py part DONE —
+SYSTEM val micro 0.5059 macro 0.6271 (R 0.3045 / A 0.4901 / oracle 0.5331, R_rate 0.116) ⇒ **Gate 3 PASSED** (system > best head
+on val); SYSTEM test micro 0.4343 macro 0.6209 (R 0.3012 / A 0.4013 / oracle 0.4677, R_rate 0.133; seen 0.7495 n=8041 / novel
+0.2742 n=15831 / excl-dynsym 0.3494 n=17861); joined 22,926 keys = 100% of BLens csv key set; canonicaliser GT agreement 0.9817.
+**DEFECT:** punstrip_score.py hung >1 h at 99% CPU in BLens NLP.recursive_split (py-spy stack) on our prediction
+'bLbr25538419688844_gbr_find_sbin_dir' — their splitter is exponential in digit-run length; their systems never emit digits.
+Job 1286044 CANCELLED at 1h10m. FIX (score-neutral, backup scripts/punstrip_score.py.bak_pre_digitfix): strip \d{5,} runs before
+tristan_canonical_name + 60 s SIGALRM hard timeout (BaseException, logged as WARN; count printed). Audit: BLens 1024-label vocab has
+NO token with a 5+-digit run (longest digit token '8051'), so stripping cannot change any label set. Verified: offending name →
+'find_directory' in 0.00 s; sha256_update/utf8_decode/md5_8051 unchanged. Score-only job 1286555 (scripts/score_only_punstrip.sbatch,
+reuses results/system/system_preds.tsv) submitted 04:10 ET.
