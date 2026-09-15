@@ -4710,3 +4710,31 @@ tristan_canonical_name + 60 s SIGALRM hard timeout (BaseException, logged as WAR
 NO token with a 5+-digit run (longest digit token '8051'), so stripping cannot change any label set. Verified: offending name →
 'find_directory' in 0.00 s; sha256_update/utf8_decode/md5_8051 unchanged. Score-only job 1286555 (scripts/score_only_punstrip.sbatch,
 reuses results/system/system_preds.tsv) submitted 04:10 ET.
+
+## 2026-09-15 — PUNSTRIP FAIR ROW: RESULTS (score-only job 1286555, 79 s, canon timeouts 0) — Gate 3 + Gate 4 PASSED
+Setup: CodeT5p-220m (public base) fine-tuned on Punstrip-train only (job 1232257, val 0.4901); LM-encoder kNN index from
+Punstrip-train only (1286043); MLP router fit on Punstrip-val only (1286044); scored on BLens cross-project test, joined key
+set 22,926 = 100.0% of BLens's evaluated csv keys (their csv 22,928; 2 keys missing from our 23,872 test rows). Nothing from our
+v2 corpus/checkpoints used. Canonicaliser GT agreement 0.9817 (first 3000 keys).
+(a) THEIR scorer (label-set micro-F1, 1024-label vocab), identical keys:              full   / strict (n=16,405)
+    ours: system (router)                                                              0.549  / 0.467
+    ours: generation head                                                              0.521  / 0.447
+    ours: retrieval head                                                               0.363  / 0.204
+    BLens 0.461 / 0.293 | BL-A 0.393 / 0.258 | BL-S 0.341 / 0.204 | XFL 0.296 / 0.085 | SymLM 0.265 / 0.133 | AsmDepictor 0.198 / 0.076
+    Gate 4: baselines on their FULL key set reproduce the paper: BLens 0.461/0.293 (paper 0.460/0.294), XFL 0.296/0.085
+    (0.295/0.085), AsmDepictor 0.198/0.076 (0.200/0.090), SymLM 0.265/0.133 (0.277/0.195, threshold-dependent).
+(b) OUR metric v2 (sub-token F1), same keys — ours raw names; baselines canonical-space approximation:
+                              micro   macro   seen(n=8041) novel  excl-dynsym
+    ours: system (router)     0.4472  0.6263  0.7611       0.2839  0.3626
+    ours: generation head     0.4142  0.6069  0.6624       0.2851  0.3365
+    ours: retrieval head      0.3107  0.5300  0.7576       0.0782  0.2352
+    BLens                     0.3939  0.6218  0.7748       0.1958  0.3153
+    XFL 0.2234 / 0.5159 / 0.5172 / 0.0707 / 0.1564; AsmDepictor 0.1533 / 0.3481 / 0.3739 / 0.0385 / 0.1155; SymLM 0.1123 / 0.0834 / 0.2341 / 0.0489 / 0.0883
+    (full 23,872-row test before key join: system 0.4343 / macro 0.6209 / seen 0.7495 / novel 0.2742 / excl-dynsym 0.3494.)
+READING: under their scorer ours beats BLens +0.088 full (+19% rel) and +0.174 strict (+59% rel); strict (generalization
+setting) is where the gap is largest. Under our metric: seen-name parity with BLens (0.761 vs 0.775 — retrieval head carries
+it), novel +0.088 (0.284 vs 0.196 — generation head). Zero-shot → fair: 0.384→0.549 full, 0.351→0.467 strict; the Punstrip
+training added the seen component without hurting novel (0.231→0.284). Router beats either head alone on both scorers and on
+val (Gate 3). Macro tie (0.626 vs 0.622). Caveat: BLens abstains (LORD threshold); ours always emits — '+ val-tuned abstention'
+row (job 1286556, punstrip_abstain_row.py, digit-run patch applied too) reported separately. Files: Wulver
+punstrip/results/system/{system_preds.tsv,score_report.json}; local results/punstrip/fair_row_score_report.json.
