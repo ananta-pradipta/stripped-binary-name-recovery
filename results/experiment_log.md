@@ -4784,3 +4784,8 @@ infer 1287907[0-2] (a100:1 80 GB, 10 h/shard) after. Scorer for extra systems `p
 scripts/punstrip/) self-test (job 1288051) reproduces the fair-row rows on the same 22,926 keys (system 0.548/0.465, gen 0.521/0.446;
 main-scorer run printed 0.549/0.467 — 0.001–0.002 drift between processes, suspected hash-order nondeterminism in BLens NLP
 canonicaliser → final table will come from ONE run with PYTHONHASHSEED=0). BLens ghidra array 1287979: 3,351/9,648 at 28 min, 2 FAIL.
+**BLens label-space decision (user "Ok" to recommendation, 17:25 ET) = 2a:** original Tokenizer-Debin-1024-Projects (their canonical
+1,024 labels), CLAP+PalmTree, ablation-c+p schedule; row label "BLens, CLAP+PalmTree, no DEXTER, retrained by us"; compare with the
+paper's no-DEXTER ablation under their scorer. 2b (raw-subtoken tokenizer refit) NOT run — approximation under our metric stays
+(~0.03 measured on our corpus in Aug) and is to be stated in the paper. Train leg to be chained afterok on palmtree_merge.
+SymGen 17:22 ET: step 32/2953, 118.7 s/step, loss 1.97. Ghidra 7,236/9,648, 3 FAIL.
