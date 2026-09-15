@@ -4801,3 +4801,8 @@ palmtree_chunk.py seeds angr at addr and addr+mapped_base and keys relative → 
 ONE at a time (priority) → ~16 h serial. PalmTree is angr-bound (ran on 8 CPUs in Aug) → CPU hedge array **1288809[0-47]**
 (general, 8 CPUs, reverse chunk order, skip-if-pickle-exists, distinct .cputmp, discard if finished elsewhere); 47 tasks started
 immediately. merge 1288555 dependency updated to afterok:1287980:1288554:1288809. CLAP 1287980 still pending (priority).
+**PalmTree DONE via CPU hedge (19:50 ET):** 48/48 chunk pickles, 0 failures, ~1 h wall (cpu array 1288809 all COMPLETED; GPU array
+1288554 had finished 11 chunks serially → remaining tasks CANCELLED after dropping it from the merge dependency). **CLAP 1287980
+retargeted in place a100_40g → a100_20g** (Slurm ETA in the 40g queue was 2026-09-16 21:58; 20g slices free on n0089/n0111) →
+STARTED 19:57 ET on n0001. Chain now: clap 1287980 → merge 1288555 (afterok) → train 1288556 → resume 1288557.
+SymGen 1287903: step 106/2953, 118.5 s/step.
