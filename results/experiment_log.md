@@ -4796,3 +4796,8 @@ embeds record fns only), load 13,027–13,035/chunk. Jobs: palmtree 1288554[0-47
 priority) → merge 1288555 (afterok both) → train 1288556 (a100 80 GB, 3-day wall, -d punstrip, original tokenizer, ablation-c+p)
 → train_resume 1288557 (afterany). Output: punstrip/blens/data/xp/punstrip/LORD-inference-logs-test-<best>.txt → score via
 punstrip_score_extra.py --blens-log. SymGen 1287903 at step 59/2953, 118.8 s/step.
+**PalmTree audit + CPU hedge (19:05 ET):** chunk 00 (GPU array) rc=0, 5,685 entries = 5,685 records in chunk (100% coverage;
+palmtree_chunk.py seeds angr at addr and addr+mapped_base and keys relative → PIE handled). But a100_10g tasks are being scheduled
+ONE at a time (priority) → ~16 h serial. PalmTree is angr-bound (ran on 8 CPUs in Aug) → CPU hedge array **1288809[0-47]**
+(general, 8 CPUs, reverse chunk order, skip-if-pickle-exists, distinct .cputmp, discard if finished elsewhere); 47 tasks started
+immediately. merge 1288555 dependency updated to afterok:1287980:1288554:1288809. CLAP 1287980 still pending (priority).
