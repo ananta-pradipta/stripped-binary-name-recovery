@@ -4777,3 +4777,10 @@ settings) — earlier table labels "(BLens ablation)" were wrong; our retrain ro
 schedule" and must be compared with the paper's no-DEXTER ablation. Jobs: ghidra_array 1287979[0-5] (6 CPU shards x14 Ghidra,
 ~1.5 h) → encode_clap 1287980 (afterok, a100_40g, ~5 h). Next after ghidra: make_pt_chunks.py 48 → palmtree_array (48x a100_10g)
 → palmtree_merge → train (USER-GATED: 2a original tokenizer / 2b raw-subtoken refit / both / skip; asked on Discord 16:35 ET).
+**SymGen leg 1 (1287903) audit 16:40 ET:** tokenization (Map, 16 procs) 12.6 min; training loop at **118.6 s/step, 2,953 steps**
+(378,060/128), loss 2.31 @ step 10, lr warmup; 4 ranks ~90% CPU, ~49 GB GPU mem each (MIG-shared physical view), host 455 GB free.
+Projection: ~890 steps per 30 h leg, checkpoint every 200 → legs bank 800/1600/2400/2953 → adapter ≈ 2026-09-20 ~02:00 ET;
+infer 1287907[0-2] (a100:1 80 GB, 10 h/shard) after. Scorer for extra systems `punstrip/scripts/punstrip_score_extra.py` (local
+scripts/punstrip/) self-test (job 1288051) reproduces the fair-row rows on the same 22,926 keys (system 0.548/0.465, gen 0.521/0.446;
+main-scorer run printed 0.549/0.467 — 0.001–0.002 drift between processes, suspected hash-order nondeterminism in BLens NLP
+canonicaliser → final table will come from ONE run with PYTHONHASHSEED=0). BLens ghidra array 1287979: 3,351/9,648 at 28 min, 2 FAIL.
