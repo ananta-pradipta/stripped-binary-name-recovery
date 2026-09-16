@@ -4806,3 +4806,13 @@ immediately. merge 1288555 dependency updated to afterok:1287980:1288554:1288809
 retargeted in place a100_40g → a100_20g** (Slurm ETA in the 40g queue was 2026-09-16 21:58; 20g slices free on n0089/n0111) →
 STARTED 19:57 ET on n0001. Chain now: clap 1287980 → merge 1288555 (afterok) → train 1288556 → resume 1288557.
 SymGen 1287903: step 106/2953, 118.5 s/step.
+
+## 2026-09-16 — Wulver login outage 2026-09-15 22:32 → 2026-09-16 16:20 ET (~18 h, unannounced; hpc.njit.edu shows no notice;
+scheduled window = 2nd Tuesday 9–21 = Sep 8). Compute unaffected. Post-outage audit 16:25 ET:
+- SymGen leg 1 (1287903): step 733/2953 @ 24h05m, 118.3 s/step, checkpoints 200/400/600 (save_total_limit 3); legs 1287904-06 +
+  infer 1287907 queued (Dependency). Leg 1 wall → ~step 880; leg 2 resumes from checkpoint-800.
+- CLAP 1287980 COMPLETED 6h05m on a100_20g: 415,538/420,111 embeddings (test 23,801/23,875 = 99.7%, val 17,741/18,047, train
+  374,065/378,189); 132 LOWCOV bins; 3 bins without clap json (the Ghidra failures). data/embedding/clap 1.40 GB.
+- palmtree_merge 1288555 COMPLETED 14 min: palmtree 419,961 entries; records with BOTH features 415,457/420,042 (98.9%);
+  data/embedding/palmtree 4.10 GB. 74 test records lack CLAP → coverage note for the BLens-retrained row.
+- train 1288556 PENDING (Priority, a100 80 GB, 3-day wall); train_resume 1288557 chained.
