@@ -4816,3 +4816,6 @@ scheduled window = 2nd Tuesday 9–21 = Sep 8). Compute unaffected. Post-outage 
 - palmtree_merge 1288555 COMPLETED 14 min: palmtree 419,961 entries; records with BOTH features 415,457/420,042 (98.9%);
   data/embedding/palmtree 4.10 GB. 74 test records lack CLAP → coverage note for the BLens-retrained row.
 - train 1288556 PENDING (Priority, a100 80 GB, 3-day wall); train_resume 1288557 chained.
+**SymGen leg 1 (1287903) TIMEOUT at 30h00m, step 903/2953 (planned):** checkpoints 400/600/800 kept; leg 2 1287904 PENDING (Priority,
+needs 4x a100_40g on one node; n0002 IDLE+POWERED_DOWN "Not responding" since 2026-09-16 17:18; n0091 3 free, n0111 3 free);
+Slurm StartTime estimate 2026-09-17 02:22 ET → ~+4 h on the chain. BLens train 1288556 still PENDING (Priority, a100 80 GB).
