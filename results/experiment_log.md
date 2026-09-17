@@ -4819,3 +4819,6 @@ scheduled window = 2nd Tuesday 9–21 = Sep 8). Compute unaffected. Post-outage 
 **SymGen leg 1 (1287903) TIMEOUT at 30h00m, step 903/2953 (planned):** checkpoints 400/600/800 kept; leg 2 1287904 PENDING (Priority,
 needs 4x a100_40g on one node; n0002 IDLE+POWERED_DOWN "Not responding" since 2026-09-16 17:18; n0091 3 free, n0111 3 free);
 Slurm StartTime estimate 2026-09-17 02:22 ET → ~+4 h on the chain. BLens train 1288556 still PENDING (Priority, a100 80 GB).
+**SymGen leg 2 (1287904) STARTED 22:12 ET on n0091 (earlier than Slurm's 02:22 estimate):** "RESUME from checkpoint-800 step=800";
+progress bar skipped to 802/2953 after 4 min ⇒ resume-patch audit PASSED (not restarting at 0). Projection: leg 2 → ~step 1690
+(checkpoint-1600), leg 3 → ~2490 (checkpoint-2400), leg 4 → 2953 (~18 h) ⇒ adapter ≈ 2026-09-20 ~20:00 ET.
