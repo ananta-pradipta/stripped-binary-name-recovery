@@ -4854,3 +4854,15 @@ precomputed ablation logs data/logs/blens/V11-PROJECTS-...-Clap+Palmtree/ (+ CLA
 → extracting C+P + main logs and the original test pickle to rescore their C+P on our identical key set (in progress). NOTE:
 baselines/blens_user_env/blens_data/xflBlensXProjectData is OUR-corpus pickle (278,428/7,826/19,406), not Punstrip's.
 Discord: status 21:03 ET, full table 21:12 ET.
+**BLens paper ablation logs rescored on OUR key set (job 1306967, rc=0, 22:0x ET):** extracted from Zenodo data.tar.gz →
+baselines/blens_user_env/zenodo_logs/{data/xflBlensXProjectData, data/logs/blens/…}. Original Zenodo test list = 23,875 records,
+(binpath,vaddr) order IDENTICAL to our rebuilt pickle (394,985/18,081/23,875 vs ours 378,189/18,047/23,875 train/val) → positional
+mapping of their target:/output: logs is exact (target agreement with published GT 0.9949 for all three logs, same as ours).
+THEIR scorer full/strict on n=22,926: **their C+P (80 ep, best val ep 39, 29.8% abstention) 0.426/0.261** (paper Table 7: 0.425 ✓),
+**their C+P+D (80 ep, ep 79) 0.445/0.269** (paper 0.445 ✓ exact), published main 200-ep 0.461/0.293, our retrain C+P 0.357/0.166.
+Our metric micro/macro/seen/novel/excl-dyn: their C+P 0.3686/0.5975/0.7547/0.1678/0.2857; their C+P+D 0.3758/0.6118/0.7531/
+0.1796/0.2950; our retrain 0.2904/0.5579/0.6793/0.0882/0.2064. Their C+P val curve peaks 0.397 @ ep39 vs ours 0.352 @ ep71.
+CONCLUSION: scorer + key set reproduce the paper to ±0.001, so our retrain's −0.069 vs their C+P is attributable to our own
+feature extraction (Ghidra 11.3.1 + CLAP + PalmTree on rebuilt bins; 74 test fns w/o CLAP), not to training or scoring.
+For the paper: use THEIR precomputed C+P / C+P+D logs as the "no-DEXTER" reference rows (exact, same keys); mention our retrain
+only as a reproducibility footnote. Local: results/punstrip/blens_paper_ablation_logs_score_report.json.
