@@ -4822,3 +4822,35 @@ Slurm StartTime estimate 2026-09-17 02:22 ET → ~+4 h on the chain. BLens train
 **SymGen leg 2 (1287904) STARTED 22:12 ET on n0091 (earlier than Slurm's 02:22 estimate):** "RESUME from checkpoint-800 step=800";
 progress bar skipped to 802/2953 after 4 min ⇒ resume-patch audit PASSED (not restarting at 0). Projection: leg 2 → ~step 1690
 (checkpoint-1600), leg 3 → ~2490 (checkpoint-2400), leg 4 → 2953 (~18 h) ⇒ adapter ≈ 2026-09-20 ~20:00 ET.
+
+## 2026-09-22 — Wulver emergency maintenance 08:00–20:00 ET (login banner only); post-outage audit 20:59 ET; BLens-retrained row SCORED
+Jobs survived: BLens 2a train 1288556 COMPLETED 2026-09-19 01:11 ET (33h05m, n0004, rc=0): "EFFECT: COMBO epochs logged: 80",
+LORD 80 ep, optimize logs 20/20, best LORD epoch 71, inference log LORD-inference-logs-test-71.txt targets=outputs=23,875;
+resume 1288557 no-op (valid log present). LORD val F1 (their threshold search, 2nd column of optimize-log last line): ep3 0.265,
+ep15 0.318, ep27 0.325, ep39 0.334, ep51 0.340, ep63 0.349, ep71 0.352 (best), ep79 0.350 → plateau from ~ep63. Test log:
+10,863/23,875 (45.5%) empty outputs (abstention, same rate as the published model), 2,306 distinct outputs (top: ocaml 703,
+main 567, get 561, initialise 539, csu_finalise 496). SymGen leg 3 1287905 TIMEOUT 09-21 10:45 at step 2502 (checkpoint-2400
+kept); leg 4 1287906 STARTED 09-22 19:55 ET on n0089 "RESUME from checkpoint-2400 step=2400", ~70 s/step → adapter ~09-23 08:00 ET;
+infer 1287907[0-2] pending (afterok). n0002 back (mixed).
+**score_extra_final 1306906 COMPLETED (1m26s, rc=0; SymGen skipped 0/8000,0/8000,0/7873):** blens_retrain_2a 22,928 rows joined,
+target agreement with published GT 0.9949; common keys 22,926 (100%); canon timeouts 0. Local copy
+results/punstrip/blens_retrain_score_report_extra_final.json.
+(a) THEIR scorer full/strict (n=22,926, n_strict 16,405): ours system 0.548/0.465 | gen head 0.521/0.446 | retrieval 0.362/0.204 |
+**BLens retrained by us (CLAP+PalmTree, no DEXTER, ablation 80+80 schedule, original 1024 tokenizer) 0.357/0.166** | BLens
+published 0.461/0.293 | XFL 0.296/0.085 | SymLM 0.265/0.133 | AsmDepictor 0.198/0.076. (Selftest gen head reproduced 0.521/0.446;
+system 0.548 vs 0.549 on 09-15 = the known ±0.001 canonicaliser hash-order drift.)
+(b) OUR metric v2 micro/macro/seen/novel/excl-dyn: ours system 0.4472/0.6263/0.7611/0.2839/0.3626 | gen 0.4142/0.6069/0.6624/
+0.2851/0.3365 | retrieval 0.3107/0.5300/0.7576/0.0782/0.2352 | BLens retrained 0.2904/0.5579/0.6793/0.0882/0.2064 | BLens
+published 0.3939/0.6218/0.7748/0.1958/0.3153 | XFL 0.2234/0.5159/0.5172/0.0707/0.1564 | SymLM 0.1123/0.0834/0.2341/0.0489/0.0883
+| AsmDepictor 0.1533/0.3481/0.3739/0.0385/0.1155.
+**Reference for the retrained row = BLens paper Table 7 (cross-project, ablation models trained 80 epochs, their scorer):**
+C+P+D 0.445 | C+D 0.438 | **C+P 0.425** | C 0.425 | P+D 0.364 | P 0.352 | D 0.310; Table 6 BL-NP 0.287; the 0.460/0.461 headline
+is the 200+200-epoch main.json model with DEXTER. Their artifact appendix states seed variance ≈ ±0.02 (±0.10 for BL-NP).
+Our C+P retrain 0.357 is 0.068 below their C+P → beyond seed noise; candidate causes: our own Ghidra 11.3.1 / CLAP / PalmTree
+re-extraction on the rebuilt binaries (theirs came from their pipeline), 74 test records without CLAP, and their COMBO/LORD
+runs used their precomputed embeddings. Conclusion: the retrained row is a pipeline sanity check, NOT a replacement for the
+published BLens csv in the headline table; published model stays the reference. Zenodo tarball (8.4 GB) DOES contain
+precomputed ablation logs data/logs/blens/V11-PROJECTS-...-Clap+Palmtree/ (+ CLAP, DEXTER, PALMTREE, C+D, P+D, NO+COCA, SIMPLE)
+→ extracting C+P + main logs and the original test pickle to rescore their C+P on our identical key set (in progress). NOTE:
+baselines/blens_user_env/blens_data/xflBlensXProjectData is OUR-corpus pickle (278,428/7,826/19,406), not Punstrip's.
+Discord: status 21:03 ET, full table 21:12 ET.
