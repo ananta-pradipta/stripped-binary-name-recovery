@@ -4893,3 +4893,11 @@ simple_lock_cleanup/read_size_t/parse_info (F1 1.0, EM miss only by case); light
 mod_redirect/mod_alias/mod_evhost. Running-example fns: jansson_simple_O3 0x2830 json_object_size (G right, R OSSL_*),
 tar2_tar_O0 0x44c025 tm_year_str (R right, G time_zone_str), mbedtls_ssl_client1_O3 0x5bf90 (both wrong), cvs_cvs_O1 0x41f4d1
 strip_rcsext (name in __assert_fail string). Paper §7 Case Study rewritten around these (paper-repo fse27).
+**In-the-wild case study (FSE §7.3) from punstrip/results/system/system_preds.tsv (Punstrip-trained HyDRA, test split):**
+tcpreplay 4.2.6-1 (Debian snapshot first_seen 2017-08-12, exact symtab match 1.0, 6 shipped stripped executables, 1,398 test
+fns): F1 0.752 / EM 59.2%; name_in_input 70% (tcpreplay error macros embed __FUNCTION__; Punstrip test overall 7.3%); on the
+559 fns without name-in-input F1 0.382 / EM 4.3% (407 of them seen names). CVE functions: dlt_en10mb_encode (CVE-2018-17974)
+exact in tcpbridge/tcpreplay-edit/tcprewrite confA 0.999 (nin=True); get_l2len (CVE-2018-20553) exact in all 6 confA 0.9998
+(nin=True); packet2tree (CVE-2018-20552) absent from rows (no boundary/inlined); get_next_packet (CVE-2018-17582) lives in the
+`tcpreplay` executable, which is not in the Punstrip test manifest. Epitome (FSE'24) code public (github Xiaolinger-Z/Epitome)
+but requires IDA Pro 7.3 + Python 2.7 + miasm fork → not retrained; added to the protocol/systems tables as discussed-only.
