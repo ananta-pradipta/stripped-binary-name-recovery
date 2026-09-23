@@ -4920,3 +4920,10 @@ n=7,860: R 0.102/0, G 0.326/9.2%, routed 0.323/9.2%, BLens 0.229/2.6%, XFL 0.086
 novel-OOV n=7,267: R 0.053/0, G 0.241/9.1%, routed 0.241/9.1%, BLens 0.164/2.2%, XFL 0.054/0.8%, SymLM 0.043/0.6%, AsmDep
 0.034/0.2%; all: routed 0.447/21.1%, R 0.311/23.8%, G 0.414/14.6%, BLens 0.394/25.1%. Two-head pattern replicates on Punstrip;
 router under-routes to retrieval there (13%) → seen EM 44% vs R 70%. Added as FSE Table (RQ5).
+
+## 2026-09-23 23:45 ET — Punstrip: SymGen-34B (LoRA, Punstrip-train only) scored (jobs 1318037[0-2] infer, 1319262 score_extra_final)
+- Infer array 1318037: 3 shards COMPLETED (3h00–3h13 each, exit 0), preds 8000/8000/7873 = inputs; joined 23,872 on keys; scored on the common 22,926-key set.
+- **SymGen-34B Punstrip: BLens evaluator full 0.435 / strict 0.395; our metric micro 0.316 / macro 0.434 / seen 0.416 / novel 0.264 / excl-dynsym 0.287.**
+- Context (same keys): ours routed 0.549/0.466 (0.447/0.626/0.761/0.284/0.363); BLens published 0.461/0.293; our BLens retrain 0.357/0.166.
+- Reading: SymGen is the strongest baseline in the strict setting (+0.10 over BLens) and near ours on novel names (0.264 vs 0.284), but 0.416 on seen names where retrieval is exact (ours 0.761) — the head-per-regime pattern again. Paper RQ5 Table 9 row + prose filled (FSE draft); strata row (Table 10) pending a strata re-run with SymGen included.
+- Report: `results/punstrip/score_report_extra_final.json` (local copy of Wulver `punstrip/results/system/score_report_extra_final.json`); slurm `punstrip/slurm/score_extra_final_1319262.out`.
