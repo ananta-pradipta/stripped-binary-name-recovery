@@ -4901,3 +4901,11 @@ exact in tcpbridge/tcpreplay-edit/tcprewrite confA 0.999 (nin=True); get_l2len (
 (nin=True); packet2tree (CVE-2018-20552) absent from rows (no boundary/inlined); get_next_packet (CVE-2018-17582) lives in the
 `tcpreplay` executable, which is not in the Punstrip test manifest. Epitome (FSE'24) code public (github Xiaolinger-Z/Epitome)
 but requires IDA Pro 7.3 + Python 2.7 + miasm fork → not retrained; added to the protocol/systems tables as discussed-only.
+
+## 2026-09-23 — SymGen-34B Punstrip adapter DONE; inference array resubmitted after sbatch bug
+Leg 4 1287906 COMPLETED 14:41 ET (18h46m, n0089) "EFFECT: leg rc=0" → baselines/SymGen/lora_weights_punstrip/{adapter_config.json,
+adapter_model.bin 39 MB} (steps 2953/2953). Infer array 1287907[0-2] FAILED at 14:41 in 1 s on all shards: line 16 of
+punstrip/scripts/symgen_infer_punstrip.sbatch (`N=$(python3 -c "...open(\"$IN\")))")`) lacked one closing parenthesis →
+SyntaxError before predict.py ran (never exercised earlier because the afterok dependency held it). Fixed (bash -n OK; count
+check prints 7,873 for shard 2), resubmitted as **1318037[0-2]** (gpu:a100:1 80 GB, 10 h each, no dependency). Scoring after:
+`sbatch punstrip/scripts/score_extra_final.sbatch` (auto-includes SymGen when all 3 shards complete).
