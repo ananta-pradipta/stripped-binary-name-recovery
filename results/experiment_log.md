@@ -4877,3 +4877,9 @@ n=268,136: **micro 0.2367 / macro 0.4721 / EM 10.7% / R_rate 12.5% | FT 0.1454 N
 in 38/50 pkgs; > R in 36, > A in 31. Largest: bdb FT 0.171, icu 0.057, mbedtls 0.148, fossil NCT 0.430, nginx118 0.924, angie
 0.876. Files: dh2/results/c_lmemb_knn/per_pkg_single_backbone.json (local results/dualhead_v2/). Bibliography check: DBLP API
 rate-limited (all 40 queries 429) → Crossref check running.
+**Compiler breakdown for the adopted single-backbone system (job 1316593, per_pkg_single_backbone.py v2, same JSON):** GCC
+248,794 fns/558 bins routed 0.2264 (R 0.1251 A 0.2033; FT 0.1412 NCT 0.6767); Clang 19,342/52 routed 0.3685 (R 0.3066 A 0.3301;
+FT 0.2074 NCT 0.8197). Paired 9 pkgs: GCC 0.4318 (R 0.380 A 0.357, macro 0.4615) vs Clang 0.3685 (macro 0.4637). Per pkg
+(gcc→clang routed): angie 0.887→0.864, dash 0.402→0.283, expat 0.150→0.104, gettext 0.176→0.256 (clang 5,598 fns vs 1,113),
+libsodium 0.123→0.122, nginx118 0.947→0.891 (R 0.953→0.861, A 0.771→0.767), psmisc 0.416→0.470, recutils 0.347→0.307,
+tengine 0.706→0.877. Paper RQ6 updated (paper-repo fse27). Supersedes T7 (old C1∪A4 system) for the FSE paper.
