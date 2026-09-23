@@ -4909,3 +4909,7 @@ punstrip/scripts/symgen_infer_punstrip.sbatch (`N=$(python3 -c "...open(\"$IN\")
 SyntaxError before predict.py ran (never exercised earlier because the afterok dependency held it). Fixed (bash -n OK; count
 check prints 7,873 for shard 2), resubmitted as **1318037[0-2]** (gpu:a100:1 80 GB, 10 h each, no dependency). Scoring after:
 `sbatch punstrip/scripts/score_extra_final.sbatch` (auto-includes SymGen when all 3 shards complete).
+**Strata rescoring for FSE Table 7 (jobs 1318005 / 1318031, scripts/score_symgen_full_strata.py = score_symgen_full.py +
+novel-known/novel-OOV strata + case-sensitive canonical EM):** SymGen seen 0.2654/EM 6.9% | novel-known 0.1677/2.3% |
+novel-OOV 0.1061/2.3% | all EM 2.9% (was 3.4% under F1==1 EM); BLens 0.3821/9.8% | 0.0190/0.0% | 0.0098/0.0% | all EM 1.2%;
+A4dm 0.6639/38.8% | 0.2012/1.8% | 0.1192/0.8%. results/score_symgen_full_strata_cs.json (local copy results/dualhead_v2/).
