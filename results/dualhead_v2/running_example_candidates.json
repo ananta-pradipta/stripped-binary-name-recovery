@@ -1,0 +1,516 @@
+{
+ "A_ret_right_gen_wrong": [
+  {
+   "pkg": "tar2",
+   "reg": "NCT",
+   "seen": true,
+   "truth": "cachedir_file_p",
+   "ret": "cachedir_file_p",
+   "gen": "diff_signature",
+   "fR": 1.0,
+   "fA": 0.0,
+   "simR": 0.975,
+   "confA": 0.346,
+   "nlines": 17,
+   "ev": 1,
+   "dg": 2,
+   "ntok": 3,
+   "digest": "gettext differs type close mode contains verify gid headers lseek openat size time ioctl archive detected failure names range value block cache contents device diffed differ directory fail files fstat fsync generating header leading linked locate lone major may memcmp",
+   "body": "\n\nundefined4 [MASK](int param_1)\n\n{\n  int iVar1;\n  ssize_t sVar2;\n  undefined local_38 [48];\n  \n  sVar2 = read(param_1,local_38,0x2b);\n  if ((sVar2 == 0x2b) &&\n     (iVar1 = memcmp(local_38,\"Signature: 8a477f597d28d172789f06886806bc55\",0x2b), iVar1 == 0)) {\n    return 1;\n  }\n  return 0;\n}\n\n",
+   "key": [
+    "tar2_tar_O0",
+    "0x40b7d6"
+   ]
+  },
+  {
+   "pkg": "patch2",
+   "reg": "NCT",
+   "seen": true,
+   "truth": "makedirs",
+   "ret": "makedirs",
+   "gen": "make_directories",
+   "fR": 1.0,
+   "fA": 0.0,
+   "simR": 0.972,
+   "confA": 0.87,
+   "nlines": 24,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 1,
+   "digest": "fflush vfprintf sigprocmask can sigemptyset dev ignoring open sigaddset signal getenv anyway create fseek get lock patch read sigaction skipping temporary tmp tty xxxxxx again apply applying assume assuming changes close controlled directory dry empty eof exit fetchname filename getting",
+   "body": "\n\nvoid [MASK](undefined8 param_1)\n\n{\n  char *__path;\n  char *pcVar1;\n  char *local_10;\n  \n  __path = (char *)FUN_0041f123(param_1);\n  pcVar1 = (char *)FUN_00411079(__path);\n  local_10 = __path;\n  if (pcVar1 != (char *)0x0) {\n    for (; local_10 <= pcVar1; local_10 = local_10 + 1) {\n      if (*local_10 == '\\0') {\n        mkdir(__path,0x1ff);\n        *local_10 = '/';\n      }\n    }\n  }\n  free(__path);\n  return;\n}\n\n",
+   "key": [
+    "patch2_patch_O0",
+    "0x411148"
+   ]
+  },
+  {
+   "pkg": "findutils2",
+   "reg": "NCT",
+   "seen": true,
+   "truth": "remember_non_cloexec_fds",
+   "ret": "remember_non_cloexec_fds",
+   "gen": "bc_init_num",
+   "fR": 1.0,
+   "fA": 0.0,
+   "simR": 0.961,
+   "confA": 0.453,
+   "nlines": 20,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 4,
+   "digest": "dcgettext buildcmd extendbuf putc argument arg care can ctl existing fchdir size valid wanted exec argc cmd state fputs list output poll proc self 03o 8lu are args argv bug call close closedir controlinfo copy count decimal description descriptor detailed",
+   "body": "\n\nvoid [MASK](void)\n\n{\n  int iVar1;\n  undefined8 local_28;\n  undefined8 local_20;\n  undefined8 local_18;\n  \n  iVar1 = FUN_0040f8d3();\n  local_28 = 0;\n  local_18 = 0;\n  local_20 = 0;\n  FUN_0040f9eb(0,iVar1 + (uint)(iVar1 != 0x7fffffff),FUN_0040f871,&local_28);\n  DAT_004433f0 = local_28;\n  DAT_004433e8 = local_20;\n  return;\n}\n\n",
+   "key": [
+    "findutils2_find_O1",
+    "0x40fb20"
+   ]
+  },
+  {
+   "pkg": "tar2",
+   "reg": "NCT",
+   "seen": true,
+   "truth": "tm_year_str",
+   "ret": "tm_year_str",
+   "gen": "time_zone_str",
+   "fR": 1.0,
+   "fA": 0.33,
+   "simR": 0.993,
+   "confA": 0.803,
+   "nlines": 22,
+   "ev": 0,
+   "dg": 2,
+   "ntok": 3,
+   "digest": "gettext sext816 scarry8 value day sborrow8 seconds year snprintf date fputc month number abort fwrite parsed time block relative timezone 02d daylight overflow saving utc current hour 09d datetime directory dst minutes normalized ordinal part working zone adjustment 02ld multiple",
+   "body": "\n\nchar * [MASK](int param_1,char *param_2)\n\n{\n  uint uVar1;\n  uint uVar2;\n  uint uVar3;\n  \n  uVar2 = param_1 % 100;\n  if ((int)uVar2 < 1) {\n    uVar2 = -uVar2;\n  }\n  uVar3 = param_1 / 100 + 0x13;\n  uVar1 = -uVar3;\n  if (0 < (int)uVar3) {\n    uVar1 = uVar3;\n  }\n  sprintf(param_2,\"-%02d%02d\" + (int)(uint)(-0x76d < param_1),(ulong)uVar1,(ulong)uVar2);\n  return param_2;\n}\n\n",
+   "key": [
+    "tar2_tar_O0",
+    "0x44c025"
+   ]
+  },
+  {
+   "pkg": "bsdtar",
+   "reg": "NCT",
+   "seen": true,
+   "truth": "isofile_free",
+   "ret": "isofile_free",
+   "gen": "archive_write_odc_free",
+   "fR": 1.0,
+   "fA": 0.33,
+   "simR": 0.981,
+   "confA": 0.769,
+   "nlines": 23,
+   "ev": 1,
+   "dg": 0,
+   "ntok": 2,
+   "digest": "allocate can format archive data set write cpio memory utf memcmp memmove converted disable extension filename joliet making should you 0123456789abcdef 7zip binary 7th bin bzip2 coludn compression deflate edition getgid getuid localtime lzma must name newc nocrc odc platform",
+   "body": "\n\nvoid [MASK](void *param_1)\n\n{\n  void *pvVar1;\n  void *__ptr;\n  \n  __ptr = *(void **)((long)param_1 + 0xa8);\n  while (__ptr != (void *)0x0) {\n    pvVar1 = *(void **)((long)__ptr + 0x18);\n    free(__ptr);\n    __ptr = pvVar1;\n  }\n  FUN_0010e9b0(*(undefined8 *)((long)param_1 + 0x20));\n  FUN_001432a0((long)param_1 + 0x28);\n  FUN_001432a0((long)param_1 + 0x40);\n  FUN_001432a0((long)param_1 + 0x58);\n  FUN_001432a0((long)param_1 + 0x70);\n  free(param_1);\n  return;\n}\n\n",
+   "key": [
+    "bsdtar_bsdtar_O2",
+    "0x54eb0"
+   ]
+  },
+  {
+   "pkg": "fossil",
+   "reg": "NCT",
+   "seen": true,
+   "truth": "juliandayFunc",
+   "ret": "juliandayFunc",
+   "gen": "compute_ymd_hms",
+   "fR": 1.0,
+   "fA": 0.0,
+   "simR": 0.933,
+   "confA": 0.629,
+   "nlines": 16,
+   "ev": 0,
+   "dg": 1,
+   "ntok": 2,
+   "digest": "concat44 02d 04d localtime subsec subsecond 20a 20d 16g 20c 20e 40f 50f auto ceiling floor julianday month second start time unavailable unixepoch weekday",
+   "body": "\n\nvoid [MASK](undefined8 param_1,undefined4 param_2,undefined8 param_3)\n\n{\n  int iVar1;\n  long local_38 [6];\n  \n  iVar1 = FUN_00407a46(param_1,param_2,param_3,local_38);\n  if (iVar1 == 0) {\n    FUN_00405a22(local_38);\n    FUN_004441ad((double)local_38[0] / DAT_00723890,param_1);\n  }\n  return;\n}\n\n",
+   "key": [
+    "fossil_fossil_O0",
+    "0x407c1a"
+   ]
+  }
+ ],
+ "B_gen_right_ret_wrong_novel": [
+  {
+   "pkg": "libsodium",
+   "reg": "FT",
+   "seen": false,
+   "truth": "crypto_generichash_blake2b_final",
+   "ret": "kdf_argon2_ctx_set_out_length",
+   "gen": "crypto_generichash_blake2b_final",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.817,
+   "confA": 0.997,
+   "nlines": 14,
+   "ev": 4,
+   "dg": 3,
+   "ntok": 4,
+   "digest": "generichash crypto bytes keybytes xmain max blake2b min fopen thunk guard page perror exp fgetc fputc hex personalbytes primitive res saltbytes sodium tests codecs fflush gsodium key libsodium rewind test vector",
+   "body": "\n\nvoid [MASK](undefined8 param_1,undefined8 param_2,ulong param_3)\n\n{\n  if (param_3 < 0x100) {\n    FUN_00115f30();\n    return;\n  }\n                    /* WARNING: Subroutine does not return */\n  __assert_fail(\"outlen <= UINT8_MAX\",\"crypto_generichash/blake2b/ref/generichash_blake2b.c\",0x6b,\n                \"crypto_generichash_blake2b_final\");\n}\n\n",
+   "key": [
+    "libsodium_generichash_O3",
+    "0x7290"
+   ]
+  },
+  {
+   "pkg": "cvs",
+   "reg": "FT",
+   "seen": false,
+   "truth": "strip_rcsext",
+   "ret": "ar_name_equal",
+   "gen": "strip_rcsext",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.898,
+   "confA": 0.997,
+   "nlines": 21,
+   "ev": 2,
+   "dg": 0,
+   "ntok": 2,
+   "digest": "cvs open close entries directory temporary attic getenv key lock tmpdir comparing lstat closedir memcmp node read unlink arguments create current cvsroot data dirs emptydir expand fclose fdopen fileattr filename files filesubr fnmatch getpwuid getuid glob hash hashp header home",
+   "body": "\n\nundefined8 [MASK](long param_1)\n\n{\n  char *pcVar1;\n  int iVar2;\n  size_t sVar3;\n  \n  pcVar1 = *(char **)(param_1 + 0x28);\n  sVar3 = strlen(pcVar1);\n  pcVar1 = pcVar1 + (sVar3 - 2);\n  iVar2 = strcmp(pcVar1,\",v\");\n  if (iVar2 == 0) {\n    *pcVar1 = '\\0';\n    return 0;\n  }\n                    /* WARNING: Subroutine does not return */\n  __assert_fail(\"!strcmp (s, RCSEXT)\",\"find_names.c\",0x170,\"strip_rcsext\");\n}\n\n",
+   "key": [
+    "cvs_cvs_O1",
+    "0x41f4d1"
+   ]
+  },
+  {
+   "pkg": "cvs",
+   "reg": "FT",
+   "seen": false,
+   "truth": "rewind_buf_from_net",
+   "ret": "prep_child_for_exec",
+   "gen": "rewind_buf_from_net",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.923,
+   "confA": 0.995,
+   "nlines": 28,
+   "ev": 4,
+   "dg": 0,
+   "ntok": 4,
+   "digest": "server proxy log serve exit allowed cvs nerror response strtol template gssapi unlocked internal read stat syslog compression fatal forcing fread level puts support testing unknown updating krb5 gss name rcsinfo context setenv setgid setuid strerror user acquire concat11 credentials",
+   "body": "\n\nvoid [MASK](void)\n\n{\n  undefined8 *puVar1;\n  long lVar2;\n  undefined8 uVar3;\n  undefined8 *puVar4;\n  \n  lVar2 = DAT_004d9ee8;\n  if (DAT_004d9ee8 == 0) {\n                    /* WARNING: Subroutine does not return */\n    __assert_fail(\"proxy_log\",\"server.c\",0x2d6,\"rewind_buf_from_net\");\n  }\n  puVar1 = (undefined8 *)(DAT_004d9ed0 + (long)DAT_004d9ed8 * 8);\n  for (puVar4 = (undefined8 *)(DAT_004d9ed0 + 8); puVar4 < puVar1; puVar4 = puVar4 + 1) {\n    free((void *)*puVar4);\n  }\n  DAT_004d9ed8 = 1;\n  uVar3 = FUN_004326e0(lVar2);\n  DAT_004d9ee8 = 0;\n  FUN_0040b5b0(DAT_004d9ef0);\n  DAT_004d9ef0 = FUN_00438f70(FUN_00450570,uVar3,DAT_004d9ef0);\n  DAT_004d9edc = 1;\n  return;\n}\n\n",
+   "key": [
+    "cvs_cvs_O3",
+    "0x451180"
+   ]
+  },
+  {
+   "pkg": "mbedtls",
+   "reg": "FT",
+   "seen": false,
+   "truth": "ssl_server_hello_is_hrr",
+   "ret": "tls_construct_stoc_ems",
+   "gen": "ssl_server_hello_is_hrr",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.903,
+   "confA": 0.999,
+   "nlines": 27,
+   "ev": 5,
+   "dg": 4,
+   "ntok": 5,
+   "digest": "ssl tls13 client data input missing hello key psk parse server request extension extensions pre shared mbedtls ext found binder record certificate encrypted ciphersuite exchange received configured identity supported adding ignored list memcmp misaligned retry selected write session mode 04x",
+   "body": "\n\nundefined8 [MASK](undefined8 param_1,long param_2,undefined8 param_3)\n\n{\n  int iVar1;\n  undefined8 uVar2;\n  \n  iVar1 = FUN_00148fd1(param_2,param_3,0x22);\n  if (iVar1 == 0) {\n    iVar1 = memcmp((void *)(param_2 + 2),&DAT_001fc540,0x20);\n    if (iVar1 == 0) {\n      uVar2 = 1;\n    }\n    else {\n      uVar2 = 0;\n    }\n  }\n  else {\n    FUN_001192e0(param_1,1,\"ssl_tls13_client.c\",0x597,\"missing input data in %s\",\n                 \"ssl_server_hello_is_hrr\");\n    FUN_00127f80(param_1,0x32,0xffff8d00);\n    uVar2 = 0xffff8d00;\n  }\n  return uVar2;\n}\n\n",
+   "key": [
+    "mbedtls_ssl_client1_O0",
+    "0x4c004"
+   ]
+  },
+  {
+   "pkg": "libsodium",
+   "reg": "FT",
+   "seen": false,
+   "truth": "sodium_crit_enter",
+   "ret": "xmlIsMainThread",
+   "gen": "sodium_crit_enter",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.879,
+   "confA": 0.979,
+   "nlines": 19,
+   "ev": 3,
+   "dg": 3,
+   "ntok": 3,
+   "digest": "sodium mutex pthread unlock concat16 concat14 crit enter core lock locked pshuflw sub1510 sub1512 sub158 concat11 concat12 concat13 concat15 concat17 concat18 concat19 block strchr pshufhw const cpuid info memchr b64 bin2base64 enumeration extended feature size zext516 001117d0 abort basic codecs",
+   "body": "\n\nvoid [MASK](void)\n\n{\n  int iVar1;\n  \n  iVar1 = pthread_mutex_lock((pthread_mutex_t *)&DAT_0016f2c8);\n  if (iVar1 != 0) {\n    return;\n  }\n  if (DAT_0016f2f0 == 0) {\n    DAT_0016f2f0 = 1;\n    return;\n  }\n                    /* WARNING: Subroutine does not return */\n  __assert_fail(\"locked == 0\",\"sodium/core.c\",0x79,\"int sodium_crit_enter(void)\");\n}\n\n",
+   "key": [
+    "libsodium_generichash_clang_O3",
+    "0xa280"
+   ]
+  },
+  {
+   "pkg": "cvs",
+   "reg": "FT",
+   "seen": false,
+   "truth": "server_pathname_check",
+   "ret": "set_verbosity",
+   "gen": "server_pathname_check",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.9,
+   "confA": 0.991,
+   "nlines": 24,
+   "ev": 3,
+   "dg": 1,
+   "ntok": 3,
+   "digest": "server protocol close cvs proxy root unlocked fflush cvsroot config current isremote parsed primary fclose syslog repository exit fopen write open absolute change nerror chdir fatal fwrite message directory request strcat read attempt buf buffer can end says serve was",
+   "body": "\n\nvoid [MASK](char *param_1)\n\n{\n  int iVar1;\n  char *pcVar2;\n  \n  pcVar2 = \"(null)\";\n  if (param_1 != (char *)0x0) {\n    pcVar2 = param_1;\n  }\n  FUN_0044b806(1,\"server_pathname_check (%s)\",pcVar2);\n  if (*param_1 == '/') {\n    error(1,0,\"absolute pathnames invalid for server (specified `%s\\')\",param_1);\n  }\n  iVar1 = FUN_0044fc42(param_1);\n  if (DAT_004bfe98 < iVar1) {\n    error(0,0,\"protocol error: `%s\\' contains more leading ..\",param_1);\n    error(1,0,\"than the %d which Max-dotdot specified\",DAT_004bfe98);\n  }\n  return;\n}\n\n",
+   "key": [
+    "cvs_cvs_O1",
+    "0x44b98e"
+   ]
+  }
+ ],
+ "C_zero_evidence_both_wrong": [
+  {
+   "pkg": "icu",
+   "reg": "FT",
+   "seen": false,
+   "truth": "RBBISetTable_deleter",
+   "ret": "fts5PorterDelete",
+   "gen": "sqlite3_os_close",
+   "fR": 0.0,
+   "fA": 0.0,
+   "simR": 0.89,
+   "confA": 0.747,
+   "nlines": 12,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 4,
+   "digest": "concat44 concat71 lock memcmp u0020 u007f unlock",
+   "body": "\n\nvoid [MASK](long *param_1)\n\n{\n  if ((long *)*param_1 != (long *)0x0) {\n    (**(code **)(*(long *)*param_1 + 8))();\n  }\n  FUN_004032d2(param_1);\n  return;\n}\n\n",
+   "key": [
+    "icu_genbrk_O1",
+    "0x4080d5"
+   ]
+  },
+  {
+   "pkg": "bdb",
+   "reg": "FT",
+   "seen": false,
+   "truth": "__lv_first_offset",
+   "ret": "ossl_gost18_cke_cipher_nid",
+   "gen": "get_log_record_type",
+   "fR": 0.0,
+   "fA": 0.0,
+   "simR": 0.784,
+   "confA": 0.518,
+   "nlines": 16,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 3,
+   "digest": "log record transaction txn active bdb2547 can find information lsn txnid type than ckp last before child greater previous update checkpoint timestamp aborted ended known prepare verified action after bdb2536 bdb2549 bdb2550 bdb2551 bdb2552 bdb2554 bdb2556 bdb2558 bdb2559 bdb2560 bdb2562",
+   "body": "\n\nint [MASK](long param_1)\n\n{\n  undefined4 local_c;\n  \n  if (*(long *)(param_1 + 0xd0) == 0) {\n    local_c = 0xc;\n  }\n  else {\n    local_c = 0x30;\n  }\n  return local_c + 0x10;\n}\n\n",
+   "key": [
+    "bdb_db_printlog_O0",
+    "0x5b27ca"
+   ]
+  },
+  {
+   "pkg": "bdb",
+   "reg": "FT",
+   "seen": false,
+   "truth": "__ham_metagroup_log",
+   "ret": "PKCS12_create_ex",
+   "gen": "deflate_init",
+   "fR": 0.0,
+   "fA": 0.0,
+   "simR": 0.847,
+   "confA": 0.576,
+   "nlines": 14,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 3,
+   "digest": "bdb1023 compact handle key length zero",
+   "body": "\n\nvoid [MASK](long param_1,undefined8 param_2,undefined8 param_3,undefined4 param_4,\n                 undefined4 param_5,undefined4 param_6,undefined8 param_7,undefined4 param_8,\n                 undefined8 param_9,undefined4 param_10,undefined8 param_11,undefined4 param_12,\n                 undefined4 param_13)\n\n{\n  FUN_00444dc8(*(undefined8 *)(param_1 + 0x30),param_1,param_2,param_3,param_4,0x1d,0,0x44,\n               &DAT_00601ca0,param_5,param_6,param_7,param_8,param_9,param_10,param_11,param_12,\n               param_13);\n  return;\n}\n\n",
+   "key": [
+    "bdb_db_stat_O0",
+    "0x5bd78c"
+   ]
+  },
+  {
+   "pkg": "libsodium",
+   "reg": "FT",
+   "seen": false,
+   "truth": "crypto_stream_chacha20_xor",
+   "ret": "_ZN16real_output_file12put_filenameEPKci",
+   "gen": "unix_shm_barrier",
+   "fR": 0.0,
+   "fA": 0.0,
+   "simR": 0.945,
+   "confA": 0.452,
+   "nlines": 11,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 4,
+   "digest": "concat44 00115af0 thunk mmap",
+   "body": "\n\nvoid [MASK](void)\n\n{\n                    /* WARNING: Could not recover jumptable at 0x00119a55. Too many branches */\n                    /* WARNING: Treating indirect jump as call */\n  (**(code **)(PTR_PTR_FUN_00168118 + 0x10))();\n  return;\n}\n\n",
+   "key": [
+    "libsodium_generichash_O3",
+    "0x19a40"
+   ]
+  },
+  {
+   "pkg": "mbedtls",
+   "reg": "FT",
+   "seen": false,
+   "truth": "psa_driver_wrapper_get_key_buffer_size_from_key_data",
+   "ret": "sys_truncate64",
+   "gen": "zlib_compile_flags",
+   "fR": 0.0,
+   "fA": 0.0,
+   "simR": 0.833,
+   "confA": 0.418,
+   "nlines": 12,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 10,
+   "digest": "",
+   "body": "\n\nundefined8\n[MASK](undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 *param_4)\n\n{\n  FUN_001a8043(param_1);\n  FUN_001a80e3(param_1);\n  *param_4 = 0;\n  return 0xffffff79;\n}\n\n",
+   "key": [
+    "mbedtls_ssl_server2_O0",
+    "0xa85a1"
+   ]
+  },
+  {
+   "pkg": "mbedtls",
+   "reg": "FT",
+   "seen": false,
+   "truth": "mbedtls_des3_set3key_enc",
+   "ret": "ge_p3_dbl",
+   "gen": "uname_main",
+   "fR": 0.0,
+   "fA": 0.0,
+   "simR": 0.928,
+   "confA": 0.481,
+   "nlines": 19,
+   "ev": 0,
+   "dg": 0,
+   "ntok": 4,
+   "digest": "concat44 puts des passed putchar cbc ecb",
+   "body": "\n\nundefined8 [MASK](undefined8 param_1,undefined8 param_2)\n\n{\n  long in_FS_OFFSET;\n  undefined auStack_198 [392];\n  long local_10;\n  \n  local_10 = *(long *)(in_FS_OFFSET + 0x28);\n  FUN_0015bb40(param_1,auStack_198,param_2);\n  FUN_00175f30(auStack_198,0x180);\n  if (local_10 == *(long *)(in_FS_OFFSET + 0x28)) {\n    return 0;\n  }\n                    /* WARNING: Subroutine does not return */\n  __stack_chk_fail();\n}\n\n",
+   "key": [
+    "mbedtls_ssl_client1_O3",
+    "0x5bf90"
+   ]
+  }
+ ],
+ "D_gen_right_digest_prefix": [
+  {
+   "pkg": "recutils",
+   "reg": "FT",
+   "seen": false,
+   "truth": "csv_init",
+   "ret": "coproc_init",
+   "gen": "csv_init",
+   "fR": 0.5,
+   "fA": 1.0,
+   "simR": 0.884,
+   "confA": 0.368,
+   "nlines": 27,
+   "ev": 0,
+   "dg": 1,
+   "ntok": 2,
+   "digest": "dcgettext rec rpl fputc new concat44 fclose buf check data destroy fputs getpass integrity password puts regfree strtol use write writer yes aborted again answer chmod close compiling concat71 convert create csv deliminator detailed don due euidaccess failures fdopen fopen",
+   "body": "\n\nundefined8 [MASK](undefined8 *param_1,undefined param_2)\n\n{\n  undefined *puVar1;\n  \n  if (param_1 != (undefined8 *)0x0) {\n    param_1[2] = 0;\n    *(undefined2 *)((long)param_1 + 0x2d) = 0x2c22;\n    puVar1 = PTR_realloc_00413fd8;\n    *param_1 = 0;\n    param_1[10] = puVar1;\n    puVar1 = PTR_free_00413fa8;\n    param_1[1] = 0;\n    param_1[0xb] = puVar1;\n    *(undefined4 *)(param_1 + 5) = 0;\n    *(undefined *)((long)param_1 + 0x2c) = param_2;\n    param_1[8] = 0x80;\n    param_1[9] = 0;\n    *(undefined (*) [16])(param_1 + 3) = (undefined  [16])0x0;\n    *(undefined (*) [16])(param_1 + 6) = (undefined  [16])0x0;\n    return 0;\n  }\n  return 0xffffffff;\n}\n\n",
+   "key": [
+    "recutils_rec2csv_O3",
+    "0x40d110"
+   ]
+  },
+  {
+   "pkg": "jansson",
+   "reg": "FT",
+   "seen": false,
+   "truth": "json_object_size",
+   "ret": "OSSL_ENCODER_INSTANCE_get_encoder_ctx",
+   "gen": "json_object_size",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.805,
+   "confA": 0.699,
+   "nlines": 11,
+   "ev": 0,
+   "dg": 2,
+   "ntok": 3,
+   "digest": "test simple json string did value argument boolean nocheck set incorrectly integer non real refcounting setn works barr count foo length reference stringn unexpected allocate automatic check decrement exit memcmp num number objects txt type typeof utf",
+   "body": "\n\nundefined8 [MASK](int *param_1)\n\n{\n  if ((param_1 != (int *)0x0) && (*param_1 == 0)) {\n    return *(undefined8 *)(param_1 + 4);\n  }\n  return 0;\n}\n\n",
+   "key": [
+    "jansson_simple_O3",
+    "0x2830"
+   ]
+  },
+  {
+   "pkg": "mutt",
+   "reg": "FT",
+   "seen": false,
+   "truth": "free_query",
+   "ret": "free_lines",
+   "gen": "free_query",
+   "fR": 0.5,
+   "fA": 1.0,
+   "simR": 0.883,
+   "confA": 0.48,
+   "nlines": 20,
+   "ev": 0,
+   "dg": 1,
+   "ntok": 2,
+   "digest": "gettext query snprintf mutt messages postponed command defined regexec strchr access noconv stat fcc fseeko memccpy new references response waiting",
+   "body": "\n\nvoid [MASK](long *param_1)\n\n{\n  long local_10;\n  \n  if (param_1 != (long *)0x0) {\n    while (*param_1 != 0) {\n      local_10 = *param_1;\n      *param_1 = *(long *)(*param_1 + 0x20);\n      FUN_0047b3fa(local_10 + 8);\n      FUN_00499459(local_10 + 0x10);\n      FUN_00499459(local_10 + 0x18);\n      FUN_00499459(&local_10);\n    }\n  }\n  return;\n}\n\n",
+   "key": [
+    "mutt_mutt_O0",
+    "0x472439"
+   ]
+  },
+  {
+   "pkg": "jansson",
+   "reg": "FT",
+   "seen": false,
+   "truth": "json_object_size",
+   "ret": "X509_OBJECT_get0_X509",
+   "gen": "json_object_size",
+   "fR": 0.29,
+   "fA": 1.0,
+   "simR": 0.854,
+   "confA": 0.685,
+   "nlines": 16,
+   "ev": 0,
+   "dg": 2,
+   "ntok": 3,
+   "digest": "test exit simple json string value length set nocheck lock unlock did argument incorrectly refcounting works boolean integer non number real setn barr count foo memcmp reference stringn unexpected allocate array automatic check decrement num object objects snprintf txt type",
+   "body": "\n\nundefined8 [MASK](int *param_1)\n\n{\n  undefined8 uVar1;\n  \n  if ((param_1 == (int *)0x0) || (*param_1 != 0)) {\n    uVar1 = 0;\n  }\n  else {\n    uVar1 = *(undefined8 *)(param_1 + 4);\n  }\n  return uVar1;\n}\n\n",
+   "key": [
+    "jansson_simple_O0",
+    "0x3c58"
+   ]
+  },
+  {
+   "pkg": "jansson",
+   "reg": "FT",
+   "seen": false,
+   "truth": "json_object_size",
+   "ret": "OSSL_ENCODER_INSTANCE_get_encoder_ctx",
+   "gen": "json_object_size",
+   "fR": 0.0,
+   "fA": 1.0,
+   "simR": 0.807,
+   "confA": 0.683,
+   "nlines": 11,
+   "ev": 0,
+   "dg": 2,
+   "ntok": 3,
+   "digest": "lock unlock test simple json string did value argument boolean nocheck set incorrectly integer non real refcounting setn works barr count foo length reference stringn unexpected allocate automatic check decrement exit memcmp num number objects txt type typeof utf",
+   "body": "\n\nundefined8 [MASK](int *param_1)\n\n{\n  if ((param_1 != (int *)0x0) && (*param_1 == 0)) {\n    return *(undefined8 *)(param_1 + 4);\n  }\n  return 0;\n}\n\n",
+   "key": [
+    "jansson_simple_O2",
+    "0x2780"
+   ]
+  }
+ ]
+}

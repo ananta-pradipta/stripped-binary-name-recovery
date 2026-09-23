@@ -1,0 +1,732 @@
+{
+ "cvs_cvs_O0": {
+  "n": 1216,
+  "top20_correct": [
+   {
+    "truth": "make_3way_diff",
+    "pred": "make_3way_diff",
+    "head": "R",
+    "q": 1.145,
+    "seen": true,
+    "digest": "/* module context: diff close output directory format open files input option read stat are ferror fstat internal memcmp more too type write file1 file2 diff3 diffutils fclose fopen gnu only operand r"
+   },
+   {
+    "truth": "proceed_next_node",
+    "pred": "proceed_next_node",
+    "head": "R",
+    "q": 1.084,
+    "seen": true,
+    "digest": "/* module context: regexec reg num regs check copy err espace index matching valid allocated compile fail fastmap fixed nregs pmatch pop search start stub */\n\nlong [MASK](long param_1,undefined8 param"
+   },
+   {
+    "truth": "shift_boundaries",
+    "pred": "shift_boundaries",
+    "head": "R",
+    "q": 1.077,
+    "seen": true,
+    "digest": "/* module context: read longjmp memcmp input feof ferror getc tolower differ files shrank abort binary end memchr newline */\n\nvoid [MASK](long param_1)\n\n{\n  int iVar1;\n  int iVar2;\n  long lVar3;\n  lon"
+   },
+   {
+    "truth": "using_to_diff3_block",
+    "pred": "using_to_diff3_block",
+    "head": "R",
+    "q": 1.058,
+    "seen": true,
+    "digest": "/* module context: diff format close output directory internal open files input option read stat are ferror fstat memcmp more too type write file1 file2 diff3 diffutils fclose fopen gnu only operand r"
+   },
+   {
+    "truth": "check_subexp_matching_top",
+    "pred": "check_subexp_matching_top",
+    "head": "R",
+    "q": 1.044,
+    "seen": true,
+    "digest": "/* module context: memcmp */\n\nint [MASK](long param_1,long param_2,undefined8 param_3)\n\n{\n  long *plVar1;\n  long lVar2;\n  int iVar3;\n  ulong local_10;\n  \n  plVar1 = *(long **)(param_1 + 0x98);\n  local"
+   },
+   {
+    "truth": "output_diff3_merge",
+    "pred": "output_diff3_merge",
+    "head": "R",
+    "q": 1.034,
+    "seen": true,
+    "digest": "/* module context: diff format longjmp internal type close open read abort are change chars end files fit fstat horizon incomplete incorrect into large last leading lines memcmp memory newline output "
+   },
+   {
+    "truth": "create_ci_newstate",
+    "pred": "create_ci_newstate",
+    "head": "R",
+    "q": 1.032,
+    "seen": true,
+    "digest": "/* module context: btowc tolower wcrtomb block towlower abort langinfo mbrtowc utf */\n\nvoid * [MASK](long *param_1,long param_2,undefined8 param_3)\n\n{\n  char cVar1;\n  int iVar2;\n  long lVar3;\n  undefi"
+   },
+   {
+    "truth": "md5_process_block",
+    "pred": "md5_process_block",
+    "head": "R",
+    "q": 1.025,
+    "seen": true,
+    "digest": "/* module context: mempcpy abort stat unlocked closedir block concat44 feof ferror fnmatch fread gettext iswprint mbrtowc mbsinit memcmp memory mmap munmap opendir readdir strchr strcoll unmap */\n\n/* "
+   }
+  ],
+  "top20_wrong": [
+   {
+    "truth": "protocol_memory_error",
+    "pred": "xalloc_die",
+    "head": "G",
+    "q": 0.92,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "_tr_flush_block",
+    "pred": "tr_flush_block",
+    "head": "G",
+    "q": 0.853,
+    "seen": true,
+    "f": 1.0
+   },
+   {
+    "truth": "RCS_getexpand",
+    "pred": "rcs_getexpand",
+    "head": "G",
+    "q": 0.835,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "RCS_setexpand",
+    "pred": "rcs_setexpand",
+    "head": "G",
+    "q": 0.807,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "Lock_Cleanup",
+    "pred": "lock_cleanup",
+    "head": "G",
+    "q": 0.803,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "Simple_Lock_Cleanup",
+    "pred": "simple_lock_cleanup",
+    "head": "G",
+    "q": 0.794,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "readSizeT",
+    "pred": "read_size_t",
+    "head": "G",
+    "q": 0.793,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "addfile",
+    "pred": "start_recursion",
+    "head": "G",
+    "q": 0.775,
+    "seen": false,
+    "f": 0.0
+   }
+  ],
+  "bottom_examples": [
+   {
+    "truth": "putrcsfield_proc",
+    "pred": "cslog_write",
+    "head": "G",
+    "q": 0.021,
+    "f": 0.0
+   },
+   {
+    "truth": "find_ignproc",
+    "pred": "addrev",
+    "head": "G",
+    "q": 0.02,
+    "f": 0.0
+   },
+   {
+    "truth": "write_letter",
+    "pred": "write_oldname",
+    "head": "G",
+    "q": 0.016,
+    "f": 0.5
+   },
+   {
+    "truth": "update_filesdone_proc",
+    "pred": "rmf",
+    "head": "G",
+    "q": 0.013,
+    "f": 0.0
+   },
+   {
+    "truth": "buf_append_char",
+    "pred": "postoa",
+    "head": "G",
+    "q": 0.008,
+    "f": 0.0
+   }
+  ]
+ },
+ "cvs_cvs_O2": {
+  "n": 969,
+  "top20_correct": [
+   {
+    "truth": "copy_stringlist",
+    "pred": "copy_stringlist",
+    "head": "R",
+    "q": 1.031,
+    "seen": true,
+    "digest": "/* module context: read diff close format open files option fstat longjmp memcmp too output ferror version help input puts write differ diffutils directory fflush gnu more operand standard usage end f"
+   },
+   {
+    "truth": "re_acquire_state",
+    "pred": "re_acquire_state",
+    "head": "R",
+    "q": 1.024,
+    "seen": true,
+    "digest": "/* module context: alpha lower upper wctype alnum blank cntrl digit graph memmove print punct space sub168 xdigit zext816 */\n\nulong * [MASK](undefined4 *param_1,long *param_2,long param_3)\n\n{\n  long *"
+   },
+   {
+    "truth": "check_halt_state_context",
+    "pred": "check_halt_state_context",
+    "head": "R",
+    "q": 1.012,
+    "seen": true,
+    "digest": "/* module context: iswalnum mbrtowc wcrtomb index memmove reg towlower valid wcscoll btowc fail iswctype num pop regexec sub168 zext816 */\n\nlong [MASK](long param_1,long param_2,undefined8 param_3)\n\n{"
+   },
+   {
+    "truth": "sub_epsilon_src_nodes",
+    "pred": "sub_epsilon_src_nodes",
+    "head": "R",
+    "q": 0.995,
+    "seen": true,
+    "digest": "/* module context: iswalnum mbrtowc wcrtomb index memmove reg towlower valid wcscoll btowc fail iswctype num pop regexec sub168 zext816 */\n\nint [MASK](long *param_1,long param_2,long param_3,undefined"
+   },
+   {
+    "truth": "sift_states_backward",
+    "pred": "sift_states_backward",
+    "head": "R",
+    "q": 0.995,
+    "seen": true,
+    "digest": "/* module context: reg zext816 regcomp regexec concat44 btowc sub168 memcmp regs index link nfa node nodes valid block wcscoll check concat71 copy epsilon err espace matching abort allocated alnum bra"
+   },
+   {
+    "truth": "send_tree",
+    "pred": "send_tree",
+    "head": "R",
+    "q": 0.979,
+    "seen": true,
+    "digest": "/* module context: concat44 concat71 sub41 adler32 crc32 fcntl */\n\nvoid [MASK](long param_1,long param_2,int param_3)\n\n{\n  ushort uVar1;\n  ushort uVar2;\n  uint uVar3;\n  byte bVar4;\n  int iVar5;\n  usho"
+   },
+   {
+    "truth": "build_tree",
+    "pred": "build_tree",
+    "head": "R",
+    "q": 0.976,
+    "seen": true,
+    "digest": "/* module context: concat44 concat71 sub41 adler32 crc32 fcntl */\n\nvoid [MASK](long param_1,undefined8 *param_2)\n\n{\n  ushort *puVar1;\n  short *psVar2;\n  byte bVar3;\n  byte bVar4;\n  ushort uVar5;\n  ush"
+   },
+   {
+    "truth": "re_node_set_init_union",
+    "pred": "re_node_set_init_union",
+    "head": "R",
+    "q": 0.975,
+    "seen": true,
+    "digest": "/* module context: mbrtowc iswalnum wcrtomb index iswlower memmove reg towlower towupper valid wcscoll btowc fail iswctype mbsinit num pop regexec sub168 zext816 */\n\nundefined8 [MASK](undefined (*para"
+   }
+  ],
+  "top20_wrong": [
+   {
+    "truth": "hashp",
+    "pred": "hash_string",
+    "head": "R",
+    "q": 1.005,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "mbuiter_multi_next.part.0",
+    "pred": "mbuiter_multi_next",
+    "head": "G",
+    "q": 0.932,
+    "seen": true,
+    "f": 0.75
+   },
+   {
+    "truth": "Parse_Info",
+    "pred": "parse_info",
+    "head": "G",
+    "q": 0.924,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "rpl_strcasecmp",
+    "pred": "mbscasecmp",
+    "head": "R",
+    "q": 0.904,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "internal_lock.part.0",
+    "pred": "internal_lock_part_0",
+    "head": "G",
+    "q": 0.841,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "isProxyServer.part.0",
+    "pred": "is_proxy_server_part_0",
+    "head": "G",
+    "q": 0.834,
+    "seen": false,
+    "f": 1.0
+   },
+   {
+    "truth": "watch_modify_watchers",
+    "pred": "modify_watchers",
+    "head": "G",
+    "q": 0.833,
+    "seen": false,
+    "f": 0.8
+   },
+   {
+    "truth": "truncate_revnum_in_place.part.0",
+    "pred": "truncate_revnum_in_place_part_0",
+    "head": "G",
+    "q": 0.826,
+    "seen": false,
+    "f": 1.0
+   }
+  ],
+  "bottom_examples": [
+   {
+    "truth": "editors",
+    "pred": "getopt_internal",
+    "head": "G",
+    "q": 0.018,
+    "f": 0.0
+   },
+   {
+    "truth": "check_numeric",
+    "pred": "checknum",
+    "head": "G",
+    "q": 0.017,
+    "f": 0.0
+   },
+   {
+    "truth": "freercsnode",
+    "pred": "free_revinfo",
+    "head": "G",
+    "q": 0.016,
+    "f": 0.0
+   },
+   {
+    "truth": "send_options",
+    "pred": "free_argv",
+    "head": "G",
+    "q": 0.008,
+    "f": 0.0
+   },
+   {
+    "truth": "groups_letter_value",
+    "pred": "getnum",
+    "head": "G",
+    "q": -0.005,
+    "f": 0.0
+   }
+  ]
+ },
+ "gettext_msgfmt_clang_O1": {
+  "n": 523,
+  "top20_correct": [
+   {
+    "truth": "gl_linked_nx_add_at",
+    "pred": "gl_linked_nx_add_at",
+    "head": "R",
+    "q": 1.077,
+    "seen": true,
+    "digest": "/* module context: abort block */\n\nlong * [MASK](long param_1,ulong param_2,long param_3)\n\n{\n  ulong uVar1;\n  undefined8 *puVar2;\n  long *plVar3;\n  long lVar4;\n  long *plVar5;\n  long lVar6;\n  \n  uVar1"
+   },
+   {
+    "truth": "find_in_given_path",
+    "pred": "find_in_given_path",
+    "head": "R",
+    "q": 1.076,
+    "seen": true,
+    "digest": "/* module context: abort pthread mutex sigaction lock sigprocmask unlock setspecific getspecific block sigemptyset posix spawn actions spawnattr concat44 destroy addopen dev fclose fflush create init "
+   },
+   {
+    "truth": "cleanup_action",
+    "pred": "cleanup_action",
+    "head": "R",
+    "q": 1.066,
+    "seen": true,
+    "digest": "/* module context: abort mutex pthread concat44 concat71 lock remove temporary unlink unlock buckets classpath bucket close entries length max stpcpy strdup unsetenv used */\n\nvoid [MASK](void)\n\n{\n  un"
+   },
+   {
+    "truth": "mem_cd_iconv",
+    "pred": "mem_cd_iconv",
+    "head": "R",
+    "q": 1.064,
+    "seen": true,
+    "digest": "/* module context: close abort iconv fcntl block strchr bcmp iswprint mbsinit memchr open pipe pipe2 setlocale strdup write */\n\nundefined8 [MASK](char *param_1,char *param_2,iconv_t param_3,long *para"
+   },
+   {
+    "truth": "gl_linked_nx_add_after",
+    "pred": "gl_linked_nx_add_after",
+    "head": "R",
+    "q": 1.059,
+    "seen": true,
+    "digest": "/* module context: abort block */\n\nlong * [MASK](long param_1,long *param_2,long param_3)\n\n{\n  long lVar1;\n  long *plVar2;\n  \n  plVar2 = (long *)malloc(0x18);\n  if (plVar2 == (long *)0x0) {\n    plVar2"
+   },
+   {
+    "truth": "triple_compare_ino_str",
+    "pred": "triple_compare_ino_str",
+    "head": "R",
+    "q": 1.035,
+    "seen": true,
+    "digest": "/* module context: abort unlink concat44 mutex pthread concat71 lock remove temporary unlock buckets rmdir bucket close entries length max stpcpy strdup used */\n\nundefined8 [MASK](undefined8 *param_1,"
+   },
+   {
+    "truth": "str_cd_iconv",
+    "pred": "str_cd_iconv",
+    "head": "R",
+    "q": 1.024,
+    "seen": true,
+    "digest": "/* module context: abort close iconv fcntl block strchr bcmp iswprint mbsinit memchr open setlocale strdup write */\n\nchar * [MASK](char *param_1,iconv_t param_2)\n\n{\n  char **__size;\n  char *pcVar1;\n  "
+   },
+   {
+    "truth": "hash_resize_after_add",
+    "pred": "hash_resize_after_add",
+    "head": "R",
+    "q": 1.019,
+    "seen": true,
+    "digest": "/* module context: abort concat71 java class version source target compile conftest javac stat fdopen unlink argument bin close options xlint builtin fclose open puts subprocess pthread home rwlockatt"
+   }
+  ],
+  "top20_wrong": [
+   {
+    "truth": "block_fatal_signals",
+    "pred": "unblock_fatal_signals",
+    "head": "R",
+    "q": 0.843,
+    "seen": true,
+    "f": 0.67
+   },
+   {
+    "truth": "do_init_fatal_signal_set",
+    "pred": "get_fatal_signal_set",
+    "head": "R",
+    "q": 0.836,
+    "seen": true,
+    "f": 0.67
+   },
+   {
+    "truth": "rpl_obstack_newchunk",
+    "pred": "obstack_newchunk",
+    "head": "G",
+    "q": 0.823,
+    "seen": true,
+    "f": 0.8
+   },
+   {
+    "truth": "po_gram_parse",
+    "pred": "yyparse",
+    "head": "G",
+    "q": 0.716,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "is_envjavac_usable",
+    "pred": "compile_java_class",
+    "head": "G",
+    "q": 0.702,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "po_gram_error_at_line",
+    "pred": "xasprintf",
+    "head": "G",
+    "q": 0.69,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "setlocale_null_r_unlocked",
+    "pred": "setlocale_null_r",
+    "head": "R",
+    "q": 0.664,
+    "seen": true,
+    "f": 0.86
+   },
+   {
+    "truth": "hash_iterate_modify",
+    "pred": "gl_tree_iterator_next",
+    "head": "G",
+    "q": 0.643,
+    "seen": false,
+    "f": 0.0
+   }
+  ],
+  "bottom_examples": [
+   {
+    "truth": "message_comment_filepos",
+    "pred": "output_line",
+    "head": "G",
+    "q": 0.027,
+    "f": 0.0
+   },
+   {
+    "truth": "default_comment_filepos",
+    "pred": "addname",
+    "head": "G",
+    "q": 0.026,
+    "f": 0.0
+   },
+   {
+    "truth": "plural_expression_histogram",
+    "pred": "get_max_size",
+    "head": "G",
+    "q": 0.025,
+    "f": 0.0
+   },
+   {
+    "truth": "special_comment_add",
+    "pred": "add_prop",
+    "head": "G",
+    "q": 0.022,
+    "f": 0.4
+   },
+   {
+    "truth": "is_expression_boolean",
+    "pred": "is_null_form",
+    "head": "G",
+    "q": 0.02,
+    "f": 0.33
+   }
+  ]
+ },
+ "lighttpd_lighttpd_O2": {
+  "n": 385,
+  "top20_correct": [],
+  "top20_wrong": [
+   {
+    "truth": "li_tohex_uc.cold",
+    "pred": "s_len_part_0",
+    "head": "G",
+    "q": 0.851,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "li_tohex_lc.cold",
+    "pred": "s_len_part_0",
+    "head": "G",
+    "q": 0.849,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "mod_redirect_set_defaults",
+    "pred": "mod_redirect",
+    "head": "G",
+    "q": 0.821,
+    "seen": false,
+    "f": 0.67
+   },
+   {
+    "truth": "mod_alias_set_defaults",
+    "pred": "mod_alias",
+    "head": "G",
+    "q": 0.8,
+    "seen": false,
+    "f": 0.67
+   },
+   {
+    "truth": "fdevent_load_file_bytes.cold",
+    "pred": "fdevent_load_file_bytes",
+    "head": "G",
+    "q": 0.797,
+    "seen": false,
+    "f": 0.89
+   },
+   {
+    "truth": "mod_evhost_set_defaults",
+    "pred": "mod_evhost",
+    "head": "G",
+    "q": 0.771,
+    "seen": false,
+    "f": 0.67
+   },
+   {
+    "truth": "network_server_handle_fdevent.cold",
+    "pred": "accept",
+    "head": "G",
+    "q": 0.768,
+    "seen": false,
+    "f": 0.0
+   },
+   {
+    "truth": "li_base64_enc.cold",
+    "pred": "in_length_part_0",
+    "head": "G",
+    "q": 0.764,
+    "seen": false,
+    "f": 0.0
+   }
+  ],
+  "bottom_examples": [
+   {
+    "truth": "fdevent_poll_event_del",
+    "pred": "chunk_queue_remove",
+    "head": "G",
+    "q": 0.023,
+    "f": 0.0
+   },
+   {
+    "truth": "Encode",
+    "pred": "write_nuls_to_buf",
+    "head": "G",
+    "q": 0.021,
+    "f": 0.0
+   },
+   {
+    "truth": "gw_response_headers_upgrade",
+    "pred": "http_log_close",
+    "head": "G",
+    "q": 0.021,
+    "f": 0.0
+   },
+   {
+    "truth": "mod_rewrite_physical",
+    "pred": "config_set_path",
+    "head": "G",
+    "q": 0.005,
+    "f": 0.0
+   },
+   {
+    "truth": "connection_write_cq",
+    "pred": "curl_plugin_get_info",
+    "head": "G",
+    "q": -0.012,
+    "f": 0.0
+   }
+  ]
+ },
+ "nginx118_nginx118_O2": {
+  "n": 397,
+  "top20_correct": [
+   {
+    "truth": "ngx_resolver_send_tcp_query",
+    "pred": "ngx_resolver_send_tcp_query",
+    "head": "R",
+    "q": 1.173,
+    "seen": true,
+    "digest": "/* module context: ngx core log rbtree delete close alloc insert name open response connection open64 openat64 empty lock strlow unlock write dns unexpected type openat query record connect post rando"
+   },
+   {
+    "truth": "ngx_http_split_clients",
+    "pred": "ngx_http_split_clients",
+    "head": "R",
+    "q": 1.17,
+    "seen": true,
+    "digest": "/* module context: ngx log http conf value complex pcalloc add parse hash palloc variable array core insert compile name pool create delete init radix128tree radix32tree rbtree duplicate find radix tr"
+   },
+   {
+    "truth": "ngx_http_block",
+    "pred": "ngx_http_block",
+    "head": "R",
+    "q": 1.169,
+    "seen": true,
+    "digest": "/* module context: ngx log core conf array palloc push epoll ctl create pcalloc add cmp filename wait eventfd hash rbtree name server time update delete http insert library parse pcre queue regex requ"
+   },
+   {
+    "truth": "ngx_conf_split_clients_block",
+    "pred": "ngx_conf_split_clients_block",
+    "head": "R",
+    "q": 1.169,
+    "seen": true,
+    "digest": "/* module context: ngx log conf http value array hash pcalloc add parse palloc variable complex pool create push init insert radix128tree radix32tree core duplicate find radix tree wildcard map compil"
+   },
+   {
+    "truth": "ngx_http_userid_domain",
+    "pred": "ngx_http_userid_domain",
+    "head": "R",
+    "q": 1.166,
+    "seen": true,
+    "digest": "/* module context: ngx push http list pcalloc log value array time alloc chain charset core link between complex map palloc charsets create parse variable decode cookie conf get pnalloc base64 paramet"
+   },
+   {
+    "truth": "ngx_http_upstream_status_variable",
+    "pred": "ngx_http_upstream_status_variable",
+    "head": "R",
+    "q": 1.15,
+    "seen": true,
+    "digest": "/* module context: ngx push http array upstream connection list palloc hash parse atoi event finalize find request cache client log max handle header pipe pnalloc sending timed unknown variable strlca"
+   },
+   {
+    "truth": "ngx_resolver_cleanup_tree.isra.0",
+    "pred": "ngx_resolver_cleanup_tree.isra.0",
+    "head": "R",
+    "q": 1.147,
+    "seen": true,
+    "digest": "/* module context: ngx log core rbtree alloc delete insert close name connection lock unlock response connect ioctl socket fionbio get nonblocking number strlow write dns unexpected type query record "
+   },
+   {
+    "truth": "ngx_http_auth_basic_set_realm",
+    "pred": "ngx_http_auth_basic_set_realm",
+    "head": "R",
+    "q": 1.146,
+    "seen": true,
+    "digest": "/* module context: ngx http log core array push value complex zone conf key add compile duplicate pcalloc read user alloc limit request slab atoi connections finalize memory must password pnalloc run "
+   }
+  ],
+  "top20_wrong": [],
+  "bottom_examples": [
+   {
+    "truth": "ngx_http_process_header_line",
+    "pred": "ngx_http_core_set_variable",
+    "head": "G",
+    "q": 0.091,
+    "f": 0.4
+   },
+   {
+    "truth": "ngx_http_proxy_rewrite_cookie_value",
+    "pred": "ngx_http_proxy_rewrite_rewrite",
+    "head": "G",
+    "q": 0.086,
+    "f": 0.73
+   },
+   {
+    "truth": "ngx_http_upstream_process_set_cookie",
+    "pred": "ngx_http_upstream_cache_add",
+    "head": "G",
+    "q": 0.084,
+    "f": 0.55
+   },
+   {
+    "truth": "ngx_http_proxy_non_buffered_copy_filter",
+    "pred": "ngx_http_upstream_copy_filter",
+    "head": "G",
+    "q": 0.083,
+    "f": 0.67
+   },
+   {
+    "truth": "ngx_http_upstream_process_last_modified",
+    "pred": "ngx_http_set_expires",
+    "head": "G",
+    "q": 0.061,
+    "f": 0.4
+   }
+  ]
+ }
+}

@@ -4883,3 +4883,13 @@ FT 0.2074 NCT 0.8197). Paired 9 pkgs: GCC 0.4318 (R 0.380 A 0.357, macro 0.4615)
 (gcc→clang routed): angie 0.887→0.864, dash 0.402→0.283, expat 0.150→0.104, gettext 0.176→0.256 (clang 5,598 fns vs 1,113),
 libsodium 0.123→0.122, nginx118 0.947→0.891 (R 0.953→0.861, A 0.771→0.767), psmisc 0.416→0.470, recutils 0.347→0.307,
 tengine 0.706→0.877. Paper RQ6 updated (paper-repo fse27). Supersedes T7 (old C1∪A4 system) for the FSE paper.
+**Case-study jobs for the FSE paper (1316960 pick_examples; 1317448/1317481 case_study.py, adopted MLP system + abstention
+regressor fit on val):** global coverage check F1@10 0.898 / @20 0.722 / @50 0.388 / @100 0.237 (matches 1219977 within 0.006).
+Per-binary (results/dualhead_v2/case_study_per_binary.json): cvs_cvs_O0 FT n=1,216 F1 0.385 EM 26.4% R-rate 12% seen 27% |
+F1@10 0.992 EM@10 94.3% | @20 0.971/87.2% | @50 0.657/51.0%; lighttpd_lighttpd_O2 FT n=385 F1 0.169 EM 0 seen 1% | F1@10 0.259;
+nginx118_nginx118_O2 NCT n=397 F1 0.950 EM 85.9% R-rate 86% seen 99% | top half perfect. Examples
+(case_study_examples.json): cvs generation composes novel CVS-internal names rcs_getexpand/rcs_setexpand/lock_cleanup/
+simple_lock_cleanup/read_size_t/parse_info (F1 1.0, EM miss only by case); lighttpd digest yields module prefixes
+mod_redirect/mod_alias/mod_evhost. Running-example fns: jansson_simple_O3 0x2830 json_object_size (G right, R OSSL_*),
+tar2_tar_O0 0x44c025 tm_year_str (R right, G time_zone_str), mbedtls_ssl_client1_O3 0x5bf90 (both wrong), cvs_cvs_O1 0x41f4d1
+strip_rcsext (name in __assert_fail string). Paper §7 Case Study rewritten around these (paper-repo fse27).
