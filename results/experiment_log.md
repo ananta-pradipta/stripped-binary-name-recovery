@@ -4866,3 +4866,14 @@ CONCLUSION: scorer + key set reproduce the paper to ±0.001, so our retrain's �
 feature extraction (Ghidra 11.3.1 + CLAP + PalmTree on rebuilt bins; 74 test fns w/o CLAP), not to training or scoring.
 For the paper: use THEIR precomputed C+P / C+P+D logs as the "no-DEXTER" reference rows (exact, same keys); mention our retrain
 only as a reproducibility footnote. Local: results/punstrip/blens_paper_ablation_logs_score_report.json.
+
+## 2026-09-23 — FSE 2027 paper draft v0 + per-package table for the adopted single-backbone system (job 1313086)
+User request (Discord 10:12 ET): draft the FSE version of the paper. Written fresh as paper/fse/paper_fse.tex (acmsmall review
+template, acmart v2.21 generated from source; 19 pp incl. refs+appendix, body ends p16), mirrored to ~/cs785-paper-repo/fse on
+branch fse27 (local commits only). Per-package/strata scorer `dh2/per_pkg_single_backbone.py` (MLP router recipe of
+routed_r_breakdown.py; a100_20g slice, job 1313086 rc=1 only in the final print — JSON written): adopted system on test
+n=268,136: **micro 0.2367 / macro 0.4721 / EM 10.7% / R_rate 12.5% | FT 0.1454 NCT 0.6930 | seen 0.8590 (EM 77.5%) novel-known
+0.2008 novel-OOV 0.1195 novel-all 0.1479 | oracle 0.2551/0.5051**; heads R 0.1382 / A 0.2125. Routed ≥ better head within 0.01
+in 38/50 pkgs; > R in 36, > A in 31. Largest: bdb FT 0.171, icu 0.057, mbedtls 0.148, fossil NCT 0.430, nginx118 0.924, angie
+0.876. Files: dh2/results/c_lmemb_knn/per_pkg_single_backbone.json (local results/dualhead_v2/). Bibliography check: DBLP API
+rate-limited (all 40 queries 429) → Crossref check running.
