@@ -4913,3 +4913,10 @@ check prints 7,873 for shard 2), resubmitted as **1318037[0-2]** (gpu:a100:1 80 
 novel-known/novel-OOV strata + case-sensitive canonical EM):** SymGen seen 0.2654/EM 6.9% | novel-known 0.1677/2.3% |
 novel-OOV 0.1061/2.3% | all EM 2.9% (was 3.4% under F1==1 EM); BLens 0.3821/9.8% | 0.0190/0.0% | 0.0098/0.0% | all EM 1.2%;
 A4dm 0.6639/38.8% | 0.2012/1.8% | 0.1192/0.8%. results/score_symgen_full_strata_cs.json (local copy results/dualhead_v2/).
+**Punstrip strata (job 1318248, punstrip/scripts/punstrip_strata.py; strata relative to Punstrip-train names, 22,926 keys,
+our sub-token F1, case-sensitive canonical EM; baselines from published canonical outputs):** seen n=7,799 (34%): R 0.761/70.0%,
+G 0.665/25.1%, routed 0.764/44.2%, BLens 0.775/69.0%, XFL 0.519/39.8%, SymLM 0.234/7.0%, AsmDep 0.374/30.9%; novel-known
+n=7,860: R 0.102/0, G 0.326/9.2%, routed 0.323/9.2%, BLens 0.229/2.6%, XFL 0.086/0.2%, SymLM 0.056/1.0%, AsmDep 0.044/0.2%;
+novel-OOV n=7,267: R 0.053/0, G 0.241/9.1%, routed 0.241/9.1%, BLens 0.164/2.2%, XFL 0.054/0.8%, SymLM 0.043/0.6%, AsmDep
+0.034/0.2%; all: routed 0.447/21.1%, R 0.311/23.8%, G 0.414/14.6%, BLens 0.394/25.1%. Two-head pattern replicates on Punstrip;
+router under-routes to retrieval there (13%) → seen EM 44% vs R 70%. Added as FSE Table (RQ5).
