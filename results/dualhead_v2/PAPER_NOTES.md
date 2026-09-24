@@ -75,7 +75,7 @@ contamination, not composition. Heads complementary (oracle +34%). A4 defect: C+
 - Dual-head narrative measured cross-system (P4 interim) and now within our system (T3d): retrieval
   owns seen/NCT, generation owns novel/FT, no system has both; router captures ~92% of 2-head oracle.
 - "votes" tokenizer naming: consider renaming in paper (frequency-voting ≠ Epitome's multi-model
-  voting) — old CLAUDE.md note.
+  voting) — old project note.
 
 ## Why CodeT5p-220m as the generation head (2026-09-02, for Design/Discussion section)
 Justification ladder (strongest first):
