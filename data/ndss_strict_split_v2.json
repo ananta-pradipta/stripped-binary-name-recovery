@@ -1,5 +1,5 @@
 {
- "policy": "v2 2026-08-18: v1 (Aug 3) carried by id; GNU siblings of train pkgs + wulver diffutils + openssl -> train; fresh pkgs (bdb mutt fossil cvs lighttpd tinycc tig zstd) + nginx-family (nginx114/126 openresty) + xproj candidates (sbase...) -> excluded reserve; new bins of known pkgs follow their package (xproject-pkg newcomers -> excluded, benchmark stays frozen 7-pkg); clang/ftdomains in separate pools. Final binary-level split pending tok_hash dedup + leakage table from match_index_v2.",
+ "policy": "v2 2026-08-18: v1 (Aug 3) carried by id; GNU siblings of train pkgs + HPC diffutils + openssl -> train; fresh pkgs (bdb mutt fossil cvs lighttpd tinycc tig zstd) + nginx-family (nginx114/126 openresty) + xproj candidates (sbase...) -> excluded reserve; new bins of known pkgs follow their package (xproject-pkg newcomers -> excluded, benchmark stays frozen 7-pkg); clang/ftdomains in separate pools. Final binary-level split pending tok_hash dedup + leakage table from match_index_v2.",
  "train": [
   "acct_ac_O0",
   "acct_ac_O1",

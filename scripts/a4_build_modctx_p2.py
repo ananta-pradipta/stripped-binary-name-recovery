@@ -9,7 +9,7 @@ all under this in-distribution probe, a propagation-aware retrain is justified.
 Output: results/a4_modctx_p2/{val,test}.jsonl."""
 import csv, json, os, re
 from collections import Counter, defaultdict
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 PROTO = f'{WS}/results/baseline_protocol_v2'
 PREDS = f'{WS}/results/a4_codet5p220m_modctx_v1/val_test_preds.tsv'
 OUT = f'{WS}/results/a4_modctx_p2'

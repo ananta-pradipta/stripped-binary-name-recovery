@@ -4,9 +4,9 @@ SymGen-34B, [BLens if per-row file given], our A1a retrieval (R), A1a decoder (D
 (refit on val with the same features as router2_eval), oracle. Same metric-v2 canonicalization for every system."""
 import json, re, subprocess, sys, collections, argparse
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 ap = argparse.ArgumentParser()
 ap.add_argument('--a4', default=f'{WS}/results/a4_codet5p220m_v1/val_test_symgen_holdout_preds.tsv')
 ap.add_argument('--a4tag', default='A4 run1'); ap.add_argument('--blens', default=None)

@@ -3,7 +3,7 @@
 **Project:** CS785 Binary Function Name Recovery
 **Date:** 2026-04-09
 **Estimated time:** 1-2 days
-**Where:** Wulver HPC (GPU required)
+**Where:** HPC HPC (GPU required)
 
 ---
 
@@ -17,15 +17,15 @@ We want to run BLens on our cross-project data to compare with our model (F1=0.6
 
 ## Prerequisites
 
-### 1. Access the project on Wulver
+### 1. Access the project on HPC
 
 ```bash
-ssh wulver    # Duo 2FA required
-ls /project/hz79/_shared/cs785/
+ssh HPC    # Duo 2FA required
+ls $WORKSPACE/
 # Should see: configs/ data/ src/ scripts/ baselines/ checkpoints/ ...
 ```
 
-### 2. Wulver environment
+### 2. HPC environment
 
 ```bash
 module load bright
@@ -38,17 +38,17 @@ All GPU jobs use:
 ```bash
 #!/bin/bash
 #SBATCH --job-name=cs785-eval-blens
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=24:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-eval-blens.%j.out
+#SBATCH --output=$WORKSPACE/slurm_logs/cs785-eval-blens.%j.out
 ```
 
-We have **full NVIDIA A100-80GB** GPUs via the `hz79` account.
+We have **full NVIDIA A100-80GB** GPUs via the `ACCOUNT` account.
 
 ---
 
@@ -57,8 +57,8 @@ We have **full NVIDIA A100-80GB** GPUs via the `hz79` account.
 ### Step 1: Clone BLens repo
 
 ```bash
-ssh wulver
-cd /project/hz79/_shared/cs785/baselines/
+ssh HPC
+cd $WORKSPACE/baselines/
 git clone https://github.com/lmu-plai/blens.git BLens
 cd BLens
 ```
@@ -68,7 +68,7 @@ cd BLens
 Their data is on Zenodo: https://doi.org/10.5281/zenodo.14713022
 
 ```bash
-cd /project/hz79/_shared/cs785/baselines/BLens
+cd $WORKSPACE/baselines/BLens
 
 # Download data.tar.gz from Zenodo (~20-30GB)
 wget 'https://zenodo.org/records/14713022/files/data.tar.gz?download=1' -O data.tar.gz
@@ -84,10 +84,10 @@ Read their `INSTALL.md` first:
 cat INSTALL.md
 ```
 
-They use virtualenvwrapper. On Wulver, a regular venv is easier:
+They use virtualenvwrapper. On HPC, a regular venv is easier:
 ```bash
-python3 -m venv /project/hz79/_shared/cs785/baselines/blens_env
-source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
+python3 -m venv $WORKSPACE/baselines/blens_env
+source $WORKSPACE/baselines/blens_env/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -103,19 +103,19 @@ Submit a SLURM job to verify BLens works:
 cat > /tmp/blens_test.sbatch << 'EOF'
 #!/bin/bash
 #SBATCH --job-name=cs785-eval-blens
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=06:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-eval-blens.%j.out
+#SBATCH --output=$WORKSPACE/slurm_logs/cs785-eval-blens.%j.out
 
 module load bright
 module load python3
-source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
-cd /project/hz79/_shared/cs785/baselines/BLens
+source $WORKSPACE/baselines/blens_env/bin/activate
+cd $WORKSPACE/baselines/BLens
 
 echo "=== BLens Evaluation ==="
 nvidia-smi -L
@@ -165,12 +165,12 @@ Two options — **do Option A first** (faster, inference only). Option B is bonu
 Tests BLens' generalization to our unseen packages. No retraining.
 
 **Our cross-project packages:** tengine, angie, nginx118, recutils
-**Our stripped binaries:** `/project/hz79/_shared/cs785/data/stripped/`
+**Our stripped binaries:** `$WORKSPACE/data/stripped/`
 
 ##### A.1: Understand BLens' input format
 
 ```bash
-cd /project/hz79/_shared/cs785/baselines/BLens
+cd $WORKSPACE/baselines/BLens
 
 # Examine their test data structure
 find data/ -name "*test*" -type f | head -10
@@ -194,8 +194,8 @@ for root, dirs, fnames in os.walk('data'):
 mkdir -p data/our_xproj/stripped/ data/our_xproj/labels/
 
 for pkg in angie nginx118 tengine recutils; do
-    cp /project/hz79/_shared/cs785/data/stripped/${pkg}_*_stripped data/our_xproj/stripped/
-    cp /project/hz79/_shared/cs785/data/labels/${pkg}_*_labels.json data/our_xproj/labels/
+    cp $WORKSPACE/data/stripped/${pkg}_*_stripped data/our_xproj/stripped/
+    cp $WORKSPACE/data/labels/${pkg}_*_labels.json data/our_xproj/labels/
 done
 
 echo "Copied $(ls data/our_xproj/stripped/ | wc -l) binaries"
@@ -216,19 +216,19 @@ Run their embedding extraction (adapt based on what you find):
 cat > /tmp/blens_preprocess_xproj.sbatch << 'EOF'
 #!/bin/bash
 #SBATCH --job-name=cs785-blens-prep
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=06:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-blens-prep.%j.out
+#SBATCH --output=$WORKSPACE/slurm_logs/cs785-blens-prep.%j.out
 
 module load bright
 module load python3
-source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
-cd /project/hz79/_shared/cs785/baselines/BLens
+source $WORKSPACE/baselines/blens_env/bin/activate
+cd $WORKSPACE/baselines/BLens
 
 echo "=== BLens Preprocessing on our xproj data ==="
 # ADAPT THIS: Run their embedding extraction on our binaries
@@ -245,19 +245,19 @@ sbatch /tmp/blens_preprocess_xproj.sbatch
 cat > /tmp/blens_infer_xproj.sbatch << 'EOF'
 #!/bin/bash
 #SBATCH --job-name=cs785-eval-blens-xproj
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=12:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-eval-blens-xproj.%j.out
+#SBATCH --output=$WORKSPACE/slurm_logs/cs785-eval-blens-xproj.%j.out
 
 module load bright
 module load python3
-source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
-cd /project/hz79/_shared/cs785/baselines/BLens
+source $WORKSPACE/baselines/blens_env/bin/activate
+cd $WORKSPACE/baselines/BLens
 
 echo "=== BLens Inference on our cross-project ==="
 nvidia-smi -L
@@ -308,7 +308,7 @@ Retrains BLens on our 300K training data, then evaluates on our cross-project se
 ##### B.1: Prepare our full training data
 
 ```bash
-cd /project/hz79/_shared/cs785/baselines/BLens
+cd $WORKSPACE/baselines/BLens
 
 # Our training set: ~242K functions (300K minus val/test/cross-project)
 # Need: stripped binaries + ground truth for all training binaries
@@ -318,7 +318,7 @@ mkdir -p data/our_train/stripped/ data/our_train/labels/
 # Copy training binaries (exclude cross-project)
 python3 -c "
 import json, shutil, os
-with open('/project/hz79/_shared/cs785/data/match_index.json') as f:
+with open('$WORKSPACE/data/match_index.json') as f:
     mi = json.load(f)
 xproj = {'tengine', 'angie', 'nginx118', 'recutils'}
 bins = set()
@@ -328,7 +328,7 @@ for v in mi.values():
         bins.add(v['binary'])
 print(f'Training binaries: {len(bins)}')
 
-src = '/project/hz79/_shared/cs785/data/stripped/'
+src = '$WORKSPACE/data/stripped/'
 dst = 'data/our_train/stripped/'
 os.makedirs(dst, exist_ok=True)
 copied = 0
@@ -341,7 +341,7 @@ print(f'Copied: {copied}')
 "
 
 # Copy labels
-cp /project/hz79/_shared/cs785/data/labels/*_labels.json data/our_train/labels/
+cp $WORKSPACE/data/labels/*_labels.json data/our_train/labels/
 ```
 
 ##### B.2: Run BLens preprocessing on training data
@@ -350,19 +350,19 @@ cp /project/hz79/_shared/cs785/data/labels/*_labels.json data/our_train/labels/
 cat > /tmp/blens_preprocess_train.sbatch << 'EOF'
 #!/bin/bash
 #SBATCH --job-name=cs785-blens-prep-train
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=24:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-blens-prep-train.%j.out
+#SBATCH --output=$WORKSPACE/slurm_logs/cs785-blens-prep-train.%j.out
 
 module load bright
 module load python3
-source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
-cd /project/hz79/_shared/cs785/baselines/BLens
+source $WORKSPACE/baselines/blens_env/bin/activate
+cd $WORKSPACE/baselines/BLens
 
 echo "=== BLens Preprocessing (full training set) ==="
 # ADAPT: Extract embeddings for all training binaries
@@ -378,19 +378,19 @@ sbatch /tmp/blens_preprocess_train.sbatch
 cat > /tmp/blens_train.sbatch << 'EOF'
 #!/bin/bash
 #SBATCH --job-name=cs785-train-blens
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=24:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/slurm_logs/cs785-train-blens.%j.out
+#SBATCH --output=$WORKSPACE/slurm_logs/cs785-train-blens.%j.out
 
 module load bright
 module load python3
-source /project/hz79/_shared/cs785/baselines/blens_env/bin/activate
-cd /project/hz79/_shared/cs785/baselines/BLens
+source $WORKSPACE/baselines/blens_env/bin/activate
+cd $WORKSPACE/baselines/BLens
 
 echo "=== BLens Training on our data ==="
 nvidia-smi -L
@@ -437,7 +437,7 @@ For **each option** completed, fill in this table:
 | Inference time | | |
 | GPU memory used | | |
 
-Save all results to: `/project/hz79/_shared/cs785/baselines/BLens/results/`
+Save all results to: `$WORKSPACE/baselines/BLens/results/`
 
 **Option A results** = "BLens (pretrained) on our data"
 **Option B results** = "BLens (retrained on our data)"
@@ -449,7 +449,7 @@ Save all results to: `/project/hz79/_shared/cs785/baselines/BLens/results/`
 ```bash
 squeue -u $USER                           # List running jobs
 sacct -j JOBID --format=State,Elapsed     # Check completed job
-tail -f /project/hz79/_shared/cs785/slurm_logs/cs785-eval-blens.JOBID.out
+tail -f $WORKSPACE/slurm_logs/cs785-eval-blens.JOBID.out
 ```
 
 ---

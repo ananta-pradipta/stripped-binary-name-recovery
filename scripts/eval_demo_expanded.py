@@ -57,12 +57,12 @@ DEMO_PACKAGES = [
 def get_ground_truth(raw_path, labels_path=None):
     """Extract function names from labels JSON or debug binary using nm.
 
-    Prefers labels JSON (consistent with Wulver eval). Falls back to nm.
+    Prefers labels JSON (consistent with HPC eval). Falls back to nm.
     Deduplicates by name to avoid counting the same function at multiple addresses.
     """
     gt = {}
 
-    # Try labels JSON first (consistent with Wulver eval)
+    # Try labels JSON first (consistent with HPC eval)
     if labels_path and os.path.exists(labels_path):
         with open(labels_path) as f:
             labels = json.load(f)
@@ -145,7 +145,7 @@ def main():
                 print(f"  SKIP {bin_name}: stripped binary not found")
                 continue
 
-            # Get ground truth (prefer labels JSON for consistency with Wulver eval)
+            # Get ground truth (prefer labels JSON for consistency with HPC eval)
             labels_path = f"data/labels/{bin_name}_labels.json"
             if not os.path.exists(labels_path):
                 labels_path = f"demo/labels/{bin_name}_labels.json"

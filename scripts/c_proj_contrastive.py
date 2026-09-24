@@ -10,9 +10,9 @@ vs raw-only first). Val-gated. Outputs preds tsv in a4_predict format + system n
 adopted MLP router and dm generation head, unified canon scoring throughout."""
 import csv, json, re, subprocess, sys, collections
 import numpy as np, torch, torch.nn as nn
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1, split_name
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 SRC = f'{WS}/results/c_lmemb_knn'
 OUT = f'{WS}/results/c_proj_contrastive'
 import os; os.makedirs(OUT, exist_ok=True)

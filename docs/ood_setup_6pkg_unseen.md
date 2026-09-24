@@ -1,19 +1,19 @@
 # OOD setup: compile 6 unseen packages
 
-Three files to create on Wulver via OOD shell. Since Discord mangles formatting, use this file as the source of truth — copy each `cat` command below **from this file** into your OOD Wulver Shell Access terminal.
+Three files to create on HPC via OOD shell. Since Discord mangles formatting, use this file as the source of truth — copy each `cat` command below **from this file** into your OOD HPC Shell Access terminal.
 
 ## Step 1: Create the compile shell script
 
 Copy this whole block into OOD and press Enter:
 
 ```bash
-cat > /mmfs1/project/hz79/_shared/cs785/scripts/compile_6pkg_unseen.sh << 'COMPILE_EOF'
+cat > $WORKSPACE/scripts/compile_6pkg_unseen.sh << 'COMPILE_EOF'
 #!/bin/bash
 # Compile 6 truly-unseen packages at O0/O1/O2/O3 for cross-project sanity eval.
 # lighttpd, fossil, yash, tinycc, zsh, cvs (mercurial is python, substituted cvs)
 set -e
 
-PROJECT_ROOT=/mmfs1/project/hz79/_shared/cs785
+PROJECT_ROOT=$WORKSPACE
 DEBUG_OUT=$PROJECT_ROOT/data/cross_project/debug_unseen
 STRIPPED_OUT=$PROJECT_ROOT/data/cross_project/stripped_unseen
 SRC_DIR=/tmp/unseen_xproj_sources
@@ -78,18 +78,18 @@ build_opt "cvs" "cvs" "$SRC_DIR/cvs" "make"
 log "DONE" "all builds"
 ls "$STRIPPED_OUT/" | head -30
 COMPILE_EOF
-chmod +x /mmfs1/project/hz79/_shared/cs785/scripts/compile_6pkg_unseen.sh
-wc -l /mmfs1/project/hz79/_shared/cs785/scripts/compile_6pkg_unseen.sh
+chmod +x $WORKSPACE/scripts/compile_6pkg_unseen.sh
+wc -l $WORKSPACE/scripts/compile_6pkg_unseen.sh
 ```
 
 ## Step 2: Create the sbatch
 
 ```bash
-cat > /mmfs1/project/hz79/_shared/cs785/scripts/compile_6pkg_unseen.sbatch << 'SBATCH_EOF'
+cat > $WORKSPACE/scripts/compile_6pkg_unseen.sbatch << 'SBATCH_EOF'
 #!/bin/bash
 #SBATCH --job-name=bfnr-eval
-#SBATCH --output=/mmfs1/project/hz79/_shared/cs785/slurm_logs/bfnr-compile-6pkg-unseen.%j.out
-#SBATCH --account=hz79
+#SBATCH --output=$WORKSPACE/slurm_logs/bfnr-compile-6pkg-unseen.%j.out
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=general
 #SBATCH --qos=standard
 #SBATCH --cpus-per-task=8
@@ -99,7 +99,7 @@ set -e
 module load bright 2>/dev/null
 module load GCC/12.3.0 2>/dev/null
 
-cd /mmfs1/project/hz79/_shared/cs785
+cd $WORKSPACE
 bash scripts/compile_6pkg_unseen.sh
 
 echo '=== Compile done ==='
@@ -107,14 +107,14 @@ date
 ls -la data/cross_project/debug_unseen/ | head -30
 ls -la data/cross_project/stripped_unseen/ | head -30
 SBATCH_EOF
-wc -l /mmfs1/project/hz79/_shared/cs785/scripts/compile_6pkg_unseen.sbatch
+wc -l $WORKSPACE/scripts/compile_6pkg_unseen.sbatch
 ```
 
 ## Step 3: Submit
 
 ```bash
-sbatch /mmfs1/project/hz79/_shared/cs785/scripts/compile_6pkg_unseen.sbatch
-squeue -u adp232 -o '%.10i %.15j %.8T %.10M %.10L %R'
+sbatch $WORKSPACE/scripts/compile_6pkg_unseen.sbatch
+squeue -u USER -o '%.10i %.15j %.8T %.10M %.10L %R'
 ```
 
 Paste the sbatch output (job ID and queue state) back to me.
@@ -125,7 +125,7 @@ Paste the sbatch output (job ID and queue state) back to me.
 
 - Compile runs on `general` partition (CPU only), **no GPU conflict**, ~3-4h wall
 - Binaries land in `data/cross_project/{debug_unseen,stripped_unseen}/`
-- When compile finishes, the next step is BAP preprocessing on your local machine (BAP isn't on Wulver)
-- Then graph generation on Wulver CPU, then eval on course_gpu
+- When compile finishes, the next step is BAP preprocessing on your local machine (BAP isn't on HPC)
+- Then graph generation on HPC CPU, then eval on course_gpu
 
 Total pipeline: ~1-2 days.

@@ -2,7 +2,7 @@ import pickle, os
 from collections import Counter
 
 for name in ['clap_test', 'palmtree_test']:
-    p = f'/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/embedding/{name}'
+    p = f'$WORKSPACE/baselines/blens_user_env/blens_data/embedding/{name}'
     with open(p, 'rb') as f: d = pickle.load(f)
     print(f'{name}: {len(d)} keys')
     pkg_ct = Counter()
@@ -14,7 +14,7 @@ for name in ['clap_test', 'palmtree_test']:
     for pkg, n in pkg_ct.most_common():
         print(f'  {pkg:<14}: {n}')
     # Check xproj test lookup
-    with open('/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
+    with open('$WORKSPACE/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
         nlp = pickle.load(f)
     test = nlp[2]
     raw = bn_hit = 0

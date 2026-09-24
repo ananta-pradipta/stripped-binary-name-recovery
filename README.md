@@ -1,6 +1,6 @@
 # HyDRA: Hybrid Decoder-Retrieval with Adaptive Routing for Dual-Regime Function Name Recovery in Stripped Binaries
 
-> NJIT: Ananta Dian Pradipta, Robert Blacha, Zhihao Lin, Haotian Zhang
+> Anonymous authors (double-anonymous submission)
 
 This repository holds the code, benchmark protocol, prediction dumps and result tables behind the FSE submission
 *HyDRA: Hybrid Decoder-Retrieval with Adaptive Routing for Dual-Regime Function Name Recovery in Stripped Binaries*.

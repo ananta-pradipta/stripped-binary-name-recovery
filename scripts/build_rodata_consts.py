@@ -3,12 +3,12 @@
 constant tables -> data/rodata_consts_v2/<bin>.json {gref_addr_hex: [CONST_* tags]}.
 Also tags identifier-free but famous tables (CRC32, AES S-box, base64 alphabet)."""
 import json, os, struct, sys, glob
-sys.path.insert(0, '/project/hz79/_shared/cs785/relift_ws/pylib')
+sys.path.insert(0, '$WORKSPACE/relift_ws/pylib')
 from elftools.elf.elffile import ELFFile
 
-GR = '/project/hz79/_shared/cs785/relift_ws/data/graphs_v3'
-ST = '/project/hz79/_shared/cs785/relift_ws/data/stripped_v2'
-OUT = '/project/hz79/_shared/cs785/relift_ws/data/rodata_consts_v2'
+GR = '$WORKSPACE/relift_ws/data/graphs_v3'
+ST = '$WORKSPACE/relift_ws/data/stripped_v2'
+OUT = '$WORKSPACE/relift_ws/data/rodata_consts_v2'
 SIGS = []
 def u32s(*vals): return b''.join(struct.pack('<I', v) for v in vals)
 SIGS.append(('CONST_SHA256', u32s(0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5)))

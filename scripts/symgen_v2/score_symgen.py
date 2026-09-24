@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Score SymGen predictions under the v2 protocol, matched-key against our heads."""
 import json, os, sys, re
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
 from collections import defaultdict
 
-WS = '/project/hz79/_shared/cs785/dh2/symgen_v2'
+WS = '$WORKSPACE/dh2/symgen_v2'
 preds = json.load(open(f'{WS}/results_c/predicted_function_name.json'))
 meta = json.load(open(f'{WS}/interim_c_metadata.json'))
 assert len(preds) <= len(meta), (len(preds), len(meta))
@@ -18,7 +18,7 @@ def clean(p):
     return m.group(0) if m else ''
 
 ours = {}
-with open('/project/hz79/_shared/cs785/dh2/results/router_v2_features.tsv') as fh:
+with open('$WORKSPACE/dh2/results/router_v2_features.tsv') as fh:
     hdr = fh.readline().rstrip('\n').split('\t')
     for line in fh:
         d = dict(zip(hdr, line.rstrip('\n').split('\t')))
@@ -26,7 +26,7 @@ with open('/project/hz79/_shared/cs785/dh2/results/router_v2_features.tsv') as f
 # map metadata addr -> bap name via key: our features key on bap_name, metadata on addr.
 # join through binary+gt_name+uniqueness fallback: use (binary, gt_name).
 ours_by_name = {}
-with open('/project/hz79/_shared/cs785/dh2/results/router_v2_features.tsv') as fh:
+with open('$WORKSPACE/dh2/results/router_v2_features.tsv') as fh:
     hdr = fh.readline().rstrip('\n').split('\t')
     for line in fh:
         d = dict(zip(hdr, line.rstrip('\n').split('\t')))

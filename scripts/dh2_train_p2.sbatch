@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name=cs785-eval --account=hz79 --partition=gpu --qos=standard
+#SBATCH --job-name=cs785-eval --account=ACCOUNT --partition=gpu --qos=standard
 #SBATCH --gres=gpu:a100:1 --cpus-per-task=8 --mem=120G --time=24:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/dh2/slurm/p2_%j.out
+#SBATCH --output=$WORKSPACE/dh2/slurm/p2_%j.out
 # P2: CCS architecture unchanged (configs/dualhead_v2_large.yaml), dataset v2, split policy v3,
 # model selection on val_xproj. Honest baseline for the dual-head ladder.
 set -uo pipefail
-cd /project/hz79/_shared/cs785/dh2
+cd $WORKSPACE/dh2
 module load CUDA/12.6.0 2>/dev/null || true
-source /home/adp232/phd-research-gpu-env/bin/activate
+source $HOME/phd-research-gpu-env/bin/activate
 SEED=${SEED:-42}
 NAME=p2_ccsarch_v2_seed${SEED}.pt
 echo "git=$(cat GIT_REV 2>/dev/null) seed=$SEED split_sha=$(sha256sum data/split_v2.json | cut -c1-12) start=$(date)"

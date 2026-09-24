@@ -3,9 +3,9 @@
 scores each dump on the test rows common to both (key = binary, bap_name). Usage: matched_retrieval.py emb_A emb_B"""
 import json, sys, re, subprocess, collections
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 def demangle_many(names):
     todo = sorted({n for n in names if n and n.startswith('_Z')}); out = {}
     for i in range(0, len(todo), 5000):

@@ -77,7 +77,7 @@ PER-BINARY
 ----------------------------------------------------------------------
 REPRODUCIBILITY
 ----------------------------------------------------------------------
-  Contributor   : Zhihao Lin
+  Contributor   : AUTHOR
   Base model    : bigcode/starcoder2-3b (few-shot prompting, no fine-tuning)
   Eval set      : 4-package cross-project held-out set
   Note          : tengine not present in this run -- evaluated on

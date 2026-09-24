@@ -3,9 +3,9 @@
 Same row sources and router recipe as score_blens_matched.py (C1 lambda1.0 encoder features, A4 run 1)."""
 import argparse, collections, json, re, subprocess, sys
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 ap = argparse.ArgumentParser()
 ap.add_argument('--feat', default=f'{WS}/results/router_c1soft_l10_interim_features.tsv')
 ap.add_argument('--regime', default=f'{WS}/results/c1soft_l10_interim_preds_greedy.tsv')

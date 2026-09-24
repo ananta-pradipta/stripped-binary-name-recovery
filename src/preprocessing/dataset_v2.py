@@ -107,7 +107,7 @@ class FunctionDatasetV2(FunctionDataset):
         else:
             raise ValueError('need votes_vocab_path or bpe_model_path')
 
-        # ---- parsed-corpus cache (graph loading from GPFS took ~2.5 h for 875K files on Wulver)
+        # ---- parsed-corpus cache (graph loading from GPFS took ~2.5 h for 875K files on HPC)
         import pickle, hashlib
         cache_key = None
         if cache_path and only_binaries is None and not exclude_binaries:

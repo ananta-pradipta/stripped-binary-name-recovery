@@ -1,6 +1,6 @@
 # Retrieval-vs-Generation Complementarity — 7-pkg xproj set
 
-- Predictions: /mmfs1/project/hz79/_shared/cs785/results/hybrid_xfl_REPRO.json (headline pdec_xfl checkpoint); 13581 functions.
+- Predictions: $WORKSPACE/results/hybrid_xfl_REPRO.json (headline pdec_xfl checkpoint); 13581 functions.
 - Heads: decoder-only, k-NN-only, hybrid-as-routed (knn if top_sim >= 0.80 else decoder; rule agreement 100.0%).
 - Plus hybrid_adaptive_paper: package-level routing (k-NN for nginx118/angie/tengine, decoder for dash/gettext/psmisc/recutils) — reproduces the paper 0.738 headline (0.7338 here; residual gap = P2-reranked k-NN not recorded per-function).
 - Overall 7-pkg F1: decoder 0.6826, k-NN 0.5576, hybrid(sigma) 0.6948, hybrid(adaptive) 0.7338.

@@ -6,10 +6,10 @@ For val/test functions: same questions against TRAIN names (= what a name-aware
 embedding could hope to pull in). Uses src.evaluation.metrics.split_name (metric v2)."""
 import json, sys, os
 from collections import Counter, defaultdict
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import split_name
-PROTO = '/project/hz79/_shared/cs785/dh2/results/baseline_protocol_v2'
-OUT = '/project/hz79/_shared/cs785/dh2/results/c1_census'
+PROTO = '$WORKSPACE/dh2/results/baseline_protocol_v2'
+OUT = '$WORKSPACE/dh2/results/c1_census'
 os.makedirs(OUT, exist_ok=True)
 DF_CAP = 3000   # sub-tokens occurring in more unique names than this are not used for candidate generation
 

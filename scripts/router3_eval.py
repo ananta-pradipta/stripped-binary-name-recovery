@@ -3,10 +3,10 @@
 plus per-package breakdown of the 2-head GBT union for the appendix. Inputs as router2_eval."""
 import json, re, subprocess, sys, collections, argparse
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
 from sklearn.ensemble import GradientBoostingClassifier
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 ap = argparse.ArgumentParser(); ap.add_argument('--router', required=True); ap.add_argument('--regime-dump', required=True)
 ap.add_argument('--a4', required=True); ap.add_argument('--out', required=True); args = ap.parse_args()
 def demangle_many(names):

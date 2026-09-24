@@ -5,10 +5,10 @@ Writes <OUT>/xflBlensXProjectData_ours_v2 = [train_rows, val_rows, test_rows] in
 plus labels/<bin>.json and bins.txt for the Ghidra/CLAP/PalmTree embedding chain (blens_v2/*.sbatch pattern).
 Embeddings must then be generated for every binary listed in bins.txt (train+val+test)."""
 import json, os, pickle
-PROTO = '/project/hz79/_shared/cs785/dh2/results/baseline_protocol_v2'
-LBL = '/project/hz79/_shared/cs785/relift_ws/data/labels_v2'
-STRIP = '/project/hz79/_shared/cs785/relift_ws/data/stripped_v2'
-OUT = '/project/hz79/_shared/cs785/dh2/blens_ours_v2'
+PROTO = '$WORKSPACE/dh2/results/baseline_protocol_v2'
+LBL = '$WORKSPACE/relift_ws/data/labels_v2'
+STRIP = '$WORKSPACE/relift_ws/data/stripped_v2'
+OUT = '$WORKSPACE/dh2/blens_ours_v2'
 os.makedirs(OUT + '/labels', exist_ok=True)
 tiers = {t: [json.loads(l) for l in open(f'{PROTO}/{t}.jsonl')] for t in ('train', 'val', 'test')}
 bins = sorted({r['binary'] for rows in tiers.values() for r in rows})

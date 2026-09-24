@@ -1,16 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name=cs785-eval --account=hz79 --partition=gpu --qos=standard
+#SBATCH --job-name=cs785-eval --account=ACCOUNT --partition=gpu --qos=standard
 #SBATCH --gres=gpu:a100:4 --cpus-per-task=16 --mem=300G --time=30:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/dh2/slurm/symgen_ft_ours_resume_%j.out
+#SBATCH --output=$WORKSPACE/dh2/slurm/symgen_ft_ours_resume_%j.out
 # Resume leg for symgen_ft_ours.sbatch: 40 GB cards force micro-batch 2 (~120 s/step x 1485 steps ~ 49.5 h) > 30 h wall.
 # Picks the latest COMPLETE Trainer checkpoint (trainer_state.json + optimizer.pt + adapter weights) and resumes
 # optimizer/scheduler/step via the patched finetune.py (keeps the resume dir when trainer_state.json exists).
-cd /project/hz79/_shared/cs785/baselines/SymGen/scripts/model_training
+cd $WORKSPACE/baselines/SymGen/scripts/model_training
 module load CUDA/12.6.0
-source /project/hz79/_shared/cs785/baselines/symgen_ft_env/bin/activate
-export HF_HOME=/project/hz79/_shared/cs785/baselines/hf_cache TRANSFORMERS_CACHE=/project/hz79/_shared/cs785/baselines/hf_cache HF_HUB_OFFLINE=1 WANDB_DISABLED=true TORCHINDUCTOR_COMPILE_THREADS=1 OMP_NUM_THREADS=4 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-DATA=/project/hz79/_shared/cs785/dh2/symgen_v2/full_input.json
-OUT=/project/hz79/_shared/cs785/baselines/SymGen/lora_weights_ours_v2
+source $WORKSPACE/baselines/symgen_ft_env/bin/activate
+export HF_HOME=$WORKSPACE/baselines/hf_cache TRANSFORMERS_CACHE=$WORKSPACE/baselines/hf_cache HF_HUB_OFFLINE=1 WANDB_DISABLED=true TORCHINDUCTOR_COMPILE_THREADS=1 OMP_NUM_THREADS=4 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+DATA=$WORKSPACE/dh2/symgen_v2/full_input.json
+OUT=$WORKSPACE/baselines/SymGen/lora_weights_ours_v2
 if [ -s $OUT/adapter_model.bin ] || [ -s $OUT/adapter_model.safetensors ]; then echo "EFFECT: final adapter already present in $OUT, nothing to resume"; exit 0; fi
 CKPT=""
 for n in $(ls -d $OUT/checkpoint-* 2>/dev/null | sed -E "s/.*checkpoint-//" | sort -nr); do d=$OUT/checkpoint-$n;

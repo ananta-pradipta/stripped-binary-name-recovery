@@ -3,9 +3,9 @@
 import sys, os, json, yaml
 from collections import Counter
 
-os.chdir('/project/hz79/_shared/cs785')
-sys.path.insert(0, '/project/hz79/_shared/cs785')
-sys.path.insert(0, '/project/hz79/_shared/cs785/scripts')
+os.chdir('$WORKSPACE')
+sys.path.insert(0, '$WORKSPACE')
+sys.path.insert(0, '$WORKSPACE/scripts')
 
 import torch
 from src.models.function_namer import FunctionNamer
@@ -17,8 +17,8 @@ from eval_cross_project import (
     resolve_thunks,
 )
 
-CKPT = '/project/hz79/_shared/cs785/checkpoints/best_model_pdec_xfl.pt'
-CONFIG = '/project/hz79/_shared/cs785/configs/optimized_large.yaml'
+CKPT = '$WORKSPACE/checkpoints/best_model_pdec_xfl.pt'
+CONFIG = '$WORKSPACE/configs/optimized_large.yaml'
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Device: {device}')

@@ -79,7 +79,7 @@ def discover(sources):
             add(i, 'local_main', os.path.join(d, f))
         for d, c in (('data/cross_project/debug', 'local_xproj'),
                      ('data/cross_project/candidates', 'local_xproj_cand'),
-                     ('data/raw_wulver', 'wulver')):
+                     ('data/raw_HPC', 'HPC')):
             if os.path.isdir(d):
                 for f in sorted(os.listdir(d)):
                     add(f, c, os.path.join(d, f))

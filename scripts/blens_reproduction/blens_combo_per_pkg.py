@@ -1,7 +1,7 @@
 import re, os, pickle
 from collections import defaultdict
 
-LOG = '/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/xp/ours-cp/COMBO-inference-logs.txt'
+LOG = '$WORKSPACE/baselines/blens_user_env/blens_data/xp/ours-cp/COMBO-inference-logs.txt'
 
 def tok(s):
     if not s: return set()
@@ -14,7 +14,7 @@ def f1(p, t):
     if not inter: return 0.0
     return 2*(len(inter)/len(tp))*(len(inter)/len(tg))/((len(inter)/len(tp))+(len(inter)/len(tg)))
 
-with open('/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
+with open('$WORKSPACE/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
     test = pickle.load(f)[2]
 lines = open(LOG).readlines()
 pairs = []

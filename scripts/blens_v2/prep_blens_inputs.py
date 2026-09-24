@@ -3,10 +3,10 @@
 same 7,532-function clean-FT sample used by SymGen interim-C."""
 import json, os, pickle
 
-WS = '/project/hz79/_shared/cs785/dh2/blens_v2'
-META = '/project/hz79/_shared/cs785/dh2/symgen_v2/interim_c_metadata.json'
-LBL = '/project/hz79/_shared/cs785/relift_ws/data/labels_v2'
-STRIP = '/project/hz79/_shared/cs785/relift_ws/data/stripped_v2'
+WS = '$WORKSPACE/dh2/blens_v2'
+META = '$WORKSPACE/dh2/symgen_v2/interim_c_metadata.json'
+LBL = '$WORKSPACE/relift_ws/data/labels_v2'
+STRIP = '$WORKSPACE/relift_ws/data/stripped_v2'
 os.makedirs(WS + '/labels', exist_ok=True)
 os.makedirs(WS + '/clap_jsons', exist_ok=True)
 

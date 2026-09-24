@@ -12,7 +12,7 @@ and no test-corpus statistics shape the ranking. Output: results/a4_poolctx/{tra
 same row schema as a4_modctx (train via a4_train_codet5p.py --data-dir, predict via --rows)."""
 import json, math, os, re
 from collections import Counter, defaultdict
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 PROTO = f'{WS}/results/baseline_protocol_v2'
 OUT = f'{WS}/results/a4_poolctx'
 os.makedirs(OUT, exist_ok=True)

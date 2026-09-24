@@ -1,9 +1,9 @@
 """Check CLAP + PalmTree embedding lookup for test samples vs train/val.
 Test should have same-shape non-zero embeddings, matching keys against xflBlensXProjectData."""
 import os, sys, pickle
-sys.path.insert(0, '/project/hz79/_shared/cs785/baselines/blens')
+sys.path.insert(0, '$WORKSPACE/baselines/blens')
 
-DATA_DIR = '/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data'
+DATA_DIR = '$WORKSPACE/baselines/blens_user_env/blens_data'
 
 # Load the xproj data (train/val/test)
 with open(os.path.join(DATA_DIR, 'xflBlensXProjectData'), 'rb') as f:

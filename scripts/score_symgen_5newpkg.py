@@ -8,11 +8,11 @@ import re
 import sys
 from collections import defaultdict
 
-sys.path.insert(0, '/mmfs1/project/hz79/_shared/cs785')
+sys.path.insert(0, '$WORKSPACE')
 from src.evaluation.metrics import compute_subtoken_f1
 
-META = '/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen/dataset/xproj_metadata_5newpkg.json'
-PRED = '/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen/results_full_ours_5newpkg/predicted_function_name.json'
+META = '/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen/dataset/xproj_metadata_5newpkg.json'
+PRED = '/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen/results_full_ours_5newpkg/predicted_function_name.json'
 
 meta = json.load(open(META))
 preds = json.load(open(PRED))
@@ -53,8 +53,8 @@ for pkg in sorted(pkg_stats.keys()):
 print(f"{'OVERALL':<12} {total_n:>6} {total_f1/total_n:>8.4f} {total_em/total_n:>8.4f}")
 
 # Also combine with prior 4-pkg (from results_full_ours) to report 9-pkg total
-META4 = '/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen/dataset/xproj_metadata_v2.json'
-PRED4 = '/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen/results_full_ours/predicted_function_name.json'
+META4 = '/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen/dataset/xproj_metadata_v2.json'
+PRED4 = '/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen/results_full_ours/predicted_function_name.json'
 import os
 if os.path.exists(META4) and os.path.exists(PRED4):
     meta4 = json.load(open(META4))

@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=cs785-eval --account=hz79 --partition=general --qos=standard
+#SBATCH --job-name=cs785-eval --account=ACCOUNT --partition=general --qos=standard
 #SBATCH --nodes=1 --ntasks=1 --cpus-per-task=8 --mem=64G --time=36:00:00
 #SBATCH --array=0-23
-#SBATCH --output=/project/hz79/_shared/cs785/dh2/blens_ours_v2/pt_chunks/palmtree_%A_%a.out
+#SBATCH --output=$WORKSPACE/dh2/blens_ours_v2/pt_chunks/palmtree_%A_%a.out
 # PalmTree encode of BLens ours-v2 in 24 load-balanced chunks (single-job pass projected ~72 h > 48 h wall, writes only at end).
-WS=/project/hz79/_shared/cs785/dh2/blens_ours_v2
-BUE=/project/hz79/_shared/cs785/baselines/blens_user_env
+WS=$WORKSPACE/dh2/blens_ours_v2
+BUE=$WORKSPACE/baselines/blens_user_env
 cd $BUE
 module load CUDA/12.6.0 2>/dev/null || true
 export OMP_NUM_THREADS=8 MKL_NUM_THREADS=8

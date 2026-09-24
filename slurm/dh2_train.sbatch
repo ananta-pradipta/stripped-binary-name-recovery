@@ -1,17 +1,17 @@
 #!/bin/bash -l
 #SBATCH --job-name=cs785-eval
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=23:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/dh2/slurm/%x.%j.out
+#SBATCH --output=$WORKSPACE/dh2/slurm/%x.%j.out
 # Usage: sbatch --export=CFG=configs/dualhead_v2_large.yaml,SEED=42,NAME=dh2_large_s42 slurm/dh2_train.sbatch
 set -euo pipefail
-cd /project/hz79/_shared/cs785/dh2
-source /home/adp232/phd-research-gpu-env/bin/activate 2>/dev/null || source /course/2026/spring/cs/785/hz79/adp232/cs785-env/bin/activate
+cd $WORKSPACE/dh2
+source $HOME/phd-research-gpu-env/bin/activate 2>/dev/null || source /course/2026/spring/cs/785/ACCOUNT/USER/cs785-env/bin/activate
 export PYTHONPATH=$PWD:${PYTHONPATH:-}
 CFG=${CFG:-configs/dualhead_v2_large.yaml}; SEED=${SEED:-42}; NAME=${NAME:-dh2_large_s${SEED}}
 echo "=== dh2 train $NAME cfg=$CFG seed=$SEED $(date) host=$(hostname) gpu=$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader | head -1)"

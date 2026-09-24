@@ -4,8 +4,8 @@
 
 ## A. Reproducibility and artifact integrity
 
-- Repo commit at collection: `bbee84e2` (dirty tree: diagnostic outputs only). Full inventory with sizes/sha256 in `artifact_manifest.tsv`. Environment: Python 3.10, torch 2.x + CUDA (RTX-class 8GB local GPU); P1 checkpoints pulled from Wulver `strlex_ws/results/p1v2/`.
-- **Missing artifacts (reported, not recreated):** BinFilter per-candidate pass flags (exist only inside the production hybrid eval on Wulver; `binfilter_pass` column is null); U1 raw token scores (the U1 dump stores final sets only); train-index function addresses (the index dump carries name+binary only, so `retrieved_train_function_id` is `binary:name`-keyed).
+- Repo commit at collection: `bbee84e2` (dirty tree: diagnostic outputs only). Full inventory with sizes/sha256 in `artifact_manifest.tsv`. Environment: Python 3.10, torch 2.x + CUDA (RTX-class 8GB local GPU); P1 checkpoints pulled from HPC `strlex_ws/results/p1v2/`.
+- **Missing artifacts (reported, not recreated):** BinFilter per-candidate pass flags (exist only inside the production hybrid eval on HPC; `binfilter_pass` column is null); U1 raw token scores (the U1 dump stores final sets only); train-index function addresses (the index dump carries name+binary only, so `retrieved_train_function_id` is `binary:name`-keyed).
 - Retrieval provenance: top-20 from plain cosine over the paper-clean control index; top-1 agrees with the anchored `U0_name` on **92.2%** (gap = anchor's BinFilter layer + tie-breaks). §16/§5 numbers use this dump; U0 metrics themselves come from the frozen `u0_recomputed.tsv`.
 - P1 systems evaluated on their cache coverage (13,084/13,581; 497 fns lack enriched graphs — angie_O3 et al., counted in §33 denominators).
 

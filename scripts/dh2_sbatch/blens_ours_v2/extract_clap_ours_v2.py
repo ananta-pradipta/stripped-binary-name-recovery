@@ -3,8 +3,8 @@ import json, pickle, os
 from transformers import AutoTokenizer, AutoModel
 import torch, numpy as np
 
-os.environ.setdefault("HF_HOME", "/project/hz79/_shared/cs785/baselines/hf_cache")
-WS = '/project/hz79/_shared/cs785/dh2/blens_ours_v2'
+os.environ.setdefault("HF_HOME", "$WORKSPACE/baselines/hf_cache")
+WS = '$WORKSPACE/dh2/blens_ours_v2'
 NLP_PATH = f'{WS}/xflBlensXProjectData'
 CLAP_DIR = f'{WS}/clap_jsons'
 OUT = f'{WS}/embedding/clap'

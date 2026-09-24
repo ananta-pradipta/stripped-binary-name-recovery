@@ -1,7 +1,7 @@
 import re, os
 from collections import defaultdict, Counter
 
-LOG = '/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/xp/ours-cp/LORD-inference-logs-test-fixed-59.txt'
+LOG = '$WORKSPACE/baselines/blens_user_env/blens_data/xp/ours-cp/LORD-inference-logs-test-fixed-59.txt'
 
 def tok(s):
     if not s: return set()
@@ -17,7 +17,7 @@ def f1(p, t):
 
 # Need test entries in same order to match per-pkg
 import pickle
-with open('/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
+with open('$WORKSPACE/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
     nlp = pickle.load(f)
 test = nlp[2]
 

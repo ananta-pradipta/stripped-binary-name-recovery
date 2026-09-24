@@ -1401,7 +1401,7 @@ For the paper, this is actually a useful illustration of the "recognizer limitat
 - k-NN head nearly insensitive to both factors (retrieval quality is capacity-independent; the decoder is what needs scale)
 
 †8M+PT encoder pretrained 9/10 epochs (job 1145547 hit 24h TIMEOUT in epoch 10; relaunched as 1148951 from the epoch-9 encoder, loss 1.874 and improving — immaterial for comparison, noted for exactness).
-Checkpoints: `checkpoints/ablation_model4/m1_ablation_model4_{nopretrain_jul,pretrain}_seed42.pt`, `checkpoints/ablation_model5_nopretrain/m1_ablation_model5_{nopretrain,pretrain_jul}_seed42.pt`; encoders `pretrained_encoder_8m.pt`, `pretrained_encoder_25m_jul.pt` (Wulver). Results: `results/m1_ablation_*_xproj.json` (Wulver).
+Checkpoints: `checkpoints/ablation_model4/m1_ablation_model4_{nopretrain_jul,pretrain}_seed42.pt`, `checkpoints/ablation_model5_nopretrain/m1_ablation_model5_{nopretrain,pretrain_jul}_seed42.pt`; encoders `pretrained_encoder_8m.pt`, `pretrained_encoder_25m_jul.pt` (HPC). Results: `results/m1_ablation_*_xproj.json` (HPC).
 
 **Same sprint (2026-07-27/28):** leakage audit (`results/ndss_prep/leakage_audit.md` — 88%/74.5% verbatim overlap), complementarity analysis (EM=0% novel/OOV all heads), clean-checkpoint 9-pkg eval (`ccs/results/hybrid_paper_clean_xproj_full_raw_strict.json` — FT collapse dash 0.13/gettext 0.04/psmisc 0.18, NCT strong, best hybrid 0.606).
 
@@ -1435,7 +1435,7 @@ Checkpoints: `checkpoints/ablation_model4/m1_ablation_model4_{nopretrain_jul,pre
 
 ## 2026-08-02 — Clean-Checkpoint Clang O0–O3 Matrix (job 1156572, COMPLETED 1h43m)
 - **Setup:** `best_model_paper_clean.pt` (zero Clang in training, clean strict split, 241K-fn clean k-NN index) evaluated on 7 xproj pkgs × Clang O0–O3 via full hybrid pipeline (`rag_clang_hybrid_paper_clean.py` = June complete script + angie O0–O3; staging mirrors GCC strict dump job 1146270 exactly).
-- **Output:** `ccs/results/hybrid_paper_clean_clang_full_raw_strict.json` (Wulver); log `eval_clang_paper_clean_hybrid.1156572.out`.
+- **Output:** `ccs/results/hybrid_paper_clean_clang_full_raw_strict.json` (HPC); log `eval_clang_paper_clean_hybrid.1156572.out`.
 
 **Per-package F1 at σ=0.70, same clean checkpoint (GCC strict run 1146270 vs this Clang run):**
 | pkg | N(GCC/Clang) | GCC | Clang | Δ |
@@ -1538,7 +1538,7 @@ Per-package F1 at σ=0.70 (baseline → arm1 → arm2):
 - Lesson for the framework: coverage % is also a *leakage detector* — an unexpectedly high overlap on a supposedly-new package is a red flag to check the split.
 
 ## 2026-08-03 — Clang training corpus: DECISION REVERSED (build it)
-- Earlier call ("not before NDSS") was made on cost grounds and was too quick. Two facts change it: (1) **87 source tarballs already local** in `build_tmp/` — the training packages' sources are in hand; (2) the campaign is **local CPU** (compile→strip→BAP→graphs) while R1/R3a occupy **Wulver GPU** — no critical-path competition; today's 44-binary ftdomains run took ~2h unattended.
+- Earlier call ("not before NDSS") was made on cost grounds and was too quick. Two facts change it: (1) **87 source tarballs already local** in `build_tmp/` — the training packages' sources are in hand; (2) the campaign is **local CPU** (compile→strip→BAP→graphs) while R1/R3a occupy **HPC GPU** — no critical-path competition; today's 44-binary ftdomains run took ~2h unattended.
 - Design (user's, and it is the correct one): Clang builds of TRAIN packages → train; Clang builds of EVAL packages → test only; never mix. Same discipline as GCC.
 - Payoff: replaces June's leaky-model parity claim with a fully-clean two-point result under our own strict protocol — the strongest possible answer to Reviewer B's shepherding item ("A different compiler?").
 - Why zero-shot Clang works at all (0.44 not 0.0): the model consumes BAP-IR instruction TYPES over a CFG, not bytes; the IR flattens instruction selection/regalloc/scheduling. The residual ~50% gap = what the IR does NOT flatten (inlining decisions, CFG shape, call idioms). The zero-shot number is thus a direct measurement of IR compiler-agnosticism — the claim B said we asserted without validating.
@@ -2085,14 +2085,14 @@ The session plan assumed both baselines "were fine-tuned on our corpus including
 - **Consequence**: the old SymGen 0.630 / BLens ~0.44 numbers were already leakage-clean at the supervision level. The comparison problem was never leakage — it is (a) SymGen's missing FT eval, and (b) population mismatch. Both resolved below.
 
 ## 2026-08-05 — SYMGEN'S FAR-TRANSFER EVAL IS VACUOUS: its dash/gettext/psmisc "functions" are 100% import stubs
-Unlogged results existed on Wulver (`results_full_ours_5newpkg`, 3,709 predictions). Scored with our sub-token F1: dash 0.598 / gettext 0.422 / psmisc 0.413 — which would demolish our FT numbers (0.13/0.04/0.14). **Attempting a per-function join with our predictions produced ZERO shared keys on all three packages, and the root cause invalidates SymGen's FT eval entirely:**
+Unlogged results existed on HPC (`results_full_ours_5newpkg`, 3,709 predictions). Scored with our sub-token F1: dash 0.598 / gettext 0.422 / psmisc 0.413 — which would demolish our FT numbers (0.13/0.04/0.14). **Attempting a per-function join with our predictions produced ZERO shared keys on all three packages, and the root cause invalidates SymGen's FT eval entirely:**
 - `readelf --dyn-syms` on the stripped eval binaries: **every FUNC entry is UND** (dash 85/85, xgettext 166/166). SymGen's per-package counts match imports × opt-levels exactly (dash: 85×4 + runtime junk ≈ 367).
 - Its "ground truth" names (`malloc`, `ioctl`, `its_rule_list_free`, `_DT_FINI`) are **imports from libc/libgettextsrc.so** — names present in the stripped binary's dynamic-linking metadata, which Ghidra assigns automatically. The decompiled input SymGen sees for these is a PLT thunk whose name is already known. This is the tengine-100%-EM artifact wearing a different hat.
 - **SymGen therefore has NO valid far-transfer number.** Its 4-pkg NCT eval (angie/nginx118/tengine/recutils) IS valid for internal functions (those packages leak internal names via defined `.dynsym`, which reaches its decompiled input as call-site names — same channel as our CALL_<sym> tokens; caveat applies to both systems).
 - Full-set clean-7 numbers (own populations, before matching): SymGen n-wt **0.630** (18,944 fns; this is where the remembered "0.630" comes from — it was always the clean number), BLens ~0.44 (19,337 fns), ours 0.550 (13,581 fns). These are NOT comparable across systems — see matched subset below.
 
 ## 2026-08-05 — MATCHED-SUBSET CLEAN-7 COMPARISON (identical functions, identical metric) — the paper table
-`scripts/matched_subset_clean7.py`; JSON: `results/ndss_prep/matched_subset_clean7.json` (= Wulver strlex_ws/results/ndss_prep_matched_subset_clean7.json). Join key (binary, GT name); ours = sigma-0.70 hybrid per-function predictions; BLens scored against its own normalized targets (it trains in a normalized name space: quotearg→quote_argument, aux→auxiliary, long names truncated — scoring it on raw names would undercount it; this is the charitable choice and matches its paper's protocol).
+`scripts/matched_subset_clean7.py`; JSON: `results/ndss_prep/matched_subset_clean7.json` (= HPC strlex_ws/results/ndss_prep_matched_subset_clean7.json). Join key (binary, GT name); ours = sigma-0.70 hybrid per-function predictions; BLens scored against its own normalized targets (it trains in a normalized name space: quotearg→quote_argument, aux→auxiliary, long names truncated — scoring it on raw names would undercount it; this is the charitable choice and matches its paper's protocol).
 
 **ours vs SymGen (7,323 shared real functions; NCT+recutils only — SymGen's FT set is vacuous):**
 | pkg | n | ours-base | ours-clanginv | SymGen |
@@ -2137,7 +2137,7 @@ Follow-ups to the "vacuous FT eval" finding, from reading the actual generation 
 This gives SymGen the same task our model faces on FT (internal functions, no name in input). CodeLlama source-exposure caveat unaffected.
 
 ## 2026-08-05 — TRACK B: first universe-cache lesson (job 1161505, aborted correctly at 7 min)
-The miner's >1%-unreadable tripwire fired: 22,713/189,571 (12%) of the LOCALLY-built token-vector cache's graph paths don't exist in strlex_ws's graph tree (local and Wulver corpora have drifted). Fix in progress: rebuild `hard_neg_token_vectors.npz` ON WULVER from strlex_ws's own match_index/split (local npz kept as `.LOCAL.npz.bak`), then resubmit. Cost of the discipline so far: three aborted-in-minutes submissions instead of three silent 8-hour nulls.
+The miner's >1%-unreadable tripwire fired: 22,713/189,571 (12%) of the LOCALLY-built token-vector cache's graph paths don't exist in strlex_ws's graph tree (local and HPC corpora have drifted). Fix in progress: rebuild `hard_neg_token_vectors.npz` ON HPC from strlex_ws's own match_index/split (local npz kept as `.LOCAL.npz.bak`), then resubmit. Cost of the discipline so far: three aborted-in-minutes submissions instead of three silent 8-hour nulls.
 
 ## 2026-08-05 — EVIDENCE-YIELD DIAGNOSTIC: how much of the answer is in the target binary itself?
 Gate measurement for the composition/OOV brainstorm's top idea (evidence-anchored lexicon biasing). `scripts/evidence_yield_diagnostic.py`; JSON `results/ndss_prep/evidence_yield.json`. Evidence pool per stripped binary = `strings -a -n 3` tokens + dynsym-defined names + import names, sub-tokenized with our own name tokenizer; GT = labels, clone-normalized.
@@ -2166,7 +2166,7 @@ The number the last two runs died on:
 | 1161287 | token-bag (K=8, w=3.0) | 1.05% | aborted |
 | 1161336 | token-bag (K=32, w=5.0) | 1.52% | aborted |
 | **1161632** | **encoder f-space (K=8, w=3.0)** | **15.54%** | **passed (floor 0.10), training continues** |
-- Miner effect checks on the Wulver universe (252,537 paired samples): accepted-negative cos mean **0.922** vs random-pair 0.346 vs true-pair 0.918 — mined negatives are as close to their anchors as genuine positives, i.e. maximal-mass by construction. 638,517 negatives / 87,213 anchors (100% pair-covered, 54.3% cross-package, 0 unresolvable after the Wulver-native cache rebuild).
+- Miner effect checks on the HPC universe (252,537 paired samples): accepted-negative cos mean **0.922** vs random-pair 0.346 vs true-pair 0.918 — mined negatives are as close to their anchors as genuine positives, i.e. maximal-mass by construction. 638,517 negatives / 87,213 anchors (100% pair-covered, 54.3% cross-package, 0 unresolvable after the HPC-native cache rebuild).
 - Slot share only 2.41% → mass/slot ratio 6.4× — the "genuinely harder than in-batch" signature.
 - Contrastive loss epoch 1: 3.69 (control arm at same epoch: ~2.1) — the objective is measurably harder with the mined negatives in the denominator, which is the point.
 - Epoch time 26.6 min (control 17) → arm finishes ~4.5h. Downstream FT A/B jobs pre-submitted with SLURM dependencies: 1162527 (control FT, afterok:1161470) and 1162528 (hardneg FT, afterok:1161632), both the exact train_homolog_ft recipe with only the encoder init varying.
@@ -2304,7 +2304,7 @@ Mean cosine of the SAME 2,000 mined negative pairs / 2,000 true positive pairs /
 **VERDICT: the FT wall's representation problem is created/maintained by the FINE-TUNING objective, not the pretraining objective. Any pretrain-level representation fix will be overwritten. The only mechanism-consistent intervention left is imposing the constraint DURING fine-tuning (auxiliary mined-negative loss), and the paper can now state the full causal chain with measurements at every link: shortcut identified (probe) → fixed (gate 1, 15.5% mass) → fix verified in f-space (this probe, +0.155→0.000) → erased by supervised FT (0.660≈0.673) → downstream null (gate 2).**
 
 ## 2026-08-06 — AUX-CL FINE-TUNE EXPERIMENT LAUNCHED (jobs 1165769 train → 1165770 eval): the washout fix
-Implementation (commits fd72f897/3e21ba08; Wulver strlex_ws train.py/build_dataset.py patched with .pre_auxcl.bak backups — NOTE the Wulver lineage had diverged ~250 lines from local, edits ported not synced):
+Implementation (commits fd72f897/3e21ba08; HPC strlex_ws train.py/build_dataset.py patched with .pre_auxcl.bak backups — NOTE the HPC lineage had diverged ~250 lines from local, edits ported not synced):
 - `src/training/aux_contrastive.py`: per-batch provider mapping training anchors → O0/O2 positive + K mined embedding-space negatives, tokenized from the dataset's in-memory graphs in the exact training input space.
 - Owner-masked NT-Xent (reusing pretrain_heads.nt_xent_loss_with_hard_negatives) applied ON RAW f every fine-tuning step — no projection head, so the constraint lives in the transferred space; λ=0.5, K=4, τ=0.07. Default-off flags; zero-aux-batches tripwire.
 - Two silent-failure classes caught before the real run: (a) torch≥2.1 DataLoader fetchers call Subset.__getitems__, bypassing the __getitem__ override and silently dropping sample_idx — the effect tripwire caught it in the smoke; (b) login-node smoke SIGKILLs (memory limits) → smoke moved to a GPU job.
@@ -2418,7 +2418,7 @@ Clean-7 Clang matrix for `best_model_cont_control.pt` (the current best / report
 Placed against the existing matrix (Clang pkg-mean): gcc-only baseline 0.250 · mixed GCC+Clang training 0.268 · compiler-invariant encoder 0.258 · **control model 0.262**. So the headline model is mid-pack on Clang transfer without any compiler-specific training — better than the plain GCC baseline (+0.012), just below the mixed-data variant (−0.006) that pays a GCC cost. The paper's compiler section can now report the reported model rather than only ablation variants.
 
 ## 2026-08-07 — TOOLING NOTE (preflight discipline): flag wired into a function DEFAULT instead of the call site
-`--no-rerank` was first patched into `retrieve_topk_with_rerank`'s signature default (`use_rerank=not args.no_rerank`), where `args` is out of scope → NameError at import, job 1166810 died in 31s. A second attempt reverted BOTH occurrences, leaving the flag unwired — the job would have silently run WITH re-ranking and produced a duplicate of the control number (the exact silent-failure class this project has been burned by). Caught by asserting, on both the local and Wulver copies, that the signature contains no `args` reference AND that exactly one call site carries the flag. Re-submitted as 1166815. Rule reinforced: after patching a flag through, verify the *call site* count, not just that the file parses.
+`--no-rerank` was first patched into `retrieve_topk_with_rerank`'s signature default (`use_rerank=not args.no_rerank`), where `args` is out of scope → NameError at import, job 1166810 died in 31s. A second attempt reverted BOTH occurrences, leaving the flag unwired — the job would have silently run WITH re-ranking and produced a duplicate of the control number (the exact silent-failure class this project has been burned by). Caught by asserting, on both the local and HPC copies, that the signature contains no `args` reference AND that exactly one call site carries the flag. Re-submitted as 1166815. Rule reinforced: after patching a flag through, verify the *call site* count, not just that the file parses.
 
 ## 2026-08-07 — NO-RERANK CLEAN-7 (job 1166815): NEW BEST 0.5550 — a free gain from DELETING the hand-weighted re-rank
 Control checkpoint, identical protocol, only `--no-rerank` differs (flag verified applied: pure k-NN F1 0.5691 vs 0.5528, matching the offline candidate-list prediction exactly; zero bit-identical packages):
@@ -3602,7 +3602,7 @@ Addendum eval (1171572): at H1-matched coverage, set-level metrics are a wash ac
 subsets within +-0.002). H2's value is the calibrated high-precision hint channel (frontier +
 seed stability +-0.2% vs H1's +-0.8%), not additional set-level recall. H2 = tail branch of
 record; next per revised roadmap: Phase 3 evidence-copy census. Artifacts:
-results/phase2_set_decoder.json, phase2_addendum.json, phase2_full_dump.tsv (Wulver).
+results/phase2_set_decoder.json, phase2_addendum.json, phase2_full_dump.tsv (HPC).
 
 ## 2026-08-10 — OPENVOCAB FINAL ANALYSES (freeze directive; job 1171677) — ALL DELIVERABLES DONE
 Commits: plan 824effcb / census+modules 1583ff22 / phase1 2e3e1b62 / phase1.5 c57fe8de /
@@ -3619,7 +3619,7 @@ P8 rescore (same evaluator, matched keys): retrieval tokens 0.587 sem F1 overall
 its own failures; SymGen tokens 0.178 (FT) / 0.401 (NCT) on retr-failure subsets — strongest
 semantic evidence where retrieval dies; contamination caveat applies.
 Deliverables: phase2_frontier_final.tsv, phase3_copyability_{census.tsv,summary.json},
-phase3_evidence_inventory.tsv (Wulver), evidence_source_breakdown.tsv,
+phase3_evidence_inventory.tsv (HPC), evidence_source_breakdown.tsv,
 baseline_semantic_rescore.tsv, qualitative_examples.md, final_summary_tables.md.
 
 ## 2026-08-11 — H3 EVIDENCE SELECTOR: census strong, selector v1 = STOP (jobs 1171700 + 1171757)
@@ -3679,7 +3679,7 @@ FINDING: phase3b_residual_selector.py cand_tensors() prioritized GT positives wh
 at MAX_CAND=192 (`keep = pos + neg[:cap]`), and this path was used for the QUERY/VAL sets (q_recs,
 val_recs), not just fit. At eval that leaks the answer into WHICH atoms get scored: any GT evidence
 atom is guaranteed scored even if it ranks below 192 by IDF. Materiality (cap-bite rate on retr0
-nginx-family pools) UNMEASURED — Wulver login unreachable during the Aug-11 maintenance.
+nginx-family pools) UNMEASURED — HPC login unreachable during the Aug-11 maintenance.
 IMPACT: the phase3b per-seed "independent_semantic_rescue_retr0 = 0.19" used this leaky candidate
 set and is UNRELIABLE (likely inflated) — RETRACTED pending a leakage-free rerun.
 NOT AFFECTED: phase3b_opsweep.py built query candidates leakage-free (rec_of: top-192 by IDF, no GT
@@ -3737,15 +3737,15 @@ C (h vs z_R probe) need GPU and are deferred to post-maintenance (cluster down 0
 Artifact: results/phase4_census_v2.json.
 
 ## 2026-08-12 — UNIFIED GATE (U0/U1/U2 + oracle) RUN LOCALLY; U2 NO-GO, fusion STOPPED
-Wulver maintenance extended indefinitely (PowerDistProblemWalsh reservation; all GPU nodes maint;
+HPC maintenance extended indefinitely (PowerDistProblemWalsh reservation; all GPU nodes maint;
 job 1172837 still queued), so the gate ran on the local RTX 4060 via unified_composer_local.py:
 identical science, but reads results/unified_sample_meta.json — an ordered (binary,name) dump made
-on the Wulver login node by iterating match_index exactly as FunctionDataset does (310,211 samples;
+on the HPC login node by iterating match_index exactly as FunctionDataset does (310,211 samples;
 local dataset differs so indices would not map). Alignment verified: NN name agreement on fit
 embeddings = 57.9% (~1% if misaligned). Setup: package-disjoint dev 4,864 fns / composer-train
 75,136; vocab |V|=8,994 (v1-canonical-2026-08-10); 25 ep, seed 42, taus dev-tuned (U1 0.45, U2 0.10).
 
-TWO SCRIPT BUGS found on this first-ever execution (fixed in commit; also synced to Wulver so the
+TWO SCRIPT BUGS found on this first-ever execution (fixed in commit; also synced to HPC so the
 queued job runs the corrected script):
  (1) U2 logit scaling: q,v are L2-normalized (q.v in [-1,1]) but score divided by sqrt(256) then
      x10 -> logits within +-0.625 of the bias -> bias(=token frequency) dominated, ~515-token
@@ -3778,12 +3778,12 @@ GATE DECISIONS (plan §20/§26/§28/§35):
    confirmation of the recognizer/coverage-boundary finding (after retmem null + Item-A census).
  - U1's only real edge: RETR_FAIL 0.069 vs U0's 0.005 — tiny absolute, and ceiling 0.096.
 Artifacts: results/unified_gate.json, unified_predictions.tsv, unified_posthoc.json,
-unified_dh_strata.json, unified_local(.log/_v2.log), unified_sample_meta.json (Wulver-order dump).
+unified_dh_strata.json, unified_local(.log/_v2.log), unified_sample_meta.json (HPC-order dump).
 
 ## 2026-08-12 (night) — FINAL DUAL-HEAD VALIDATION (full-data U1 + simple U3): STOP composition
 Spec: user's "Final Dual-Head Validation" plan (parity-fair full-data U1 + global-lambda fusion).
 Jobs: 1172878 (embedded full corpus, aborted on space assert — by design), 1173477 (full run, DONE).
-Wulver returned ~17:38 EDT (power problem resolved); unified cross-check 1172837 reproduced the
+HPC returned ~17:38 EDT (power problem resolved); unified cross-check 1172837 reproduced the
 local 4060 U0/U1/U2 gate EXACTLY (4 decimals) — §21 archival confirmation, U2 NO-GO stands.
 
 INFRA: full-corpus control-space embeddings now persisted (strlex_ws/results/ztr_full_control.npz,
@@ -3918,7 +3918,7 @@ function-identity signal; token queries find nothing to localize; learned signal
 local. Five readout families across two granularities of the frozen encoder now agree: no
 package-transferable name-primitive structure. §42 fallback (decompiled/IR generator input) is
 the designated next option — user decision required.
-Artifacts: results/e1/* incl E1_REPORT.md; block states cached on Wulver.
+Artifacts: results/e1/* incl E1_REPORT.md; block states cached on HPC.
 
 ## 2026-08-14 — E2 PHASE 1 (layer-selective evidence): GATE FAILED, Outcome C (jobs 1175470-967)
 Census: uncapped blocks mean 27.3/p99 229/max 29,303; cap 128 truncates 2.67% (E1 cap-30: 19.5%).
@@ -3974,13 +3974,13 @@ untouched per user constraint) is the main line. Jobs 1176939-1177484; ~50min/ep
 - Operation memories small (§19 census flag): INSERT 614 / DELETE 1,508 / KEEP 1,093 admissible; support curve saved, no relaxation.
 - STOP 1 (§75): contrastive INSERT MRR 0.0240 vs absolute-TM control 0.0289 (worse), Hit@5 0.039 vs 0.052, positive folds 1/5; DELETE Hit@5 0.048 << 0.20. Both near-floor: residual-concept identification is essentially unsolved by count-based memories at this support. Editor NOT built; clean-7 untouched.
 
-## 2026-08-16 — FEC (factorized evidence composition): STOP A at Stage 1 (Wulver job 1182009)
+## 2026-08-16 — FEC (factorized evidence composition): STOP A at Stage 1 (HPC job 1182009)
 - Strict OOF_NOVEL_COMPOSABLE protocol built (6,000 queries; 3.5K-24.5K exact-token-set fns removed per fold train — RARC-inflation fix worked).
 - SVD-64 latent ranking MRR 0.0268 vs unfactorized identical-matrix control 0.0616 (-56%!), Hit@10 0.051 vs 0.117, positive folds 0/5, Hit@20 0.075 (gate 0.20). Candidate oracle 0.2402 (<0.250 too).
 - Low-rank smoothing DESTROYS the sparse discriminative associations rather than generalizing them. Notable: the loose-threshold exact matrix (N>=3/P>=2/Name>=2, PPMI x dispersion, idf-weighted) is the strongest evidence ranker measured so far (MRR 0.062 on the strict protocol) — better than all prior TM variants.
 - Fourth consecutive mechanism stop (P1 heads / RARC / RCEM / FEC), all gate-disciplined, clean-7 never touched.
 
-## 2026-08-16 — SECC (sparse evidence coverage composer): Stage A PASS, Stage B STOP (Wulver 1182194)
+## 2026-08-16 — SECC (sparse evidence coverage composer): Stage A PASS, Stage B STOP (HPC 1182194)
 - Stage A: exact-matrix candidate ceiling on strict OOF = oracle F1 0.3143, recall 0.2560 (gates 0.280/0.22 PASSED) — the raw-evidence inventory has real headroom.
 - Stage B: composer ordering ExactTM-topm 0.0608 > RRF 0.0477 > SECC coverage 0.0428 (efficiency 0.136 vs gate 0.40). Submodular source-balanced coverage HURTS vs independent ranking. U0 top-1 on strict protocol: 0.0048 (exact-set removal works).
 - Persistent cross-mechanism finding: best selector reaches only ~19% of its own candidate oracle — SELECTION from a good inventory is the unsolved sub-problem (matches RARC F4).

@@ -1,16 +1,16 @@
 #!/bin/bash
-# Sync code changes to Wulver (excludes large data/checkpoints)
+# Sync code changes to HPC (excludes large data/checkpoints)
 # Uses rsync — only transfers files that changed, takes seconds.
 #
-# Requires SSH multiplexing (ssh wulver in another terminal first)
+# Requires SSH multiplexing (ssh HPC in another terminal first)
 #
-# Usage: bash scripts/wulver_sync.sh
+# Usage: bash scripts/HPC_sync.sh
 
-WULVER="wulver"
-REMOTE_DIR="/course/2026/spring/cs/785/hz79/adp232/cs785"
+HPC="HPC"
+REMOTE_DIR="/course/2026/spring/cs/785/ACCOUNT/USER/cs785"
 LOCAL_DIR="$HOME/cs785-project"
 
-echo "Syncing code to Wulver..."
+echo "Syncing code to HPC..."
 rsync -avz --delete \
   --exclude 'data/' \
   --exclude 'checkpoints/' \
@@ -22,11 +22,11 @@ rsync -avz --delete \
   --exclude 'demo/stripped/' \
   --exclude 'demo/raw/' \
   --exclude 'results/exp*' \
-  ${LOCAL_DIR}/src/ ${WULVER}:${REMOTE_DIR}/src/
+  ${LOCAL_DIR}/src/ ${HPC}:${REMOTE_DIR}/src/
 rsync -avz \
-  ${LOCAL_DIR}/configs/ ${WULVER}:${REMOTE_DIR}/configs/
+  ${LOCAL_DIR}/configs/ ${HPC}:${REMOTE_DIR}/configs/
 rsync -avz \
   --exclude '__pycache__/' \
-  ${LOCAL_DIR}/scripts/ ${WULVER}:${REMOTE_DIR}/scripts/
+  ${LOCAL_DIR}/scripts/ ${HPC}:${REMOTE_DIR}/scripts/
 
 echo "Done! Synced: src/, configs/, scripts/"

@@ -1,6 +1,6 @@
 === SymGen Inference on Cross-Project (FULL-data LoRA) ===
 Date: Mon Apr 13 06:08:38 AM EDT 2026
-LoRA: /course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen/lora_weights_ours (full 300K fine-tune, job 909652)
+LoRA: /course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen/lora_weights_ours (full 300K fine-tune, job 909652)
 GPU 0: NVIDIA A100-SXM4-80GB (UUID: GPU-9deb881a-81a0-6615-d995-9ad2933521a4)
 Loading checkpoint shards:   0%|          | 0/7 [00:00<?, ?it/s]Loading checkpoint shards:  14%|█▍        | 1/7 [00:24<02:26, 24.48s/it]Loading checkpoint shards:  29%|██▊       | 2/7 [00:46<01:54, 22.87s/it]Loading checkpoint shards:  43%|████▎     | 3/7 [01:07<01:29, 22.29s/it]Loading checkpoint shards:  57%|█████▋    | 4/7 [01:28<01:05, 21.83s/it]Loading checkpoint shards:  71%|███████▏  | 5/7 [01:50<00:43, 21.67s/it]Loading checkpoint shards:  86%|████████▌ | 6/7 [02:13<00:22, 22.08s/it]Loading checkpoint shards: 100%|██████████| 7/7 [02:36<00:00, 22.36s/it]Loading checkpoint shards: 100%|██████████| 7/7 [02:36<00:00, 22.31s/it]
 Model eval done

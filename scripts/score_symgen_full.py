@@ -11,9 +11,9 @@ symgen_v2/results_fulltest/shard_K/predicted_function_name.json (index-aligned l
 whatever rows exist so far (interim read); the final run must see every shard complete."""
 import argparse, collections, json, os, pickle, re, subprocess, sys
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1, split_name
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 ap = argparse.ArgumentParser()
 ap.add_argument('--shards', type=int, default=34)
 ap.add_argument('--meta-dir', default=f'{WS}/symgen_v2/fulltest_shards')

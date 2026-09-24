@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-LOG = '/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/xp/ours-cp/COMBO-inference-logs.txt'
+LOG = '$WORKSPACE/baselines/blens_user_env/blens_data/xp/ours-cp/COMBO-inference-logs.txt'
 
 def tok(s):
     if not s: return set()

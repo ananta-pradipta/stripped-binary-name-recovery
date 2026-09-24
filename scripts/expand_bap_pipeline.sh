@@ -261,4 +261,4 @@ echo "════════════════════════�
 echo " BAP PIPELINE COMPLETE"
 echo "═══════════════════════════════════════════════"
 echo ""
-echo "Next: sync to Wulver and train"
+echo "Next: sync to HPC and train"

@@ -1,5 +1,5 @@
 import json, os, sys
-WS="/project/hz79/_shared/cs785/dh2/blens_ours_v2"; K=int(sys.argv[1]) if len(sys.argv)>1 else 24
+WS="$WORKSPACE/dh2/blens_ours_v2"; K=int(sys.argv[1]) if len(sys.argv)>1 else 24
 bins=[l.strip() for l in open(f"{WS}/bins.txt") if l.strip()]
 def nfn(p):
     try: return len(json.load(open(f"{WS}/clap_jsons/{os.path.basename(p)}.clap.json")))

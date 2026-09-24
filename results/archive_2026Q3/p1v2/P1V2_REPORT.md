@@ -71,7 +71,7 @@ cross-project NOVEL gain over U1 in the research arc.
 
 - Code: `experiments_semantic/{parse_bap_v2 → src/preprocessing/parse_bap_v2.py, p1_cache_v2.py, p1_cache_v3.py, p1_lex_extract.py, p1v2_train.py, u1_lex_union.py}`
 - Data: `data/graphs_v2` (395K enriched graphs), `data/lex_v1` (834 binaries), caches `results/p1v2`, `results/p1lex`
-- Checkpoints (Wulver `strlex_ws/results/p1v2/`): `p1_ckpt_{P1-full,P1-embfix,P1-lex,P1-copy}.pt` (+fold0), summaries `p1_summary_{tag}.json`
+- Checkpoints (HPC `strlex_ws/results/p1v2/`): `p1_ckpt_{P1-full,P1-embfix,P1-lex,P1-copy}.pt` (+fold0), summaries `p1_summary_{tag}.json`
 - Key commits: 2b51f999 (NOGAT/NOADV), 6f4db119 (EMB_TRAIN+TAG), 1c6de942 (wd=0), 6af5ab9f (lex pipeline), 5f343abc (U1-union rule), 19d2743b-era (P1_COPY)
 
 ## Recommended next directions (direct-evidence spirit)

@@ -48,11 +48,11 @@ Step 7: Build vocabularies
     data/external_calls/ → data/external_calls/external_vocab.json
 ```
 
-### Wulver HPC: /project/hz79/_shared/cs785/
+### HPC HPC: $WORKSPACE/
 
 ```
-Step 8: Sync data to Wulver
-    bash scripts/wulver_sync.sh  (syncs code)
+Step 8: Sync data to HPC
+    bash scripts/HPC_sync.sh  (syncs code)
     rsync data files manually    (match_index, vocabs, graphs, labels, ext_calls)
 
 Step 9: Train model
@@ -246,18 +246,18 @@ print(f'External vocab: {len(vocab)} tokens')
 
 ---
 
-## Syncing to Wulver
+## Syncing to HPC
 
-After preprocessing locally, sync data to Wulver for training/eval:
+After preprocessing locally, sync data to HPC for training/eval:
 
 ### Quick code sync (excludes data/)
 ```bash
-bash scripts/wulver_sync.sh
+bash scripts/HPC_sync.sh
 ```
 
 ### Manual data sync
 ```bash
-REMOTE="wulver:/project/hz79/_shared/cs785"
+REMOTE="HPC:$WORKSPACE"
 
 # Essential files (always sync these)
 rsync -avz data/match_index.json "$REMOTE/data/"
@@ -276,27 +276,27 @@ rsync -az data/external_calls/newpkg_*.json "$REMOTE/data/external_calls/"
 ```
 
 ### SSH requirement
-You must have an active SSH connection to Wulver first:
+You must have an active SSH connection to HPC first:
 ```bash
-ssh wulver  
+ssh HPC  
 ```
 
 ---
 
-## Wulver HPC Guide
+## HPC HPC Guide
 
 ### Access
-- **Host:** wulver.njit.edu (or use SSH config alias `wulver`)
-- **Account:** `hz79` (research account — full A100-80GB GPU access)
-- **Project dir:** `/project/hz79/_shared/cs785`
-- **Python env:** `/project/hz79/_shared/cs785-env`
+- **Host:** HPC.institution.edu (or use SSH config alias `HPC`)
+- **Account:** `ACCOUNT` (research account — full A100-80GB GPU access)
+- **Project dir:** `$WORKSPACE`
+- **Python env:** `$WORKSPACE-env`
 
 ### Submitting a training job
 
 ```bash
 #!/bin/bash
 #SBATCH --job-name=cs785-train
-#SBATCH --account=hz79
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=gpu
 #SBATCH --qos=standard
 #SBATCH --gres=gpu:a100:1
@@ -307,8 +307,8 @@ ssh wulver
 
 module load bright
 module load python3
-source /project/hz79/_shared/cs785-env/bin/activate
-cd /project/hz79/_shared/cs785
+source $WORKSPACE-env/bin/activate
+cd $WORKSPACE
 
 python3 -m src.training.train \
     --config configs/optimized_large.yaml \
@@ -320,7 +320,7 @@ python3 -m src.training.train \
 
 ### Monitoring jobs
 ```bash
-squeue -u adp232                    # List running jobs
+squeue -u USER                    # List running jobs
 sacct -j JOBID --format=State,Elapsed  # Check completed job
 tail -f slurm_logs/cs785-train.JOBID.out  # Watch output
 seff JOBID                           # Resource usage after completion
@@ -348,18 +348,18 @@ data/
 │   └── {pkg}_{bin}_O{level}_stripped
 ├── debug/                       # Copy of debug binaries (LOCAL ONLY)
 │   └── {pkg}_{bin}_O{level}
-├── bir/                         # BAP-IR files (LOCAL ONLY, not on Wulver)
+├── bir/                         # BAP-IR files (LOCAL ONLY, not on HPC)
 │   └── {pkg}_{bin}_O{level}.bir
-├── graphs/                      # Per-function CFG graphs (SYNCED TO WULVER)
+├── graphs/                      # Per-function CFG graphs (SYNCED TO HPC)
 │   └── {pkg}_{bin}_O{level}_sub_{addr}.json
-├── labels/                      # Ground truth labels (SYNCED TO WULVER)
+├── labels/                      # Ground truth labels (SYNCED TO HPC)
 │   └── {pkg}_{bin}_O{level}_labels.json
-├── external_calls/              # External calls (SYNCED TO WULVER)
+├── external_calls/              # External calls (SYNCED TO HPC)
 │   ├── {pkg}_{bin}_O{level}_external.json
 │   └── external_vocab.json
-├── match_index.json             # Central mapping (SYNCED TO WULVER)
-├── split_assignments.json       # Train/val/test splits (SYNCED TO WULVER)
-└── votes_vocab.json             # Name tokenizer vocab (SYNCED TO WULVER)
+├── match_index.json             # Central mapping (SYNCED TO HPC)
+├── split_assignments.json       # Train/val/test splits (SYNCED TO HPC)
+└── votes_vocab.json             # Name tokenizer vocab (SYNCED TO HPC)
 ```
 
 ---
@@ -393,14 +393,14 @@ The eval script expects this exact format:
 
 ## Critical Rules
 
-1. **BAP is LOCAL ONLY.** BAP is not installed on Wulver. All BAP lifting must be done locally.
+1. **BAP is LOCAL ONLY.** BAP is not installed on HPC. All BAP lifting must be done locally.
 2. **Compile with `-no-pie`** to avoid address mismatch between nm and BAP.
 3. **Label `functions` must be `name → addr`.** The eval script breaks otherwise.
 4. **Use deterministic sort `(-count, name)` for vocab building.** Non-deterministic sort caused 1,232 token mismatches.
 5. **Cross-project packages must NOT be in training.**
 6. **`match_index.json` is regenerated, not hand-edited.**
 7. **NEVER overwrite `external_vocab.json` during inference.** The vocab is saved in checkpoints.
-8. **Coordinate with Ananta before changing `match_index.json` or `split_assignments.json`** — training depends on these.
+8. **Coordinate with AUTHOR before changing `match_index.json` or `split_assignments.json`** — training depends on these.
 
 ---
 
@@ -426,12 +426,12 @@ for p, c in pkgs.most_common(10):
     print(f'  {p}: {c}')
 "
 
-# Sync to Wulver
-bash scripts/wulver_sync.sh
-rsync -avz data/match_index.json wulver:/project/hz79/_shared/cs785/data/
-rsync -avz data/votes_vocab.json wulver:/project/hz79/_shared/cs785/data/
-rsync -az data/graphs/newpkg_*.json wulver:/project/hz79/_shared/cs785/data/graphs/
-rsync -az data/labels/newpkg_*_labels.json wulver:/project/hz79/_shared/cs785/data/labels/
+# Sync to HPC
+bash scripts/HPC_sync.sh
+rsync -avz data/match_index.json HPC:$WORKSPACE/data/
+rsync -avz data/votes_vocab.json HPC:$WORKSPACE/data/
+rsync -az data/graphs/newpkg_*.json HPC:$WORKSPACE/data/graphs/
+rsync -az data/labels/newpkg_*_labels.json HPC:$WORKSPACE/data/labels/
 ```
 
 ---
@@ -447,10 +447,10 @@ rsync -az data/labels/newpkg_*_labels.json wulver:/project/hz79/_shared/cs785/da
 | `src/preprocessing/parse_bap.py` | Shared | BAP-IR parser + V3 tokenization |
 | `src/preprocessing/extract_external.py` | Shared | External call extractor |
 | `src/preprocessing/build_votes.py` | Shared | Votes name tokenizer |
-| `src/preprocessing/build_dataset.py` | Ananta | Dataset loader (PyTorch) |
+| `src/preprocessing/build_dataset.py` | AUTHOR | Dataset loader (PyTorch) |
 | `data/match_index.json` | Shared | Central graph→label mapping |
 | `data/split_assignments.json` | Shared | Train/val/test splits |
-| `configs/optimized_large.yaml` | Ananta | Model config (25M+ params) |
-| `src/training/train.py` | Ananta | Training loop |
-| `scripts/eval_cross_project.py` | Ananta | Cross-project evaluation |
-| `scripts/wulver_sync.sh` | Shared | Code sync to Wulver |
+| `configs/optimized_large.yaml` | AUTHOR | Model config (25M+ params) |
+| `src/training/train.py` | AUTHOR | Training loop |
+| `scripts/eval_cross_project.py` | AUTHOR | Cross-project evaluation |
+| `scripts/HPC_sync.sh` | Shared | Code sync to HPC |

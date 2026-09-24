@@ -6,8 +6,8 @@ id = sg<proj>_<tool>_<opt>   (pkg prefix 'sg' keeps SymGen builds distinguishabl
                               '_' inside tool names -> '-' so pkg_of/opt_of split stays valid)
 Writes relift_ws/symgen/ingest_manifest.tsv and prints EFFECT counts."""
 import os, re, struct, csv
-SRC = '/project/hz79/_shared/cs785/symgen_corpus/binaries/x86_64'
-DST = '/project/hz79/_shared/cs785/relift_ws/symgen/bins'
+SRC = '$WORKSPACE/symgen_corpus/binaries/x86_64'
+DST = '$WORKSPACE/relift_ws/symgen/bins'
 EXCLUDE = {'coreutils', 'diffutils', 'gettext', 'gawk', 'grep', 'gzip', 'inetutils', 'tar', 'units'}
 def norm(p):
     p = p.lower().replace('openssl-openssl', 'openssl')
@@ -34,7 +34,7 @@ for opt in sorted(os.listdir(SRC)):
             os.symlink(path, link); n_link += 1
             rows.append({'id': bid, 'pkg': f'sg{pkg}', 'proj': proj, 'tool': tool, 'opt': opt, 'path': path,
                          'size_mb': round(os.path.getsize(path) / 2**20, 2)})
-with open('/project/hz79/_shared/cs785/relift_ws/symgen/ingest_manifest.tsv', 'w') as fh:
+with open('$WORKSPACE/relift_ws/symgen/ingest_manifest.tsv', 'w') as fh:
     w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()), delimiter='\t'); w.writeheader(); w.writerows(rows)
 pk = sorted({r['pkg'] for r in rows})
 print(f'EFFECT: symgen ingest source: {n_link} ELF links, {len(pk)} packages, skipped {n_skip_proj} excluded proj-dirs, {n_nonelf} non-ELF files; total {sum(r["size_mb"] for r in rows)/1024:.1f} GB')

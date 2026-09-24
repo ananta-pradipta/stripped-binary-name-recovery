@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=2026-spring-cs-785-ACCOUNT-USER
 #SBATCH --qos=course
 #SBATCH --time=02:00:00
 #SBATCH --job-name=cs785-eval
@@ -11,7 +11,7 @@
 #SBATCH --gres=gpu:a100_10g:1
 
 # Navigate to project directory
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
+cd /course/2026/spring/cs/785/ACCOUNT/USER/cs785
 
 # Load modules and activate Python environment
 module load bright

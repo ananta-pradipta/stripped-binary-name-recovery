@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=bfnr-eval
-#SBATCH --output=/mmfs1/project/hz79/_shared/cs785/slurm_logs/bfnr-compile-6pkg-unseen.%j.out
-#SBATCH --account=hz79
+#SBATCH --output=$WORKSPACE/slurm_logs/bfnr-compile-6pkg-unseen.%j.out
+#SBATCH --account=ACCOUNT
 #SBATCH --partition=general
 #SBATCH --qos=standard
 #SBATCH --cpus-per-task=8
@@ -10,7 +10,7 @@
 module load bright 2>/dev/null || true
 module load GCC/12.3.0 2>/dev/null || true
 
-cd /mmfs1/project/hz79/_shared/cs785
+cd $WORKSPACE
 bash scripts/compile_6pkg_unseen.sh
 
 echo '=== Compile done ==='

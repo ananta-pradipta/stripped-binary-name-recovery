@@ -7,9 +7,9 @@ per name/function scale); (2) are they complementary or redundant (oracle, exclu
 for rows where it is not, only pretraining prior can produce it (contamination-sensitivity cut);
 (5) dump qualitative examples (SymGen-only exact hits, A4-only hits, both-fail-high-evidence)."""
 import json, os, re, sys, glob, random, collections, subprocess
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1, split_name
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 
 def demangle_many(names):
     todo = sorted({n for n in names if n and n.startswith('_Z')}); out = {}

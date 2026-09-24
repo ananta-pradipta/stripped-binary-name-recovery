@@ -1,12 +1,12 @@
 """BLens inference on the v2 clean-FT sample (mirror of run_combo_fixed.py)."""
 import os, sys, pickle
-sys.path.insert(0, '/project/hz79/_shared/cs785/baselines/blens')
+sys.path.insert(0, '$WORKSPACE/baselines/blens')
 from builder import loadNLPData, loadData
 from inferenceCOMBO import inferenceCOMBO
 from inferenceLORD import inferenceLORD
 
-WS = '/project/hz79/_shared/cs785/dh2/blens_v2'
-DATA_DIR = '/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data'
+WS = '$WORKSPACE/dh2/blens_v2'
+DATA_DIR = '$WORKSPACE/baselines/blens_user_env/blens_data'
 EXP_DIR = os.path.join(DATA_DIR, 'xp', 'ours-cp')
 MODE = os.environ.get('MODE', 'lord')
 EPOCH = int(os.environ.get('EPOCH', '59'))

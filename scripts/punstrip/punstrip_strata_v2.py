@@ -1,13 +1,13 @@
 """Punstrip test strata (seen / novel-known / novel-OOV vs Punstrip-train names) for our heads, the published baselines,
 and the SymGen-34B LoRA (Punstrip-train) predictions; our sub-token F1 + case-sensitive canonical EM on the 22,926 joined keys."""
 import csv, json, re, sys, collections
-sys.path.insert(0, "/project/hz79/_shared/cs785/dh2")
+sys.path.insert(0, "$WORKSPACE/dh2")
 from src.evaluation.metrics import compute_subtoken_f1, split_name
-P="/project/hz79/_shared/cs785/punstrip"
+P="$WORKSPACE/punstrip"
 def canon(n):
     n=re.sub(r"\(.*\)$","",n); n=re.sub(r"<[^<>]*>","",n); parts=n.split("::")[-2:] if "::" in n else [n]; return "_".join(p for p in parts if p)
 try:
-    sys.path.insert(0, "/project/hz79/_shared/cs785/dh2/scripts"); from matched_baselines import sg_clean
+    sys.path.insert(0, "$WORKSPACE/dh2/scripts"); from matched_baselines import sg_clean
     print("sg_clean imported")
 except Exception as ex:
     print("sg_clean fallback:", ex)
@@ -18,7 +18,7 @@ for l in open(f"{P}/data/train.jsonl"):
     d=json.loads(l); n=canon(d["name"]); train_names.add(n); train_tokens.update(t.lower() for t in split_name(n))
 print("train names",len(train_names),"tokens",len(train_tokens))
 csvmap={}
-for r in csv.DictReader(open("/project/hz79/_shared/cs785/baselines/blens/evaluation/cross-project.csv")):
+for r in csv.DictReader(open("$WORKSPACE/baselines/blens/evaluation/cross-project.csv")):
     csvmap[(r["binPath"],int(r["vaddr"]))]=r
 rows=[r for r in csv.DictReader(open(f"{P}/results/system/system_preds.tsv"),delimiter="\t") if r["tier"]=="test"]
 # SymGen: shards aligned with meta; key '<binary>_<addr>' -> (binpath, vaddr) via our rows

@@ -6,9 +6,9 @@ A4 preds tsv, GBT router refit on val with the same recipe as matched_baselines.
 canonicalization (c++filt demangle, template/arg stripping) for every system. Reports overall, by regime, by name stratum."""
 import argparse, collections, json, os, pickle, re, subprocess, sys
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 ap = argparse.ArgumentParser()
 ap.add_argument('--log', required=True, help='LORD-inference-logs-*.txt from the BLens experiment dir')
 ap.add_argument('--nlp', default=f'{WS}/blens_ours_v2/xflBlensXProjectData')

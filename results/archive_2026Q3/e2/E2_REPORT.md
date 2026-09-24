@@ -71,5 +71,5 @@ modality is binding → P2. Residue worth carrying: H0/H1-max RETR_FAIL signal; 
 ranking signal (0.072); context-stream coverage stats.
 
 Artifacts: results/e2/ (census, homogenization, tomography, folds, context census, summary,
-e2c_model.pt); states e2_H{0-3}_{train,clean7}.npz on Wulver (~25GB, permanent);
+e2c_model.pt); states e2_H{0-3}_{train,clean7}.npz on HPC (~25GB, permanent);
 job logs e2.1175470/71/72/967.out. Code: experiments_semantic/e2_phase1.py.

@@ -13,13 +13,13 @@ Run with the blensnlp python (needs enchant/nltk for NLP.py). Env: OUT (dir with
   --self-test                 add 'selftest: generation head' from our own predA column (must reproduce the main table row)
 Writes OUT/score_report_extra_<tag>.json and prints EFFECT tables."""
 import argparse, csv, json, os, re, sys, collections, pickle, signal
-sys.path.insert(0, '/project/hz79/_shared/cs785/punstrip/scripts'); sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
-sys.path.insert(0, '/project/hz79/_shared/cs785/baselines/blens')
+sys.path.insert(0, '$WORKSPACE/punstrip/scripts'); sys.path.insert(0, '$WORKSPACE/dh2')
+sys.path.insert(0, '$WORKSPACE/baselines/blens')
 import blens_scorer as B
 from src.evaluation.metrics import compute_subtoken_f1
 from NLP import NLP
 
-P = '/project/hz79/_shared/cs785/punstrip'
+P = '$WORKSPACE/punstrip'
 OUT = os.environ['OUT']
 VOCAB = set(json.load(open(f'{P}/manifest/blens_label_vocab_1024.json')))
 

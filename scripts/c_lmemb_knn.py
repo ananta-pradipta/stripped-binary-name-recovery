@@ -9,7 +9,7 @@ and predict the neighbor's name. Output preds.tsv in a4_predict format so score_
 import json, os, sys
 import torch
 from torch.utils.data import DataLoader
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 CKPT = f'{WS}/checkpoints/a4_codet5p220m_modctx_v1/best'
 DATA = f'{WS}/results/a4_modctx'
 OUT = f'{WS}/results/c_lmemb_knn'
@@ -34,7 +34,7 @@ device = 'cuda'
 try:
     tok = AutoTokenizer.from_pretrained(CKPT)
 except Exception:
-    tok = AutoTokenizer.from_pretrained(f'/project/hz79/_shared/cs785/baselines/hf_local/codet5p-220m')
+    tok = AutoTokenizer.from_pretrained(f'$WORKSPACE/baselines/hf_local/codet5p-220m')
 enc = AutoModelForSeq2SeqLM.from_pretrained(CKPT).get_encoder().to(device).eval()
 
 def load(tier):

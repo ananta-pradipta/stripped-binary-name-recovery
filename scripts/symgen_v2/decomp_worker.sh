@@ -1,11 +1,11 @@
 #!/bin/bash
 # $1 = binary id. Decompile the protocol addresses of one stripped_v2 ELF.
-WS=/project/hz79/_shared/cs785/dh2/symgen_v2
-TOOLS=/project/hz79/_shared/cs785/tools
+WS=$WORKSPACE/dh2/symgen_v2
+TOOLS=$WORKSPACE/tools
 JH=$TOOLS/jdk-21.0.12+8
-STRIP=/project/hz79/_shared/cs785/relift_ws/data/stripped_v2/$1
+STRIP=$WORKSPACE/relift_ws/data/stripped_v2/$1
 OUT=$WS/decomp/$1.json
-GP=${TMPDIR:-/tmp}/adp232_sg_$1
+GP=${TMPDIR:-/tmp}/USER_sg_$1
 [ -s "$OUT" ] && exit 0
 [ -f "$STRIP" ] || { echo "$1 MISSING_STRIPPED"; exit 0; }
 BASE=$(cat $WS/bases/$1 2>/dev/null || echo 0x0)

@@ -3,7 +3,7 @@
 Source: Zenodo 15530083 ("Binary Files of SymGen", NDSS'25). 33 projects × {x86_64, x86_32, arm, mips} × {O0..O3}:
 `binaries.tar.gz` (4.7 GB, unstripped ELFs), `unstripped_decompiled_data.tar.gz` (1.2 GB, Ghidra JSON per binary:
 name → decomp_code / args_metadata / assembly / function_address), `stripped_decompiled_data.tar.gz` (1.1 GB),
-`source_projects.tar.gz` (0.2 GB). Wulver: `/project/hz79/_shared/cs785/symgen_corpus/` (binaries tarball symlinked
+`source_projects.tar.gz` (0.2 GB). HPC: `$WORKSPACE/symgen_corpus/` (binaries tarball symlinked
 from the April download in the course dir; x86_64 unstripped decomp already extracted there).
 
 ## Overlap audit (`scripts/symgen_overlap_audit.py`, name-normalized vs `split_v2.json` meta.roles)
@@ -27,8 +27,8 @@ Ingestible: **24 projects, x86_64, O0–O3**. Version differences (e.g. grep-3.8
 
 ## Pipeline
 - **BAP heads**: extract x86_64 ELFs (job 1195865) → strip copies (`strip --strip-all`) → labels from unstripped
-  `.symtab` (same `relift_v2.py` path as dataset v2; container recipe in [[project_wulver_bap_container]]) → BAP +
-  eh_frame rooter lift on Wulver CPU nodes → `match_index` rows with `corpus: symgen_zenodo` → DatasetV2 with
+  `.symtab` (same `relift_v2.py` path as dataset v2; container recipe in [[project_HPC_bap_container]]) → BAP +
+  eh_frame rooter lift on HPC CPU nodes → `match_index` rows with `corpus: symgen_zenodo` → DatasetV2 with
   `corpora: [local_main, symgen_zenodo]`. Expect ~2,000 binaries (24 proj × 4 opt × ~20 bins) ≈ the size of relift v2
   (1,890 bins, which took ~1 day wall-clock on CPU nodes).
 - **A4 head**: join stripped-decomp JSON (address-keyed) with unstripped names → `results/a4_ft/train_symgen.jsonl`

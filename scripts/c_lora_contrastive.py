@@ -11,14 +11,14 @@ adapter kept; then full re-embed of train/val/test, kNN preds tsv, unified canon
 MLP-routed system vs the demangled generation head."""
 import csv, json, os, re, subprocess, sys, collections, random
 import numpy as np, torch, torch.nn as nn
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1, split_name
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 OUT = f'{WS}/results/c_lora_contrastive'
 os.makedirs(OUT, exist_ok=True)
 torch.manual_seed(42); np.random.seed(42); random.seed(42)
 dev = 'cuda'
-M = '/project/hz79/_shared/cs785/baselines/hf_local/codet5p-220m'
+M = '$WORKSPACE/baselines/hf_local/codet5p-220m'
 MAX_SRC = 1280; BS_GROUPS = 24; PER_GROUP = 2; STEPS = 6000; TAU = 0.07; LR = 1e-3
 
 def demangle_many(names):

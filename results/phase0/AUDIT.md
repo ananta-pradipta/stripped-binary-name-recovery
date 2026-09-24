@@ -1,6 +1,6 @@
 # Phase-0 dataset audit (B2/B3/B5/B6/B8)
 
-Date: 2026-08-17. Repo: /home/apradipta/cs785-project (branch `unified`, read-only). Outputs: this dir only.
+Date: 2026-08-17. Repo: $HOME/cs785-project (branch `unified`, read-only). Outputs: this dir only.
 
 ## Method / provenance
 

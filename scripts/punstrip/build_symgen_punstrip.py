@@ -13,7 +13,7 @@ Audits printed as EFFECT lines: rows, skipped, mask applied on 100%, GT-name-in-
 import argparse, json, os, re
 from collections import Counter
 
-P = '/project/hz79/_shared/cs785/punstrip'
+P = '$WORKSPACE/punstrip'
 INSTR = ('Suppose you are an expert in software reverse engineering. Here is a piece of decompiled code, '
          'you should infer code semantics and tell me the original function name from the contents of the '
          'function to replace [MASK]. And you need to tell me your answer. Now the decompiled codes are as follows:')

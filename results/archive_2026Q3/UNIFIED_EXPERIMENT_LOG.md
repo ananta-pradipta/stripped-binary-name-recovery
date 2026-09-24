@@ -120,5 +120,5 @@ Strictly dominant. First real cross-project NOVEL gain over U1 in the arc.
 ## Key artifacts
 - Reports: `results/UNIFIED_FINAL_REPORT.md`, `results/g1/G1_REPORT.md`, `results/e1/E1_REPORT.md`, `results/e2/E2_REPORT.md`, `results/p1v2/P1V2_REPORT.md`, `results/RESEARCH_PROPOSAL_DUAL_HEAD.md`
 - Code: `src/preprocessing/parse_bap_v2.py`, `experiments_semantic/{p1_cache_v2,p1_cache_v3,p1_lex_extract,p1v2_train,u1_lex_union}.py`
-- Wulver: `strlex_ws/results/p1v2/p1_ckpt_{P1-full,P1-embfix,P1-lex,P1-copy}.pt` + fold0 + summaries
+- HPC: `strlex_ws/results/p1v2/p1_ckpt_{P1-full,P1-embfix,P1-lex,P1-copy}.pt` + fold0 + summaries
 - Key commits: 2b51f999, 6f4db119, 1c6de942, 6af5ab9f, 5f343abc, c8918cd7

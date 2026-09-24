@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --job-name=cs785-eval
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=2026-spring-cs-785-ACCOUNT-USER
 #SBATCH --qos=course
 #SBATCH --gres=gpu:a100_10g:1
 #SBATCH --time=04:00:00
@@ -15,8 +15,8 @@ echo "Date: $(date)"
 echo "Node: $(hostname)"
 echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'none')"
 
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
-source /course/2026/spring/cs/785/hz79/adp232/cs785-env/bin/activate
+cd /course/2026/spring/cs/785/ACCOUNT/USER/cs785
+source /course/2026/spring/cs/785/ACCOUNT/USER/cs785-env/bin/activate
 
 echo ""
 echo "=== Reverse hybrid: test set ==="

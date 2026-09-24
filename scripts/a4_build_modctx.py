@@ -8,7 +8,7 @@ the naming-convention prefix within +-10 neighbors. Output: results/a4_modctx/{t
 (same row schema as a4_baptext, trainable via a4_train_codet5p.py --data-dir, predictable via --rows)."""
 import json, os, re, sys
 from collections import Counter, defaultdict
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 PROTO = f'{WS}/results/baseline_protocol_v2'
 OUT = f'{WS}/results/a4_modctx'
 os.makedirs(OUT, exist_ok=True)

@@ -49,7 +49,7 @@ XPROJECT_NCT = ['nginx118', 'angie', 'tengine', 'openresty', 'nginx114', 'nginx1
                 'findutils2', 'diffutils2', 'inetutils2', 'coreutils4']
 XPROJECT_RESERVE = ['atop', 'bdb', 'bsdtar', 'byacc', 'diffutils3', 'entr', 'file', 'gdbm',
                     'gperf2', 'icu', 'lsof', 'mawk', 'mksh', 'mutt', 'procps', 'pv', 'sbase',
-                    'sysstat', 'tcsh', 'tdb',                         # 2026-08 Wulver harvest, never trained on
+                    'sysstat', 'tcsh', 'tdb',                         # 2026-08 HPC harvest, never trained on
                     'sggmp', 'sglibpng', 'sglibmicrohttpd', 'sgpoke', 'sglibredwg']  # SymGen-corpus external holdout (B1, confirmed 2026-08-26)
 VAL_XPROJ = ['rush', 'cppi', 'direvent', 'csplit2', 'wdiff', 'spell',   # small FT-like
              'coreutils3',                                              # near-clone of coreutils (version)

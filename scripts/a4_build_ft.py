@@ -5,7 +5,7 @@ symgen_v2/build_symgen_input.py (ghidra_name -> [MASK], first occurrence).
 Output: results/a4_ft/{train,val}.jsonl + stats.json. Nothing is trained here."""
 import json, os, sys
 from collections import Counter, defaultdict
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 PROTO = f'{WS}/results/baseline_protocol_v2'
 OUT = f'{WS}/results/a4_ft'
 os.makedirs(OUT, exist_ok=True)

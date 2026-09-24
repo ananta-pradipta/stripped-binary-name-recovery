@@ -9,9 +9,9 @@ Strategy B:
 This is inference-only — no model changes, no retraining.
 
 Usage:
-  python3 scripts/eval_knn_hybrid.py checkpoints/best_model_wulver.pt
-  python3 scripts/eval_knn_hybrid.py checkpoints/best_model_wulver.pt --threshold -0.15
-  python3 scripts/eval_knn_hybrid.py checkpoints/best_model_wulver.pt --sweep
+  python3 scripts/eval_knn_hybrid.py checkpoints/best_model_HPC.pt
+  python3 scripts/eval_knn_hybrid.py checkpoints/best_model_HPC.pt --threshold -0.15
+  python3 scripts/eval_knn_hybrid.py checkpoints/best_model_HPC.pt --sweep
 """
 import argparse
 import json

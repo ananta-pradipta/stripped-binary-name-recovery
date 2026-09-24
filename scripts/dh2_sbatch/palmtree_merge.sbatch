@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=cs785-eval --account=hz79 --partition=general --qos=standard
+#SBATCH --job-name=cs785-eval --account=ACCOUNT --partition=general --qos=standard
 #SBATCH --nodes=1 --ntasks=1 --cpus-per-task=4 --mem=64G --time=02:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/dh2/blens_ours_v2/pt_chunks/merge_%j.out
-WS=/project/hz79/_shared/cs785/dh2/blens_ours_v2
-BUE=/project/hz79/_shared/cs785/baselines/blens_user_env
+#SBATCH --output=$WORKSPACE/dh2/blens_ours_v2/pt_chunks/merge_%j.out
+WS=$WORKSPACE/dh2/blens_ours_v2
+BUE=$WORKSPACE/baselines/blens_user_env
 cd $BUE
 ./envs/BLens/bin/python - <<PY
 import pickle, glob, os

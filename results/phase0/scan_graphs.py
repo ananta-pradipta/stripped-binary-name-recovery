@@ -6,7 +6,7 @@ Writes a compact TSV to OUT.
 import os, sys, json, hashlib, time
 from multiprocessing import Pool
 
-GDIR = '/home/apradipta/cs785-project/data/graphs'
+GDIR = '$HOME/cs785-project/data/graphs'
 OUT = sys.argv[1]
 
 def scan(fn):

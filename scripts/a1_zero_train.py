@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A1 zero-training experiments on the embedding dump (Wulver, CPU).
+"""A1 zero-training experiments on the embedding dump (HPC, CPU).
 
 E1 string-rerank : rescore top-K retrieval candidates with sim + a*strJacc + b*extJacc
                    (a,b tuned on val), emit top candidate's name.
@@ -10,12 +10,12 @@ Metric v2 scoring (camel fix in metrics; C++ GT demangled via c++filt).
 """
 import json, re, subprocess, sys
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1, split_name
 from collections import defaultdict
 
-OUT = '/project/hz79/_shared/cs785/dh2/results/emb_v2'
-regime = json.load(open('/project/hz79/_shared/cs785/dh2/data/split_v2.json'))['meta']['test_regime']
+OUT = '$WORKSPACE/dh2/results/emb_v2'
+regime = json.load(open('$WORKSPACE/dh2/data/split_v2.json'))['meta']['test_regime']
 train_meta = json.load(open(f'{OUT}/train_meta.json'))
 tr_names = [m['name'] for m in train_meta]
 tr_strs = [set(t for s in m['strings'] for t in (s if isinstance(s, list) else [s])) if m['strings'] else set() for m in train_meta]

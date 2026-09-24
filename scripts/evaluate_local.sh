@@ -25,11 +25,11 @@ CHECKPOINT="${CHECKPOINT:-checkpoints/best_model.pt}"
 CONFIG="configs/optimized_large.yaml"
 
 if [ ! -f "$CHECKPOINT" ]; then
-    if [ -f "checkpoints/best_model_wulver.pt" ]; then
-        CHECKPOINT="checkpoints/best_model_wulver.pt"
+    if [ -f "checkpoints/best_model_HPC.pt" ]; then
+        CHECKPOINT="checkpoints/best_model_HPC.pt"
     else
         echo "  Checkpoint not found: $CHECKPOINT"
-        echo "  Run: bash scripts/wulver_sync_model.sh"
+        echo "  Run: bash scripts/HPC_sync_model.sh"
         exit 1
     fi
 fi

@@ -1,67 +1,67 @@
-# Wulver debug-ELF harvest (2026-08-17)
+# HPC debug-ELF harvest (2026-08-17)
 
-Goal: bring every unstripped x86-64 ELF (has `.symtab`) that exists under `/project/hz79/_shared/cs785` on Wulver but has no local debug ELF into `data/raw_wulver/<id>` for `scripts/relift_v2.py`. Wulver was read-only throughout; nothing else in the repo was modified.
+Goal: bring every unstripped x86-64 ELF (has `.symtab`) that exists under `$WORKSPACE` on HPC but has no local debug ELF into `data/raw_HPC/<id>` for `scripts/relift_v2.py`. HPC was read-only throughout; nothing else in the repo was modified.
 
 ## Method
 
-1. Walked the Wulver tree with a pure-python ELF header parser (magic, class, e_machine=62, section names, `.note.gnu.build-id`); skipped python envs, HF caches, JDK/Ghidra, tarball stages, graphs/labels/bir dirs. Directories scanned: `data/{debug,raw,cross_project,stripped,string_lexicon,external_calls}`, `ccs`, `clang_leaky_ws`, `clang_o1o3`, `data_clang`, `data_clang_train`, `data_hybrid`, `strlex_ws`, `demo`, `build_tmp`, `results`, `scripts`, `src`, `configs`, `tools`, `home_archive_adp232/{icfg,slurm_logs}`, `baselines/{SymLM,SymGen,blens,AsmDepictor,xfl,llasm,prorec,blens_user_env/{bin_chunks,bin_chunks_xproj,blens_data}}`. Also checked `~adp232` on Wulver (unrelated MASTER/StockMixer only) and `/project/hz79/_shared` (only `cs785`).
+1. Walked the HPC tree with a pure-python ELF header parser (magic, class, e_machine=62, section names, `.note.gnu.build-id`); skipped python envs, HF caches, JDK/Ghidra, tarball stages, graphs/labels/bir dirs. Directories scanned: `data/{debug,raw,cross_project,stripped,string_lexicon,external_calls}`, `ccs`, `clang_leaky_ws`, `clang_o1o3`, `data_clang`, `data_clang_train`, `data_hybrid`, `strlex_ws`, `demo`, `build_tmp`, `results`, `scripts`, `src`, `configs`, `tools`, `home_archive_USER/{icfg,slurm_logs}`, `baselines/{SymLM,SymGen,blens,AsmDepictor,xfl,llasm,prorec,blens_user_env/{bin_chunks,bin_chunks_xproj,blens_data}}`. Also checked `~USER` on HPC (unrelated MASTER/StockMixer only) and `$PROJECT/_shared` (only `cs785`).
 2. Kept only x86-64 ELF64 with `.symtab` (`has_symtab=1`); dropped build-tree duplicates (`clang_o1o3/build/**`, `demo/build/**`, `build_tmp/**` — the latter are byte-identical to the `*_O3` files in `data/raw`, e.g. `build_tmp/gawk-5.2.2/gawk` == `data/raw/gawk2_gawk_O3`; kept in the TSV as `build-tree-dup` for provenance) plus openssl test/fuzz binaries, gnulib-tests, ghidra, sample binaries.
 3. Local inventory = `corpus_manifest.tsv` `has_debug_elf` paths + `data/raw/<id>[_sym]` + `data/cross_project/{debug,candidates}` + `ftdomains*/bins/*.debug` + `clang_*/bins/*.debug` + `demo/raw/*_sym` (1,617 ids).
-4. Full listing: `results/phase0/manifest/wulver_debug_elfs.tsv` (380 rows; columns id, path, size, has_symtab, has_debug_sections, build_id, elf_type, source_group, local_path, local_build_id, status).
+4. Full listing: `results/phase0/manifest/HPC_debug_elfs.tsv` (380 rows; columns id, path, size, has_symtab, has_debug_sections, build_id, elf_type, source_group, local_path, local_build_id, status).
 
 ## Result summary
 
-- Wulver debug ELFs found (with .symtab, after de-dup of build trees): 353 files, 353 distinct ids.
-- **Copied (no local debug ELF): 283 files, 1338.0 MB (1337990744 bytes)** into `data/raw_wulver/`. All 283 verified after copy (size + build-id + `.symtab` present). No `_sym` renaming was needed (all Wulver basenames already equal the id).
-- Local debug ELF exists and matches Wulver: 8 (cflow x4 same build-id; nginx118/tengine/... clang bins identical size, no build-id).
-- Local debug ELF exists but Wulver copy is a DIFFERENT build (report only, NOT copied): see table below.
+- HPC debug ELFs found (with .symtab, after de-dup of build trees): 353 files, 353 distinct ids.
+- **Copied (no local debug ELF): 283 files, 1338.0 MB (1337990744 bytes)** into `data/raw_HPC/`. All 283 verified after copy (size + build-id + `.symtab` present). No `_sym` renaming was needed (all HPC basenames already equal the id).
+- Local debug ELF exists and matches HPC: 8 (cflow x4 same build-id; nginx118/tengine/... clang bins identical size, no build-id).
+- Local debug ELF exists but HPC copy is a DIFFERENT build (report only, NOT copied): see table below.
 
 ## Copied files per package
 
-| package | files | MB | Wulver source | build-id check vs local stripped ELF |
+| package | files | MB | HPC source | build-id check vs local stripped ELF |
 |---|---|---|---|---|
 | angie | 4 | 16.5 | SymLM/xproj_debug | bid-verified |
-| atop | 8 | 4.9 | data/debug | no-buildid-on-wulver |
-| bdb | 40 | 617.2 | data/debug | no-buildid-on-wulver |
+| atop | 8 | 4.9 | data/debug | no-buildid-on-HPC |
+| bdb | 40 | 617.2 | data/debug | no-buildid-on-HPC |
 | cvs | 4 | 11.0 | cross_project/debug_unseen | no-local-stripped-bid |
-| diffutils | 16 | 4.9 | data/raw | no-buildid-on-wulver |
+| diffutils | 16 | 4.9 | data/raw | no-buildid-on-HPC |
 | findutils2 | 8 | 5.8 | data/raw | no-local-stripped-bid |
 | fossil | 4 | 58.6 | cross_project/debug_unseen | BID-MISMATCH-vs-local-stripped, no-local-stripped-bid |
-| gawk2 | 4 | 9.5 | data/raw | no-buildid-on-wulver |
-| gdbm | 12 | 2.2 | data/debug | no-buildid-on-wulver |
+| gawk2 | 4 | 9.5 | data/raw | no-buildid-on-HPC |
+| gdbm | 12 | 2.2 | data/debug | no-buildid-on-HPC |
 | grep2 | 4 | 2.6 | data/raw | no-local-stripped-bid |
 | gzip2 | 4 | 1.1 | data/raw | no-local-stripped-bid |
-| icu | 44 | 410.4 | data/debug | no-buildid-on-wulver |
-| iotop | 4 | 1.6 | data/debug | no-buildid-on-wulver |
-| libxml2 | 6 | 24.7 | data/debug | no-buildid-on-wulver |
+| icu | 44 | 410.4 | data/debug | no-buildid-on-HPC |
+| iotop | 4 | 1.6 | data/debug | no-buildid-on-HPC |
+| libxml2 | 6 | 24.7 | data/debug | no-buildid-on-HPC |
 | lighttpd | 4 | 6.0 | cross_project/debug_unseen | no-local-stripped-bid |
-| lsof | 4 | 2.7 | data/debug | no-buildid-on-wulver |
-| mksh | 4 | 4.1 | data/debug | no-buildid-on-wulver |
-| mutt | 8 | 10.8 | data/debug | no-buildid-on-wulver |
+| lsof | 4 | 2.7 | data/debug | no-buildid-on-HPC |
+| mksh | 4 | 4.1 | data/debug | no-buildid-on-HPC |
+| mutt | 8 | 10.8 | data/debug | no-buildid-on-HPC |
 | nginx114 | 2 | 6.9 | SymLM/xproj_debug | no-local-stripped-bid |
 | nginx118 | 4 | 14.8 | SymLM/xproj_debug | bid-verified |
 | nginx126 | 2 | 7.3 | SymLM/xproj_debug | no-local-stripped-bid |
 | openresty | 4 | 40.0 | SymLM/xproj_debug | no-local-stripped-bid |
 | patch2 | 4 | 2.0 | data/raw | no-local-stripped-bid |
-| procps | 8 | 0.5 | data/debug | no-buildid-on-wulver |
+| procps | 8 | 0.5 | data/debug | no-buildid-on-HPC |
 | sed2 | 4 | 2.9 | data/raw | no-local-stripped-bid |
-| sysstat | 28 | 10.6 | data/debug | no-buildid-on-wulver |
+| sysstat | 28 | 10.6 | data/debug | no-buildid-on-HPC |
 | tar2 | 4 | 7.7 | data/raw | no-local-stripped-bid |
-| tcsh | 3 | 4.0 | data/debug | no-buildid-on-wulver |
-| tdb | 16 | 0.6 | data/debug | no-buildid-on-wulver |
+| tcsh | 3 | 4.0 | data/debug | no-buildid-on-HPC |
+| tdb | 16 | 0.6 | data/debug | no-buildid-on-HPC |
 | tengine | 2 | 8.9 | SymLM/xproj_debug | bid-verified |
-| tig | 4 | 6.1 | data/debug | no-buildid-on-wulver |
+| tig | 4 | 6.1 | data/debug | no-buildid-on-HPC |
 | tinycc | 4 | 3.9 | cross_project/debug_unseen | no-local-stripped-bid |
 | units2 | 4 | 1.0 | data/raw | no-local-stripped-bid |
 | which2 | 4 | 0.3 | data/raw | no-local-stripped-bid |
-| zstd | 4 | 25.7 | data/debug | no-buildid-on-wulver |
+| zstd | 4 | 25.7 | data/debug | no-buildid-on-HPC |
 | **total** | **283** | **1338.0** | | |
 
-Notes on the build-id column: Wulver-compiled binaries in `data/debug` and `data/raw` were linked without `--build-id` (annobin `.gnu.build.attributes` only), so they cannot be build-id-verified against local stripped ELFs; `relift_v2.py`/`rcdg_stage0_elfcheck.py` should verify by section layout / FDE count. Where both sides had a build-id: angie x4, nginx118 x4, tengine x2 match the local stripped ELFs exactly (`SymLM/xproj_debug` copies are the true debug twins of the local BIRs). **fossil_fossil_O0/O2** (`cross_project/debug_unseen`) have build-ids bf02306b../d77be070.. that do NOT match the local stripped build-ids in the manifest (4364276a../f9c514d1..) — copied anyway (no local debug exists) but treat as a different build.
+Notes on the build-id column: HPC-compiled binaries in `data/debug` and `data/raw` were linked without `--build-id` (annobin `.gnu.build.attributes` only), so they cannot be build-id-verified against local stripped ELFs; `relift_v2.py`/`rcdg_stage0_elfcheck.py` should verify by section layout / FDE count. Where both sides had a build-id: angie x4, nginx118 x4, tengine x2 match the local stripped ELFs exactly (`SymLM/xproj_debug` copies are the true debug twins of the local BIRs). **fossil_fossil_O0/O2** (`cross_project/debug_unseen`) have build-ids bf02306b../d77be070.. that do NOT match the local stripped build-ids in the manifest (4364276a../f9c514d1..) — copied anyway (no local debug exists) but treat as a different build.
 
-## Ids where a local debug ELF exists but the Wulver copy differs (NOT copied)
+## Ids where a local debug ELF exists but the HPC copy differs (NOT copied)
 
-| id | Wulver path | Wulver bid / size | local path | local bid / size |
+| id | HPC path | HPC bid / size | local path | local bid / size |
 |---|---|---|---|---|
 | libxml2_xmllint_O1 | data/debug/libxml2_xmllint_O1 | - / 4140240 | data/raw/libxml2_xmllint_O1_sym | ab28b5e9fb7b / 221128 |
 | libxml2_xmllint_O3 | data/debug/libxml2_xmllint_O3 | - / 5821120 | data/raw/libxml2_xmllint_O3_sym | d2f99a5d53cb / 241072 |
@@ -97,35 +97,35 @@ Notes on the build-id column: Wulver-compiled binaries in `data/debug` and `data
 | tcsh_tcsh_O2 | data/debug/tcsh_tcsh_O2 | - / 1462560 | data/cross_project/candidates/tcsh_tcsh_O2 | 78051804e6d9 / 1559336 |
 
 - recutils x24 (`baselines/SymLM/dataset_generation/xproj_debug/`): a different recutils build than local `data/raw/recutils_*_sym` (and than the local stripped ELFs / BIRs); ignore for re-lift.
-- libxml2_xmllint_O1/O3: Wulver `data/debug` copies are 4.1/5.8 MB (static libxml2 link) vs local 221/241 KB `_sym` (dynamic link) -- different builds; local O0/O2 debug do not exist locally at all and were copied (`libxml2_xmllint_O0`, `libxml2_xmllint_O2`, plus xmlcatalog x4). Local `data/stripped/libxml2_xmllint_O0/O2` are known build-mismatched (see project_rcdg.md), so verify before use.
-- tcsh_tcsh_O2: local `data/cross_project/candidates/tcsh_tcsh_O2` (1,559,336 B) vs Wulver `data/debug/tcsh_tcsh_O2` (1,462,560 B), neither has a build-id -- different builds; O0/O1/O3 were copied.
-- openssl_openssl_O0..O3: Wulver `data/raw` copies (no build-id, 16.2/21.2/22.1/23.7 MB) vs local (with build-id, 17.0/22.1/23.4/24.9 MB) -- different builds.
-- patch_patch (demo, no opt tag): Wulver `demo/raw/patch_patch_sym` bid 8af836f2.. vs local `data/raw/patch_patch_sym` bid fd6fc0ea.. -- different builds. `demo/raw/diffutils_{cmp,diff,diff3,sdiff}_sym` are already present locally in `demo/raw/`.
+- libxml2_xmllint_O1/O3: HPC `data/debug` copies are 4.1/5.8 MB (static libxml2 link) vs local 221/241 KB `_sym` (dynamic link) -- different builds; local O0/O2 debug do not exist locally at all and were copied (`libxml2_xmllint_O0`, `libxml2_xmllint_O2`, plus xmlcatalog x4). Local `data/stripped/libxml2_xmllint_O0/O2` are known build-mismatched (see project_rcdg.md), so verify before use.
+- tcsh_tcsh_O2: local `data/cross_project/candidates/tcsh_tcsh_O2` (1,559,336 B) vs HPC `data/debug/tcsh_tcsh_O2` (1,462,560 B), neither has a build-id -- different builds; O0/O1/O3 were copied.
+- openssl_openssl_O0..O3: HPC `data/raw` copies (no build-id, 16.2/21.2/22.1/23.7 MB) vs local (with build-id, 17.0/22.1/23.4/24.9 MB) -- different builds.
+- patch_patch (demo, no opt tag): HPC `demo/raw/patch_patch_sym` bid 8af836f2.. vs local `data/raw/patch_patch_sym` bid fd6fc0ea.. -- different builds. `demo/raw/diffutils_{cmp,diff,diff3,sdiff}_sym` are already present locally in `demo/raw/`.
 
-## Debug ELFs that do NOT exist anywhere on Wulver (searched all locations above)
+## Debug ELFs that do NOT exist anywhere on HPC (searched all locations above)
 
-These ids have graphs/labels/stripped ELFs on Wulver (from `ccs/data` / `data/stripped`, compiled ~Mar 20 or Apr 26 2026) but the unstripped binaries were only ever written to `$DEBUG=/project/hz79/_shared/cs785/data/debug` or a `/tmp/p0_0_6_*_$SLURM_JOB_ID` build dir, and are gone:
+These ids have graphs/labels/stripped ELFs on HPC (from `ccs/data` / `data/stripped`, compiled ~Mar 20 or Apr 26 2026) but the unstripped binaries were only ever written to `$DEBUG=$WORKSPACE/data/debug` or a `/tmp/p0_0_6_*_$SLURM_JOB_ID` build dir, and are gone:
 - **coreutils2_{dd,df,du,ls,mktemp,realpath,shred,sort,stty}_{O0,O1,O2,O3,default}** -- 45 ids, only `data/stripped/*_stripped` (Mar 20) + labels (200 fns each) remain; no sbatch in `ccs/` references coreutils2 (built by an older `scripts/expand_bap_only.sh` flow); `build_tmp/coreutils-8.32` contains only `src/make-prime-list`.
 - **diffutils2_{cmp,diff,diff3,sdiff}_O0..O3** -- 16 ids, stripped + labels only.
 - **inetutils2_{dnsdomainname,hostname,logger}_O0..O3** -- 12 ids, stripped + labels only.
 - **zsh_zsh_O0..O3** -- `data/debug/zsh_zsh_O*` exist but are STRIPPED (0 `.symtab`, no `.debug_*`; zsh links with `-s`), and `data/labels/zsh_zsh_O*_labels.json` have 0 functions -> zsh debug never existed.
 - **nginx114_nginx114_O1/O3, nginx126_nginx126_O1/O3** -- never built (only O0/O2 exist anywhere: labels, stripped, SymLM xproj_debug).
-- **dash_dash_clang_O0/O2** -- only labels/graphs in `data_clang/`; the clang bins on Wulver (`clang_o1o3/bins`) are O1/O3 only and are already local. `angie/nginx118/tengine/gettext/psmisc/recutils _clang_O1/O3` likewise already local (identical sizes).
-- Sibling `*2_` packages that WERE recovered: gawk2, grep2, gzip2, sed2, tar2, units2, which2, patch2, findutils2 (find, xargs), diffutils_(cmp|diff|diff3|sdiff)_O0..O3 -- all from Wulver `data/raw/` (56 files).
+- **dash_dash_clang_O0/O2** -- only labels/graphs in `data_clang/`; the clang bins on HPC (`clang_o1o3/bins`) are O1/O3 only and are already local. `angie/nginx118/tengine/gettext/psmisc/recutils _clang_O1/O3` likewise already local (identical sizes).
+- Sibling `*2_` packages that WERE recovered: gawk2, grep2, gzip2, sed2, tar2, units2, which2, patch2, findutils2 (find, xargs), diffutils_(cmp|diff|diff3|sdiff)_O0..O3 -- all from HPC `data/raw/` (56 files).
 
 ## Exact commands
 
 ```bash
-# 1. scan (pure-python ELF parser streamed to Wulver, output captured locally; run per top-level dir)
-ssh wulver 'python3 - /project/hz79/_shared/cs785/<dir>' < scratchpad/scan.py > scratchpad/scan_<dir>.tsv
-# 2. compare with local inventory -> results/phase0/manifest/wulver_debug_elfs.tsv + files_from.txt (283 relative paths)
+# 1. scan (pure-python ELF parser streamed to HPC, output captured locally; run per top-level dir)
+ssh HPC 'python3 - $WORKSPACE/<dir>' < scratchpad/scan.py > scratchpad/scan_<dir>.tsv
+# 2. compare with local inventory -> results/phase0/manifest/HPC_debug_elfs.tsv + files_from.txt (283 relative paths)
 # 3. copy (flattened basenames == ids; no rename needed)
-rsync -av --no-relative --files-from=scratchpad/files_from.txt wulver:/project/hz79/_shared/cs785/ /home/apradipta/cs785-project/data/raw_wulver/
+rsync -av --no-relative --files-from=scratchpad/files_from.txt HPC:$WORKSPACE/ $HOME/cs785-project/data/raw_HPC/
 #   -> sent 14,062 bytes  received 1,338,333,910 bytes; total size 1,337,990,744
 # 4. verify: size, .symtab, build-id re-parsed for all 283 -> 283 OK / 0 bad
 ```
 
-## Source manifest of the copied files (relative to `/project/hz79/_shared/cs785/`)
+## Source manifest of the copied files (relative to `$WORKSPACE/`)
 
 ```
 angie_angie_O0	baselines/SymLM/dataset_generation/xproj_debug/angie_angie_O0	3701000	329e88015892d70c80b0802a55f5311e1b03a995

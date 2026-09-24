@@ -1,15 +1,15 @@
 #!/bin/bash -l
-#SBATCH --job-name=cs785-eval --account=hz79 --partition=gpu --qos=standard
+#SBATCH --job-name=cs785-eval --account=ACCOUNT --partition=gpu --qos=standard
 #SBATCH --gres=gpu:a100:1 --cpus-per-task=8 --mem=80G --time=08:00:00
-#SBATCH --output=/project/hz79/_shared/cs785/dh2/symgen_v2/infer_c_oursv2_%j.out
+#SBATCH --output=$WORKSPACE/dh2/symgen_v2/infer_c_oursv2_%j.out
 set -euo pipefail
-export HF_HOME=/project/hz79/_shared/cs785/baselines/hf_cache
-export TRANSFORMERS_CACHE=/project/hz79/_shared/cs785/baselines/hf_cache
+export HF_HOME=$WORKSPACE/baselines/hf_cache
+export TRANSFORMERS_CACHE=$WORKSPACE/baselines/hf_cache
 module load bright 2>/dev/null || true
 module load CUDA/12.6.0
-source /project/hz79/_shared/cs785/baselines/symgen_ft_env/bin/activate
-SYMGEN=/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen
-WS=/project/hz79/_shared/cs785/dh2/symgen_v2
+source $WORKSPACE/baselines/symgen_ft_env/bin/activate
+SYMGEN=/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen
+WS=$WORKSPACE/dh2/symgen_v2
 python3 - <<PY
 import json
 inp=json.load(open("$WS/interim_c_input.json")); meta=json.load(open("$WS/interim_c_metadata.json"))

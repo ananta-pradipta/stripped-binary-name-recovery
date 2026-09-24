@@ -144,7 +144,7 @@ The August entry marked the XFL/Punstrip corpus "not obtainable". Verified today
 ships `xfl/evaluation/dataset.txt` (manifest of all 10,047 binaries as Debian package + install
 path, 3,465 packages) and `dataset_eval_split.dill` (9,042/502/503 binary split); (2) the BLens
 Zenodo artifact (10.5281/zenodo.15119877, already at
-`baselines/blens_user_env/zenodo/data.tar.gz` on Wulver) contains the function-level ground truth
+`baselines/blens_user_env/zenodo/data.tar.gz` on HPC) contains the function-level ground truth
 for the cross-project setting (train 394,985 fns/9,042 bins/3,112 pkgs; val 18,081/367/173; test
 23,875/451/174; records = bin path, address, name, tokenised name), the cross-binary and strict
 splits, embeddings, and raw logs of BLens/XFL/SymLM/AsmDepictor/HexT5; (3) `punstrip/debian-unstripped`

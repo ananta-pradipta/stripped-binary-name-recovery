@@ -1401,7 +1401,7 @@ For the paper, this is actually a useful illustration of the "recognizer limitat
 - k-NN head nearly insensitive to both factors (retrieval quality is capacity-independent; the decoder is what needs scale)
 
 †8M+PT encoder pretrained 9/10 epochs (job 1145547 hit 24h TIMEOUT in epoch 10; relaunched as 1148951 from the epoch-9 encoder, loss 1.874 and improving — immaterial for comparison, noted for exactness).
-Checkpoints: `checkpoints/ablation_model4/m1_ablation_model4_{nopretrain_jul,pretrain}_seed42.pt`, `checkpoints/ablation_model5_nopretrain/m1_ablation_model5_{nopretrain,pretrain_jul}_seed42.pt`; encoders `pretrained_encoder_8m.pt`, `pretrained_encoder_25m_jul.pt` (Wulver). Results: `results/m1_ablation_*_xproj.json` (Wulver).
+Checkpoints: `checkpoints/ablation_model4/m1_ablation_model4_{nopretrain_jul,pretrain}_seed42.pt`, `checkpoints/ablation_model5_nopretrain/m1_ablation_model5_{nopretrain,pretrain_jul}_seed42.pt`; encoders `pretrained_encoder_8m.pt`, `pretrained_encoder_25m_jul.pt` (HPC). Results: `results/m1_ablation_*_xproj.json` (HPC).
 
 **Same sprint (2026-07-27/28):** leakage audit (`results/ndss_prep/leakage_audit.md` — 88%/74.5% verbatim overlap), complementarity analysis (EM=0% novel/OOV all heads), clean-checkpoint 9-pkg eval (`ccs/results/hybrid_paper_clean_xproj_full_raw_strict.json` — FT collapse dash 0.13/gettext 0.04/psmisc 0.18, NCT strong, best hybrid 0.606).
 
@@ -1435,7 +1435,7 @@ Checkpoints: `checkpoints/ablation_model4/m1_ablation_model4_{nopretrain_jul,pre
 
 ## 2026-08-02 — Clean-Checkpoint Clang O0–O3 Matrix (job 1156572, COMPLETED 1h43m)
 - **Setup:** `best_model_paper_clean.pt` (zero Clang in training, clean strict split, 241K-fn clean k-NN index) evaluated on 7 xproj pkgs × Clang O0–O3 via full hybrid pipeline (`rag_clang_hybrid_paper_clean.py` = June complete script + angie O0–O3; staging mirrors GCC strict dump job 1146270 exactly).
-- **Output:** `ccs/results/hybrid_paper_clean_clang_full_raw_strict.json` (Wulver); log `eval_clang_paper_clean_hybrid.1156572.out`.
+- **Output:** `ccs/results/hybrid_paper_clean_clang_full_raw_strict.json` (HPC); log `eval_clang_paper_clean_hybrid.1156572.out`.
 
 **Per-package F1 at σ=0.70, same clean checkpoint (GCC strict run 1146270 vs this Clang run):**
 | pkg | N(GCC/Clang) | GCC | Clang | Δ |
@@ -1538,7 +1538,7 @@ Per-package F1 at σ=0.70 (baseline → arm1 → arm2):
 - Lesson for the framework: coverage % is also a *leakage detector* — an unexpectedly high overlap on a supposedly-new package is a red flag to check the split.
 
 ## 2026-08-03 — Clang training corpus: DECISION REVERSED (build it)
-- Earlier call ("not before NDSS") was made on cost grounds and was too quick. Two facts change it: (1) **87 source tarballs already local** in `build_tmp/` — the training packages' sources are in hand; (2) the campaign is **local CPU** (compile→strip→BAP→graphs) while R1/R3a occupy **Wulver GPU** — no critical-path competition; today's 44-binary ftdomains run took ~2h unattended.
+- Earlier call ("not before NDSS") was made on cost grounds and was too quick. Two facts change it: (1) **87 source tarballs already local** in `build_tmp/` — the training packages' sources are in hand; (2) the campaign is **local CPU** (compile→strip→BAP→graphs) while R1/R3a occupy **HPC GPU** — no critical-path competition; today's 44-binary ftdomains run took ~2h unattended.
 - Design (user's, and it is the correct one): Clang builds of TRAIN packages → train; Clang builds of EVAL packages → test only; never mix. Same discipline as GCC.
 - Payoff: replaces June's leaky-model parity claim with a fully-clean two-point result under our own strict protocol — the strongest possible answer to Reviewer B's shepherding item ("A different compiler?").
 - Why zero-shot Clang works at all (0.44 not 0.0): the model consumes BAP-IR instruction TYPES over a CFG, not bytes; the IR flattens instruction selection/regalloc/scheduling. The residual ~50% gap = what the IR does NOT flatten (inlining decisions, CFG shape, call idioms). The zero-shot number is thus a direct measurement of IR compiler-agnosticism — the claim B said we asserted without validating.
@@ -2085,14 +2085,14 @@ The session plan assumed both baselines "were fine-tuned on our corpus including
 - **Consequence**: the old SymGen 0.630 / BLens ~0.44 numbers were already leakage-clean at the supervision level. The comparison problem was never leakage — it is (a) SymGen's missing FT eval, and (b) population mismatch. Both resolved below.
 
 ## 2026-08-05 — SYMGEN'S FAR-TRANSFER EVAL IS VACUOUS: its dash/gettext/psmisc "functions" are 100% import stubs
-Unlogged results existed on Wulver (`results_full_ours_5newpkg`, 3,709 predictions). Scored with our sub-token F1: dash 0.598 / gettext 0.422 / psmisc 0.413 — which would demolish our FT numbers (0.13/0.04/0.14). **Attempting a per-function join with our predictions produced ZERO shared keys on all three packages, and the root cause invalidates SymGen's FT eval entirely:**
+Unlogged results existed on HPC (`results_full_ours_5newpkg`, 3,709 predictions). Scored with our sub-token F1: dash 0.598 / gettext 0.422 / psmisc 0.413 — which would demolish our FT numbers (0.13/0.04/0.14). **Attempting a per-function join with our predictions produced ZERO shared keys on all three packages, and the root cause invalidates SymGen's FT eval entirely:**
 - `readelf --dyn-syms` on the stripped eval binaries: **every FUNC entry is UND** (dash 85/85, xgettext 166/166). SymGen's per-package counts match imports × opt-levels exactly (dash: 85×4 + runtime junk ≈ 367).
 - Its "ground truth" names (`malloc`, `ioctl`, `its_rule_list_free`, `_DT_FINI`) are **imports from libc/libgettextsrc.so** — names present in the stripped binary's dynamic-linking metadata, which Ghidra assigns automatically. The decompiled input SymGen sees for these is a PLT thunk whose name is already known. This is the tengine-100%-EM artifact wearing a different hat.
 - **SymGen therefore has NO valid far-transfer number.** Its 4-pkg NCT eval (angie/nginx118/tengine/recutils) IS valid for internal functions (those packages leak internal names via defined `.dynsym`, which reaches its decompiled input as call-site names — same channel as our CALL_<sym> tokens; caveat applies to both systems).
 - Full-set clean-7 numbers (own populations, before matching): SymGen n-wt **0.630** (18,944 fns; this is where the remembered "0.630" comes from — it was always the clean number), BLens ~0.44 (19,337 fns), ours 0.550 (13,581 fns). These are NOT comparable across systems — see matched subset below.
 
 ## 2026-08-05 — MATCHED-SUBSET CLEAN-7 COMPARISON (identical functions, identical metric) — the paper table
-`scripts/matched_subset_clean7.py`; JSON: `results/ndss_prep/matched_subset_clean7.json` (= Wulver strlex_ws/results/ndss_prep_matched_subset_clean7.json). Join key (binary, GT name); ours = sigma-0.70 hybrid per-function predictions; BLens scored against its own normalized targets (it trains in a normalized name space: quotearg→quote_argument, aux→auxiliary, long names truncated — scoring it on raw names would undercount it; this is the charitable choice and matches its paper's protocol).
+`scripts/matched_subset_clean7.py`; JSON: `results/ndss_prep/matched_subset_clean7.json` (= HPC strlex_ws/results/ndss_prep_matched_subset_clean7.json). Join key (binary, GT name); ours = sigma-0.70 hybrid per-function predictions; BLens scored against its own normalized targets (it trains in a normalized name space: quotearg→quote_argument, aux→auxiliary, long names truncated — scoring it on raw names would undercount it; this is the charitable choice and matches its paper's protocol).
 
 **ours vs SymGen (7,323 shared real functions; NCT+recutils only — SymGen's FT set is vacuous):**
 | pkg | n | ours-base | ours-clanginv | SymGen |
@@ -2137,7 +2137,7 @@ Follow-ups to the "vacuous FT eval" finding, from reading the actual generation 
 This gives SymGen the same task our model faces on FT (internal functions, no name in input). CodeLlama source-exposure caveat unaffected.
 
 ## 2026-08-05 — TRACK B: first universe-cache lesson (job 1161505, aborted correctly at 7 min)
-The miner's >1%-unreadable tripwire fired: 22,713/189,571 (12%) of the LOCALLY-built token-vector cache's graph paths don't exist in strlex_ws's graph tree (local and Wulver corpora have drifted). Fix in progress: rebuild `hard_neg_token_vectors.npz` ON WULVER from strlex_ws's own match_index/split (local npz kept as `.LOCAL.npz.bak`), then resubmit. Cost of the discipline so far: three aborted-in-minutes submissions instead of three silent 8-hour nulls.
+The miner's >1%-unreadable tripwire fired: 22,713/189,571 (12%) of the LOCALLY-built token-vector cache's graph paths don't exist in strlex_ws's graph tree (local and HPC corpora have drifted). Fix in progress: rebuild `hard_neg_token_vectors.npz` ON HPC from strlex_ws's own match_index/split (local npz kept as `.LOCAL.npz.bak`), then resubmit. Cost of the discipline so far: three aborted-in-minutes submissions instead of three silent 8-hour nulls.
 
 ## 2026-08-05 — EVIDENCE-YIELD DIAGNOSTIC: how much of the answer is in the target binary itself?
 Gate measurement for the composition/OOV brainstorm's top idea (evidence-anchored lexicon biasing). `scripts/evidence_yield_diagnostic.py`; JSON `results/ndss_prep/evidence_yield.json`. Evidence pool per stripped binary = `strings -a -n 3` tokens + dynsym-defined names + import names, sub-tokenized with our own name tokenizer; GT = labels, clone-normalized.
@@ -2166,7 +2166,7 @@ The number the last two runs died on:
 | 1161287 | token-bag (K=8, w=3.0) | 1.05% | aborted |
 | 1161336 | token-bag (K=32, w=5.0) | 1.52% | aborted |
 | **1161632** | **encoder f-space (K=8, w=3.0)** | **15.54%** | **passed (floor 0.10), training continues** |
-- Miner effect checks on the Wulver universe (252,537 paired samples): accepted-negative cos mean **0.922** vs random-pair 0.346 vs true-pair 0.918 — mined negatives are as close to their anchors as genuine positives, i.e. maximal-mass by construction. 638,517 negatives / 87,213 anchors (100% pair-covered, 54.3% cross-package, 0 unresolvable after the Wulver-native cache rebuild).
+- Miner effect checks on the HPC universe (252,537 paired samples): accepted-negative cos mean **0.922** vs random-pair 0.346 vs true-pair 0.918 — mined negatives are as close to their anchors as genuine positives, i.e. maximal-mass by construction. 638,517 negatives / 87,213 anchors (100% pair-covered, 54.3% cross-package, 0 unresolvable after the HPC-native cache rebuild).
 - Slot share only 2.41% → mass/slot ratio 6.4× — the "genuinely harder than in-batch" signature.
 - Contrastive loss epoch 1: 3.69 (control arm at same epoch: ~2.1) — the objective is measurably harder with the mined negatives in the denominator, which is the point.
 - Epoch time 26.6 min (control 17) → arm finishes ~4.5h. Downstream FT A/B jobs pre-submitted with SLURM dependencies: 1162527 (control FT, afterok:1161470) and 1162528 (hardneg FT, afterok:1161632), both the exact train_homolog_ft recipe with only the encoder init varying.
@@ -2304,7 +2304,7 @@ Mean cosine of the SAME 2,000 mined negative pairs / 2,000 true positive pairs /
 **VERDICT: the FT wall's representation problem is created/maintained by the FINE-TUNING objective, not the pretraining objective. Any pretrain-level representation fix will be overwritten. The only mechanism-consistent intervention left is imposing the constraint DURING fine-tuning (auxiliary mined-negative loss), and the paper can now state the full causal chain with measurements at every link: shortcut identified (probe) → fixed (gate 1, 15.5% mass) → fix verified in f-space (this probe, +0.155→0.000) → erased by supervised FT (0.660≈0.673) → downstream null (gate 2).**
 
 ## 2026-08-06 — AUX-CL FINE-TUNE EXPERIMENT LAUNCHED (jobs 1165769 train → 1165770 eval): the washout fix
-Implementation (commits fd72f897/3e21ba08; Wulver strlex_ws train.py/build_dataset.py patched with .pre_auxcl.bak backups — NOTE the Wulver lineage had diverged ~250 lines from local, edits ported not synced):
+Implementation (commits fd72f897/3e21ba08; HPC strlex_ws train.py/build_dataset.py patched with .pre_auxcl.bak backups — NOTE the HPC lineage had diverged ~250 lines from local, edits ported not synced):
 - `src/training/aux_contrastive.py`: per-batch provider mapping training anchors → O0/O2 positive + K mined embedding-space negatives, tokenized from the dataset's in-memory graphs in the exact training input space.
 - Owner-masked NT-Xent (reusing pretrain_heads.nt_xent_loss_with_hard_negatives) applied ON RAW f every fine-tuning step — no projection head, so the constraint lives in the transferred space; λ=0.5, K=4, τ=0.07. Default-off flags; zero-aux-batches tripwire.
 - Two silent-failure classes caught before the real run: (a) torch≥2.1 DataLoader fetchers call Subset.__getitems__, bypassing the __getitem__ override and silently dropping sample_idx — the effect tripwire caught it in the smoke; (b) login-node smoke SIGKILLs (memory limits) → smoke moved to a GPU job.
@@ -2418,7 +2418,7 @@ Clean-7 Clang matrix for `best_model_cont_control.pt` (the current best / report
 Placed against the existing matrix (Clang pkg-mean): gcc-only baseline 0.250 · mixed GCC+Clang training 0.268 · compiler-invariant encoder 0.258 · **control model 0.262**. So the headline model is mid-pack on Clang transfer without any compiler-specific training — better than the plain GCC baseline (+0.012), just below the mixed-data variant (−0.006) that pays a GCC cost. The paper's compiler section can now report the reported model rather than only ablation variants.
 
 ## 2026-08-07 — TOOLING NOTE (preflight discipline): flag wired into a function DEFAULT instead of the call site
-`--no-rerank` was first patched into `retrieve_topk_with_rerank`'s signature default (`use_rerank=not args.no_rerank`), where `args` is out of scope → NameError at import, job 1166810 died in 31s. A second attempt reverted BOTH occurrences, leaving the flag unwired — the job would have silently run WITH re-ranking and produced a duplicate of the control number (the exact silent-failure class this project has been burned by). Caught by asserting, on both the local and Wulver copies, that the signature contains no `args` reference AND that exactly one call site carries the flag. Re-submitted as 1166815. Rule reinforced: after patching a flag through, verify the *call site* count, not just that the file parses.
+`--no-rerank` was first patched into `retrieve_topk_with_rerank`'s signature default (`use_rerank=not args.no_rerank`), where `args` is out of scope → NameError at import, job 1166810 died in 31s. A second attempt reverted BOTH occurrences, leaving the flag unwired — the job would have silently run WITH re-ranking and produced a duplicate of the control number (the exact silent-failure class this project has been burned by). Caught by asserting, on both the local and HPC copies, that the signature contains no `args` reference AND that exactly one call site carries the flag. Re-submitted as 1166815. Rule reinforced: after patching a flag through, verify the *call site* count, not just that the file parses.
 
 ## 2026-08-07 — NO-RERANK CLEAN-7 (job 1166815): NEW BEST 0.5550 — a free gain from DELETING the hand-weighted re-rank
 Control checkpoint, identical protocol, only `--no-rerank` differs (flag verified applied: pure k-NN F1 0.5691 vs 0.5528, matching the offline candidate-list prediction exactly; zero bit-identical packages):
@@ -3602,7 +3602,7 @@ Addendum eval (1171572): at H1-matched coverage, set-level metrics are a wash ac
 subsets within +-0.002). H2's value is the calibrated high-precision hint channel (frontier +
 seed stability +-0.2% vs H1's +-0.8%), not additional set-level recall. H2 = tail branch of
 record; next per revised roadmap: Phase 3 evidence-copy census. Artifacts:
-results/phase2_set_decoder.json, phase2_addendum.json, phase2_full_dump.tsv (Wulver).
+results/phase2_set_decoder.json, phase2_addendum.json, phase2_full_dump.tsv (HPC).
 
 ## 2026-08-10 — OPENVOCAB FINAL ANALYSES (freeze directive; job 1171677) — ALL DELIVERABLES DONE
 Commits: plan 824effcb / census+modules 1583ff22 / phase1 2e3e1b62 / phase1.5 c57fe8de /
@@ -3619,7 +3619,7 @@ P8 rescore (same evaluator, matched keys): retrieval tokens 0.587 sem F1 overall
 its own failures; SymGen tokens 0.178 (FT) / 0.401 (NCT) on retr-failure subsets — strongest
 semantic evidence where retrieval dies; contamination caveat applies.
 Deliverables: phase2_frontier_final.tsv, phase3_copyability_{census.tsv,summary.json},
-phase3_evidence_inventory.tsv (Wulver), evidence_source_breakdown.tsv,
+phase3_evidence_inventory.tsv (HPC), evidence_source_breakdown.tsv,
 baseline_semantic_rescore.tsv, qualitative_examples.md, final_summary_tables.md.
 
 ## 2026-08-11 — H3 EVIDENCE SELECTOR: census strong, selector v1 = STOP (jobs 1171700 + 1171757)
@@ -3679,7 +3679,7 @@ FINDING: phase3b_residual_selector.py cand_tensors() prioritized GT positives wh
 at MAX_CAND=192 (`keep = pos + neg[:cap]`), and this path was used for the QUERY/VAL sets (q_recs,
 val_recs), not just fit. At eval that leaks the answer into WHICH atoms get scored: any GT evidence
 atom is guaranteed scored even if it ranks below 192 by IDF. Materiality (cap-bite rate on retr0
-nginx-family pools) UNMEASURED — Wulver login unreachable during the Aug-11 maintenance.
+nginx-family pools) UNMEASURED — HPC login unreachable during the Aug-11 maintenance.
 IMPACT: the phase3b per-seed "independent_semantic_rescue_retr0 = 0.19" used this leaky candidate
 set and is UNRELIABLE (likely inflated) — RETRACTED pending a leakage-free rerun.
 NOT AFFECTED: phase3b_opsweep.py built query candidates leakage-free (rec_of: top-192 by IDF, no GT
@@ -3737,15 +3737,15 @@ C (h vs z_R probe) need GPU and are deferred to post-maintenance (cluster down 0
 Artifact: results/phase4_census_v2.json.
 
 ## 2026-08-12 — UNIFIED GATE (U0/U1/U2 + oracle) RUN LOCALLY; U2 NO-GO, fusion STOPPED
-Wulver maintenance extended indefinitely (PowerDistProblemWalsh reservation; all GPU nodes maint;
+HPC maintenance extended indefinitely (PowerDistProblemWalsh reservation; all GPU nodes maint;
 job 1172837 still queued), so the gate ran on the local RTX 4060 via unified_composer_local.py:
 identical science, but reads results/unified_sample_meta.json — an ordered (binary,name) dump made
-on the Wulver login node by iterating match_index exactly as FunctionDataset does (310,211 samples;
+on the HPC login node by iterating match_index exactly as FunctionDataset does (310,211 samples;
 local dataset differs so indices would not map). Alignment verified: NN name agreement on fit
 embeddings = 57.9% (~1% if misaligned). Setup: package-disjoint dev 4,864 fns / composer-train
 75,136; vocab |V|=8,994 (v1-canonical-2026-08-10); 25 ep, seed 42, taus dev-tuned (U1 0.45, U2 0.10).
 
-TWO SCRIPT BUGS found on this first-ever execution (fixed in commit; also synced to Wulver so the
+TWO SCRIPT BUGS found on this first-ever execution (fixed in commit; also synced to HPC so the
 queued job runs the corrected script):
  (1) U2 logit scaling: q,v are L2-normalized (q.v in [-1,1]) but score divided by sqrt(256) then
      x10 -> logits within +-0.625 of the bias -> bias(=token frequency) dominated, ~515-token
@@ -3778,12 +3778,12 @@ GATE DECISIONS (plan §20/§26/§28/§35):
    confirmation of the recognizer/coverage-boundary finding (after retmem null + Item-A census).
  - U1's only real edge: RETR_FAIL 0.069 vs U0's 0.005 — tiny absolute, and ceiling 0.096.
 Artifacts: results/unified_gate.json, unified_predictions.tsv, unified_posthoc.json,
-unified_dh_strata.json, unified_local(.log/_v2.log), unified_sample_meta.json (Wulver-order dump).
+unified_dh_strata.json, unified_local(.log/_v2.log), unified_sample_meta.json (HPC-order dump).
 
 ## 2026-08-12 (night) — FINAL DUAL-HEAD VALIDATION (full-data U1 + simple U3): STOP composition
 Spec: user's "Final Dual-Head Validation" plan (parity-fair full-data U1 + global-lambda fusion).
 Jobs: 1172878 (embedded full corpus, aborted on space assert — by design), 1173477 (full run, DONE).
-Wulver returned ~17:38 EDT (power problem resolved); unified cross-check 1172837 reproduced the
+HPC returned ~17:38 EDT (power problem resolved); unified cross-check 1172837 reproduced the
 local 4060 U0/U1/U2 gate EXACTLY (4 decimals) — §21 archival confirmation, U2 NO-GO stands.
 
 INFRA: full-corpus control-space embeddings now persisted (strlex_ws/results/ztr_full_control.npz,
@@ -3918,7 +3918,7 @@ function-identity signal; token queries find nothing to localize; learned signal
 local. Five readout families across two granularities of the frozen encoder now agree: no
 package-transferable name-primitive structure. §42 fallback (decompiled/IR generator input) is
 the designated next option — user decision required.
-Artifacts: results/e1/* incl E1_REPORT.md; block states cached on Wulver.
+Artifacts: results/e1/* incl E1_REPORT.md; block states cached on HPC.
 
 ## 2026-08-14 — E2 PHASE 1 (layer-selective evidence): GATE FAILED, Outcome C (jobs 1175470-967)
 Census: uncapped blocks mean 27.3/p99 229/max 29,303; cap 128 truncates 2.67% (E1 cap-30: 19.5%).
@@ -3974,13 +3974,13 @@ untouched per user constraint) is the main line. Jobs 1176939-1177484; ~50min/ep
 - Operation memories small (§19 census flag): INSERT 614 / DELETE 1,508 / KEEP 1,093 admissible; support curve saved, no relaxation.
 - STOP 1 (§75): contrastive INSERT MRR 0.0240 vs absolute-TM control 0.0289 (worse), Hit@5 0.039 vs 0.052, positive folds 1/5; DELETE Hit@5 0.048 << 0.20. Both near-floor: residual-concept identification is essentially unsolved by count-based memories at this support. Editor NOT built; clean-7 untouched.
 
-## 2026-08-16 — FEC (factorized evidence composition): STOP A at Stage 1 (Wulver job 1182009)
+## 2026-08-16 — FEC (factorized evidence composition): STOP A at Stage 1 (HPC job 1182009)
 - Strict OOF_NOVEL_COMPOSABLE protocol built (6,000 queries; 3.5K-24.5K exact-token-set fns removed per fold train — RARC-inflation fix worked).
 - SVD-64 latent ranking MRR 0.0268 vs unfactorized identical-matrix control 0.0616 (-56%!), Hit@10 0.051 vs 0.117, positive folds 0/5, Hit@20 0.075 (gate 0.20). Candidate oracle 0.2402 (<0.250 too).
 - Low-rank smoothing DESTROYS the sparse discriminative associations rather than generalizing them. Notable: the loose-threshold exact matrix (N>=3/P>=2/Name>=2, PPMI x dispersion, idf-weighted) is the strongest evidence ranker measured so far (MRR 0.062 on the strict protocol) — better than all prior TM variants.
 - Fourth consecutive mechanism stop (P1 heads / RARC / RCEM / FEC), all gate-disciplined, clean-7 never touched.
 
-## 2026-08-16 — SECC (sparse evidence coverage composer): Stage A PASS, Stage B STOP (Wulver 1182194)
+## 2026-08-16 — SECC (sparse evidence coverage composer): Stage A PASS, Stage B STOP (HPC 1182194)
 - Stage A: exact-matrix candidate ceiling on strict OOF = oracle F1 0.3143, recall 0.2560 (gates 0.280/0.22 PASSED) — the raw-evidence inventory has real headroom.
 - Stage B: composer ordering ExactTM-topm 0.0608 > RRF 0.0477 > SECC coverage 0.0428 (efficiency 0.136 vs gate 0.40). Submodular source-balanced coverage HURTS vs independent ranking. U0 top-1 on strict protocol: 0.0048 (exact-set removal works).
 - Persistent cross-mechanism finding: best selector reaches only ~19% of its own candidate oracle — SELECTION from a good inventory is the unsolved sub-problem (matches RARC F4).
@@ -4003,50 +4003,50 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - 17 "debug ELFs" in data/raw are libtool wrapper scripts (all 12 gettext ids, dico, libtool).
 **Validation on the first 45 re-lifted binaries:** parser byte-deterministic; median per-binary label coverage 0.990 (0 < 0.90); 5,956 thunk duplicates dropped with aliases kept; 22.8% of functions carry ≥1 .rodata string; smoke training run through 1 epoch OK.
 
-## 2026-08-18 — Dataset v2 relift COMPLETE + preprocessing moved to Wulver CPU
+## 2026-08-18 — Dataset v2 relift COMPLETE + preprocessing moved to HPC CPU
 - **1,890/1,890 binaries lifted, rc=0, zero empty .bir** (manifest: 1,895 unique ids; 5 permanent NOELF = libtool wrapper scripts). Median label coverage ≥0.98; low-cov tail = tiny binaries (peekfd, tdbrestore) + asm-heavy pkgs (libsodium/pcre2 clang, cov 0.975-0.979).
-- **All BAP preprocessing now on Wulver CPU nodes** (general partition, ~100 SU total; recipe + pitfalls in memory `project_wulver_bap_container.md`). Container lift validated **byte-identical** (md5 .bir/.starts/.syms/labels) vs local on acct_ac_O0, libsodium_sign_clang_O1, pcre2_pcre2grep_clang_O3.
+- **All BAP preprocessing now on HPC CPU nodes** (general partition, ~100 SU total; recipe + pitfalls in memory `project_HPC_bap_container.md`). Container lift validated **byte-identical** (md5 .bir/.starts/.syms/labels) vs local on acct_ac_O0, libsodium_sign_clang_O1, pcre2_pcre2grep_clang_O3.
 - Jobs: 1185664 (clang 618, 1.3h), 1185684 (ftdomains 86), 1185685 (main remainder 19 — fossil_O0 7.6min cov 0.9996, openssl_O0 11min cov 0.9995), 1185701 (manifest heal + effect check, PASS).
-- Canonical dataset home: `/project/hz79/_shared/cs785/relift_ws/data/`; local `data/` is a mirror (synced both ways 2026-08-18).
-- Next: split assignment for new pkgs (nginx family → holdout, GNU *2 siblings, openssl 57K fns, sbase candidates), then parse/graph build (Wulver CPU).
+- Canonical dataset home: `$WORKSPACE/relift_ws/data/`; local `data/` is a mirror (synced both ways 2026-08-18).
+- Next: split assignment for new pkgs (nginx family → holdout, GNU *2 siblings, openssl 57K fns, sbase candidates), then parse/graph build (HPC CPU).
 
 ## 2026-08-23 — Dataset v2 split policy v3 (agreed on Discord) + P2 launch
 - Policy: three package-disjoint tiers (train / val = 10 whole pkgs / test = 33 whole pkgs, former xproject + reserve pool merged). No in-distribution val/test. Unit = package family (name-overlap ≥0.35 on non-ubiquitous names; names in ≥3 pkgs ignored — otherwise gnulib chained 41 pkgs into one family). Regime tag per test pkg: NCT if family-linked to train OR verbatim-name overlap ≥60% (moved psmisc 64%, diffutils3 98%, cppi 95% to NCT); else FT.
 - Record-level policy (`FunctionDatasetV2.apply_split_policy`, `data.split_policy: v3`): train one sample per (tok_hash,name); val/test drop tok_hash∈train and in_dynsym (kept as strata).
-- Measured (Wulver job 1192654, `docs/DATASET_V2_CARD.md`): train 997 bins 434,651 → 190,151 after dedup; val 104 bins 21,982 → 10,617 scored; test 611 bins 362,912 → 268,178 scored (81,988 body-in-train + 12,746 exported dropped). Test regimes: FT 27 pkgs / 263,113 raw fns (name overlap 0.2–35%), NCT 24 pkgs / 99,799 (42–100%). bdb+icu = 44% of raw test → report per-package macro-F1 alongside micro.
+- Measured (HPC job 1192654, `docs/DATASET_V2_CARD.md`): train 997 bins 434,651 → 190,151 after dedup; val 104 bins 21,982 → 10,617 scored; test 611 bins 362,912 → 268,178 scored (81,988 body-in-train + 12,746 exported dropped). Test regimes: FT 27 pkgs / 263,113 raw fns (name overlap 0.2–35%), NCT 24 pkgs / 99,799 (42–100%). bdb+icu = 44% of raw test → report per-package macro-F1 alongside micro.
 - Votes vocab v2 (train tier only): 8,385 sub-tokens. Split sha256 f0b97bd53277… recorded in checkpoints.
 - Smoke (CPU job 1192658, 7 binaries, 1 epoch): full v2 path OK, policy stats printed, checkpoint written.
-- **P2 launched: Wulver job 1192671** — `configs/dualhead_v2_large.yaml` (CCS architecture unchanged, 30.4M params), seed 42, AMP, select on val_xproj, 50 epochs, patience 20. Output `dh2/slurm/p2_1192671.out`, checkpoint `dh2/checkpoints/p2_ccsarch_v2_seed42.pt`. Code git 9163aa1b.
+- **P2 launched: HPC job 1192671** — `configs/dualhead_v2_large.yaml` (CCS architecture unchanged, 30.4M params), seed 42, AMP, select on val_xproj, 50 epochs, patience 20. Output `dh2/slurm/p2_1192671.out`, checkpoint `dh2/checkpoints/p2_ccsarch_v2_seed42.pt`. Code git 9163aa1b.
 
-## 2026-08-23 — P2 RESULT (honest baseline, CCS arch unchanged on dataset v2; Wulver 1192671/1192722)
+## 2026-08-23 — P2 RESULT (honest baseline, CCS arch unchanged on dataset v2; HPC 1192671/1192722)
 - Train 190,151 deduped fns, 33.7M params, 50 ep (best ep 43), 339 s/ep. **Val F1 0.114** (greedy, 10 pkgs, 10,617 scored).
 - **TEST (268,178 scored, 50 pkgs, greedy):** micro F1 **0.080** / EM 5.2%; per-package macro F1 **0.306** / EM 24.9%.
   - FT (27 pkgs, 223K fns): micro 0.019 / macro 0.051. NCT (23 pkgs, 45K fns): micro 0.383 / macro 0.605.
   - Strata: seen-name (name ∈ train) F1 **0.526** n=33,500; novel-name F1 **0.016**, EM 0.000, n=234,678 (87.5% of scored test).
   - Not mode-collapsed: FT 41,367 unique predictions over 223K fns (top name 0.3%); 1.9% empty predictions. Novel-name fns with any sub-token credit: 5.1%; F1≥0.5: 0.6%. bdb+icu+mbedtls = 175K of 223K FT fns → micro is their number.
-- Interpretation: recognizer confirmed at scale (0.53 vs 0.016); the v2 protocol exposes it directly. Old 0.738 headline ≈ seen-name stratum. Files: results/dualhead_v2/p2_eval_greedy.json, p2_preds_greedy.tsv; Wulver ckpt dh2/checkpoints/p2_ccsarch_v2_seed42.pt.
+- Interpretation: recognizer confirmed at scale (0.53 vs 0.016); the v2 protocol exposes it directly. Old 0.738 headline ≈ seen-name stratum. Files: results/dualhead_v2/p2_eval_greedy.json, p2_preds_greedy.tsv; HPC ckpt dh2/checkpoints/p2_ccsarch_v2_seed42.pt.
 
-## 2026-08-23 — P2-Baseline diagnosis (frozen encoder, k-NN retrieval head; Wulver 1193032)
+## 2026-08-23 — P2-Baseline diagnosis (frozen encoder, k-NN retrieval head; HPC 1193032)
 - Decision rule (pre-registered on Discord): proceed to P3-DualHead iff hybrid-oracle ≥ decoder+0.03 F1 AND seen-vs-novel AUC ≥ 0.75. **Both PASS on test: +0.033 (0.113 vs 0.080), AUC 0.787** (val: +0.041, AUC 0.731 — marginal).
 - Retrieval alone > decoder already: test micro 0.101 vs 0.080, macro 0.351 vs 0.306; seen-name 0.699 vs 0.526 (+0.17 — recovers most of the decoder's "knows the name but doesn't say it" failures); NCT 0.506 vs 0.383. Novel-name: both ≈0.016 (dead, as established — contribution there is abstention only).
 - Perfect-router ceiling (hybrid-oracle): test 0.113 micro / 0.375 macro → router headroom over retrieval-alone is +0.011 micro / +0.024 macro. Top5-oracle 0.127 → rerank headroom similar.
 - Router features work: sim1 AUC retrieval-correct 0.860; seen-vs-novel 0.787; margin AUC (retrieval-vs-decoder wins) only 0.617 (weak — need richer features for head choice).
 - Abstention is the big lever: risk-coverage on sim1 — top 5% coverage F1 0.475, 10% 0.419, 20% 0.344 vs 0.101 overall. Selective prediction is publishable value.
 - Vocab-oracle (sampled, n=4000): test 0.484 — retrieval reaches only 21% of it (selection/representation gap persists on v2, matches the 15–38% finding on the old corpus).
-- Files: results/dualhead_v2/diag_p2.json; dump on Wulver dh2/results/diag_p2_dump.tsv. VERDICT: GO for P3-DualHead (retrieval head + calibrated router + abstention; decoder kept for graceful degradation).
+- Files: results/dualhead_v2/diag_p2.json; dump on HPC dh2/results/diag_p2_dump.tsv. VERDICT: GO for P3-DualHead (retrieval head + calibrated router + abstention; decoder kept for graceful degradation).
 
 ## 2026-08-24 — P3-DualHead router v1 (features: sim1+margin; trained on val, eval on test; local, from diag dump)
 - Head-choice: degenerates to always-retrieval (retrieval ≥ decoder on 96% of fns) → hybrid = retrieval 0.1014; gate Δ≥+0.01 vs best single NOT met. Perfect-router headroom +0.011 lives in the 4% decoder-wins set — router v2 will add decoder confidence, ext-Jaccard, string overlap.
 - Abstention: learned confidence router AURC 0.739 vs sim1-only 0.774 vs unranked 0.899. Selective F1: 5% cov 0.784, 10% 0.520, 20% 0.355, 50% 0.180 (full 0.101). Selective prediction axis WORKS.
 - Interim P3 verdict: retrieval-dominant selective system supported; head-choice pending router v2.
 
-## 2026-08-24 — P3-DualHead router v2 (full features; Wulver 1193224). Head-choice CLOSED, abstention axis STRONG.
+## 2026-08-24 — P3-DualHead router v2 (full features; HPC 1193224). Head-choice CLOSED, abstention axis STRONG.
 - Features: sim1, margin, ext_jacc(top-1 nbr), str_jacc, d_conf, d_len, n_ext, n_str, n_blocks. Trained on val only.
 - Head-choice: router still picks retrieval 100% of the time (Δ vs best single = 0.0 on val AND test). With 9 features the 4% decoder-wins set is NOT identifiable → learned head-choice gate FAILS definitively on this encoder. Dual-head as "pick per function" = honest negative result.
 - Abstention/calibration (the win): AURC 0.7075 (vs sim1-ranking 0.7726, unranked 0.899); **ECE 0.0059** (old CCS heads: ≥0.56 — calibration fixed by 2 orders of magnitude). Selective F1 on test: **5% coverage 0.960, 10% 0.700, 20% 0.407**, 30% 0.291, 50% 0.188, full 0.101. Val: 5% 0.964, 10% 0.883.
 - Final P3 system = retrieval + calibrated confidence + abstention ("selective name recovery"); decoder relegated to a compared baseline head. results/dualhead_v2/router_v2.json.
 
-## 2026-08-24 — P4-ExternalBaselines: SymGen interim-C row (existing LoRA, 24 clean FT pkgs; Wulver 1193501/1193508)
+## 2026-08-24 — P4-ExternalBaselines: SymGen interim-C row (existing LoRA, 24 clean FT pkgs; HPC 1193501/1193508)
 - Pipeline: Ghidra decomp of all 714 val/test stripped bins at protocol addresses (278,755/278,795 ok) → 7,532-fn stratified sample (cap 400/pkg) over the 24 FT test packages absent from the LoRA's April training corpus → CodeLlama-34B+LoRA generation (~5 h A100) → scored with our metric.
 - **SymGen micro F1 0.116 / EM 2.6% / macro 0.132 vs our retrieval 0.032 / decoder 0.031 on the same 7,532 keys.** SymGen wins 22/24 packages (exceptions: icu 0.008 vs 0.024, sbase ~tie). Biggest gaps: lighttpd 0.21-vs-0.02, lmdb 0.19-vs-0.02, sysstat 0.24-vs-0.04, tcsh 0.04-vs-0.002.
 - HONEST READ: on far-transfer/novel names, decompiled-code input + 34B LLM prior yields ~4× our sub-token F1 — partial semantic credit (loop/compare/free vocabulary) that BAP-token models never produce. "Beat SymGen" does NOT hold on the FT axis. Our winning axes: NCT/seen-name (retrieval 0.5–0.7), efficiency (34M vs 34B; ~ms vs 2.6 s/fn), calibration+selective prediction (SymGen has no confidence signal), BAP-only/no-decompiler deployment constraint.
@@ -4064,7 +4064,7 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - FT ranking (clean 24-pkg sample): SymGen-34B 0.120 ≫ our retrieval 0.037 > our decoder 0.032 > BLens-0.1B 0.026. Files: results/dualhead_v2/blens_interim_c_score.json.
 
 ## 2026-08-24 — Redesign censuses (Track A) + eval audits
-- **A1 strings census (Wulver, full honest test):** FT: 29.1% of fns reference ≥1 string; among those mean GT-subtoken recall 0.387, full name present 14.7% (=4.3% of ALL FT fns). NCT: 53.4%/0.240/9.6%. Aggregate FT signal ≈0.11 recall ≈ SymGen's whole FT score. A1 = top priority (string channel to both heads + copy/candidate source + router feature).
+- **A1 strings census (HPC, full honest test):** FT: 29.1% of fns reference ≥1 string; among those mean GT-subtoken recall 0.387, full name present 14.7% (=4.3% of ALL FT fns). NCT: 53.4%/0.240/9.6%. Aggregate FT signal ≈0.11 recall ≈ SymGen's whole FT score. A1 = top priority (string channel to both heads + copy/candidate source + router feature).
 - **A2 magic-constant census: NEGATIVE.** 156 crypto-heavy binaries, 183K fns: 325 fns with algo immediates, 0% name-keyword precision (constants in .rodata tables, not immediates; found in callers not primitives). A2 dropped as separate track; rodata-table matching folded into A1 channel.
 - **Batch-size audit (job 1193962): PASS** — val micro F1 0.1078 identical at batch 32 and 256; eval_v2 is batch-stable. Train-time val metric reads +0.006 high (own decode path); all reported numbers pinned to eval_v2.
 - Unit tests committed: tests/test_metrics_v2.py, tests/test_split_policy.py. BLens join audit 0 mismatches; BLens targets-empty anomaly verified harmless (caption_tokens print-only at inference).
@@ -4080,7 +4080,7 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 ## 2026-08-25 — A1 zero-training experiments (emb dump 1194394, jobs 1194763/1194770)
 - E1 string rerank (top-20, score = sim + α·strJacc, α tuned on val): TEST micro 0.103→0.108, macro 0.354→0.368 at α=0.4 (grid boundary; wider sweep running). GATE MET (macro +0.013). Ext-Jaccard weight tunes to 0 (hurts — ext-call paradox again).
 - E2 naive string-emit (longest identifier when sim1<thr): val tuning disables it (thr=0). Census names are present but need a learned candidate scorer (→ C2 dual-encoder spec).
-- Artifacts: results/emb_v2/ on Wulver (train_emb.npy 457M, {val,test}_knn.npz + meta with strings/ext).
+- Artifacts: results/emb_v2/ on HPC (train_emb.npy 457M, {val,test}_knn.npz + meta with strings/ext).
 - Wide α sweep (1194770): val plateaus α≥0.8 (0.1509); TEST at α=3.2: micro 0.1084 / macro 0.3693. Production pick α=0.8 (plateau start). String-rerank final: **retrieval 0.103/0.354 → 0.108/0.369** (+0.005/+0.015, zero training).
 
 ## 2026-08-25 — A1a RESULT: string channel retrain (job 1194836, ckpt p3a_strings_v2_seed42.pt, ep50 best 0.1310)
@@ -4120,7 +4120,7 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - **A4 run 1 DONE (1195917, 8h22m): FULL val_xproj F1 0.2004 (FT 0.147 / NCT 0.669), EM 0.119; best ckpt step 14K (sub 0.2068), plateau from 14K.** Audit: 10,617 val rows, 0 empty preds, pred-uniqueness 0.438 (BAP decoder 0.65); errors are cross-project family confusions (zstd → lz4_* names), not collapse. Predictor job 1196560 (val/test + SymGen holdout) and run 2 (1196561: ours + SymGen cap 40K/pkg, 2 ep) submitted.
 - A3+ enriched retrieval rerun (1196472/73/74, enrichment verified): test retrieval 0.1068/0.3572, +rerank 0.1091/0.3578, router @10% 0.706 — vs A1a 0.1147/0.3797, 0.1176/0.3814, 0.754. **A3+ CLOSED (negative on all heads, valid inputs).**
 - parse_v3_symgen chain (1196549, 49 min): parse OK (3,910 graphs), match_index_v3 = 2,148,493 records (symgen_zenodo 1,273,690 pre-dedup, median cov 0.963); string-refs step FAILED: `elftools` not on PYTHONPATH inside the container (needs $WS/pylib) — rerunning.
-- **Split v3 (job 1196596) + votes v3 (1196597, 11,117 names) + string refs (1196595, 3,910 files) DONE.** Audit vs v2: train v2 ⊂ v3 (997 → 2,208 bins; +1,211 SymGen), test v2 ⊂ v3 (611 → 696; +85 = the 5 SymGen holdout packages, all regime FT), val identical (104), no regime change on any existing package, 724 SymGen builds excluded as duplicate builds (openssl test clones). Functions raw: train 1.66M, test 396K. Config `dualhead_v2_strings_symgen.yaml`: corpora null (ALL corpora as in v2 — the earlier [local_main, symgen_zenodo] would have dropped wulver/clang/ftdomains), train_pkg_cap 40000, votes v3. Cache build corpus_v3 job 1196612 (240G).
+- **Split v3 (job 1196596) + votes v3 (1196597, 11,117 names) + string refs (1196595, 3,910 files) DONE.** Audit vs v2: train v2 ⊂ v3 (997 → 2,208 bins; +1,211 SymGen), test v2 ⊂ v3 (611 → 696; +85 = the 5 SymGen holdout packages, all regime FT), val identical (104), no regime change on any existing package, 724 SymGen builds excluded as duplicate builds (openssl test clones). Functions raw: train 1.66M, test 396K. Config `dualhead_v2_strings_symgen.yaml`: corpora null (ALL corpora as in v2 — the earlier [local_main, symgen_zenodo] would have dropped HPC/clang/ftdomains), train_pkg_cap 40000, votes v3. Cache build corpus_v3 job 1196612 (240G).
 - **A4 run 1 TEST (1196560): micro 0.1852 / macro 0.3680 / EM 0.055; FT 0.1214 (macro 0.144); NCT 0.5042 (macro 0.631); seen 0.621; novel 0.1231. SymGen holdout (9,991 scorable): 0.2231 / macro 0.1887 / EM 0.161.** vs BAP decoder 0.100/0.339 (FT 0.027, novel 0.024), retrieval+rerank 0.118/0.381. Audit: 40 test rows lacked decomp (0.015%); pred-uniqueness 0.155 (BAP 0.21); val re-read 0.2003 = training-side full val 0.2004 ✓.
 - **HEAD UNION (1196617): conf router (sim1≥0.635→retrieval else A4) TEST 0.1983 / 0.4300 (FT 0.116, NCT 0.609); regime router 0.1933/0.4237; oracle R∪A4 0.2223/0.4692.** vs standing best 0.1176/0.3814 → +0.081 micro / +0.049 macro. τ from val transfers (val 0.2127/0.395). NCT under the router (0.609) exceeds retrieval alone (0.553): A4 rescues low-confidence NCT queries too.
 - a4_predict confidence column (geometric-mean token prob) smoke (1196619): works; on the smoke ckpt high-conf half F1 0.151 vs low-conf half 0.0 → usable router/abstention signal. Full A4 run-1 predictor rerun with conf submitted; then `scripts/router2_eval.py` (learned router + selective prediction).
@@ -4232,13 +4232,13 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - 2026-08-28 10:30 UTC BLens train 1200059 cannot fit 24 h: config `ablation-c+p.json` = COMBO 80 epochs (~13.5 min/epoch on 190K rows → ~18 h; at epoch 24 after 5.4 h) + LORD 80 epochs. RunExp supports `-train -loadEpoch N` (trainLORD skips epochs ≤ N; checkpoints every 4 epochs) and `-train` alone reuses saved params + COMBO base. Follow-on `blens_ours_v2/train_resume.sbatch` (afterany:1200059, a100_40g, 24 h): resume LORD from latest checkpoint → `-inferBest`; no-op if the inference log exists. Projection: A finishes COMBO ~18 h + ~25 LORD epochs; B does the remaining ~55 epochs (~12.5 h) + inference → BLens numbers ≈ Aug 29 ~20:00 UTC (was "Aug 28 evening").
 - 2026-08-28 12:20 UTC SymGen checkpoint-800 audit: complete (adapter_model.bin, optimizer.pt, scheduler.pt, trainer_state.json global_step 800, rng ×4; 114 MB); loss 0.29 (0.33 at step 200). save_total_limit=3 rotated out checkpoint-200. Step 826/1485 at 27.2 h → wall (30 h) at ~step 910 → 1199296 resumes from checkpoint-800. BLens COMBO epoch 43/80.
 - **2026-08-28 15:05 UTC SymGen resume bug caught by audit:** 1199253 TIMEOUT at ~step 910 as planned; resume 1199296 started but logged `RESUME from checkpoint-400 step=400` — the sbatch's `sort -t- -k2,2n -r` returned the checkpoints in ascending order, so the loop picked the oldest complete one. Cancelled at 15 s (no GPU time lost). Fixed: numeric sort on the extracted step (`sed 's/.*checkpoint-//' | sort -nr`), verified on the login node to pick checkpoint-800; resubmitted as **1201089** (4× a100_40g). Audit rule: bar must start at 800/1485.
-- 2026-08-28 15:50 UTC **Wulver outage**: login01/02/03 (128.235.212.x) unreachable on port 22 and ICMP; internet/njit.edu fine locally → cluster/network side. Also the SSH control master expired (~15:00 UTC), user must re-run `ssh wulver`. Last known state: SymGen resume 1201089 RUNNING n0089 (start-at-800 audit pending), BLens 1200059 COMBO epoch ~60/80, 1200835 queued. Jobs unaffected by login-node outage.
-- 16:50 UTC Wulver login nodes back after ~57 min; key-only SSH refused (`Permission denied (gssapi-keyex,gssapi-with-mic,keyboard-interactive)`) → user must re-run `ssh wulver` to recreate the ControlMaster socket; reconnect watcher armed to audit 1201089 (must start at 800/1485) the moment it can connect.
-- 16:55 UTC reconnected (user re-ran `ssh wulver`). **SymGen resume 1201089 FAILED after 10.5 min**: checkpoint selection now correct (`RESUME from checkpoint-800 step=800`, adapter loaded), but the run died in the first DDP training step (ChildFailedError; exception being extracted). BLens 1200059 fine: COMBO epoch 69/80.
+- 2026-08-28 15:50 UTC **HPC outage**: login01/02/03 (128.235.212.x) unreachable on port 22 and ICMP; internet/institution.edu fine locally → cluster/network side. Also the SSH control master expired (~15:00 UTC), user must re-run `ssh HPC`. Last known state: SymGen resume 1201089 RUNNING n0089 (start-at-800 audit pending), BLens 1200059 COMBO epoch ~60/80, 1200835 queued. Jobs unaffected by login-node outage.
+- 16:50 UTC HPC login nodes back after ~57 min; key-only SSH refused (`Permission denied (gssapi-keyex,gssapi-with-mic,keyboard-interactive)`) → user must re-run `ssh HPC` to recreate the ControlMaster socket; reconnect watcher armed to audit 1201089 (must start at 800/1485) the moment it can connect.
+- 16:55 UTC reconnected (user re-ran `ssh HPC`). **SymGen resume 1201089 FAILED after 10.5 min**: checkpoint selection now correct (`RESUME from checkpoint-800 step=800`, adapter loaded), but the run died in the first DDP training step (ChildFailedError; exception being extracted). BLens 1200059 fine: COMBO epoch 69/80.
 - 17:05 UTC 1201089 root cause: `RuntimeError: CUDA error: CUBLAS_STATUS_NOT_SUPPORTED when calling cublasGemmEx(... CUDA_R_16F ...)` in the first DDP forward — the identical config ran 30 h on the same node; this error is cuBLAS failing to get workspace memory, and the job landed on n0089 within a minute of the TIMEOUT of 1199253 and the cancel of 1199296 there (GPU memory not yet reaped). Resubmitted the resume unchanged except `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` → **1201270**.
 - 17:40 UTC SymGen resume **1201270 verified**: `RESUME from checkpoint-800 step=800`, bar at 803/1485 after 18 min (past the point where 1201089 died) → 682 steps left ≈ 22.5 h → adapter ≈ 2026-08-29 ~16:00 UTC, then `infer_c_oursv2` / `infer_nct_oursv2` + `matched_baselines.py --sg-c/--sg-nct`.
 - 17:55 UTC SymGen inference staged on the resume: `symgen_v2/infer_c_oursv2.sbatch` → **1201282**, `infer_nct_oursv2.sbatch` → **1201283** (both `afterok:1201270`, a100:1 80 GB, 8 h). Fixed before submit: EFFECT lines counted the April `results_c/` / `results_nct/` files (now `*_oursv2`), NCT log name (`infer_nct_oursv2_%j.out`), added a final-adapter guard. Then: `scripts/matched_baselines.py --sg-c symgen_v2/results_c_oursv2/predicted_function_name.json --sg-nct symgen_v2/results_nct_oursv2/predicted_function_name.json --out results/matched_baselines_sgours_a4v1.json`.
-- 18:05 UTC audit of the staged inference scripts found a path bug: `SYMGEN=/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen` is a separate (old course) tree, not a symlink to `/project/hz79/_shared/cs785/baselines/SymGen` where `lora_weights_ours_v2` is being written — the adapter guard would have tripped. Fixed `SYMGEN=` to the `/project` tree (predict.py present there); 1201282/1201283 cancelled and resubmitted as **1201284 (FT sample) / 1201285 (NCT sample)**, both afterok:1201270.
+- 18:05 UTC audit of the staged inference scripts found a path bug: `SYMGEN=/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen` is a separate (old course) tree, not a symlink to `$WORKSPACE/baselines/SymGen` where `lora_weights_ours_v2` is being written — the adapter guard would have tripped. Fixed `SYMGEN=` to the `/project` tree (predict.py present there); 1201282/1201283 cancelled and resubmitted as **1201284 (FT sample) / 1201285 (NCT sample)**, both afterok:1201270.
 
 ### 2026-08-29 — BLens-on-our-tier: LORD stage relaunched (job 1202627 → 1202628)
 - Job 1200059: COMBO pretrain 80 ep completed (train loss 10.3→3.6; **val loss rose 11.3→13.8** every epoch — April 4-pkg run was flat ≈8.4; BLens' own recipe, reported as-is). LORD stage OOM'd at step 0: job was placed on n0002, a MIG `a100_40g` slice on a shared card (40 GB, <63 MiB free); the April LORD run used 80 GB `gpu:a100`. `inferBest` then failed (no LORD ckpt) and left a 3 KB traceback stub `LORD-inference-logs-test-0.txt`.
@@ -4247,7 +4247,7 @@ Benchmark research (results/phase0/BENCHMARKS_AND_SOTA.md): SymGen x86-64 (Zenod
 - SymGen-on-our-tier 1201270: 1425/1485 steps, ETA ≈16:00 UTC → inference 1201284 (FT) / 1201285 (NCT) chained.
 
 ### 2026-08-30 — Fair baselines on OUR train tier: SymGen + BLens retrains scored (jobs 1204611 / 1204612)
-- Wulver outage Aug 29 17:05 → Aug 30 11:30 EDT (login nodes + edge unreachable); all compute jobs survived and COMPLETED: SymGen infer 1201284 (7,532 FT preds) / 1201285 (7,063 NCT preds); BLens LORD 1202627 (80 ep, inferBest ep67, 268,178 log pairs); afterany leg 1202628 no-op'd on the content-checked log.
+- HPC outage Aug 29 17:05 → Aug 30 11:30 EDT (login nodes + edge unreachable); all compute jobs survived and COMPLETED: SymGen infer 1201284 (7,532 FT preds) / 1201285 (7,063 NCT preds); BLens LORD 1202627 (80 ep, inferBest ep67, 268,178 log pairs); afterany leg 1202628 no-op'd on the content-checked log.
 - **SymGen-34B + LoRA retrained on our tier (matched keys):** FT 0.124 / 0.138 / EM 2.7% (own-corpus LoRA was 0.120 / 0.137 / 2.8%); NCT 0.260 / 0.258 / 7.7% (was 0.236 / 0.234 / 7.3%). Fair retraining is a wash on FT, +0.025 on NCT. A4-220m stays within 0.009 of the 34B on FT with higher EM; our retrieval owns NCT (0.744).
 - **BLens (CLAP+PalmTree) retrained on our tier, all 267,668 matched test keys:** 0.059 / 0.171 / 1.3% (FT 0.013, NCT 0.287; seen-name 0.382, novel 0.013) vs our GBT union 0.204 / 0.431 / 10.2% and retrieval alone 0.126. BLens abstains on 46.0%; vs its own canonical targets it scores 0.090 (0.167 on answered rows) — vocabulary mismatch explains ~0.03, not the gap.
 - Audit: log↔row alignment verified (mismatched `target:` strings = BLens name preprocessing, e.g. ngx_http_upstream_init_keepalive_peer → ngx_http_upstream_initialise_keep_peer). FINAL_TABLES T3 rewritten as T3a/T3b; ledger FAIRNESS items 1 and 4 closed.
@@ -4275,7 +4275,7 @@ Reading: Ghidra decompilation itself buys +0.029 head / +0.017 system micro. A p
 BAP text reaches FT/novel ≈ 0.109 — ~4x the old GRU decoder (0.030/0.024) — so most of the FT gap was
 LM pretraining + seq2seq capacity, not the IR. BAP-only novel/FT 0.109 sits at the user's 0.10–0.12
 "BAP-only viable" threshold. Files: results/union_c1l10_a4baptext.json, router2_c1l10_a4baptext.json,
-a4_codet5p220m_baptext_v1/val_test_{eval.json,preds.tsv} (Wulver dh2).
+a4_codet5p220m_baptext_v1/val_test_{eval.json,preds.tsv} (HPC dh2).
 
 ## 2026-09-01 — SymLM-style semantic F1 (CodeWordNet clusters) on full test (job 1210146)
 word_cluster.json from the SymLM checkout (18,379 words); pred token matches when it shares a cluster
@@ -4326,7 +4326,7 @@ vs adopted final 0.2052/0.4387 (+0.021/+0.018); oracle 0.2451; selective 0.96@5%
 A4-modctx ALONE (0.2094) beats the entire previous routed system (0.2052).
 Bug found+fixed: a4_build_modctx.py wrote flag as `name_seen` but a4_predict.py reads
 `name_seen_in_train` → job 1210206's seen/novel strata were wrong (seen n=0); strata above
-recomputed by joining preds TSV with protocol flags (rescore_modctx.py on Wulver dh2/).
+recomputed by joining preds TSV with protocol flags (rescore_modctx.py on HPC dh2/).
 Files: dh2/results/a4_codet5p220m_modctx_v1/, results/union_c1l10_a4modctx.json,
 results/router2_c1l10_a4modctx.json. Checkpoint: dh2/checkpoints/a4_codet5p220m_modctx_v1/best.
 
@@ -4543,7 +4543,7 @@ Audit: rc=0, 10,617 val + 268,136 test rows (identical key set to the pretrained
 f1_v2 means reproduce the json micro numbers. DEFECT: a4_predict wrote name_seen=0 for every row
 (scratch ckpt dir lacks the train-name list), so the json's seen/novel strata are empty; the
 seen/novel rows above are rebuilt by joining on the pretrained tsv's flags
-(results/a4_codet5p220m_scratch_v1/seen_novel_strata_joined.json on Wulver).
+(results/a4_codet5p220m_scratch_v1/seen_novel_strata_joined.json on HPC).
 Reading: the prior matters MOST where the head is weakest — 77% of novel-name F1 and 78% of FT
 F1 come from pretraining; on seen names/NCT the scratch model still recovers ~half (memorisation
 works without a prior). Scratch predictions are collapsed (pred uniqueness 0.06 vs 0.17; top pred
@@ -4572,23 +4572,23 @@ close "LoRA under the pooling bottleneck" as negative alongside the projection p
 Script patches kept for any future run: LORA_GC (checkpointing), LORA_OUT, LORA_FINAL_ONLY,
 adapter saved on probe improvement, enc.train() from step 1.
 **Update 2026-09-03 17:40 ET:** user decision = "cancel for now". Reruns 1221111 (40g hedge) and
-1220646 (80 GB backup) cancelled before starting; nothing running on Wulver. Status: LoRA
+1220646 (80 GB backup) cancelled before starting; nothing running on HPC. Status: LoRA
 contrastive adapter PARKED (not permanently closed) — evidence so far is 3 probes within noise of
-the raw reference. Artefacts retained on Wulver for a revisit: patched scripts/c_lora_contrastive.py
+the raw reference. Artefacts retained on HPC for a revisit: patched scripts/c_lora_contrastive.py
 (LORA_GC / LORA_OUT / LORA_FINAL_ONLY, per-probe adapter save), c_lora_40g.sbatch, c_lora_40g_v2.sbatch.
 
 ## 2026-09-03 — PUNSTRIP benchmark evaluation STARTED (user directive 23:45 ET; protocol in results/punstrip/PLAN.md)
 Deep research established the corpus is public by reference (XFL manifest 10,047 bins; BLens Zenodo function-level GT +
 splits + strict filters + per-function baseline predictions in blens/evaluation/cross-project.csv; Punstrip build scripts).
-Stage 0 (GT/splits): manifests dumped to Wulver punstrip/manifest/{train,val,test}_manifest.json — train 394,985 fns/
+Stage 0 (GT/splits): manifests dumped to HPC punstrip/manifest/{train,val,test}_manifest.json — train 394,985 fns/
 9,042 bins/3,112 pkgs; val 18,081/367/173; test 23,875/451/174 (= paper). GATE 0 PASSED: package overlap 0/0/0.
 Stage 1 (rebuild from snapshot.debian.org, verified by (addr,name) symtab match against the manifest):
-  pilot coreutils/realpath → 8.28-1 matched 104/104 (all other 2018-22 versions ≤ 0.11); Wulver smoke 3270-common,
+  pilot coreutils/realpath → 8.28-1 matched 104/104 (all other 2018-22 versions ≤ 0.11); HPC smoke 3270-common,
   9base, libnfc-examples → 3/3 packages min-match 1.000 (versions first_seen 2017-02..2018-03; coreutils 8.30-1 of
   2018-08-30 mismatched ⇒ corpus snapshot in (2018-03-03, 2018-08-30)). Selection rule: newest version first_seen
   ≤ 2018-08-30 walking backwards, accept when every manifest binary of the package ≥ 0.98.
   Job 1221475 (array 0-1, general partition): val+test = 347 pkgs / 818 bins. Script punstrip/scripts/punstrip_rebuild.py
-  (ar+tar extraction; Wulver lacks dpkg-deb). Outputs punstrip/rebuild/{pkgs/<pkg>/status.json,bins/,dbg/}.
+  (ar+tar extraction; HPC lacks dpkg-deb). Outputs punstrip/rebuild/{pkgs/<pkg>/status.json,bins/,dbg/}.
 Model inputs will come only from the shipped (stripped) Debian binaries; .debug used only for GT + boundaries.
 **Stage 2 smoke + Gate 4 pre-check (2026-09-03 ~20:30 ET, jobs 1221477 + login-node python):**
 - Ghidra decompile with GT boundaries (pre-script creates functions at manifest entries, then export): 3 binaries,
@@ -4606,7 +4606,7 @@ non-matches were binutils-*-linux-gnu (legacy `-dbg` packages, ELF debug files w
 now falls back dbgsym→dbg and discovers debug ELFs by magic; retry job 1221483 matched all 4 at 1.000 (2.31.1-1).
 Train rebuild LAUNCHED: job 1221487 (6 shards, 3,112 pkgs / 9,042 bins). BLens label space resolved: groundtruth =
 NLP.tristan_canonical_name restricted to the ORIGINAL 1024-label vocabulary (Zenodo data/tokenizer/Tokenizer-Debin-
-1024-Projects; the Wulver copy had been refit on our names in April). User-space env tools/mm (micromamba: enchant +
+1024-Projects; the HPC copy had been refit on our names in April). User-space env tools/mm (micromamba: enchant +
 hunspell en_US/en_GB + nltk) runs their canonicaliser; agreement with their groundtruth column 95.8% on 2,000 keys
 (without the vocabulary filter 60.6%; with the wrong tokenizer 57%). Scoring uses their groundtruth verbatim as target
 and canonicalises only our predictions (punstrip_score.py).
@@ -4652,7 +4652,7 @@ READING (interim, zero-shot): without ever seeing Punstrip-train, our head alrea
 settings and beats BLens on STRICT (0.351 vs 0.289) — BLens's full-set lead is carried by duplicated/seen names (its
 seen-name F1 0.77 vs novel 0.19 in our metric; ours is flat 0.26/0.23 because it has no Punstrip memory). The fair row
 (trained on Punstrip-train, + retrieval head + router) is still pending and is expected to add the seen-name component.
-Files: Wulver punstrip/results/zeroshot_v2dm/{system_preds.tsv,score_report.json}; local results/punstrip/zeroshot_v2dm_score_report.json.
+Files: HPC punstrip/results/zeroshot_v2dm/{system_preds.tsv,score_report.json}; local results/punstrip/zeroshot_v2dm_score_report.json.
 Key-set note: BLens's csv holds 22,928 of the 23,874 test functions; the 946 absent ones are exactly those whose canonical
 name has NO token in their 1024-label vocabulary (400/400 sampled: names like admonish, advise, pwd, adios — their
 evaluator drops rows with empty target). Our joined key set is therefore their key set minus the 4 excluded packages.
@@ -4736,14 +4736,14 @@ setting) is where the gap is largest. Under our metric: seen-name parity with BL
 it), novel +0.088 (0.284 vs 0.196 — generation head). Zero-shot → fair: 0.384→0.549 full, 0.351→0.467 strict; the Punstrip
 training added the seen component without hurting novel (0.231→0.284). Router beats either head alone on both scorers and on
 val (Gate 3). Macro tie (0.626 vs 0.622). Caveat: BLens abstains (LORD threshold); ours always emits — '+ val-tuned abstention'
-row (job 1286556, punstrip_abstain_row.py, digit-run patch applied too) reported separately. Files: Wulver
+row (job 1286556, punstrip_abstain_row.py, digit-run patch applied too) reported separately. Files: HPC
 punstrip/results/system/{system_preds.tsv,score_report.json}; local results/punstrip/fair_row_score_report.json.
 **Abstention row (job 1286556, punstrip_abstain_row.py, 107 s, no canon timeouts) — SEPARATE, never headline:** per-head
 thresholds tuned on Punstrip-VAL only under BLens full preset: R ≥ 0.88, A ≥ 0.48 (val full 0.5936 → 0.6115, val abstention
 21.2%). TEST (their scorer, 22,926 keys): no-abstention 0.5484 full / 0.4652 strict (0.0% abstained) → + val-tuned abstention
 **0.5647 / 0.4762 at 25.9% abstained**. BLens abstains ~46% by design and scores 0.461 / 0.293 ⇒ lead is not an always-emit
 artifact; always-emit headline is the conservative number. Local: results/punstrip/fair_row_abstain_row.json. Chain COMPLETE;
-Wulver queue empty. User-gated next: SymGen-34B LoRA on Punstrip-train; BLens retrain (exact our-metric table); 770m; tables.
+HPC queue empty. User-gated next: SymGen-34B LoRA on Punstrip-train; BLens retrain (exact our-metric table); 770m; tables.
 
 ## 2026-09-15 — PUNSTRIP baselines: SymGen-34B LoRA on Punstrip-train LAUNCHED; BLens retrain prep (user "Go for 1 and 2", 15:48 ET)
 Corrected costs vs. last night's estimate: Punstrip-train = 378K rows (2x our corpus) → SymGen 1 epoch = 2,954 steps at batch 128
@@ -4759,7 +4759,7 @@ EFFECT: train 378,060 inputs (0 skipped, 3,071 pkgs, GT-name-in-input 6.9% vs ro
 Jobs: 80 GB chain 1287899→1287900→1287901 (symgen_ft_punstrip.sbatch, a100:4, micro 8, self-resuming: picks latest complete
 checkpoint, no-ops if final adapter exists) → infer array 1287902[0-2] (afterok, symgen_infer_punstrip.sbatch, a100:1, 10 h/shard).
 40 GB hedge chain 1287903→…→1287906 (symgen_ft_punstrip_40g.sbatch, a100_40g:4, micro 2) → infer 1287907[0-2]. Both write
-baselines/SymGen/lora_weights_punstrip → Wulver-side guard `punstrip/symgen/mutual_cancel.sh` (nohup, 45 s poll) cancels the
+baselines/SymGen/lora_weights_punstrip → HPC-side guard `punstrip/symgen/mutual_cancel.sh` (nohup, 45 s poll) cancels the
 losing chain when a leg-1 starts (log punstrip/symgen/mutual_cancel.log). Queue at submit: our priority 10602 below az328/hz54 block;
 n0111 (4x a100_40g) idle. Scoring plan: punstrip_score_extra (their scorer via patched canon + our metric) once preds land.
 **SymGen 40 GB hedge WON (15:58 ET):** 1287903 started on n0091 (4x a100_40g, micro 2, FRESH start, gpus 0-3); guard cancelled
@@ -4807,7 +4807,7 @@ retargeted in place a100_40g → a100_20g** (Slurm ETA in the 40g queue was 2026
 STARTED 19:57 ET on n0001. Chain now: clap 1287980 → merge 1288555 (afterok) → train 1288556 → resume 1288557.
 SymGen 1287903: step 106/2953, 118.5 s/step.
 
-## 2026-09-16 — Wulver login outage 2026-09-15 22:32 → 2026-09-16 16:20 ET (~18 h, unannounced; hpc.njit.edu shows no notice;
+## 2026-09-16 — HPC login outage 2026-09-15 22:32 → 2026-09-16 16:20 ET (~18 h, unannounced; hpc.institution.edu shows no notice;
 scheduled window = 2nd Tuesday 9–21 = Sep 8). Compute unaffected. Post-outage audit 16:25 ET:
 - SymGen leg 1 (1287903): step 733/2953 @ 24h05m, 118.3 s/step, checkpoints 200/400/600 (save_total_limit 3); legs 1287904-06 +
   infer 1287907 queued (Dependency). Leg 1 wall → ~step 880; leg 2 resumes from checkpoint-800.
@@ -4823,7 +4823,7 @@ Slurm StartTime estimate 2026-09-17 02:22 ET → ~+4 h on the chain. BLens train
 progress bar skipped to 802/2953 after 4 min ⇒ resume-patch audit PASSED (not restarting at 0). Projection: leg 2 → ~step 1690
 (checkpoint-1600), leg 3 → ~2490 (checkpoint-2400), leg 4 → 2953 (~18 h) ⇒ adapter ≈ 2026-09-20 ~20:00 ET.
 
-## 2026-09-22 — Wulver emergency maintenance 08:00–20:00 ET (login banner only); post-outage audit 20:59 ET; BLens-retrained row SCORED
+## 2026-09-22 — HPC emergency maintenance 08:00–20:00 ET (login banner only); post-outage audit 20:59 ET; BLens-retrained row SCORED
 Jobs survived: BLens 2a train 1288556 COMPLETED 2026-09-19 01:11 ET (33h05m, n0004, rc=0): "EFFECT: COMBO epochs logged: 80",
 LORD 80 ep, optimize logs 20/20, best LORD epoch 71, inference log LORD-inference-logs-test-71.txt targets=outputs=23,875;
 resume 1288557 no-op (valid log present). LORD val F1 (their threshold search, 2nd column of optimize-log last line): ep3 0.265,
@@ -4926,5 +4926,5 @@ router under-routes to retrieval there (13%) → seen EM 44% vs R 70%. Added as 
 - **SymGen-34B Punstrip: BLens evaluator full 0.435 / strict 0.395; our metric micro 0.316 / macro 0.434 / seen 0.416 / novel 0.264 / excl-dynsym 0.287.**
 - Context (same keys): ours routed 0.549/0.466 (0.447/0.626/0.761/0.284/0.363); BLens published 0.461/0.293; our BLens retrain 0.357/0.166.
 - Reading: SymGen is the strongest baseline in the strict setting (+0.10 over BLens) and near ours on novel names (0.264 vs 0.284), but 0.416 on seen names where retrieval is exact (ours 0.761) — the head-per-regime pattern again. Paper RQ5 Table 9 row + prose filled (FSE draft); strata row (Table 10) pending a strata re-run with SymGen included.
-- Report: `results/punstrip/score_report_extra_final.json` (local copy of Wulver `punstrip/results/system/score_report_extra_final.json`); slurm `punstrip/slurm/score_extra_final_1319262.out`.
+- Report: `results/punstrip/score_report_extra_final.json` (local copy of HPC `punstrip/results/system/score_report_extra_final.json`); slurm `punstrip/slurm/score_extra_final_1319262.out`.
 - **Strata (job 1319267, `punstrip_strata_v2.py`, adds SymGen): SymGen-34B seen 0.418 F1 / 21.3% EM; novel-known 0.309 / 9.1%; novel-OOV 0.214 / 9.1%; all 0.316 / 13.3%** (all-F1 matches score_extra_final micro 0.316 → join + cleaning consistent). Ours routed 0.764/44.2%, 0.323/9.2%, 0.241/9.1%; G 0.665, 0.326, 0.241; R 0.761/70.0%, 0.102, 0.053; BLens 0.775/69.0%, 0.229, 0.164. Paper Table 10 row added. Report `results/punstrip/punstrip_strata_v2.json`.

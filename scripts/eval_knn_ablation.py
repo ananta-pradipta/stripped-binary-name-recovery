@@ -10,8 +10,8 @@ Tests:
 Outputs a clean markdown summary table.
 
 Usage:
-  python3 scripts/eval_knn_ablation.py checkpoints/best_model_wulver.pt
-  python3 scripts/eval_knn_ablation.py checkpoints/best_model_wulver.pt --config configs/optimized_large.yaml --amp
+  python3 scripts/eval_knn_ablation.py checkpoints/best_model_HPC.pt
+  python3 scripts/eval_knn_ablation.py checkpoints/best_model_HPC.pt --config configs/optimized_large.yaml --amp
 """
 import argparse
 import json

@@ -1,6 +1,6 @@
 import json, os, re, collections, statistics, itertools
-ROOT='/home/apradipta/cs785-project'
-OUTD='/tmp/claude-1000/-home-apradipta-cs785-project/0f684b34-c85e-456a-af39-b91d4f421f48/scratchpad/phase0_audit'
+ROOT='$HOME/cs785-project'
+OUTD='/tmp/claude-1000/-home-USER-cs785-project/0f684b34-c85e-456a-af39-b91d4f421f48/scratchpad/phase0_audit'
 os.chdir(ROOT)
 audit={}
 

@@ -1,6 +1,6 @@
 import pickle, os
 from collections import Counter
-with open('/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
+with open('$WORKSPACE/baselines/blens_user_env/blens_data/xflBlensXProjectData', 'rb') as f:
     nlp = pickle.load(f)
 train, val, test = nlp[0], nlp[1], nlp[2]
 

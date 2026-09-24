@@ -1,7 +1,7 @@
 # Unified Retrieval–Composition Experiment — Complete Results Report
 
 **Date:** 2026-08-11 → 2026-08-13 · **Branch:** `unified` (commits `20b54965` … `e4e804d6`)
-**Hardware:** Wulver A100 40GB (jobs 1172837, 1172878, 1173477, 1174048) + local RTX 4060
+**Hardware:** HPC A100 40GB (jobs 1172837, 1172878, 1173477, 1174048) + local RTX 4060
 **Verdict up front:** **STOP composition — permanently.** Two independent validation rounds — a
 parity-fair full-data run (Part 1, §3–§8) and a fully protocol-corrected rerun that answered
 every methodological objection (Part 2, §10) — show that no composition head (linear,
@@ -324,8 +324,8 @@ but not aggregate F1.
 | Full dev fusion sweep | `fusion_dev_sweep.tsv` |
 | U3 predictions + metrics | `u3_final.tsv`, `u3_final.json`, `final_comparison.tsv` |
 | Phase-1 gate (corrected U0/U1/U2) | `results/unified_gate.json`, `results/unified_predictions.tsv`, `results/unified_posthoc.json`, `results/unified_dh_strata.json` |
-| Full-corpus production-space embeddings | Wulver `strlex_ws/results/ztr_full_control.npz` (862 MB) |
-| Job logs | Wulver `strlex_ws/results/{unified.1172837,dualhead.1173477}.out` |
+| Full-corpus production-space embeddings | HPC `strlex_ws/results/ztr_full_control.npz` (862 MB) |
+| Job logs | HPC `strlex_ws/results/{unified.1172837,dualhead.1173477}.out` |
 | Code | `experiments_semantic/unified_composer.py`, `unified_composer_local.py`, `unified_posthoc.py`, `dualhead_final_full.py` |
 
 Determinism: seeds fixed (42/123/7; corpus sampling rng 1234); identical results verified on

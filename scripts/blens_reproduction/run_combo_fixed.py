@@ -1,12 +1,12 @@
 """Inference with CORRECT test-split embeddings (clap_test + palmtree_test)."""
 import os, sys, pickle, json
-sys.path.insert(0, '/project/hz79/_shared/cs785/baselines/blens')
+sys.path.insert(0, '$WORKSPACE/baselines/blens')
 
 from builder import loadNLPData, loadData
 from inferenceCOMBO import inferenceCOMBO
 from inferenceLORD import inferenceLORD
 
-DATA_DIR = '/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data'
+DATA_DIR = '$WORKSPACE/baselines/blens_user_env/blens_data'
 EXP_DIR = os.path.join(DATA_DIR, 'xp', 'ours-cp')
 MODE = os.environ.get('MODE', 'combo')
 EPOCH = int(os.environ.get('EPOCH', '59'))

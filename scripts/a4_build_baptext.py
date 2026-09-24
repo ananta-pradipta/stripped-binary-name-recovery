@@ -5,8 +5,8 @@ into text, so the SAME CodeT5+ 220M recipe (scripts/a4_train_codet5p.py --data-d
 fine-tuned on it. Rows mirror results/a4_ft/*.jsonl: key, binary, package, addr, name, code (+regime/name_seen for eval).
 Output: results/a4_baptext/{train,val,test}.jsonl + stats.json."""
 import json, os, sys, collections, multiprocessing as mp
-WS = '/project/hz79/_shared/cs785/dh2'; PROTO = f'{WS}/results/baseline_protocol_v2'
-G = '/project/hz79/_shared/cs785/relift_ws/data/graphs_v3'; S = '/project/hz79/_shared/cs785/relift_ws/data/string_refs_v2'
+WS = '$WORKSPACE/dh2'; PROTO = f'{WS}/results/baseline_protocol_v2'
+G = '$WORKSPACE/relift_ws/data/graphs_v3'; S = '$WORKSPACE/relift_ws/data/string_refs_v2'
 OUT = f'{WS}/results/a4_baptext'
 MAX_BLOCKS, MAX_TOK, SIG, MAX_CTX, MAX_STR, STR_LEN = 30, 20, 10, 5, 8, 60
 

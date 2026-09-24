@@ -9,10 +9,10 @@ No test-set access here; test predictions are produced by scripts/a4_predict.py 
 import argparse, json, os, random, sys, time, math
 import torch
 from torch.utils.data import Dataset, DataLoader
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import split_name
 
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 
 def f1_pair(pred, gold):
     p = [t.lower() for t in split_name(pred)]; g = [t.lower() for t in split_name(gold)]

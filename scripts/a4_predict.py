@@ -9,9 +9,9 @@ import argparse, json, os, re, subprocess, sys, time
 from collections import defaultdict
 import torch
 from torch.utils.data import DataLoader
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 PROTO = f'{WS}/results/baseline_protocol_v2'
 
 def demangle_many(names):

@@ -1,17 +1,17 @@
 # Task: Add More Packages to Dataset
 
-**For:** Robert Blacha
+**For:** AUTHOR
 **Project:** CS785 Binary Function Name Recovery
 **Date:** 2026-04-09
 **Deadline:** April 22, 2026
 **Estimated time:** 1 day
-**Where:** Local machine (BAP required) → sync to Wulver
+**Where:** Local machine (BAP required) → sync to HPC
 
 ---
 
 ## Goal
 
-Add diverse packages to our 300K training dataset. More packages = better generalization. Target: **18 new packages** from SYMGEN's published dataset (already downloaded on Wulver).
+Add diverse packages to our 300K training dataset. More packages = better generalization. Target: **18 new packages** from SYMGEN's published dataset (already downloaded on HPC).
 
 ---
 
@@ -19,7 +19,7 @@ Add diverse packages to our 300K training dataset. More packages = better genera
 
 ### 1. Local machine setup
 
-BAP is **not on Wulver** — all preprocessing is local.
+BAP is **not on HPC** — all preprocessing is local.
 
 ```bash
 cd ~/cs785-project
@@ -33,11 +33,11 @@ If BAP not installed:
 bash scripts/01_setup_environment.sh   # ~30 min
 ```
 
-### 2. Wulver access (for syncing results)
+### 2. HPC access (for syncing results)
 
 ```bash
-ssh wulver   # Duo 2FA, then connection persists 24h
-ls /project/hz79/_shared/cs785/data/match_index.json   # Verify access
+ssh HPC   # Duo 2FA, then connection persists 24h
+ls $WORKSPACE/data/match_index.json   # Verify access
 ```
 
 ---
@@ -62,7 +62,7 @@ for p, c in pkgs.most_common(10):
 
 ## What to Add (18 new packages)
 
-These packages are in SYMGEN's published dataset (already on Wulver) but **not in our training data**:
+These packages are in SYMGEN's published dataset (already on HPC) but **not in our training data**:
 
 | Package | Domain | Expected size |
 |---------|--------|---------------|
@@ -91,12 +91,12 @@ These packages are in SYMGEN's published dataset (already on Wulver) but **not i
 
 ## Step-by-Step for Each Package
 
-### 1. Copy binaries from Wulver to local
+### 1. Copy binaries from HPC to local
 
 The SYMGEN dataset has unstripped binaries (with debug symbols):
 ```bash
 # On local machine — copy ONE package at a time
-scp -r wulver:/project/hz79/_shared/cs785/baselines/SymGen/zenodo/extracted_bins/x86_64/O2/gettext-0.21/ ~/cs785-project/data/symgen_bins/gettext/
+scp -r HPC:$WORKSPACE/baselines/SymGen/zenodo/extracted_bins/x86_64/O2/gettext-0.21/ ~/cs785-project/data/symgen_bins/gettext/
 ```
 
 Repeat for each package you're adding. Start with O2 (one opt level).
@@ -242,10 +242,10 @@ print(f'Total dataset: {len(mi)} functions')
 "
 ```
 
-### 8. Sync to Wulver
+### 8. Sync to HPC
 
 ```bash
-REMOTE="wulver:/project/hz79/_shared/cs785"
+REMOTE="HPC:$WORKSPACE"
 
 # Sync new data
 rsync -az data/graphs/gettext_*.json "$REMOTE/data/graphs/"
@@ -273,20 +273,20 @@ python3 -m src.preprocessing.build_votes \
     --output data/votes_vocab.json \
     --min-count 2
 
-# Sync to Wulver
-rsync -avz data/votes_vocab.json wulver:/project/hz79/_shared/cs785/data/
+# Sync to HPC
+rsync -avz data/votes_vocab.json HPC:$WORKSPACE/data/
 ```
 
 ---
 
 ## Important Rules
 
-1. **BAP is LOCAL ONLY** — not on Wulver
+1. **BAP is LOCAL ONLY** — not on HPC
 2. **`functions` must be `{name: addr}` format** — NOT `{addr: name}`
 3. **Compile with `-no-pie`** if compiling from source (prevents address mismatch)
 4. **Don't add these to training:** tengine, angie, nginx118, recutils (cross-project)
 5. **Skip binaries >5MB** — BAP will likely OOM (openssl, gdb)
-6. **Coordinate with Ananta** before changing `split_assignments.json`
+6. **Coordinate with AUTHOR** before changing `split_assignments.json`
 
 ---
 
@@ -297,14 +297,14 @@ rsync -avz data/votes_vocab.json wulver:/project/hz79/_shared/cs785/data/
 | `data/raw/*_sym` | Debug binaries (local only) |
 | `data/stripped/*_stripped` | Stripped binaries (local only) |
 | `data/bir/*.bir` | BAP IR files (local only) |
-| `data/graphs/*.json` | Per-function CFG graphs (sync to Wulver) |
-| `data/labels/*_labels.json` | Ground truth labels (sync to Wulver) |
-| `data/external_calls/*.json` | Library calls (sync to Wulver) |
-| `data/match_index.json` | Central mapping (sync to Wulver) |
-| SYMGEN binaries on Wulver | `/project/hz79/_shared/cs785/baselines/SymGen/zenodo/extracted_bins/x86_64/` |
+| `data/graphs/*.json` | Per-function CFG graphs (sync to HPC) |
+| `data/labels/*_labels.json` | Ground truth labels (sync to HPC) |
+| `data/external_calls/*.json` | Library calls (sync to HPC) |
+| `data/match_index.json` | Central mapping (sync to HPC) |
+| SYMGEN binaries on HPC | `$WORKSPACE/baselines/SymGen/zenodo/extracted_bins/x86_64/` |
 
 ---
 
 ## Questions?
 
-Ask Ananta on Discord.
+Ask AUTHOR on Discord.

@@ -7,9 +7,9 @@ For the novel-name sample rows whose own decomp text lacks GT tokens, measure GT
   (d) prefix recoverability: is the GT name's FIRST token findable in neighbors (naming-convention signal)?
 This sizes the headroom of module-evidence pooling / name propagation / project-lexicon prompts."""
 import json, os, re, sys, glob, random, collections
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import split_name
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 K = 10  # address neighbors each side
 
 # novel-name sample: reuse fulltest meta (novel rows), sample per binary

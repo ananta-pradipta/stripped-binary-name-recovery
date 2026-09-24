@@ -9,9 +9,9 @@ Row: key binary package addr name code in_dynsym opt. `in_dynsym` = stripped nam
 scored rows of the holdout must drop in_dynsym (split policy v3), training keeps them (as our protocol does).
 """
 import json, os, re, collections
-SRC_S = '/project/hz79/_shared/cs785/symgen_corpus/decomp_stripped/x86_64'
-SRC_U = '/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen/zenodo/extracted/x86_64'
-OUT = '/project/hz79/_shared/cs785/dh2/results/a4_ft'
+SRC_S = '$WORKSPACE/symgen_corpus/decomp_stripped/x86_64'
+SRC_U = '/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen/zenodo/extracted/x86_64'
+OUT = '$WORKSPACE/dh2/results/a4_ft'
 EXCLUDE = {'coreutils', 'diffutils', 'gettext', 'gawk', 'grep', 'gzip', 'inetutils', 'tar', 'units'}
 HOLDOUT = {'gmp', 'libpng', 'libmicrohttpd', 'poke', 'libredwg'}
 CRT = {'_init', '_fini', '_start', 'deregister_tm_clones', 'register_tm_clones', '__do_global_dtors_aux',

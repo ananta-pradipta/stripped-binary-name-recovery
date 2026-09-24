@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=2026-spring-cs-785-ACCOUNT-USER
 #SBATCH --qos=course
 #SBATCH --time=04:00:00
 #SBATCH --job-name=cs785-abl4
@@ -10,7 +10,7 @@
 #SBATCH --mem=16G
 #SBATCH --gres=gpu:a100_10g:1
 
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
+cd /course/2026/spring/cs/785/ACCOUNT/USER/cs785
 module load bright
 module load python3
 source ../cs785-env/bin/activate

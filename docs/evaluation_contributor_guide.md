@@ -1,6 +1,6 @@
 # Evaluation & Metrics Contributor Guide
 
-**For:** Zhihao Lin (NLP evaluation metrics implementation and semantic similarity analysis)
+**For:** AUTHOR (NLP evaluation metrics implementation and semantic similarity analysis)
 **Project:** CS785 Binary Function Name Recovery
 **Last updated:** 2026-04-02
 
@@ -34,7 +34,7 @@ source ~/cs785-project/activate.sh
 # - No BAP needed for evaluation (only for predict.py on new binaries)
 ```
 
-All evaluation scripts work locally or on Wulver. Demo evaluation on Wulver requires pre-processed graph files (already uploaded).
+All evaluation scripts work locally or on HPC. Demo evaluation on HPC requires pre-processed graph files (already uploaded).
 
 ---
 
@@ -45,7 +45,7 @@ All evaluation scripts work locally or on Wulver. Demo evaluation on Wulver requ
 | Mode | Script | What it measures | BAP needed? |
 |------|--------|-----------------|-------------|
 | **Test eval** | `scripts/eval_test.py` | Performance on held-out test split (8,973 functions) | No |
-| **Demo eval** | `scripts/eval_demo_wulver.py` | Cross-project generalization (12,688 functions, 11 unseen packages) | No |
+| **Demo eval** | `scripts/eval_demo_HPC.py` | Cross-project generalization (12,688 functions, 11 unseen packages) | No |
 | **Stratified eval** | `scripts/eval_stratified.py` | Breakdown by difficulty (easy/hard-seen/hard-unseen) | No |
 | **Predict** | `scripts/predict.py` | End-to-end on any stripped binary | **Yes** |
 
@@ -225,12 +225,12 @@ python3 scripts/eval_test.py checkpoints/best_model.pt [--splits val test] [--am
 
 **Output:** `results/test_eval_metrics.json`
 
-### `scripts/eval_demo_wulver.py` — Cross-Project Evaluation
+### `scripts/eval_demo_HPC.py` — Cross-Project Evaluation
 
 Evaluates on 11 unseen demo packages using beam search.
 
 ```bash
-python3 scripts/eval_demo_wulver.py checkpoints/best_model.pt
+python3 scripts/eval_demo_HPC.py checkpoints/best_model.pt
 ```
 
 **Key differences from test eval:**
@@ -323,7 +323,7 @@ Both tokenizers ultimately produce a string that gets passed to `compute_all_met
 
 ## 7. Running Evaluations
 
-### Test set (local or Wulver)
+### Test set (local or HPC)
 
 ```bash
 # Quick test eval
@@ -336,11 +336,11 @@ python3 scripts/eval_test.py checkpoints/best_model.pt --amp
 python3 scripts/eval_test.py checkpoints/best_model.pt --splits test
 ```
 
-### Cross-project demo (Wulver recommended)
+### Cross-project demo (HPC recommended)
 
 ```bash
-# On Wulver
-ssh wulver "cd /course/.../cs785 && python3 scripts/eval_demo_wulver.py checkpoints/best_model.pt"
+# On HPC
+ssh HPC "cd /course/.../cs785 && python3 scripts/eval_demo_HPC.py checkpoints/best_model.pt"
 ```
 
 ### Stratified analysis
@@ -576,7 +576,7 @@ Higher Val F1 doesn't always mean better cross-project performance. Val set is s
 |------|---------|
 | `src/evaluation/metrics.py` | All metric implementations |
 | `scripts/eval_test.py` | Test set evaluation |
-| `scripts/eval_demo_wulver.py` | Cross-project demo evaluation |
+| `scripts/eval_demo_HPC.py` | Cross-project demo evaluation |
 | `scripts/eval_stratified.py` | Stratified difficulty analysis |
 | `scripts/predict.py` | End-to-end prediction (needs BAP) |
 | `src/preprocessing/build_votes.py` | Votes tokenizer (affects decoding) |

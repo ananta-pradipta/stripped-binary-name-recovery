@@ -33,7 +33,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    :root { --njit-red: #D32F2F; --njit-dark: #1a1a2e; }
+    :root { --INSTITUTION-red: #D32F2F; --INSTITUTION-dark: #1a1a2e; }
     .main-header {
         background: linear-gradient(135deg, #D32F2F 0%, #8B0000 100%);
         color: white; padding: 1.5rem 2rem; border-radius: 10px; margin-bottom: 1.5rem;
@@ -224,7 +224,7 @@ def render_sidebar(manager, loaded_models):
         st.markdown("### About")
         st.caption(
             "CS 785 Advanced Binary Analysis w/ Machine Learning\n\n"
-            "Contributors: Ananta Pradipta, Robert Blacha, Zhihao Lin\n\n"
+            "Contributors: AUTHOR AUTHOR, AUTHOR, AUTHOR\n\n"
             "Reproducing and extending the DeBin with "
             "GNN-based deep learning for binary function name recovery."
         )

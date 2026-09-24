@@ -9,7 +9,7 @@ Produces a full report with:
   4. Sample predictions (correct, close, wrong)
   5. Ablation table (if checkpoints available)
 
-Works both locally and on Wulver.
+Works both locally and on HPC.
 
 Usage:
   python3 scripts/eval_full.py                          # Full report

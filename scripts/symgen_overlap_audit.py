@@ -1,6 +1,6 @@
 import json, re, os
-E = "/course/2026/spring/cs/785/hz79/adp232/cs785/baselines/SymGen/zenodo/extracted/x86_64"
-roles = json.load(open("/project/hz79/_shared/cs785/dh2/data/split_v2.json"))["meta"]["roles"]
+E = "/course/2026/spring/cs/785/ACCOUNT/USER/cs785/baselines/SymGen/zenodo/extracted/x86_64"
+roles = json.load(open("$WORKSPACE/dh2/data/split_v2.json"))["meta"]["roles"]
 base = {}
 for pkg, role in roles.items():
     k = re.sub(r"\d+$", "", pkg.lower())

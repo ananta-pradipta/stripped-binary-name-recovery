@@ -3,8 +3,8 @@
 A Streamlit web application for predicting human-readable function names from
 stripped ELF binaries using graph neural networks.
 
-**CS 785 Deep Learning, NJIT, Group 1**
-Ananta, Robert Blacha, Zhihao Lin
+**CS 785 Deep Learning, INSTITUTION, Group 1**
+AUTHOR, AUTHOR, AUTHOR
 
 
 ## Features

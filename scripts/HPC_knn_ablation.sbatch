@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --job-name=cs785-eval
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=2026-spring-cs-785-ACCOUNT-USER
 #SBATCH --qos=course
 #SBATCH --gres=gpu:a100_10g:1
 #SBATCH --time=02:00:00
@@ -10,8 +10,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=cs785-eval.%j.out
 
-cd /course/2026/spring/cs/785/hz79/adp232/cs785
-source /course/2026/spring/cs/785/hz79/adp232/cs785-env/bin/activate
+cd /course/2026/spring/cs/785/ACCOUNT/USER/cs785
+source /course/2026/spring/cs/785/ACCOUNT/USER/cs785-env/bin/activate
 
 echo "=== k-NN Ablation Study ==="
 echo "Date: $(date)"

@@ -1,14 +1,14 @@
 #!/bin/bash
-# First-time setup on Wulver HPC
-# Run this AFTER uploading data with wulver_upload.sh
-# Run this ON Wulver (after SSH-ing in)
+# First-time setup on HPC HPC
+# Run this AFTER uploading data with HPC_upload.sh
+# Run this ON HPC (after SSH-ing in)
 #
-# Usage: bash cs785/scripts/wulver_setup.sh
+# Usage: bash cs785/scripts/HPC_setup.sh
 
-COURSE_DIR="/course/2026/spring/cs/785/hz79/adp232"
+COURSE_DIR="/course/2026/spring/cs/785/ACCOUNT/USER"
 cd ${COURSE_DIR}
 
-echo "=== Setting up Python environment on Wulver ==="
+echo "=== Setting up Python environment on HPC ==="
 
 # Load Python module
 module load bright 2>/dev/null
@@ -62,4 +62,4 @@ print('All dependencies OK')
 
 echo ""
 echo "=== Setup complete! ==="
-echo "To train: cd cs785 && sbatch scripts/wulver_train.sbatch"
+echo "To train: cd cs785 && sbatch scripts/HPC_train.sbatch"

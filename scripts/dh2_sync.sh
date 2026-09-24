@@ -1,9 +1,9 @@
 #!/bin/bash
-# Sync the dualhead-hydra (dataset v2) workspace to Wulver — ADDITIVE, isolated under dh2/.
+# Sync the dualhead-hydra (dataset v2) workspace to HPC — ADDITIVE, isolated under dh2/.
 # Usage: bash scripts/dh2_sync.sh [code|data|all]   (default: code)
 set -euo pipefail
-W=wulver
-R=/project/hz79/_shared/cs785/dh2
+W=HPC
+R=$WORKSPACE/dh2
 L=$HOME/cs785-project
 what=${1:-code}
 ssh $W "mkdir -p $R/src $R/scripts $R/configs $R/tests $R/docs $R/data $R/checkpoints $R/results $R/slurm"

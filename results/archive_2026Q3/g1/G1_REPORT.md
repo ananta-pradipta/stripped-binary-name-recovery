@@ -93,8 +93,8 @@ thirds of what the prototypes capture is package-local, not transferable concept
 ## Artifacts
 `results/g1/`: g1_gate.json, g1_results_by_stratum.{json,tsv}, g1_results_by_frequency.{json,tsv},
 g1_prototype_recall.{json,tsv}, g1_predictions.tsv (per-function §46 dump),
-token_support_stats.tsv, prototype_support.tsv, prototype_vectors.npz (Wulver),
+token_support_stats.tsv, prototype_support.tsv, prototype_vectors.npz (HPC),
 pseudo_novel_split.tsv + pseudo_novel_audit.json, g1_train_pairs.tsv, generator_proto_config.yaml,
-g1_adapter.pt, hard_neg_pool.npz (Wulver), job log g1.1174597.out.
+g1_adapter.pt, hard_neg_pool.npz (HPC), job log g1.1174597.out.
 Code: `experiments_semantic/g1_prototype_memory.py`, `embed_clean7.py`;
-clean-7 fresh embeddings persisted at `results/zq_clean7_fresh.npz` (Wulver).
+clean-7 fresh embeddings persisted at `results/zq_clean7_fresh.npz` (HPC).

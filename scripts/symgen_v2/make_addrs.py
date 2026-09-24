@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Build per-binary .addrs lists + elf bases from the exported protocol jsonl."""
 import json, os, sys
-sys.path.insert(0, '/project/hz79/_shared/cs785/relift_ws/pylib')
+sys.path.insert(0, '$WORKSPACE/relift_ws/pylib')
 from elftools.elf.elffile import ELFFile
-WS = '/project/hz79/_shared/cs785/dh2/symgen_v2'
-PROTO = '/project/hz79/_shared/cs785/dh2/results/baseline_protocol_v2'
-STRIP = '/project/hz79/_shared/cs785/relift_ws/data/stripped_v2'
+WS = '$WORKSPACE/dh2/symgen_v2'
+PROTO = '$WORKSPACE/dh2/results/baseline_protocol_v2'
+STRIP = '$WORKSPACE/relift_ws/data/stripped_v2'
 os.makedirs(WS + '/addrs', exist_ok=True); os.makedirs(WS + '/bases', exist_ok=True)
 os.makedirs(WS + '/decomp', exist_ok=True); os.makedirs(WS + '/logs', exist_ok=True)
 per = {}

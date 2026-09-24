@@ -4,7 +4,7 @@
 # NOTE: no `set -e` — each build_opt call handles its own failure with `continue`,
 # and set -e combined with tar/wget subshells caused silent aborts on yash/OSDN redirects.
 
-PROJECT_ROOT=/mmfs1/project/hz79/_shared/cs785
+PROJECT_ROOT=$WORKSPACE
 DEBUG_OUT=$PROJECT_ROOT/data/cross_project/debug_unseen
 STRIPPED_OUT=$PROJECT_ROOT/data/cross_project/stripped_unseen
 SRC_DIR=/tmp/unseen_xproj_sources
@@ -93,7 +93,7 @@ pkg_lighttpd() {
 }
 
 pkg_yash() {
-    # OSDN redirector was silently erroring on wulver wget; try SF mirror + a couple of fallbacks
+    # OSDN redirector was silently erroring on HPC wget; try SF mirror + a couple of fallbacks
     download_extract "yash" "https://master.dl.sourceforge.net/project/yash/yash/2.57/yash-2.57.tar.xz?viasf=1" \
         || download_extract "yash" "https://mirror.yash.sh/pub/yash-2.57.tar.xz" \
         || return
@@ -112,7 +112,7 @@ pkg_zsh() {
 
 pkg_fossil() {
     download_extract "fossil" "https://fossil-scm.org/home/tarball/version-2.25/fossil-src-2.25.tar.gz" || return
-    # Drop --static: Wulver compute node lacks libcrypto.a / libc static libs
+    # Drop --static: HPC compute node lacks libcrypto.a / libc static libs
     build_opt "fossil" "fossil" "$SRC_DIR/fossil" "make" "./configure --with-openssl=none" "fossil"
 }
 

@@ -17,7 +17,7 @@ Scope: answer the 8-point directive of 2026-08-17. Everything below is gate-disc
 
 ## 1. Branch reset (point 1–2) — proposal, needs your OK before I cut
 
-- **Base = `dev`** (CCS-era code, post-submission, non-anonymized; `ccs-anon` is byte-identical except anonymization). `dev`'s loader still has the silent "new binary → train" default that caused the leakage; the guarded loader lives on Wulver `ccs/src/preprocessing/build_dataset.py` (XPROJ guard) — I port that guard in as fix #1.
+- **Base = `dev`** (CCS-era code, post-submission, non-anonymized; `ccs-anon` is byte-identical except anonymization). `dev`'s loader still has the silent "new binary → train" default that caused the leakage; the guarded loader lives on HPC `ccs/src/preprocessing/build_dataset.py` (XPROJ guard) — I port that guard in as fix #1.
 - **New branch: `dualhead-hydra`** cut from `dev`.
 - **Nothing deleted.** `unified`, `openvocab`, `ndss27`, `dualspace` stay as archive branches; I add tags `archive/…` so they are findable. `results/experiment_log.md` (3,987 lines, append-only) and every `*_REPORT.md` are carried onto the new branch under `results/archive_2026Q3/` as the "lessons learnt" record. Untracked data dirs on disk stay untouched (I'll list what is safe to purge later; disk purge only on your explicit word).
 - Uncommitted WIP on `unified` gets one archive commit so nothing is lost.
@@ -49,7 +49,7 @@ Everything above is preprocessing/loader-side; the raw `.bir` (936 binaries, 4.5
 | B6 | 42 label-noise samples (BAP mis-named subs); 100,843 non-sub graph files; thunk resolution can absorb PLT-stub graphs | exclude non-sub keys; thunk resolver must reject stub bodies |
 | B8 | 414/881 binaries (32.6% of fns) unsplit → silently train under dev loader; split file names non-existent ids | as planned (guard + tracked split); corpus manifest first |
 | B1 | failing unit test written | as planned |
-| corpus | local `data/` (939 bir, 302K fns, 431/17/18/4 split) ≠ Wulver `ccs/data` (933 bins, 613K graphs, 821/17/18/77/208 split) | **P0.1 corpus manifest** (local+Wulver): per binary build-id, debug/stripped/bir/graphs presence, opt truth, label source; single source of truth for dataset v2 |
+| corpus | local `data/` (939 bir, 302K fns, 431/17/18/4 split) ≠ HPC `ccs/data` (933 bins, 613K graphs, 821/17/18/77/208 split) | **P0.1 corpus manifest** (local+HPC): per binary build-id, debug/stripped/bir/graphs presence, opt truth, label source; single source of truth for dataset v2 |
 
 ## 3. Dataset redesign (point 6)
 
@@ -71,7 +71,7 @@ Design (subject to the Phase-0 literature check):
 - **Phase 1 — Pipeline fixes B1–B9 + dataset v2.** Deterministic re-parse, new split file, leakage table. Gate: all verification cells in §2 pass; dataset card written.
 - **Phase 2 — Retrain the CCS architecture unchanged on dataset v2** (encoder + fusion + decoder + k-NN, fixed collate). This is the honest new baseline and tells us how much of the old headline was leakage vs. real. Gate: reproducible ±0.005 across 2 seeds; leakage table clean.
 - **Phase 3 — Dual-head v2.** (a) enriched channels B7 into both heads; (b) router re-tried on the *fixed* dev set: learned per-query gate over [retrieval margin, ext-Jaccard, coverage features] with calibrated confidence + abstention; (c) decoder as graceful-degradation head (evaluate by selective metrics, not novel-EM). Gate: dual > best single head by ≥+0.01 F1 AND better AURC on the package-disjoint dev; else the dual claim is reported as a coverage-boundary result, not oversold.
-- **Phase 4 — Baselines clean.** Re-run BLens and SymGen+LoRA on dataset v2 under the identical protocol (their previous fine-tunes included dash/gettext/psmisc). Envs exist on Wulver.
+- **Phase 4 — Baselines clean.** Re-run BLens and SymGen+LoRA on dataset v2 under the identical protocol (their previous fine-tunes included dash/gettext/psmisc). Envs exist on HPC.
 - **Phase 5 — Ablations & robustness.** Fusion cascade, channel ablations, gate sensitivity, 2×2 scale/pretrain (already done — re-verify on v2), Clang/opt-level robustness, efficiency table.
 
 ## 6. What I need from you (blocking only for the branch cut)
@@ -79,4 +79,4 @@ Design (subject to the Phase-0 literature check):
 2. Confirm "discard" = archive (tags + results copied), not delete. Disk purge of untracked experiment dirs only on your list.
 3. Target venue / deadline, if any (affects how deep Phase 3 goes before we lock a dataset).
 
-Non-blocking assumptions I'll proceed under: BAP-only, no decompiler, no LLM ≥1B; Wulver hz79 for GPU; local for BAP; every result to Discord + experiment_log.
+Non-blocking assumptions I'll proceed under: BAP-only, no decompiler, no LLM ≥1B; HPC ACCOUNT for GPU; local for BAP; every result to Discord + experiment_log.

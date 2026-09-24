@@ -1,62 +1,62 @@
 #!/bin/bash
-# Upload preprocessed data and code to Wulver HPC
+# Upload preprocessed data and code to HPC HPC
 # Uses SSH multiplexing — authenticate ONCE, all transfers reuse the connection.
 #
 # Usage:
 #   1. First, set up SSH config (one-time):
 #        mkdir -p ~/.ssh/sockets
 #        Add to ~/.ssh/config:
-#          Host wulver
-#              HostName wulver.njit.edu
-#              User adp232
+#          Host HPC
+#              HostName HPC.institution.edu
+#              User USER
 #              ControlMaster auto
 #              ControlPath ~/.ssh/sockets/%r@%h-%p
 #              ControlPersist 2h
 #
 #   2. Open a connection (authenticates with Duo once):
-#        ssh wulver
+#        ssh HPC
 #        # Keep this terminal open!
 #
 #   3. In another terminal, run:
-#        bash scripts/wulver_upload.sh
+#        bash scripts/HPC_upload.sh
 #
 # The script uses tar for large directories (graphs: 241K files, 2.2GB)
 # to avoid slow per-file scp transfers.
 
 set -e
 
-WULVER="wulver"  # Uses SSH config alias (multiplexed connection)
-REMOTE_BASE="/course/2026/spring/cs/785/hz79/adp232"
+HPC="HPC"  # Uses SSH config alias (multiplexed connection)
+REMOTE_BASE="/course/2026/spring/cs/785/ACCOUNT/USER"
 REMOTE_DIR="${REMOTE_BASE}/cs785"
 LOCAL_DIR="$HOME/cs785-project"
-TMP_DIR="/tmp/wulver_upload"
+TMP_DIR="/tmp/HPC_upload"
 
 # Check SSH connection is alive
 echo "=== Checking SSH connection ==="
-if ! ssh -O check ${WULVER} 2>/dev/null; then
-    echo "ERROR: No active SSH connection to Wulver."
-    echo "Open a terminal and run:  ssh wulver"
+if ! ssh -O check ${HPC} 2>/dev/null; then
+    echo "ERROR: No active SSH connection to HPC."
+    echo "Open a terminal and run:  ssh HPC"
     echo "Then re-run this script in another terminal."
     exit 1
 fi
 echo "SSH multiplexed connection active."
 echo ""
 
-echo "=== Uploading to Wulver HPC ==="
+echo "=== Uploading to HPC HPC ==="
 echo "Remote: ${REMOTE_DIR}"
 echo ""
 
 # Create remote directory structure
 echo "[1/8] Creating remote directories..."
-ssh ${WULVER} "mkdir -p ${REMOTE_DIR}/{data/bpe_model,src,configs,checkpoints,scripts,demo,results}"
+ssh ${HPC} "mkdir -p ${REMOTE_DIR}/{data/bpe_model,src,configs,checkpoints,scripts,demo,results}"
 
 # --- Large directories: tar + upload + extract ---
 mkdir -p ${TMP_DIR}
 
 echo "[2/8] Packing and uploading data/graphs (2.2GB, 241K files)..."
-if ssh ${WULVER} "[ -d ${REMOTE_DIR}/data/graphs ] && [ \$(ls ${REMOTE_DIR}/data/graphs/ 2>/dev/null | head -5 | wc -l) -gt 0 ]" 2>/dev/null; then
+if ssh ${HPC} "[ -d ${REMOTE_DIR}/data/graphs ] && [ \$(ls ${REMOTE_DIR}/data/graphs/ 2>/dev/null | head -5 | wc -l) -gt 0 ]" 2>/dev/null; then
     # Check file count on remote
-    REMOTE_GRAPHS=$(ssh ${WULVER} "find ${REMOTE_DIR}/data/graphs -type f 2>/dev/null | wc -l")
+    REMOTE_GRAPHS=$(ssh ${HPC} "find ${REMOTE_DIR}/data/graphs -type f 2>/dev/null | wc -l")
     LOCAL_GRAPHS=$(find ${LOCAL_DIR}/data/graphs -type f | wc -l)
     echo "  Remote has ${REMOTE_GRAPHS} files, local has ${LOCAL_GRAPHS} files."
     if [ "${REMOTE_GRAPHS}" -eq "${LOCAL_GRAPHS}" ]; then
@@ -64,58 +64,58 @@ if ssh ${WULVER} "[ -d ${REMOTE_DIR}/data/graphs ] && [ \$(ls ${REMOTE_DIR}/data
     else
         echo "  Mismatch — re-uploading graphs..."
         tar czf ${TMP_DIR}/graphs.tar.gz -C ${LOCAL_DIR}/data graphs
-        scp ${TMP_DIR}/graphs.tar.gz ${WULVER}:${REMOTE_DIR}/data/
-        ssh ${WULVER} "cd ${REMOTE_DIR}/data && rm -rf graphs && tar xzf graphs.tar.gz && rm graphs.tar.gz"
+        scp ${TMP_DIR}/graphs.tar.gz ${HPC}:${REMOTE_DIR}/data/
+        ssh ${HPC} "cd ${REMOTE_DIR}/data && rm -rf graphs && tar xzf graphs.tar.gz && rm graphs.tar.gz"
         echo "  Done."
     fi
 else
     echo "  Compressing..."
     tar czf ${TMP_DIR}/graphs.tar.gz -C ${LOCAL_DIR}/data graphs
     echo "  Uploading (~500MB compressed)..."
-    scp ${TMP_DIR}/graphs.tar.gz ${WULVER}:${REMOTE_DIR}/data/
-    echo "  Extracting on Wulver..."
-    ssh ${WULVER} "cd ${REMOTE_DIR}/data && tar xzf graphs.tar.gz && rm graphs.tar.gz"
+    scp ${TMP_DIR}/graphs.tar.gz ${HPC}:${REMOTE_DIR}/data/
+    echo "  Extracting on HPC..."
+    ssh ${HPC} "cd ${REMOTE_DIR}/data && tar xzf graphs.tar.gz && rm graphs.tar.gz"
     echo "  Done."
 fi
 
 echo "[3/8] Packing and uploading data/labels (27MB, 450 files)..."
 tar czf ${TMP_DIR}/labels.tar.gz -C ${LOCAL_DIR}/data labels
-scp ${TMP_DIR}/labels.tar.gz ${WULVER}:${REMOTE_DIR}/data/
-ssh ${WULVER} "cd ${REMOTE_DIR}/data && rm -rf labels && tar xzf labels.tar.gz && rm labels.tar.gz"
+scp ${TMP_DIR}/labels.tar.gz ${HPC}:${REMOTE_DIR}/data/
+ssh ${HPC} "cd ${REMOTE_DIR}/data && rm -rf labels && tar xzf labels.tar.gz && rm labels.tar.gz"
 
 echo "[4/8] Packing and uploading data/external_calls (59MB, 415 files)..."
 tar czf ${TMP_DIR}/external_calls.tar.gz -C ${LOCAL_DIR}/data external_calls
-scp ${TMP_DIR}/external_calls.tar.gz ${WULVER}:${REMOTE_DIR}/data/
-ssh ${WULVER} "cd ${REMOTE_DIR}/data && rm -rf external_calls && tar xzf external_calls.tar.gz && rm external_calls.tar.gz"
+scp ${TMP_DIR}/external_calls.tar.gz ${HPC}:${REMOTE_DIR}/data/
+ssh ${HPC} "cd ${REMOTE_DIR}/data && rm -rf external_calls && tar xzf external_calls.tar.gz && rm external_calls.tar.gz"
 
 echo "[5/8] Packing and uploading data/string_refs (13MB, 334 files)..."
 tar czf ${TMP_DIR}/string_refs.tar.gz -C ${LOCAL_DIR}/data string_refs
-scp ${TMP_DIR}/string_refs.tar.gz ${WULVER}:${REMOTE_DIR}/data/
-ssh ${WULVER} "cd ${REMOTE_DIR}/data && rm -rf string_refs && tar xzf string_refs.tar.gz && rm string_refs.tar.gz"
+scp ${TMP_DIR}/string_refs.tar.gz ${HPC}:${REMOTE_DIR}/data/
+ssh ${HPC} "cd ${REMOTE_DIR}/data && rm -rf string_refs && tar xzf string_refs.tar.gz && rm string_refs.tar.gz"
 
 # --- Small files: direct scp ---
 echo "[6/8] Uploading index files, vocabs, BPE model..."
-scp ${LOCAL_DIR}/data/match_index.json ${WULVER}:${REMOTE_DIR}/data/
-scp ${LOCAL_DIR}/data/split_assignments.json ${WULVER}:${REMOTE_DIR}/data/
-scp ${LOCAL_DIR}/data/votes_vocab.json ${WULVER}:${REMOTE_DIR}/data/
-scp ${LOCAL_DIR}/data/build_manifest.json ${WULVER}:${REMOTE_DIR}/data/ 2>/dev/null || true
-scp -r ${LOCAL_DIR}/data/bpe_model ${WULVER}:${REMOTE_DIR}/data/
+scp ${LOCAL_DIR}/data/match_index.json ${HPC}:${REMOTE_DIR}/data/
+scp ${LOCAL_DIR}/data/split_assignments.json ${HPC}:${REMOTE_DIR}/data/
+scp ${LOCAL_DIR}/data/votes_vocab.json ${HPC}:${REMOTE_DIR}/data/
+scp ${LOCAL_DIR}/data/build_manifest.json ${HPC}:${REMOTE_DIR}/data/ 2>/dev/null || true
+scp -r ${LOCAL_DIR}/data/bpe_model ${HPC}:${REMOTE_DIR}/data/
 
 echo "[7/8] Uploading source code, configs, scripts, demo, checkpoints..."
-scp -r ${LOCAL_DIR}/src ${WULVER}:${REMOTE_DIR}/
-scp -r ${LOCAL_DIR}/configs ${WULVER}:${REMOTE_DIR}/
-scp -r ${LOCAL_DIR}/scripts ${WULVER}:${REMOTE_DIR}/
-scp ${LOCAL_DIR}/checkpoints/pretrained_encoder.pt ${WULVER}:${REMOTE_DIR}/checkpoints/
+scp -r ${LOCAL_DIR}/src ${HPC}:${REMOTE_DIR}/
+scp -r ${LOCAL_DIR}/configs ${HPC}:${REMOTE_DIR}/
+scp -r ${LOCAL_DIR}/scripts ${HPC}:${REMOTE_DIR}/
+scp ${LOCAL_DIR}/checkpoints/pretrained_encoder.pt ${HPC}:${REMOTE_DIR}/checkpoints/
 
 # Demo data
 tar czf ${TMP_DIR}/demo.tar.gz -C ${LOCAL_DIR} demo
-scp ${TMP_DIR}/demo.tar.gz ${WULVER}:${REMOTE_DIR}/
-ssh ${WULVER} "cd ${REMOTE_DIR} && rm -rf demo && tar xzf demo.tar.gz && rm demo.tar.gz"
+scp ${TMP_DIR}/demo.tar.gz ${HPC}:${REMOTE_DIR}/
+ssh ${HPC} "cd ${REMOTE_DIR} && rm -rf demo && tar xzf demo.tar.gz && rm demo.tar.gz"
 
 # --- Verification ---
 echo "[8/8] Verifying upload..."
 echo ""
-ssh ${WULVER} "
+ssh ${HPC} "
 echo '=== Remote file counts ==='
 echo \"graphs:         \$(find ${REMOTE_DIR}/data/graphs -type f 2>/dev/null | wc -l) files\"
 echo \"labels:         \$(find ${REMOTE_DIR}/data/labels -type f 2>/dev/null | wc -l) files\"
@@ -155,9 +155,9 @@ echo "  labels:         $(find ${LOCAL_DIR}/data/labels -type f | wc -l) files"
 echo "  external_calls: $(find ${LOCAL_DIR}/data/external_calls -type f | wc -l) files"
 echo "  string_refs:    $(find ${LOCAL_DIR}/data/string_refs -type f | wc -l) files"
 echo ""
-echo "Next steps on Wulver:"
+echo "Next steps on HPC:"
 echo "  # In the SSH terminal that's already open:"
-echo "  bash cs785/scripts/wulver_setup.sh     # first time only"
+echo "  bash cs785/scripts/HPC_setup.sh     # first time only"
 echo "  cd ${REMOTE_DIR}"
-echo "  sbatch scripts/wulver_train.sbatch"
-echo "  squeue -u adp232"
+echo "  sbatch scripts/HPC_train.sbatch"
+echo "  squeue -u USER"

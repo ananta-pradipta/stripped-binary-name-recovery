@@ -91,5 +91,5 @@ a user-level scope decision, explicitly not implemented without a go-ahead.
 `results/e1/`: e1_summary.json (all tables), tomography_results.{json,tsv},
 finegrain_representation_audit.json, reusable_token_instance_coverage.tsv,
 g1_xpkg_matched_control.tsv, e1_crosspackage.tsv, e1_predictions.tsv, e1_evidence_maps.tsv,
-e1_config.yaml, e1_models.pt (Wulver), finegrain_states_{train,clean7}.npz (Wulver; clean7 copy
+e1_config.yaml, e1_models.pt (HPC), finegrain_states_{train,clean7}.npz (HPC; clean7 copy
 local), job log e1.1174620.out. Code: `experiments_semantic/e1_evidence.py`.

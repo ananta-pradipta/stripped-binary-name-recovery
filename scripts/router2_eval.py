@@ -8,9 +8,9 @@ oracle; and selective F1 @ 5/10/20/30/50/100% coverage for the routed system vs 
 """
 import json, re, subprocess, sys, collections, argparse, math
 import numpy as np
-sys.path.insert(0, '/project/hz79/_shared/cs785/dh2')
+sys.path.insert(0, '$WORKSPACE/dh2')
 from src.evaluation.metrics import compute_subtoken_f1
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 ap = argparse.ArgumentParser(); ap.add_argument('--router', default=f'{WS}/results/router_p3a_features.tsv')
 ap.add_argument('--a4', required=True); ap.add_argument('--regime-dump', default=f'{WS}/results/p3a_preds_greedy.tsv')
 ap.add_argument('--out', required=True)

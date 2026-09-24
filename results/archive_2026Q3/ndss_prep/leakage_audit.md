@@ -1,6 +1,6 @@
 # Leakage Audit — 7-pkg Cross-Project Set vs Train Definitions
 
-- xproj set: 13581 functions from /mmfs1/project/hz79/_shared/cs785/results/hybrid_xfl_REPRO.json (expected ~13581, deviation 0.00%)
+- xproj set: 13581 functions from $WORKSPACE/results/hybrid_xfl_REPRO.json (expected ~13581, deviation 0.00%)
 - Train A (headline `best_model_pdec_xfl.pt`): reconstructed 279299 fns (logged 243805) — dash/gettext/psmisc IN train
 - Train B (paper-clean `best_model_paper_clean.pt`): reconstructed 274106 fns (logged 241174) — all 7 xproj pkgs (+grep/sed) excluded
 - Sub-token splitter: build_votes (underscore + camelCase, lowercased); freq1 = seen at least once in train, mc2 = Votes min_count>=2 vocab rule.

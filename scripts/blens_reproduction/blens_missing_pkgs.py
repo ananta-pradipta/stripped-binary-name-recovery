@@ -1,6 +1,6 @@
 import pickle
 from collections import Counter
-with open('/project/hz79/_shared/cs785/baselines/blens_user_env/blens_data/embedding/clap', 'rb') as f:
+with open('$WORKSPACE/baselines/blens_user_env/blens_data/embedding/clap', 'rb') as f:
     clap = pickle.load(f)
 # What packages have CLAP embeddings?
 pkg_ct = Counter()

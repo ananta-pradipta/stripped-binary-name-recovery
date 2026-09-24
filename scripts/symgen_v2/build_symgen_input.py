@@ -8,8 +8,8 @@
 import argparse, json, os, random
 from collections import defaultdict
 
-WS = '/project/hz79/_shared/cs785/dh2/symgen_v2'
-PROTO = '/project/hz79/_shared/cs785/dh2/results/baseline_protocol_v2'
+WS = '$WORKSPACE/dh2/symgen_v2'
+PROTO = '$WORKSPACE/dh2/results/baseline_protocol_v2'
 INSTR = ('Suppose you are an expert in software reverse engineering. Here is a piece of decompiled code, '
          'you should infer code semantics and tell me the original function name from the contents of the '
          'function to replace [MASK]. And you need to tell me your answer. Now the decompiled codes are as follows:')

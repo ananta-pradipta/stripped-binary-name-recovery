@@ -11,7 +11,7 @@ targets incl. foo.part.0-style GCC suffixes and diverges from what is scored (EM
 Reads results/a4_modctx/{tier}.jsonl (digest inputs unchanged), writes results/a4_modctx_dm/;
 also writes the seen-flag under the key a4_predict.py reads (name_seen_in_train)."""
 import argparse, json, os, re, subprocess
-WS = '/project/hz79/_shared/cs785/dh2'
+WS = '$WORKSPACE/dh2'
 ap = argparse.ArgumentParser()
 ap.add_argument('--src', default=f'{WS}/results/a4_modctx', help='row dir whose targets to canonize')
 ap.add_argument('--out', default=f'{WS}/results/a4_modctx_dm')

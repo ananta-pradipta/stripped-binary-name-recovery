@@ -1,6 +1,6 @@
 # Model Architecture & Training Contributor Guide
 
-**For:** Ananta Dian Pradipta (model implementation, training, block encoder, GNN/attention variants)
+**For:** AUTHOR (model implementation, training, block encoder, GNN/attention variants)
 **Project:** CS785 Binary Function Name Recovery
 **Last updated:** 2026-04-02
 
@@ -17,7 +17,7 @@
 7. [Self-Supervised Pretraining](#7-self-supervised-pretraining)
 8. [Configurations](#8-configurations)
 9. [Running Training](#9-running-training)
-10. [Wulver HPC Workflow](#10-wulver-hpc-workflow)
+10. [HPC HPC Workflow](#10-HPC-hpc-workflow)
 11. [Checkpoint Format](#11-checkpoint-format)
 12. [Common Tasks](#12-common-tasks)
 13. [Debugging & Troubleshooting](#13-debugging--troubleshooting)
@@ -34,20 +34,20 @@ source ~/cs785-project/activate.sh
 # GPU: RTX 4060 Laptop (8GB VRAM) — batch_size=128 for 8M model, batch_size=32 for 25M
 ```
 
-### Wulver HPC (full training)
+### HPC HPC (full training)
 
 ```bash
 # Step 1: User opens SSH connection (Duo 2FA required once)
-ssh wulver
+ssh HPC
 
-# Step 2: Sync code changes to Wulver
-bash scripts/wulver_sync.sh
+# Step 2: Sync code changes to HPC
+bash scripts/HPC_sync.sh
 
 # Step 3: Submit training job
-ssh wulver "cd /course/2026/spring/cs/785/hz79/adp232/cs785 && sbatch scripts/wulver_train.sbatch"
+ssh HPC "cd /course/2026/spring/cs/785/ACCOUNT/USER/cs785 && sbatch scripts/HPC_train.sbatch"
 
 # Step 4: Monitor
-ssh wulver "tail -f /course/2026/spring/cs/785/hz79/adp232/cs785/cs785-train.*.out"
+ssh HPC "tail -f /course/2026/spring/cs/785/ACCOUNT/USER/cs785/cs785-train.*.out"
 ```
 
 ---
@@ -444,17 +444,17 @@ python3 -m src.training.train --config configs/optimized.yaml --seed 42 \
 
 ---
 
-## 10. Wulver HPC Workflow
+## 10. HPC HPC Workflow
 
-### Project location on Wulver
+### Project location on HPC
 
 ```
-/course/2026/spring/cs/785/hz79/adp232/cs785/
+/course/2026/spring/cs/785/ACCOUNT/USER/cs785/
 ├── src/              # Code (synced from local)
 ├── configs/          # Configs (synced from local)
 ├── scripts/          # Scripts (synced from local)
 ├── data/             # Pre-processed data (uploaded once)
-├── checkpoints/      # Model checkpoints (generated on Wulver)
+├── checkpoints/      # Model checkpoints (generated on HPC)
 ├── results/          # Evaluation results
 └── cs785-train.*.out # SLURM job output logs
 ```
@@ -464,35 +464,35 @@ python3 -m src.training.train --config configs/optimized.yaml --seed 42 \
 ```bash
 # 1. Make code changes locally
 
-# 2. Sync code to Wulver (seconds, rsync)
-bash scripts/wulver_sync.sh
+# 2. Sync code to HPC (seconds, rsync)
+bash scripts/HPC_sync.sh
 
 # 3. Submit job
-ssh wulver "cd /course/2026/spring/cs/785/hz79/adp232/cs785 && sbatch scripts/wulver_train.sbatch"
+ssh HPC "cd /course/2026/spring/cs/785/ACCOUNT/USER/cs785 && sbatch scripts/HPC_train.sbatch"
 
 # 4. Check job status
-ssh wulver "squeue -u adp232"
+ssh HPC "squeue -u USER"
 
 # 5. Monitor training output
-ssh wulver "tail -50 /course/2026/spring/cs/785/hz79/adp232/cs785/cs785-train.*.out"
+ssh HPC "tail -50 /course/2026/spring/cs/785/ACCOUNT/USER/cs785/cs785-train.*.out"
 
 # 6. Copy checkpoint back to local
-scp wulver:/course/2026/spring/cs/785/hz79/adp232/cs785/checkpoints/best_model.pt \
-    checkpoints/best_model_wulver.pt
+scp HPC:/course/2026/spring/cs/785/ACCOUNT/USER/cs785/checkpoints/best_model.pt \
+    checkpoints/best_model_HPC.pt
 ```
 
-### SLURM job settings (`wulver_train.sbatch`)
+### SLURM job settings (`HPC_train.sbatch`)
 
 ```bash
 #SBATCH --partition=course_gpu
-#SBATCH --account=2026-spring-cs-785-hz79-adp232
+#SBATCH --account=2026-spring-cs-785-ACCOUNT-USER
 #SBATCH --gres=gpu:a100_10g:1    # Gets full A100 40GB
 #SBATCH --time=08:00:00
 #SBATCH --mem=32G
 #SBATCH --cpus-per-task=8
 ```
 
-### Training times on Wulver A100
+### Training times on HPC A100
 
 | Model | Params | Batch | Epochs | Time |
 |-------|--------|-------|--------|------|
@@ -556,11 +556,11 @@ cp configs/optimized.yaml configs/ablation_new.yaml
 # Edit: disable/enable components
 
 # 2. Sync + submit
-bash scripts/wulver_sync.sh
-ssh wulver "cd /course/.../cs785 && sbatch scripts/wulver_train.sbatch"
+bash scripts/HPC_sync.sh
+ssh HPC "cd /course/.../cs785 && sbatch scripts/HPC_train.sbatch"
 
 # 3. Evaluate
-ssh wulver "cd /course/.../cs785 && python3 scripts/eval_test.py checkpoints/new/best_model.pt"
+ssh HPC "cd /course/.../cs785 && python3 scripts/eval_test.py checkpoints/new/best_model.pt"
 ```
 
 ### Inspect gate values
@@ -645,5 +645,5 @@ BPE fragments rare sub-tokens into characters, making sub-token F1 unreliable. V
 | `src/training/train.py` | Training loop |
 | `configs/optimized_large.yaml` | Current best config (25M) |
 | `configs/optimized.yaml` | 8M config (for ablation) |
-| `scripts/wulver_train.sbatch` | HPC job submission |
-| `scripts/wulver_sync.sh` | Code sync to Wulver |
+| `scripts/HPC_train.sbatch` | HPC job submission |
+| `scripts/HPC_sync.sh` | Code sync to HPC |

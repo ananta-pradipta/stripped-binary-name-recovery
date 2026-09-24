@@ -4,12 +4,12 @@
 READ-ONLY on all data. Writes only to results/phase0/manifest/:
   corpus_manifest.tsv, corpus_manifest.json, MANIFEST.md,
   elf_cache.json (per-ELF readelf facts, keyed by path+size+mtime; speeds re-runs),
-  wulver_inventory.json (cached output of wulver_inventory_remote.py; refresh with --wulver).
+  HPC_inventory.json (cached output of HPC_inventory_remote.py; refresh with --HPC).
 
 Usage:
   source activate.sh
-  python3 scripts/build_corpus_manifest.py            # local + cached Wulver inventory
-  python3 scripts/build_corpus_manifest.py --wulver   # re-pull Wulver inventory over ssh first
+  python3 scripts/build_corpus_manifest.py            # local + cached HPC inventory
+  python3 scripts/build_corpus_manifest.py --HPC   # re-pull HPC inventory over ssh first
   python3 scripts/build_corpus_manifest.py --no-elf   # skip readelf pass (reuse cache only)
 
 Binary id = <package>_<tool>_<opt>; opt in {O0,O1,O2,O3} or absent (=default);
@@ -32,8 +32,8 @@ OUT = 'results/phase0/manifest'
 os.makedirs(OUT, exist_ok=True)
 OPTS = ('O0', 'O1', 'O2', 'O3')
 ELFCHECK_ARCHIVE = f'{OUT}/corpus_elfcheck_archive_unified.tsv'   # git show archive/unified:results/rcdg/corpus_elfcheck.tsv
-WULVER_INV = f'{OUT}/wulver_inventory.json'
-WULVER_REMOTE_PY = f'{OUT}/wulver_inventory_remote.py'
+HPC_INV = f'{OUT}/HPC_inventory.json'
+HPC_REMOTE_PY = f'{OUT}/HPC_inventory_remote.py'
 ELF_CACHE = f'{OUT}/elf_cache.json'
 AUDIT = 'results/phase0/audit.json'
 
@@ -234,7 +234,7 @@ def elfcheck(strip, bir):
 # ----------------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--wulver', action='store_true', help='re-pull Wulver inventory via ssh')
+    ap.add_argument('--HPC', action='store_true', help='re-pull HPC inventory via ssh')
     ap.add_argument('--no-elf', action='store_true', help='skip readelf pass; use cache only')
     ap.add_argument('--workers', type=int, default=8)
     args = ap.parse_args()
@@ -436,17 +436,17 @@ def main():
                 n_computed += 1
     print(f'[elfcheck] archive={len(elfc)} computed_now={n_computed}', file=sys.stderr)
 
-    # ---- Wulver inventory
-    if args.wulver or not os.path.exists(WULVER_INV):
-        print('[wulver] pulling inventory via ssh ...', file=sys.stderr)
+    # ---- HPC inventory
+    if args.HPC or not os.path.exists(HPC_INV):
+        print('[HPC] pulling inventory via ssh ...', file=sys.stderr)
         try:
-            with open(WULVER_REMOTE_PY) as fin, open(WULVER_INV + '.tmp', 'w') as fout:
-                subprocess.run(['ssh', '-o', 'BatchMode=yes', 'wulver', 'cat > /tmp/adp_inv.py; python3 /tmp/adp_inv.py'],
+            with open(HPC_REMOTE_PY) as fin, open(HPC_INV + '.tmp', 'w') as fout:
+                subprocess.run(['ssh', '-o', 'BatchMode=yes', 'HPC', 'cat > /tmp/adp_inv.py; python3 /tmp/adp_inv.py'],
                                stdin=fin, stdout=fout, timeout=900, check=True)
-            os.replace(WULVER_INV + '.tmp', WULVER_INV)
+            os.replace(HPC_INV + '.tmp', HPC_INV)
         except Exception as e:
-            print(f'[wulver] FAILED ({e}); using cached inventory if present', file=sys.stderr)
-    wul = json.load(open(WULVER_INV)) if os.path.exists(WULVER_INV) else None
+            print(f'[HPC] FAILED ({e}); using cached inventory if present', file=sys.stderr)
+    wul = json.load(open(HPC_INV)) if os.path.exists(HPC_INV) else None
     wul_ids = set()
     if wul:
         wsplit = {}
@@ -471,17 +471,17 @@ def main():
         for m in wsplit.values():
             wul_ids |= set(m)
         for bid in wul_ids:
-            r = R(bid, 'wulver')
-            r['wulver_has_bir'] = bid in w_bir; r['wulver_bir_size'] = w_bir.get(bid)
-            r['wulver_has_labels'] = bid in w_lab; r['wulver_has_external'] = bid in w_ext
-            r['wulver_n_sub_graphs'] = w_gsub.get(bid); r['wulver_n_nonsub_graphs'] = w_gnon.get(bid)
-            r['wulver_n_matched'] = w_mi.get(bid)
-            r['wulver_has_debug_elf'] = bid in w_debug or bid in w_raw or bid in w_xp.get('debug_unseen', set())
-            r['wulver_has_stripped_elf'] = bid in w_strip or bid in w_xp.get('stripped', set()) or bid in w_xp.get('stripped_unseen', set())
-            r['wulver_split_v1'] = wsplit['ccs_split_v1'].get(bid)
-            r['wulver_split_paper_clean'] = wsplit['ccs_split_paper_clean'].get(bid)
-            r['wulver_split_paper_clean_strict_idx'] = wsplit['ccs_split_paper_clean_strict_idx'].get(bid)
-            r['wulver_data_split'] = wsplit['data_split'].get(bid)
+            r = R(bid, 'HPC')
+            r['HPC_has_bir'] = bid in w_bir; r['HPC_bir_size'] = w_bir.get(bid)
+            r['HPC_has_labels'] = bid in w_lab; r['HPC_has_external'] = bid in w_ext
+            r['HPC_n_sub_graphs'] = w_gsub.get(bid); r['HPC_n_nonsub_graphs'] = w_gnon.get(bid)
+            r['HPC_n_matched'] = w_mi.get(bid)
+            r['HPC_has_debug_elf'] = bid in w_debug or bid in w_raw or bid in w_xp.get('debug_unseen', set())
+            r['HPC_has_stripped_elf'] = bid in w_strip or bid in w_xp.get('stripped', set()) or bid in w_xp.get('stripped_unseen', set())
+            r['HPC_split_v1'] = wsplit['ccs_split_v1'].get(bid)
+            r['HPC_split_paper_clean'] = wsplit['ccs_split_paper_clean'].get(bid)
+            r['HPC_split_paper_clean_strict_idx'] = wsplit['ccs_split_paper_clean_strict_idx'].get(bid)
+            r['HPC_data_split'] = wsplit['data_split'].get(bid)
 
     # ---- duplicates from audit B5
     dup_partner = collections.defaultdict(list)
@@ -540,13 +540,13 @@ def main():
         r['corpora'] = sorted(r['corpora'])
         # eligibility (conservative)
         reasons = []
-        if not r['has_debug_elf'] and not r.get('wulver_has_debug_elf'):
+        if not r['has_debug_elf'] and not r.get('HPC_has_debug_elf'):
             reasons.append('no_debug_elf')
-        if not r['has_stripped_elf'] and not r.get('wulver_has_stripped_elf'):
+        if not r['has_stripped_elf'] and not r.get('HPC_has_stripped_elf'):
             reasons.append('no_stripped_elf')
-        if not r['has_bir'] and not r.get('wulver_has_bir'):
+        if not r['has_bir'] and not r.get('HPC_has_bir'):
             reasons.append('no_bir')
-        if not r['has_labels'] and not r.get('wulver_has_labels') and not r.get('n_xproj_ground_truth'):
+        if not r['has_labels'] and not r.get('HPC_has_labels') and not r.get('n_xproj_ground_truth'):
             reasons.append('no_labels')
         elif r['n_labels'] is not None and r['n_labels'] == 0:
             reasons.append('empty_labels')
@@ -562,20 +562,20 @@ def main():
                 reasons.append(f'duplicate_build_of:{keep}')
             else:
                 r['notes'].append('dup_group_keeper:' + ','.join(sorted(partners)))
-        if r.get('n_sub_graphs') in (None, 0) and r.get('wulver_n_sub_graphs') in (None, 0):
+        if r.get('n_sub_graphs') in (None, 0) and r.get('HPC_n_sub_graphs') in (None, 0):
             reasons.append('no_sub_graphs')
-        if r.get('n_matched') in (None, 0) and r.get('wulver_n_matched') in (None, 0) and r.get('n_matched_clang_mi') in (None, 0):
+        if r.get('n_matched') in (None, 0) and r.get('HPC_n_matched') in (None, 0) and r.get('n_matched_clang_mi') in (None, 0):
             reasons.append('no_matched_functions')
         if r.get('n_matched_dangling') and r['n_matched_dangling'] == r.get('n_matched'):
             reasons.append('match_index_entries_dangling(graph_files_missing)')
         # role hint (NOT an eligibility blocker): held-out cross-project packages / excluded-in-v1
         role = []
-        if r.get('wulver_split_paper_clean') == 'xproject' or r.get('wulver_split_v1') == 'xproject':
-            role.append('xproject_holdout(wulver_paper_clean)')
+        if r.get('HPC_split_paper_clean') == 'xproject' or r.get('HPC_split_v1') == 'xproject':
+            role.append('xproject_holdout(HPC_paper_clean)')
         if 'local_main:cross_project' in r['corpora']:
             role.append('local_cross_project_dir')
-        if r.get('wulver_split_v1') == 'excluded' and r.get('wulver_split_paper_clean') != 'xproject':
-            role.append('excluded_in_wulver_v1(not in paper_clean)')
+        if r.get('HPC_split_v1') == 'excluded' and r.get('HPC_split_paper_clean') != 'xproject':
+            role.append('excluded_in_HPC_v1(not in paper_clean)')
         if r['local_split'] == 'excluded':
             role.append('excluded_in_local_split')
         r['role_hint'] = role
@@ -586,10 +586,10 @@ def main():
     # ---- write JSON + TSV
     cols = ['id', 'package', 'tool', 'opt_tag', 'corpora', 'has_debug_elf', 'has_stripped_elf', 'n_debug_elfs', 'n_stripped_elfs',
             'has_bir', 'bir_size', 'has_labels', 'n_labels', 'label_schema', 'n_xproj_ground_truth', 'n_external_fns', 'n_sub_graphs', 'n_nonsub_graphs',
-            'n_matched', 'n_matched_dangling', 'n_matched_clang_mi', 'local_split', 'wulver_split_v1', 'wulver_split_paper_clean',
-            'wulver_split_paper_clean_strict_idx', 'wulver_data_split', 'wulver_has_bir', 'wulver_bir_size', 'wulver_has_labels',
-            'wulver_has_external', 'wulver_n_sub_graphs', 'wulver_n_nonsub_graphs', 'wulver_n_matched', 'wulver_has_debug_elf',
-            'wulver_has_stripped_elf', 'build_id_stripped', 'build_id_debug', 'build_id_match', 'build_id_any_match', 'elf_type',
+            'n_matched', 'n_matched_dangling', 'n_matched_clang_mi', 'local_split', 'HPC_split_v1', 'HPC_split_paper_clean',
+            'HPC_split_paper_clean_strict_idx', 'HPC_data_split', 'HPC_has_bir', 'HPC_bir_size', 'HPC_has_labels',
+            'HPC_has_external', 'HPC_n_sub_graphs', 'HPC_n_nonsub_graphs', 'HPC_n_matched', 'HPC_has_debug_elf',
+            'HPC_has_stripped_elf', 'build_id_stripped', 'build_id_debug', 'build_id_match', 'build_id_any_match', 'elf_type',
             'has_eh_frame', 'n_fde', 'n_fde_debug', 'elfcheck_ratio', 'elfcheck_src', 'duplicate_of', 'eligible_v2',
             'ineligible_reasons', 'role_hint', 'notes']
 
@@ -628,7 +628,7 @@ def write_md(final, wul, audit, extra, n_mi_local, n_mi_clang, cache, elfc, unre
     P('# CORPUS MANIFEST (single source of truth)\n')
     P('Generated by `scripts/build_corpus_manifest.py` (re-runnable; READ-ONLY on data). Row-level detail: '
       '`corpus_manifest.tsv` / `corpus_manifest.json` in this directory. ELF facts cached in `elf_cache.json`; '
-      'Wulver inventory cached in `wulver_inventory.json` (from `wulver_inventory_remote.py`, run on the login node).\n')
+      'HPC inventory cached in `HPC_inventory.json` (from `HPC_inventory_remote.py`, run on the login node).\n')
     P('## Method\n')
     P('- **Binary id** = `<package>_<tool>_<opt>`; opt in {O0,O1,O2,O3} else `default`; package = prefix before first `_`, tool = middle.')
     P('- **Local sources**: `data/raw` (`<id>_sym` and bare `<id>`), `data/stripped` (+`_p0_0_6_{siblings,round2,round3,xrep}`), '
@@ -643,11 +643,11 @@ def write_md(final, wul, audit, extra, n_mi_local, n_mi_clang, cache, elfc, unre
     P('- **elfcheck_ratio**: fraction of the first 300 `sub sub_X(` entries in the .bir whose vaddr X lies in an executable PT_LOAD '
       'segment of the stripped ELF and starts with a plausible prologue byte (port of `archive/unified:experiments_semantic/rcdg_stage0_elfcheck.py`). '
       'Reused from `archive/unified:results/rcdg/corpus_elfcheck.tsv` where present, computed here otherwise. <0.8 => the .bir was lifted from a different build.')
-    P('- **Wulver** (`/project/hz79/_shared/cs785`): `data/{bir,labels,external_calls,graphs,debug,raw,stripped,cross_project,match_index.json,split_assignments.json}` and '
+    P('- **HPC** (`$WORKSPACE`): `data/{bir,labels,external_calls,graphs,debug,raw,stripped,cross_project,match_index.json,split_assignments.json}` and '
       '`ccs/data/{labels,external_calls,graphs->data/graphs,match_index.json->data/match_index.json,split_assignments*.json}`. Splits recorded from '
       '`ccs/data/split_assignments.json` (v1), `split_assignments_paper_clean.json`, `split_assignments_paper_clean_strict_idx.json`, `data/split_assignments.json`.')
     P('- **Duplicate builds**: `results/phase0/audit.json` B5.all_pairs, `max(identity_raw, identity_thunk_resolved) >= 0.9` => duplicate opt pair; the lexicographically lowest id in a duplicate group is kept.')
-    P('- **eligible_v2** (conservative): requires debug ELF (local or Wulver), stripped ELF, .bir, labels (non-empty), sub-graphs, matched functions, '
+    P('- **eligible_v2** (conservative): requires debug ELF (local or HPC), stripped ELF, .bir, labels (non-empty), sub-graphs, matched functions, '
       'stripped/debug build-id agreement (any copy), elfcheck >= 0.8, not a duplicate build, no dangling match_index entries. '
       'Split membership (`excluded`/`xproject`) is NOT a blocker; it is reported in `role_hint` so held-out packages can be kept out of the train pool.\n')
 
@@ -699,7 +699,7 @@ def write_md(final, wul, audit, extra, n_mi_local, n_mi_clang, cache, elfc, unre
           f'external={len(glob.glob(c + "/external/*.json"))}, graphs={len(os.listdir(c + "/graphs"))} files' +
           (f', match_index={n_mi_clang} fns' if c == 'clang_train' else '') + ' |')
     if wul:
-        P('\n**Wulver** (`/project/hz79/_shared/cs785`):\n')
+        P('\n**HPC** (`$WORKSPACE`):\n')
         P('| location | count |'); P('|---|---|')
         P(f'| data/bir | {len(wul["data_bir"])} .bir |')
         P(f'| data/labels (= ccs/data/labels) | {len(wul["data_labels"])} / {len(wul["ccs_labels"])} ids |')
@@ -728,15 +728,15 @@ def write_md(final, wul, audit, extra, n_mi_local, n_mi_clang, cache, elfc, unre
         'debug ELF but no labels': [r['id'] for r in final if r['has_debug_elf'] and not r['has_labels']],
         'labels but no debug ELF (local)': [r['id'] for r in final if r['has_labels'] and not r['has_debug_elf']],
         'graphs but not in local match_index': [r['id'] for r in final if (r.get('n_sub_graphs') or 0) and not (r.get('n_matched') or 0) and 'local_main' in r['corpora']],
-        'Wulver-only ids (no local trace at all)': [r['id'] for r in final if r['corpora'] == ['wulver']],
-        'local-only ids (absent from Wulver) [all corpora]': [r['id'] for r in final if 'wulver' not in r['corpora']],
-        'local-only ids, local_main* only': [r['id'] for r in final if 'wulver' not in r['corpora'] and all(c.startswith('local_main') for c in r['corpora'])],
+        'HPC-only ids (no local trace at all)': [r['id'] for r in final if r['corpora'] == ['HPC']],
+        'local-only ids (absent from HPC) [all corpora]': [r['id'] for r in final if 'HPC' not in r['corpora']],
+        'local-only ids, local_main* only': [r['id'] for r in final if 'HPC' not in r['corpora'] and all(c.startswith('local_main') for c in r['corpora'])],
         'in local match_index but not in local split file': [r['id'] for r in final if (r.get('n_matched') or 0) and not r['local_split']],
         'in local split file but no local sub-graphs': [r['id'] for r in final if r['local_split'] and not (r.get('n_sub_graphs') or 0)],
-        'Wulver bir but no local bir': [r['id'] for r in final if r.get('wulver_has_bir') and not r['has_bir']],
-        'local bir but no Wulver bir': [r['id'] for r in final if r['has_bir'] and not r.get('wulver_has_bir') and 'wulver' in r['corpora']],
-        'Wulver labels but no local labels': [r['id'] for r in final if r.get('wulver_has_labels') and not r['has_labels']],
-        'Wulver graphs but no local graphs': [r['id'] for r in final if (r.get('wulver_n_sub_graphs') or 0) and not (r.get('n_sub_graphs') or 0)],
+        'HPC bir but no local bir': [r['id'] for r in final if r.get('HPC_has_bir') and not r['has_bir']],
+        'local bir but no HPC bir': [r['id'] for r in final if r['has_bir'] and not r.get('HPC_has_bir') and 'HPC' in r['corpora']],
+        'HPC labels but no local labels': [r['id'] for r in final if r.get('HPC_has_labels') and not r['has_labels']],
+        'HPC graphs but no local graphs': [r['id'] for r in final if (r.get('HPC_n_sub_graphs') or 0) and not (r.get('n_sub_graphs') or 0)],
         'multiple stripped ELF copies with DIFFERENT build-ids': [r['id'] for r in final if len(r.get('build_ids_stripped_all') or []) > 1],
         'multiple debug ELF copies with DIFFERENT build-ids': [r['id'] for r in final if len(r.get('build_ids_debug_all') or []) > 1],
     }
@@ -832,11 +832,11 @@ def write_md(final, wul, audit, extra, n_mi_local, n_mi_clang, cache, elfc, unre
     P('- eligible by opt: ' + ', '.join(f'{o}={sum(1 for r in final if r["eligible_v2"] and r["opt_tag"] == o)}' for o in list(OPTS) + ['default']))
     P('- eligible by corpus: ' + ', '.join(f'{c}={n}' for c, n in sorted(collections.Counter(c for r in final if r['eligible_v2'] for c in r['corpora']).items())))
     P('- eligible with local debug ELF (labels re-derivable locally): ' + str(sum(1 for r in final if r['eligible_v2'] and r['has_debug_elf'])) +
-      '; eligible only via Wulver assets: ' + str(sum(1 for r in final if r['eligible_v2'] and not r['has_debug_elf'])))
+      '; eligible only via HPC assets: ' + str(sum(1 for r in final if r['eligible_v2'] and not r['has_debug_elf'])))
     nd = sum(r.get('n_matched_dangling') or 0 for r in final)
     P(f'- local data/match_index.json entries whose graph file is missing on disk: {nd} (ids: ' + ', '.join(r['id'] for r in final if r.get('n_matched_dangling')) + ')')
     P('\nCaveats: `no_matched_functions` for ftdomains/ftdomains2/cross_project ids means "not in any match_index" (those corpora are matched at eval time '
-      'via match_local.py / ground_truth.json), not "unmatchable"; they need a re-match step before entering v2. Eligibility trusts existing labels/graphs where debug ELF is only on Wulver; `no_debug_elf` ids can still be used '
+      'via match_local.py / ground_truth.json), not "unmatchable"; they need a re-match step before entering v2. Eligibility trusts existing labels/graphs where debug ELF is only on HPC; `no_debug_elf` ids can still be used '
       'if their labels are trusted, but names cannot be re-derived. Duplicate-group keeper = lexicographically lowest id (usually the lower opt).')
     open(f'{OUT}/MANIFEST.md', 'w').write('\n'.join(L) + '\n')
 
