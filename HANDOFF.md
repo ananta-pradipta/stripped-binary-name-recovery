@@ -4,7 +4,7 @@ State: experiment ladder complete except user-deferred baseline retrains; paper 
 - Final heads: BAP retrieval encoder = C1 soft λ1.0 (HPC dh2/checkpoints/c1_soft_l10_seed42.pt); generation head = A4 run 1 (dh2/checkpoints/a4_codet5p220m_v1/best; run 2 = a4_codet5p220m_symgen_v2); router = GBT on 11 features (scripts/router2_eval.py, fit on val).
 - Headline: test 0.2052/0.4387 (micro/macro), oracle 0.2241/0.4713, selective F1 0.880@10% / 0.690@20%.
 - HPC workspace: $WORKSPACE/dh2 (scripts mirrored here under scripts/, sbatch templates under scripts/dh2_sbatch/). Data v3: $WORKSPACE/relift_ws/data (match_index_v3, split_v3, votes_v3); cache dh2/data_cache/corpus_v3.pkl.
-- Memory (auto): ~/.claude/projects/-home-USER-cs785-project/memory/project_fundamental_redesign_20260824.md (READ FIRST), feedback_audit_completed_jobs.md, feedback_HPC_job_config.md (node/memory traps).
+- Memory (auto): local agent memory directory (not tracked)
 - Only job running: C1 λ0.3 training (1198921). Its best epoch moved to 9 → when it ends, run the final chain (eval/embdump/a1zt/router_c1soft_l03.sbatch + union_c1soft_l03.sbatch; exact commands in memory project_fundamental_redesign_20260824.md).
 
 ## Fairness runs — LAUNCHED 2026-08-27 07:40 UTC (user OK): SymGen LoRA = job 1199230 (4× a100_40g, n0089; 1199218 failed on cache_dir trap), BLens ghidra 1199227 → encode 1199228 → train 1199229 (earlier chains failed on path/outdir bugs, fixed). Remaining user-gated: seed-43 A4, 770M head.
