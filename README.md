@@ -198,13 +198,13 @@ means of the per-package means (two packages hold 44% of the test functions, so 
 
 ### By name category (F1 / EM)
 
-| System | Seen (33.5K, 12.5%) | Novel-known (81.8K, 30.5%) | Novel-OOV (152.8K, 57.0%) |
+| System | Seen (33.7K, 12.6%) | Novel-known (81.6K, 30.4%) | Novel-OOV (152.8K, 57.0%) |
 |---|---|---|---|
-| SymGen-34B | 0.265 / 6.9% | 0.168 / 2.3% | 0.106 / 2.3% |
-| BLens | 0.382 / 9.8% | 0.019 / 0.0% | 0.010 / 0.0% |
-| HyDRA-R | **0.870 / 81.8%** | 0.046 / 0.1% | 0.027 / 0.0% |
-| HyDRA-G | 0.666 / 39.3% | **0.201** / 1.8% | 0.119 / 0.8% |
-| **HyDRA (routed)** | 0.859 / 77.5% | **0.201** / 1.8% | **0.120** / 0.8% |
+| SymGen-34B | 0.262 / 6.9% | 0.168 / 2.3% | 0.106 / 2.3% |
+| BLens | 0.382 / 10.3% | 0.019 / 0.0% | 0.011 / 0.1% |
+| HyDRA-R | **0.866 / 81.4%** | 0.046 / 0.0% | 0.027 / 0.0% |
+| HyDRA-G | 0.664 / 39.0% | **0.201** / 1.8% | **0.119** / 0.8% |
+| **HyDRA (routed)** | 0.856 / 77.2% | 0.200 / 1.7% | **0.119** / 0.8% |
 
 Seen: the name occurs in training. Novel-known: unseen name whose sub-tokens all occur in training names.
 Novel-OOV: at least one sub-token never seen. Retrieval owns the first category, generation the other two; the
