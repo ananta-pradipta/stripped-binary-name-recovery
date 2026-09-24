@@ -4941,3 +4941,8 @@ router under-routes to retrieval there (13%) → seen EM 44% vs R 70%. Added as 
 - **NCT-threshold sensitivity** (family-linked packages fossil, openresty stay NCT): thr 0.50/0.60 → 23 NCT / 27 FT identical; thr 0.70 → 22/28 (psmisc moves to FT); FT fn-F1 routed 0.145→0.146, NCT 0.693→0.694; FT pkg-F1 0.168→0.178. Paper RQ2 sentence added.
 - Package-count unit resolved for the paper: 120 packages (project at one version/fork; 16 families of 35 members + 85 singletons), tiers 59/10/51 packages, 50 test packages retain functions after filtering (gperf2 fully deduplicated).
 - Dump: `results/dualhead_v2/per_pkg_dump.json`.
+
+## 2026-09-24 05:05 ET — Name categories recomputed with the CANONICAL seen flag (job 1320515, `scripts/canon_categories.py`)
+- Seen = canonical (demangled, template-stripped) test name ∈ canonical training names. 199 test rows move from novel-known to seen. Counts: seen 33,678 (12.6%), novel-known 81,631 (30.4%), novel-OOV 152,827 (57.0%). Retrieval EM on canonical-novel rows = 0 (by construction now).
+- Per category F1/EM (common 268,136 keys): seen R 0.866/81.4%, G 0.664/39.0%, routed 0.856/77.2%, SymGen 0.262/6.9%, BLens 0.382/10.3%; novel-known R 0.046/0.0%, G 0.201/1.8%, routed 0.200/1.7%, SymGen 0.168/2.3%, BLens 0.019/0.0%; novel-OOV R 0.027/0.0%, G 0.119/0.8%, routed 0.119/0.8%, SymGen 0.106/2.3%, BLens 0.011/0.1%. Raw-flag numbers (previous Table 6) differ by ≤0.004.
+- Paper Table 6, §5.3 counts, Fig.4 ⑤, and the "82%" seen-EM mentions updated (now 81%). Report `results/dualhead_v2/canon_categories.json`.
