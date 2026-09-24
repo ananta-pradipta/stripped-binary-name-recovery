@@ -540,37 +540,93 @@ class FunctionDataset(Dataset):
                     split_file='data/split_assignments.json'):
         """Split by binary to avoid data leakage.
 
-        If split_file exists, use fixed binary assignments (safe for data expansion).
-        Otherwise, fall back to seeded random shuffle (legacy behavior).
-        New binaries not in the split file default to train.
+        If ``split_file`` exists, use fixed binary assignments.  Every binary
+        present in the dataset MUST be assigned to exactly one of the split
+        lists; an unassigned binary raises (defect B8: the legacy
+        "new binary defaults to train" rule silently put dash/gettext/psmisc
+        — cross-project evaluation packages — into supervised training).
+        Set ``ALLOW_UNASSIGNED_TO_TRAIN=1`` to restore the legacy behaviour
+        (loud warning; never for reported numbers).
+
+        Accepted schemas (all lists of binary ids):
+          v1: {train, val, test, [excluded]}
+          v2: {train, val_indist, [val_xproj], test, [xproject], [excluded]}
+        ``xproject``/``excluded`` binaries are dropped from train/val/test.
+        ``self.split_sha256`` (hash of the split file) and
+        ``self.split_schema`` are exposed so checkpoints can record them.
+        Returns ``(train_idx, val_idx, test_idx)``; ``self.val_xproj_idx``
+        holds the OOD-validation indices when the v2 schema provides them.
         """
+        self.val_xproj_idx = []
+        self.val_xproj_bins = set()
+        self.split_sha256 = None
+        self.split_schema = None
+
         if os.path.exists(split_file):
-            with open(split_file) as f:
-                assignments = json.load(f)
-            val_bins_set = set(assignments['val'])
+            import hashlib
+            raw = open(split_file, 'rb').read()
+            self.split_sha256 = hashlib.sha256(raw).hexdigest()
+            assignments = json.loads(raw)
+            if 'val_indist' in assignments:
+                val_bins_set = set(assignments['val_indist'])
+                self.val_xproj_bins = set(assignments.get('val_xproj', []))
+                self.split_schema = 'v2'
+            else:
+                val_bins_set = set(assignments['val'])
+                self.split_schema = 'v1'
             test_bins_set = set(assignments['test'])
             train_bins_set = set(assignments['train'])
+            excluded_set = set(assignments.get('xproject', [])) | set(assignments.get('excluded', []))
 
-            # Excluded binaries are dropped entirely
-            excluded_set = set(assignments.get('excluded', []))
+            # Split lists must be disjoint.
+            named = {'train': train_bins_set, 'val': val_bins_set, 'test': test_bins_set,
+                     'val_xproj': self.val_xproj_bins, 'held_out': excluded_set}
+            names = list(named)
+            for i in range(len(names)):
+                for j in range(i + 1, len(names)):
+                    both = named[names[i]] & named[names[j]]
+                    if both:
+                        raise RuntimeError(
+                            f"=== SPLIT FILE INVALID === {len(both)} binaries appear in both "
+                            f"'{names[i]}' and '{names[j]}' of {split_file}: {sorted(both)[:10]}")
 
-            # Any new binary not in the file goes to train (unless excluded)
             all_binaries = set(s['binary'] for s in self.samples)
-            known = train_bins_set | val_bins_set | test_bins_set | excluded_set
-            new_binaries = all_binaries - known
+            known = train_bins_set | val_bins_set | test_bins_set | excluded_set | self.val_xproj_bins
+            new_binaries = sorted(all_binaries - known)
             if new_binaries:
-                train_bins_set.update(new_binaries)
-                print(f"New binaries assigned to train: {sorted(new_binaries)}")
+                if os.environ.get('ALLOW_UNASSIGNED_TO_TRAIN') == '1':
+                    print(f"WARNING (ALLOW_UNASSIGNED_TO_TRAIN=1): {len(new_binaries)} unassigned "
+                          f"binaries defaulted to train — LEAKY, never for reported numbers. "
+                          f"First: {new_binaries[:10]}")
+                    train_bins_set.update(new_binaries)
+                else:
+                    raise RuntimeError(
+                        "\n\n=== SPLIT ASSIGNMENT GUARD (B8) ===\n"
+                        f"{len(new_binaries)} binaries are in the dataset but not assigned in {split_file}.\n"
+                        f"First: {new_binaries[:10]}\n"
+                        "Under the legacy rule these would SILENTLY enter training (this is how "
+                        "dash/gettext/psmisc leaked into the CCS headline).\n"
+                        "FIX: assign every binary explicitly (train/val/test/xproject/excluded).\n"
+                        "Bypass (never for reported numbers): ALLOW_UNASSIGNED_TO_TRAIN=1")
+            phantom = sorted((known - all_binaries))
+            if phantom:
+                print(f"NOTE: {len(phantom)} split-file binaries have no samples in the dataset "
+                      f"(first: {phantom[:5]})")
             if excluded_set & all_binaries:
-                print(f"Excluded binaries: {len(excluded_set & all_binaries)}")
+                print(f"Held-out (xproject/excluded) binaries dropped: {len(excluded_set & all_binaries)}")
 
             train_idx = [i for i, s in enumerate(self.samples) if s['binary'] in train_bins_set]
             val_idx = [i for i, s in enumerate(self.samples) if s['binary'] in val_bins_set]
             test_idx = [i for i, s in enumerate(self.samples) if s['binary'] in test_bins_set]
+            self.val_xproj_idx = [i for i, s in enumerate(self.samples)
+                                  if s['binary'] in self.val_xproj_bins]
 
-            print(f"Splits (fixed): {len(train_idx)} train, {len(val_idx)} val, {len(test_idx)} test")
+            print(f"Splits ({self.split_schema}, fixed, sha256 {self.split_sha256[:12]}): "
+                  f"{len(train_idx)} train, {len(val_idx)} val, {len(test_idx)} test, "
+                  f"{len(self.val_xproj_idx)} val_xproj")
             print(f"Binaries: {len(train_bins_set & all_binaries)} train, "
-                  f"{len(val_bins_set & all_binaries)} val, {len(test_bins_set & all_binaries)} test")
+                  f"{len(val_bins_set & all_binaries)} val, {len(test_bins_set & all_binaries)} test, "
+                  f"{len(self.val_xproj_bins & all_binaries)} val_xproj")
         else:
             # Legacy: seeded random shuffle
             binaries = sorted(set(s["binary"] for s in self.samples))

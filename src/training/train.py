@@ -20,38 +20,11 @@ from src.models.function_namer import FunctionNamer
 from src.preprocessing.build_dataset import FunctionDataset
 from src.evaluation.metrics import compute_subtoken_f1
 from src.training.contrastive_sampler import ContrastiveBatchSampler
+from src.training.name_aware_contrastive import NameAwareBatchSampler, soft_contrastive_loss, load_hard_negatives
+CL_MODE, CL_TAU, CL_BETA = 'exact', 0.1, 1.0
 
 
-def collate_fn(batch):
-    """Custom collate for variable-length sequences."""
-    keys = batch[0].keys()
-    result = {}
-    for k in keys:
-        if isinstance(batch[0][k], torch.Tensor):
-            if k == 'edge_index':
-                edge_lists = []
-                offset = 0
-                for sample in batch:
-                    ei = sample[k].clone()
-                    ei = ei + offset
-                    edge_lists.append(ei)
-                    offset += sample['num_blocks']
-                result[k] = torch.cat(edge_lists, dim=1)
-            elif k in ('decoder_input', 'decoder_target', 'ext_call_ids'):
-                max_len = max(s[k].size(0) for s in batch)
-                padded = torch.zeros(len(batch), max_len, dtype=batch[0][k].dtype)
-                for i, s in enumerate(batch):
-                    padded[i, :s[k].size(0)] = s[k]
-                result[k] = padded
-            else:
-                result[k] = torch.stack([s[k] for s in batch])
-        elif k == 'block_features':
-            result[k] = torch.stack([s[k] for s in batch])
-        elif k == 'num_blocks':
-            result[k] = [s[k] for s in batch]
-        else:
-            result[k] = [s[k] for s in batch]
-    return result
+from src.training.collate import collate_fn  # canonical (B1 fix)
 
 
 def get_teacher_forcing_ratio(epoch, num_epochs, start=1.0, end=0.5):
@@ -133,11 +106,12 @@ def compute_contrastive_loss(z, names, temperature=0.1):
     if B < 2:
         return torch.tensor(0.0, device=z.device)
 
-    # L2-normalize embeddings
-    z_norm = torch.nn.functional.normalize(z, dim=1)
+    # L2-normalize embeddings (float32 outside autocast: fp16 overflows on the -1e9 mask under --amp)
+    z_norm = torch.nn.functional.normalize(z.float(), dim=1)
 
     # Cosine similarity matrix (B, B)
-    sim = torch.mm(z_norm, z_norm.t()) / temperature
+    with torch.autocast(device_type='cuda', enabled=False):
+        sim = torch.mm(z_norm, z_norm.t()) / temperature
 
     # Build positive mask: (i, j) is positive if names[i] == names[j] and i != j
     positive_mask = torch.zeros(B, B, dtype=torch.bool, device=z.device)
@@ -163,7 +137,7 @@ def compute_contrastive_loss(z, names, temperature=0.1):
     # L_i = -log(exp(sim(i, pos)) / sum_j!=i exp(sim(i, j)))
     # Mask out self-similarity
     self_mask = torch.eye(B, dtype=torch.bool, device=z.device)
-    sim = sim.masked_fill(self_mask, -1e9)
+    sim = sim.masked_fill(self_mask, -1e4)
 
     # For each row, compute log-softmax over all non-self entries
     log_softmax = sim - torch.logsumexp(sim, dim=1, keepdim=True)
@@ -242,7 +216,11 @@ def train_epoch(model, loader, optimizer, criterion, device, tf_ratio=1.0,
             # Contrastive loss: pull same-name embeddings together
             if contrastive_weight > 0:
                 names = batch['name']  # list of function name strings
-                cl_loss = compute_contrastive_loss(z_enc, names)
+                if CL_MODE == 'soft':
+                    pk = [b.split('_')[0] for b in batch['binary']]
+                    cl_loss = soft_contrastive_loss(z_enc, names, pk, temperature=CL_TAU, beta=CL_BETA)
+                else:
+                    cl_loss = compute_contrastive_loss(z_enc, names)
                 loss = loss + contrastive_weight * cl_loss
                 total_cl_loss += cl_loss.item()
 
@@ -410,6 +388,11 @@ def main():
                         help='Unlikelihood loss weight (0=disabled, try 0.5-2.0)')
     parser.add_argument('--scst-weight', type=float, default=0.0,
                         help='SCST (Phase 4 RL) loss weight. Uses REINFORCE with F1 reward.')
+    parser.add_argument('--contrastive-mode', choices=['exact', 'soft'], default='exact',
+                        help="exact = legacy same-name NT-Xent; soft = C1 name-aware soft-label InfoNCE (name-aware sampler)")
+    parser.add_argument('--contrastive-beta', type=float, default=1.0, help='C1: cross-package positive up-weight')
+    parser.add_argument('--contrastive-tau', type=float, default=0.1)
+    parser.add_argument('--hard-neg-knn', type=str, default=None, help='C1: embedding dump dir with train_knn.npz + train_meta.json')
     parser.add_argument('--contrastive-weight', type=float, default=0.0,
                         help='Contrastive loss weight (0=disabled, try 0.1-1.0)')
     parser.add_argument('--ml-weight', type=float, default=0.0,
@@ -465,10 +448,12 @@ def main():
         print(f"BPE vocab size (actual): {sp_model.get_piece_size()}")
     actual_name_vocab_size = sp_model.get_piece_size()
 
-    with open(cfg['data']['external_vocab_path']) as f:
-        ext_vocab_data = json.load(f)
-    actual_ext_vocab_size = ext_vocab_data['vocab_size']
-    print(f"External vocab size (actual): {actual_ext_vocab_size}")
+    dataset_format = cfg['data'].get('format', 'v1')
+    if dataset_format != 'v2':
+        with open(cfg['data']['external_vocab_path']) as f:
+            ext_vocab_data = json.load(f)
+        actual_ext_vocab_size = ext_vocab_data['vocab_size']
+        print(f"External vocab size (actual): {actual_ext_vocab_size}")
 
     # String refs (enabled via config)
     string_refs_dir = None
@@ -477,41 +462,89 @@ def main():
         string_refs_dir = 'data/string_refs'
         string_vocab_path = 'data/string_refs/string_vocab.json'
 
-    dataset = FunctionDataset(
-        graphs_dir=cfg['data']['graphs_dir'],
-        labels_dir=cfg['data']['labels_dir'],
-        external_calls_dir=cfg['data']['external_calls_dir'],
-        bpe_model_path=cfg['data']['bpe_model_path'],
-        external_vocab_path=cfg['data']['external_vocab_path'],
-        max_blocks=cfg['data']['max_blocks_per_function'],
-        max_tokens=cfg['data']['max_tokens_per_block'],
-        max_name_len=cfg['data']['max_name_length'],
-        votes_vocab_path=votes_vocab_path,
-        enrich_callees=args.enrich_callees,
-        callee_dropout=args.callee_dropout,
-        string_refs_dir=string_refs_dir,
-        string_vocab_path=string_vocab_path,
-    )
+    split_file = cfg['data'].get('split_file', 'data/split_assignments.json')
+    if dataset_format == 'v2':
+        # Dataset v2 (docs/DUALHEAD_HYDRA_PLAN.md): matcher-v2 index + graphs_v3 + string_refs_v2.
+        # Vocabularies (token / ext / string) are built from the TRAIN tier binaries only.
+        from src.preprocessing.dataset_v2 import FunctionDatasetV2
+        with open(split_file) as f:
+            _split = json.load(f)
+        _train_bins = set(_split['train'])
+        dataset = FunctionDatasetV2(
+            match_index_path=cfg['data'].get('match_index_path', 'data/match_index_v2.json'),
+            string_refs_dir=cfg['data'].get('string_refs_dir', 'data/string_refs_v2'),
+            votes_vocab_path=votes_vocab_path,
+            max_blocks=cfg['data']['max_blocks_per_function'],
+            max_tokens=cfg['data']['max_tokens_per_block'],
+            max_name_len=cfg['data']['max_name_length'],
+            min_tokens=cfg['data'].get('min_tokens', 1),
+            corpora=set(cfg['data']['corpora']) if cfg['data'].get('corpora') else None,
+            vocab_binaries=_train_bins,
+            max_token_vocab=cfg['data'].get('max_token_vocab', 3000),
+            max_ext_vocab=cfg['data'].get('max_ext_vocab', 5000),
+            cache_path=cfg['data'].get('cache_path'),
+            enrich_a3=bool(cfg['data'].get('enrich_a3', False)),
+            rodata_consts_dir=cfg['data'].get('rodata_consts_dir'),
+            train_pkg_cap=cfg['data'].get('train_pkg_cap'),
+        )
+        actual_ext_vocab_size = len(dataset.ext_vocab)
+        print(f"External vocab size (v2, train-built): {actual_ext_vocab_size}")
+    else:
+        dataset = FunctionDataset(
+          graphs_dir=cfg['data']['graphs_dir'],
+          labels_dir=cfg['data']['labels_dir'],
+          external_calls_dir=cfg['data']['external_calls_dir'],
+          bpe_model_path=cfg['data']['bpe_model_path'],
+          external_vocab_path=cfg['data']['external_vocab_path'],
+          max_blocks=cfg['data']['max_blocks_per_function'],
+          max_tokens=cfg['data']['max_tokens_per_block'],
+          max_name_len=cfg['data']['max_name_length'],
+          votes_vocab_path=votes_vocab_path,
+          enrich_callees=args.enrich_callees,
+          callee_dropout=args.callee_dropout,
+          string_refs_dir=string_refs_dir,
+          string_vocab_path=string_vocab_path,
+        )
 
     if len(dataset) == 0:
         print("ERROR: Dataset is empty!")
         return
 
     train_idx, val_idx, test_idx = dataset.get_splits(
-        cfg['data']['train_split'], cfg['data']['val_split']
+        cfg['data']['train_split'], cfg['data']['val_split'], split_file=split_file,
     )
 
+    if len(val_idx) == 0 and getattr(dataset, 'val_xproj_idx', None):
+        print("NOTE: val_indist tier is empty; using val_xproj as the validation set")
+        val_idx = list(dataset.val_xproj_idx)
+    if cfg['data'].get('split_policy') == 'v3':
+        if not hasattr(dataset, 'apply_split_policy'):
+            raise RuntimeError("data.split_policy v3 requires the v2 dataset format")
+        train_idx, val_idx, test_idx = dataset.apply_split_policy(train_idx, val_idx, test_idx)
+        if getattr(dataset, 'val_xproj_idx', None):
+            dataset.val_xproj_idx = list(val_idx) if set(val_idx) <= set(dataset.val_xproj_idx) else dataset.val_xproj_idx
     if len(train_idx) == 0 or len(val_idx) == 0:
         print(f"ERROR: Empty split! Train: {len(train_idx)}, Val: {len(val_idx)}")
         return
 
-    if args.contrastive_weight > 0:
+    global CL_MODE, CL_TAU, CL_BETA
+    CL_MODE, CL_TAU, CL_BETA = args.contrastive_mode, args.contrastive_tau, args.contrastive_beta
+    if args.contrastive_weight > 0 and args.contrastive_mode == 'soft':
+        hard = None
+        if args.hard_neg_knn:
+            hard = load_hard_negatives(os.path.join(args.hard_neg_knn, 'train_knn.npz'),
+                                       os.path.join(args.hard_neg_knn, 'train_meta.json'), dataset, train_idx)
+            print(f"C1 hard negatives loaded for {len(hard)} train functions")
+        contrastive_sampler = NameAwareBatchSampler(dataset, train_idx, batch_size=cfg['training']['batch_size'],
+                                                    anchor_count=max(4, cfg['training']['batch_size'] // 4), hard_neg=hard)
+    elif args.contrastive_weight > 0:
         # Use contrastive batch sampler for dense positive pairs
         contrastive_sampler = ContrastiveBatchSampler(
             dataset, train_idx,
             batch_size=cfg['training']['batch_size'],
             pair_count=32,
         )
+    if args.contrastive_weight > 0:
         train_loader = DataLoader(
             dataset, batch_sampler=contrastive_sampler,
             collate_fn=collate_fn, num_workers=args.num_workers,
@@ -530,6 +563,22 @@ def main():
         shuffle=False, collate_fn=collate_fn, num_workers=args.num_workers,
         persistent_workers=args.num_workers > 0,
     )
+    # Dataset v2: package-disjoint dev tier (val_xproj). Model selection uses it when
+    # data.select_on == 'val_xproj' (fixes the "validation not representative" defect:
+    # every learned threshold/gate previously tuned on in-distribution val failed on
+    # cross-project test). Both F1s are logged every epoch.
+    select_on = cfg['data'].get('select_on', 'val_indist')
+    val_xproj_idx = list(getattr(dataset, 'val_xproj_idx', []) or [])
+    val_xproj_loader = None
+    if val_xproj_idx:
+        val_xproj_loader = DataLoader(
+            Subset(dataset, val_xproj_idx), batch_size=cfg['training']['batch_size'],
+            shuffle=False, collate_fn=collate_fn, num_workers=args.num_workers,
+            persistent_workers=args.num_workers > 0,
+        )
+        print(f"val_xproj (package-disjoint dev): {len(val_xproj_idx)} functions; model selection on: {select_on}")
+    elif select_on == 'val_xproj':
+        raise RuntimeError("data.select_on == 'val_xproj' but the split has no val_xproj tier")
 
     # Override config with actual vocab sizes
     cfg['block_encoder']['token_vocab_size'] = len(dataset.token_vocab)
@@ -700,6 +749,16 @@ def main():
         dataset.training_mode = False  # Disable enrichment for validation
         val_loss, val_f1 = validate(model, val_loader, criterion, device, sp_model,
                                     use_amp=args.amp)
+        val_xproj_f1 = None
+        if val_xproj_loader is not None:
+            if list(val_idx) == val_xproj_idx:
+                val_xproj_f1 = val_f1      # same set (val_indist empty): do not validate twice
+            else:
+                _, val_xproj_f1 = validate(model, val_xproj_loader, criterion, device, sp_model,
+                                           use_amp=args.amp)
+            print(f"  [val_indist F1 {val_f1:.4f} | val_xproj F1 {val_xproj_f1:.4f}]", end="")
+            if select_on == 'val_xproj':
+                val_f1 = val_xproj_f1
 
         scheduler.step()
 
@@ -725,6 +784,8 @@ def main():
                 'config': cfg,
                 'token_vocab': dataset.token_vocab,
                 'ext_vocab': dataset.ext_vocab,
+                'split_sha256': getattr(dataset, 'split_sha256', None),
+                'split_schema': getattr(dataset, 'split_schema', None),
             }
             torch.save(_ckpt, os.path.join(ckpt_dir, args.save_name))
             print(f" ★ New best!")
@@ -741,6 +802,8 @@ def main():
                 'config': cfg,
                 'token_vocab': dataset.token_vocab,
                 'ext_vocab': dataset.ext_vocab,
+                'split_sha256': getattr(dataset, 'split_sha256', None),
+                'split_schema': getattr(dataset, 'split_schema', None),
             }, os.path.join(ckpt_dir, _latest_name))
         if not args.save_every_epoch and patience_counter >= patience:
             print(f"\nEarly stopping at epoch {epoch+1}")

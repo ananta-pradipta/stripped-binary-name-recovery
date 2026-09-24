@@ -1,0 +1,1368 @@
+{
+ "n": 234651,
+ "per_pkg": [
+  {
+   "pkg": "bdb",
+   "n": 95999,
+   "SG": 0.147,
+   "A4": 0.154,
+   "R": 0.037
+  },
+  {
+   "pkg": "icu",
+   "n": 48284,
+   "SG": 0.054,
+   "A4": 0.041,
+   "R": 0.021
+  },
+  {
+   "pkg": "mbedtls",
+   "n": 30297,
+   "SG": 0.105,
+   "A4": 0.104,
+   "R": 0.029
+  },
+  {
+   "pkg": "fossil",
+   "n": 10741,
+   "SG": 0.206,
+   "A4": 0.182,
+   "R": 0.033
+  },
+  {
+   "pkg": "libsodium",
+   "n": 8817,
+   "SG": 0.066,
+   "A4": 0.062,
+   "R": 0.018
+  },
+  {
+   "pkg": "gettext",
+   "n": 5817,
+   "SG": 0.144,
+   "A4": 0.109,
+   "R": 0.033
+  },
+  {
+   "pkg": "mutt",
+   "n": 4501,
+   "SG": 0.125,
+   "A4": 0.102,
+   "R": 0.028
+  },
+  {
+   "pkg": "cvs",
+   "n": 3110,
+   "SG": 0.278,
+   "A4": 0.271,
+   "R": 0.042
+  },
+  {
+   "pkg": "openresty",
+   "n": 3103,
+   "SG": 0.452,
+   "A4": 0.456,
+   "R": 0.225
+  },
+  {
+   "pkg": "jansson",
+   "n": 3058,
+   "SG": 0.115,
+   "A4": 0.088,
+   "R": 0.023
+  },
+  {
+   "pkg": "recutils",
+   "n": 3040,
+   "SG": 0.207,
+   "A4": 0.161,
+   "R": 0.089
+  },
+  {
+   "pkg": "tcsh",
+   "n": 2827,
+   "SG": 0.052,
+   "A4": 0.052,
+   "R": 0.009
+  },
+  {
+   "pkg": "lmdb",
+   "n": 2238,
+   "SG": 0.159,
+   "A4": 0.181,
+   "R": 0.029
+  },
+  {
+   "pkg": "expat",
+   "n": 1941,
+   "SG": 0.126,
+   "A4": 0.089,
+   "R": 0.027
+  },
+  {
+   "pkg": "lighttpd",
+   "n": 1612,
+   "SG": 0.205,
+   "A4": 0.168,
+   "R": 0.035
+  },
+  {
+   "pkg": "mksh",
+   "n": 1495,
+   "SG": 0.11,
+   "A4": 0.086,
+   "R": 0.019
+  },
+  {
+   "pkg": "tinycc",
+   "n": 1483,
+   "SG": 0.073,
+   "A4": 0.072,
+   "R": 0.023
+  },
+  {
+   "pkg": "gdbm",
+   "n": 1146,
+   "SG": 0.14,
+   "A4": 0.105,
+   "R": 0.042
+  },
+  {
+   "pkg": "sysstat",
+   "n": 1029,
+   "SG": 0.259,
+   "A4": 0.157,
+   "R": 0.072
+  },
+  {
+   "pkg": "lsof",
+   "n": 688,
+   "SG": 0.078,
+   "A4": 0.092,
+   "R": 0.022
+  },
+  {
+   "pkg": "atop",
+   "n": 662,
+   "SG": 0.046,
+   "A4": 0.042,
+   "R": 0.026
+  },
+  {
+   "pkg": "angie",
+   "n": 627,
+   "SG": 0.433,
+   "A4": 0.465,
+   "R": 0.187
+  },
+  {
+   "pkg": "tengine",
+   "n": 518,
+   "SG": 0.461,
+   "A4": 0.469,
+   "R": 0.216
+  },
+  {
+   "pkg": "sbase",
+   "n": 315,
+   "SG": 0.011,
+   "A4": 0.009,
+   "R": 0.001
+  },
+  {
+   "pkg": "dash",
+   "n": 248,
+   "SG": 0.036,
+   "A4": 0.038,
+   "R": 0.065
+  },
+  {
+   "pkg": "mawk",
+   "n": 208,
+   "SG": 0.133,
+   "A4": 0.093,
+   "R": 0.035
+  },
+  {
+   "pkg": "nginx118",
+   "n": 114,
+   "SG": 0.471,
+   "A4": 0.46,
+   "R": 0.207
+  },
+  {
+   "pkg": "procps",
+   "n": 107,
+   "SG": 0.173,
+   "A4": 0.183,
+   "R": 0.077
+  },
+  {
+   "pkg": "byacc",
+   "n": 106,
+   "SG": 0.197,
+   "A4": 0.109,
+   "R": 0.045
+  },
+  {
+   "pkg": "tdb",
+   "n": 106,
+   "SG": 0.26,
+   "A4": 0.117,
+   "R": 0.083
+  },
+  {
+   "pkg": "psmisc",
+   "n": 100,
+   "SG": 0.233,
+   "A4": 0.257,
+   "R": 0.073
+  },
+  {
+   "pkg": "pv",
+   "n": 70,
+   "SG": 0.128,
+   "A4": 0.07,
+   "R": 0.024
+  },
+  {
+   "pkg": "bsdtar",
+   "n": 50,
+   "SG": 0.089,
+   "A4": 0.239,
+   "R": 0.584
+  },
+  {
+   "pkg": "tar2",
+   "n": 43,
+   "SG": 0.13,
+   "A4": 0.183,
+   "R": 0.262
+  },
+  {
+   "pkg": "units2",
+   "n": 20,
+   "SG": 0.295,
+   "A4": 0.295,
+   "R": 0.1
+  },
+  {
+   "pkg": "coreutils4",
+   "n": 17,
+   "SG": 0.167,
+   "A4": 0.254,
+   "R": 0.379
+  },
+  {
+   "pkg": "inetutils2",
+   "n": 17,
+   "SG": 0.165,
+   "A4": 0.047,
+   "R": 0.039
+  },
+  {
+   "pkg": "grep2",
+   "n": 16,
+   "SG": 0.0,
+   "A4": 0.0,
+   "R": 0.0
+  },
+  {
+   "pkg": "sed2",
+   "n": 16,
+   "SG": 0.144,
+   "A4": 0.167,
+   "R": 0.0
+  },
+  {
+   "pkg": "entr",
+   "n": 14,
+   "SG": 0.188,
+   "A4": 0.064,
+   "R": 0.081
+  },
+  {
+   "pkg": "findutils2",
+   "n": 14,
+   "SG": 0.164,
+   "A4": 0.162,
+   "R": 0.0
+  },
+  {
+   "pkg": "file",
+   "n": 9,
+   "SG": 0.13,
+   "A4": 0.074,
+   "R": 0.0
+  },
+  {
+   "pkg": "nginx114",
+   "n": 6,
+   "SG": 0.446,
+   "A4": 0.593,
+   "R": 0.515
+  },
+  {
+   "pkg": "patch2",
+   "n": 6,
+   "SG": 0.356,
+   "A4": 0.389,
+   "R": 0.056
+  },
+  {
+   "pkg": "gawk2",
+   "n": 5,
+   "SG": 0.1,
+   "A4": 0.35,
+   "R": 0.496
+  },
+  {
+   "pkg": "nginx126",
+   "n": 5,
+   "SG": 0.153,
+   "A4": 0.139,
+   "R": 0.16
+  },
+  {
+   "pkg": "diffutils3",
+   "n": 4,
+   "SG": 0.167,
+   "A4": 0.0,
+   "R": 0.125
+  },
+  {
+   "pkg": "diffutils2",
+   "n": 2,
+   "SG": 0.25,
+   "A4": 0.667,
+   "R": 0.0
+  }
+ ],
+ "pkg_wins": {
+  "A4>SG": 15,
+  "SG>A4": 22,
+  "tie": 11
+ },
+ "em_overlap": {
+  "both": 2769,
+  "SG_only": 4049,
+  "A4_only": 1780
+ },
+ "oracle_A4_SG": 0.1707,
+ "oracle_A4_SG_R": 0.1792,
+ "mean": {
+  "SG": 0.1276,
+  "A4": 0.1231,
+  "R": 0.0352
+ },
+ "f1_wins": {
+  "SG>A4": 38371,
+  "A4>SG": 31843,
+  "tie": 164437
+ },
+ "char_SG": {
+  "precision": 0.1372,
+  "recall": 0.126,
+  "pred_len": 3.26,
+  "uniq_preds": 20977,
+  "empty": 1004
+ },
+ "char_A4": {
+  "precision": 0.1301,
+  "recall": 0.1244,
+  "pred_len": 3.84,
+  "uniq_preds": 36462,
+  "empty": 0
+ },
+ "char_R": {
+  "precision": 0.0398,
+  "recall": 0.0339,
+  "pred_len": 3.27,
+  "uniq_preds": 23184,
+  "empty": 0
+ },
+ "gt_len": 3.63,
+ "top_tokens_SG": [
+  [
+   "sqlite3",
+   56215
+  ],
+  [
+   "[inst]",
+   27219
+  ],
+  [
+   "xml",
+   20442
+  ],
+  [
+   "get",
+   19768
+  ],
+  [
+   "set",
+   18985
+  ],
+  [
+   "bind",
+   18699
+  ],
+  [
+   "btree",
+   17036
+  ],
+  [
+   "elf",
+   11512
+  ],
+  [
+   "bfd",
+   10522
+  ],
+  [
+   "zeroblob",
+   10319
+  ],
+  [
+   "ossl",
+   9337
+  ],
+  [
+   "stream",
+   8135
+  ],
+  [
+   "is",
+   8001
+  ],
+  [
+   "free",
+   7795
+  ],
+  [
+   "write",
+   6619
+  ],
+  [
+   "size",
+   6610
+  ],
+  [
+   "quic",
+   6548
+  ],
+  [
+   "init",
+   6544
+  ],
+  [
+   "file",
+   6163
+  ],
+  [
+   "print",
+   6115
+  ]
+ ],
+ "top_tokens_A4": [
+  [
+   "sqlite3",
+   27018
+  ],
+  [
+   "xml",
+   20630
+  ],
+  [
+   "get",
+   20531
+  ],
+  [
+   "t",
+   16699
+  ],
+  [
+   "set",
+   15763
+  ],
+  [
+   "db",
+   11095
+  ],
+  [
+   "epns",
+   9698
+  ],
+  [
+   "fts5",
+   9446
+  ],
+  [
+   "init",
+   8731
+  ],
+  [
+   "ossl",
+   7602
+  ],
+  [
+   "epkns",
+   6988
+  ],
+  [
+   "ssl",
+   6956
+  ],
+  [
+   "7board",
+   6799
+  ],
+  [
+   "schema",
+   6769
+  ],
+  [
+   "ngx",
+   6498
+  ],
+  [
+   "parse",
+   6328
+  ],
+  [
+   "write",
+   6322
+  ],
+  [
+   "timer",
+   6155
+  ],
+  [
+   "vdbe",
+   6089
+  ],
+  [
+   "e",
+   5899
+  ]
+ ],
+ "evidence_sample_n": 6000,
+ "by_evidence_full_evidence": {
+  "n": 405,
+  "share": 0.068,
+  "SG": 0.464,
+  "A4": 0.55,
+  "R": 0.1011
+ },
+ "by_evidence_partial": {
+  "n": 470,
+  "share": 0.078,
+  "SG": 0.482,
+  "A4": 0.4668,
+  "R": 0.1179
+ },
+ "by_evidence_weak": {
+  "n": 1241,
+  "share": 0.207,
+  "SG": 0.1441,
+  "A4": 0.1292,
+  "R": 0.0415
+ },
+ "by_evidence_zero_evidence": {
+  "n": 3884,
+  "share": 0.647,
+  "SG": 0.0396,
+  "A4": 0.0351,
+  "R": 0.0179
+ },
+ "examples": {
+  "SG_only_EM": [
+   [
+    "angie",
+    "ngx_http_api_handler",
+    "ngx_http_api_handler",
+    "ngx_http_api_path_handler"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_init_sticky",
+    "ngx_http_upstream_sticky_init",
+    "ngx_http_upstream_init_cookie"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_init_sticky",
+    "ngx_http_upstream_sticky_init",
+    "ngx_http_upstream_sticky_variable"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_init_sticky",
+    "ngx_http_upstream_sticky_init",
+    "ngx_http_upstream_sticky_variable"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_init_sticky",
+    "ngx_http_upstream_sticky_init",
+    "ngx_http_upstream_sticky_variable"
+   ],
+   [
+    "angie",
+    "ngx_ssl_handshake_handler",
+    "ngx_ssl_handshake_handler",
+    "ngx_http_handshake_handler"
+   ],
+   [
+    "angie",
+    "ngx_ssl_connection_error",
+    "ngx_ssl_connection_error",
+    "ossl_err_state_to_string"
+   ],
+   [
+    "angie",
+    "ngx_ssl_shutdown_handler",
+    "ngx_ssl_shutdown_handler",
+    "ngx_http_upstream_shutdown"
+   ],
+   [
+    "angie",
+    "ngx_ssl_get_cached_session",
+    "ngx_ssl_get_cached_session",
+    "ngx_ssl_session_lookup"
+   ],
+   [
+    "angie",
+    "ngx_http_prometheus_template",
+    "ngx_http_prometheus_template",
+    "ngx_http_core_promote"
+   ],
+   [
+    "angie",
+    "ngx_http_prometheus_metric",
+    "ngx_http_prometheus_metric",
+    "ngx_http_core_core_metric"
+   ],
+   [
+    "angie",
+    "ngx_http_ssl_init",
+    "ngx_http_ssl_init",
+    "ngx_http_ssl_handler"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_init_sticky",
+    "ngx_http_upstream_sticky_init",
+    "ngx_http_upstream_sticky_variable"
+   ],
+   [
+    "angie",
+    "ngx_ssl_handshake_handler",
+    "ngx_ssl_handshake_handler",
+    "ngx_http_handshake_handler"
+   ],
+   [
+    "angie",
+    "ngx_ssl_shutdown_handler",
+    "ngx_ssl_shutdown_handler",
+    "ngx_http_upstream_shutdown"
+   ],
+   [
+    "angie",
+    "ngx_ssl_get_cached_session",
+    "ngx_ssl_get_cached_session",
+    "ngx_ssl_session_lookup"
+   ],
+   [
+    "angie",
+    "ngx_http_ssl_init",
+    "ngx_http_ssl_init",
+    "ngx_http_ssl_handler"
+   ],
+   [
+    "angie",
+    "ngx_http_uwsgi_set_ssl",
+    "ngx_http_uwsgi_set_ssl",
+    "ngx_http_uwsgi_ssl_create"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_init_sticky",
+    "ngx_http_upstream_sticky_init",
+    "ngx_http_upstream_sticky_variable"
+   ],
+   [
+    "bdb",
+    "db_version",
+    "db_version",
+    "sqlite3_db_version"
+   ],
+   [
+    "bdb",
+    "__env_set_memory_max",
+    "env_set_memory_max",
+    "db_env_set_memory_max"
+   ],
+   [
+    "bdb",
+    "__env_set_app_dispatch",
+    "env_set_app_dispatch",
+    "db_env_set_app_dispatch"
+   ],
+   [
+    "bdb",
+    "__env_add_data_dir",
+    "env_add_data_dir",
+    "db_env_add_data_dir"
+   ],
+   [
+    "bdb",
+    "__env_set_intermediate_dir_mode",
+    "env_set_intermediate_dir_mode",
+    "db_env_set_intermediate_dir_mode"
+   ],
+   [
+    "bdb",
+    "__env_set_thread_count",
+    "env_set_thread_count",
+    "db_env_set_thread_count"
+   ],
+   [
+    "bdb",
+    "__env_set_shm_key",
+    "env_set_shm_key",
+    "db_env_set_shm_key"
+   ],
+   [
+    "bdb",
+    "__fop_read_meta",
+    "fop_read_meta",
+    "btree_read_meta"
+   ],
+   [
+    "bdb",
+    "__log_get_config",
+    "log_get_config",
+    "db_env_check_flag"
+   ],
+   [
+    "bdb",
+    "__log_newfh",
+    "log_newfh",
+    "db_env_log_newfh"
+   ],
+   [
+    "bdb",
+    "__memp_fget_pp",
+    "__memp_fget_pp",
+    "sqlite3_db_pool_file_get"
+   ],
+   [
+    "bdb",
+    "__memp_fcreate_pp",
+    "__memp_fcreate_pp",
+    "memp_fcreate"
+   ],
+   [
+    "bdb",
+    "__memp_set_clear_len",
+    "memp_set_clear_len",
+    "db_pool_file_set_clear_len"
+   ],
+   [
+    "bdb",
+    "__memp_set_lsn_offset",
+    "memp_set_lsn_offset",
+    "db_pool_file_set_lsn_offset"
+   ],
+   [
+    "bdb",
+    "__memp_set_pgcookie",
+    "__memp_set_pgcookie",
+    "db_pool_file_set_pgcookie"
+   ],
+   [
+    "bdb",
+    "__memp_skip_curadj",
+    "__memp_skip_curadj",
+    "update_cur_sifted_state"
+   ],
+   [
+    "bdb",
+    "__partc_get",
+    "__partc_get",
+    "fts5_seg_iter_poslist"
+   ],
+   [
+    "bdb",
+    "__txn_set_commit_token",
+    "txn_set_commit_token",
+    "db_txn_set_commit_token"
+   ],
+   [
+    "bdb",
+    "__txn_set_timeout",
+    "txn_set_timeout",
+    "db_txn_set_timeout"
+   ],
+   [
+    "bdb",
+    "__ham_curadj_recover",
+    "__ham_curadj_recover",
+    "sqlite3_ham_curadj_recover"
+   ],
+   [
+    "bdb",
+    "__rep_bulk_unmarshal",
+    "__rep_bulk_unmarshal",
+    "__rep_bulk"
+   ]
+  ],
+  "A4_only_EM": [
+   [
+    "angie",
+    "ngx_resolver_set_status_zone",
+    "ngx_resolver_set_status_zone",
+    "ngx_resolver_create_conf"
+   ],
+   [
+    "angie",
+    "ngx_json_parse_array",
+    "ngx_json_parse_array",
+    "ngx_data_parse_array"
+   ],
+   [
+    "angie",
+    "ngx_http_api_handler",
+    "ngx_http_api_handler",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_api_handler",
+    "ngx_http_api_handler",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_api_handler",
+    "ngx_http_api_handler",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_json_parse_string",
+    "ngx_json_parse_string",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "__memp_get_config",
+    "memp_get_config",
+    "__db_memp_get_flags"
+   ],
+   [
+    "bdb",
+    "__rep_mpf_open",
+    "rep_mpf_open",
+    "sqlite3_mpf_open"
+   ],
+   [
+    "bdb",
+    "send_permlsn",
+    "send_permlsn",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "__repmgr_connect",
+    "repmgr_connect",
+    "repmgr_connect_site"
+   ],
+   [
+    "bdb",
+    "__repmgr_start_connect",
+    "repmgr_start_connect",
+    "repmgr_connect_site"
+   ],
+   [
+    "bdb",
+    "prepare_input",
+    "prepare_input",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "accept_handshake",
+    "accept_handshake",
+    "bdb3679_accept_handshake"
+   ],
+   [
+    "bdb",
+    "__repmgr_forward_single_write",
+    "repmgr_forward_single_write",
+    "int"
+   ],
+   [
+    "bdb",
+    "__repmgr_msgdispatch",
+    "repmgr_msgdispatch",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "__get_filereg_info",
+    "get_filereg_info",
+    "elf_get_filereg_info"
+   ],
+   [
+    "bdb",
+    "__lock_id_set",
+    "lock_id_set",
+    "sqlite3_lock_id_set"
+   ],
+   [
+    "bdb",
+    "__db_get_byteswapped",
+    "db_get_byteswapped",
+    "sqlite3BtreeGetByteswapped"
+   ],
+   [
+    "bdb",
+    "__db_get_dbname",
+    "db_get_dbname",
+    "xmlXPtrGetDbNode"
+   ],
+   [
+    "bdb",
+    "__db_get_multiple",
+    "db_get_multiple",
+    "sqlite3BtreeIsInReadTrans"
+   ],
+   [
+    "bdb",
+    "__db_get_type",
+    "db_get_type",
+    "sqlite3BtreeGetPageSize"
+   ],
+   [
+    "bdb",
+    "__db_get_blob_sub_dir",
+    "db_get_blob_sub_dir",
+    "sqlite3BtreeGetBlobSubdir"
+   ],
+   [
+    "bdb",
+    "__db_get_encrypt_flags",
+    "db_get_encrypt_flags",
+    "sqlite3BtreeGetEncryptFlags"
+   ],
+   [
+    "bdb",
+    "__db_get_assoc_flags",
+    "db_get_assoc_flags",
+    "xmlXPtrGetAssocData"
+   ],
+   [
+    "bdb",
+    "__db_set_lorder",
+    "db_set_lorder",
+    "set_lorder"
+   ],
+   [
+    "bdb",
+    "__db_get_alloc",
+    "db_get_alloc",
+    "sqlite3BtreeGetAllocator"
+   ],
+   [
+    "bdb",
+    "__db_set_pagesize",
+    "db_set_pagesize",
+    "bdb_set_pagesize"
+   ],
+   [
+    "bdb",
+    "__db_get_open_flags",
+    "db_get_open_flags",
+    "sqlite3BtreeGetAutoVacuum"
+   ],
+   [
+    "bdb",
+    "__db_meta_setup",
+    "db_meta_setup",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "__db_sort_multiple",
+    "db_sort_multiple",
+    "sort_multiple"
+   ],
+   [
+    "bdb",
+    "db_sequence_create",
+    "db_sequence_create",
+    "sqlite3BtreeCreateTable"
+   ],
+   [
+    "bdb",
+    "__rep_send_message",
+    "rep_send_message",
+    "int"
+   ],
+   [
+    "bdb",
+    "__repmgr_site",
+    "repmgr_site",
+    "int"
+   ],
+   [
+    "bdb",
+    "__repmgr_connect",
+    "repmgr_connect",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "accept_handshake",
+    "accept_handshake",
+    "bdb3679_accept_handshake"
+   ],
+   [
+    "bdb",
+    "__repmgr_msgdispatch",
+    "repmgr_msgdispatch",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "__repmgr_forward_single_write",
+    "repmgr_forward_single_write",
+    "[INST]"
+   ],
+   [
+    "bdb",
+    "__get_filereg_by_dbregid",
+    "get_filereg_by_dbregid",
+    "__dwarf_get_filereg_by_dbregid"
+   ],
+   [
+    "bdb",
+    "__lock_id_set",
+    "lock_id_set",
+    "sqlite3BtreeLockingMode"
+   ],
+   [
+    "bdb",
+    "__db_get_type",
+    "db_get_type",
+    "xmlNanoFTPGetConnectionType"
+   ]
+  ],
+  "SG_big_win": [
+   [
+    "angie",
+    "ngx_json_list_length",
+    "list_length",
+    "count_path_elements"
+   ],
+   [
+    "angie",
+    "ngx_ssl_connection_error",
+    "ngx_ssl_connection_error",
+    "ossl_err_state_to_string"
+   ],
+   [
+    "angie",
+    "ngx_ssl_ocsp_process_status_line",
+    "ngx_ssl_ocsp_get_status",
+    "xml_parse_name_complex"
+   ],
+   [
+    "angie",
+    "ngx_ssl_load_certificate",
+    "ngx_ssl_load_certificate_chain",
+    "ngx_http_file_cache_get"
+   ],
+   [
+    "angie",
+    "ngx_ssl_ocsp_read_handler",
+    "ngx_ssl_ocsp_handler",
+    "ngx_http_responder_process_request"
+   ],
+   [
+    "atop",
+    "do_pacctdir",
+    "pacctdir",
+    "atopacctd_init_option"
+   ],
+   [
+    "atop",
+    "json_print_MDD",
+    "print_mdd_stats",
+    "dump_header"
+   ],
+   [
+    "atop",
+    "json_print_LVM",
+    "print_lvm_stats",
+    "dump_llvm_header"
+   ],
+   [
+    "bdb",
+    "__db_check_txn",
+    "__db_txn_begin",
+    "sqlite3_begin_transaction"
+   ],
+   [
+    "bdb",
+    "__env_open_arg",
+    "bdb_env_open",
+    "dbenv_options"
+   ],
+   [
+    "bdb",
+    "__env_not_config",
+    "bdb_env_not_config",
+    "db1568_must_be_defined"
+   ],
+   [
+    "bdb",
+    "__log_get_config",
+    "log_get_config",
+    "db_env_check_flag"
+   ],
+   [
+    "bdb",
+    "__memp_fget_pp",
+    "__memp_fget_pp",
+    "sqlite3_db_pool_file_get"
+   ],
+   [
+    "bdb",
+    "__memp_skip_curadj",
+    "__memp_skip_curadj",
+    "update_cur_sifted_state"
+   ],
+   [
+    "bdb",
+    "__partition_set",
+    "bdb_set_partition",
+    "sqlite3_dbdata_init"
+   ],
+   [
+    "bdb",
+    "__partc_get",
+    "__partc_get",
+    "fts5_seg_iter_poslist"
+   ],
+   [
+    "bdb",
+    "__rep_elect_pp",
+    "rep_elect",
+    "db_env_repelect"
+   ],
+   [
+    "bdb",
+    "__rep_get_config",
+    "rep_get_config",
+    "db_env_check_key"
+   ],
+   [
+    "bdb",
+    "__rep_egen_init",
+    "__rep_egen_read",
+    "sqlite3_repegen_table"
+   ],
+   [
+    "bdb",
+    "__repmgr_site",
+    "sqlite3_repmgr_site",
+    "sqlite3_rpm_group_add"
+   ],
+   [
+    "bdb",
+    "__repmgr_get_eid",
+    "bdb_get_eid",
+    "env_next"
+   ],
+   [
+    "bdb",
+    "set_local_site",
+    "sqlite3BtreeSetLocalSite",
+    "xml_write_localsite"
+   ],
+   [
+    "bdb",
+    "got_acks",
+    "got_acks",
+    "xml_relax_ng_check_perm_result"
+   ],
+   [
+    "bdb",
+    "__repmgr_listen",
+    "repmgr_listen",
+    "write_backref"
+   ],
+   [
+    "bdb",
+    "__repmgr_ssl_accept",
+    "SSL_accept",
+    "conn_open"
+   ]
+  ],
+  "A4_big_win": [
+   [
+    "angie",
+    "ngx_json_parse_string",
+    "ngx_json_parse_raw_string",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_api_merge_conf",
+    "ngx_http_upstream_merge_loc_conf",
+    "sqlite3_bind_zeroblob"
+   ],
+   [
+    "angie",
+    "ngx_http_prometheus_render",
+    "ngx_http_prometheus_create_request",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_json_parse_string",
+    "ngx_json_parse_raw_string",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_variable_angie_version",
+    "ngx_http_variable_server_version",
+    "ossl_init_no_load_config_get_table_conf"
+   ],
+   [
+    "angie",
+    "ngx_http_limit_conn_merge_loc_conf",
+    "ngx_http_limit_req_merge_conf",
+    "ossl_quic_stream_set_params"
+   ],
+   [
+    "angie",
+    "ngx_http_limit_req_merge_loc_conf",
+    "ngx_http_limit_req_merge_conf",
+    "ossl_quic_params_set_transport_params"
+   ],
+   [
+    "angie",
+    "ngx_http_api_handler",
+    "ngx_http_api_handler",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_prometheus_render",
+    "ngx_http_prometheus_create_request",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_get_sticky_peer",
+    "ngx_http_upstream_get_cached_time",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_json_parse_string",
+    "json_parse_string",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_variable_angie_version",
+    "ngx_http_variable_nginx_version",
+    "xmlCryptoInit"
+   ],
+   [
+    "angie",
+    "ngx_http_api_merge_conf",
+    "ngx_http_upstream_merge_loc_conf",
+    "ossl_quic_stream_set_peer_max_streams"
+   ],
+   [
+    "angie",
+    "ngx_http_api_handler",
+    "ngx_http_api_handler",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_get_sticky_peer",
+    "ngx_http_upstream_get_variable",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_json_parse_string",
+    "json_parse_string",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_variable_angie_version",
+    "ngx_http_variable_nginx_version",
+    "xmlSecOpenSSLAppInit"
+   ],
+   [
+    "angie",
+    "ngx_http_api_merge_conf",
+    "ngx_http_upstream_merge_loc_conf",
+    "ossl_quic_stream_set_peer_max_streams"
+   ],
+   [
+    "angie",
+    "ngx_http_api_handler",
+    "ngx_http_api_handler",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_upstream_get_sticky_peer",
+    "ngx_http_upstream_get_variable",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_ssl_new_session",
+    "ngx_ssl_session_delete",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_json_parse_value",
+    "ngx_json_parse_payload",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_json_parse_string",
+    "ngx_json_parse_string",
+    "[INST]"
+   ],
+   [
+    "angie",
+    "ngx_http_variable_angie_version",
+    "ngx_http_variable_nginx_version",
+    "xmlCryptoInit"
+   ],
+   [
+    "angie",
+    "ngx_http_limit_conn_merge_loc_conf",
+    "ngx_http_limit_req_merge_conf",
+    "ossl_quic_stream_set_max_stream_data_bidi_local"
+   ]
+  ]
+ }
+}

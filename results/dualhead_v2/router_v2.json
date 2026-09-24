@@ -1,0 +1,74 @@
+{
+ "checkpoint": "checkpoints/p2_ccsarch_v2_seed42.pt",
+ "features": [
+  "sim1",
+  "margin",
+  "ext_jacc",
+  "str_jacc",
+  "d_conf",
+  "d_len",
+  "n_ext",
+  "n_str",
+  "n_blocks"
+ ],
+ "head_weights": {
+  "sim1": 0.11937631382831952,
+  "margin": 0.2995912919734755,
+  "ext_jacc": -0.1579227557267869,
+  "str_jacc": 0.20385905202099525,
+  "d_conf": -0.2221109613046008,
+  "d_len": 0.08338070077426094,
+  "n_ext": -0.06745819644983779,
+  "n_str": 0.004641295961723661,
+  "n_blocks": 0.26348299422435334,
+  "bias": 3.3744036731282314
+ },
+ "tiers": {
+  "val": {
+   "n": 10617,
+   "retrieval_f1": 0.13688889731557147,
+   "decoder_f1": 0.10779674107563368,
+   "hybrid_f1": 0.13688889731557147,
+   "delta_vs_best_single": 0.0,
+   "router_picks_decoder_pct": 0.0,
+   "decoder_picks_correct": 0.0,
+   "macro_hybrid_f1": 0.313909608443786,
+   "aurc_conf_router": 0.6299655719418794,
+   "aurc_sim1_retrieval": 0.735916929085619,
+   "ece_conf": 0.007633090035599677,
+   "coverage": {
+    "5%": 0.9637,
+    "10%": 0.8831,
+    "20%": 0.5601,
+    "30%": 0.4033,
+    "50%": 0.2583,
+    "100%": 0.1369
+   },
+   "hybrid_FT": 0.0630567106228037,
+   "hybrid_NCT": 0.7855233706385778
+  },
+  "test": {
+   "n": 268178,
+   "retrieval_f1": 0.10139359907620134,
+   "decoder_f1": 0.07974759301658223,
+   "hybrid_f1": 0.10139359907620134,
+   "delta_vs_best_single": 0.0,
+   "router_picks_decoder_pct": 0.0,
+   "decoder_picks_correct": 0.0,
+   "macro_hybrid_f1": 0.3511995062442081,
+   "aurc_conf_router": 0.707462014720651,
+   "aurc_sim1_retrieval": 0.7725850355811795,
+   "ece_conf": 0.005866804614028035,
+   "coverage": {
+    "5%": 0.9604,
+    "10%": 0.6995,
+    "20%": 0.4074,
+    "30%": 0.2905,
+    "50%": 0.1881,
+    "100%": 0.1014
+   },
+   "hybrid_FT": 0.02047940554023462,
+   "hybrid_NCT": 0.5059790496634712
+  }
+ }
+}

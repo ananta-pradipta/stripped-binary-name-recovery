@@ -1,0 +1,206 @@
+{
+ "n_keys": 22926,
+ "ours: system (router)": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.5569,
+   "micro_r": 0.542,
+   "micro_f1": 0.5493
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.4732,
+   "micro_r": 0.4601,
+   "micro_f1": 0.4666
+  },
+  "ours_v2": {
+   "micro": 0.4472,
+   "macro_pkg": 0.6263,
+   "seen": 0.7611,
+   "novel": 0.2839,
+   "excl_dynsym": 0.3626,
+   "n": 22926,
+   "n_seen": 7844,
+   "n_novel": 15082,
+   "n_pkgs": 174
+  }
+ },
+ "ours: generation head": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.5284,
+   "micro_r": 0.5146,
+   "micro_f1": 0.5214
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.4542,
+   "micro_r": 0.4398,
+   "micro_f1": 0.4469
+  },
+  "ours_v2": {
+   "micro": 0.4142,
+   "macro_pkg": 0.6069,
+   "seen": 0.6624,
+   "novel": 0.2851,
+   "excl_dynsym": 0.3365,
+   "n": 22926,
+   "n_seen": 7844,
+   "n_novel": 15082,
+   "n_pkgs": 174
+  }
+ },
+ "ours: retrieval head": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.3662,
+   "micro_r": 0.3598,
+   "micro_f1": 0.363
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.2058,
+   "micro_r": 0.2033,
+   "micro_f1": 0.2045
+  },
+  "ours_v2": {
+   "micro": 0.3107,
+   "macro_pkg": 0.53,
+   "seen": 0.7576,
+   "novel": 0.0782,
+   "excl_dynsym": 0.2352,
+   "n": 22926,
+   "n_seen": 7844,
+   "n_novel": 15082,
+   "n_pkgs": 174
+  }
+ },
+ "BLens (from BLens csv)": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.6556,
+   "micro_r": 0.355,
+   "micro_f1": 0.4606
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.4815,
+   "micro_r": 0.2111,
+   "micro_f1": 0.2935
+  },
+  "ours_v2_canonspace": {
+   "micro": 0.3939,
+   "macro_pkg": 0.6218,
+   "seen": 0.7748,
+   "novel": 0.1958,
+   "excl_dynsym": 0.3153,
+   "n": 22926,
+   "n_seen": 7844,
+   "n_novel": 15082,
+   "n_pkgs": 174
+  }
+ },
+ "XFL (from BLens csv)": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.6097,
+   "micro_r": 0.1953,
+   "micro_f1": 0.2958
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.2848,
+   "micro_r": 0.0502,
+   "micro_f1": 0.0854
+  },
+  "ours_v2_canonspace": {
+   "micro": 0.2234,
+   "macro_pkg": 0.5159,
+   "seen": 0.5172,
+   "novel": 0.0707,
+   "excl_dynsym": 0.1564,
+   "n": 22926,
+   "n_seen": 7844,
+   "n_novel": 15082,
+   "n_pkgs": 174
+  }
+ },
+ "SymLM (from BLens csv)": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.5415,
+   "micro_r": 0.1752,
+   "micro_f1": 0.2648
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.3303,
+   "micro_r": 0.0834,
+   "micro_f1": 0.1332
+  },
+  "ours_v2_canonspace": {
+   "micro": 0.1123,
+   "macro_pkg": 0.0834,
+   "seen": 0.2341,
+   "novel": 0.0489,
+   "excl_dynsym": 0.0883,
+   "n": 22926,
+   "n_seen": 7844,
+   "n_novel": 15082,
+   "n_pkgs": 174
+  }
+ },
+ "AsmDepictor (from BLens csv)": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.2428,
+   "micro_r": 0.1668,
+   "micro_f1": 0.1978
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.094,
+   "micro_r": 0.0637,
+   "micro_f1": 0.0759
+  },
+  "ours_v2_canonspace": {
+   "micro": 0.1533,
+   "macro_pkg": 0.3481,
+   "seen": 0.3739,
+   "novel": 0.0385,
+   "excl_dynsym": 0.1155,
+   "n": 22926,
+   "n_seen": 7844,
+   "n_novel": 15082,
+   "n_pkgs": 174
+  }
+ },
+ "BL-S (from BLens csv)": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.6695,
+   "micro_r": 0.2289,
+   "micro_f1": 0.3412
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.4976,
+   "micro_r": 0.1286,
+   "micro_f1": 0.2044
+  }
+ },
+ "BL-A (from BLens csv)": {
+  "blens_full": {
+   "n": 22926,
+   "micro_p": 0.6554,
+   "micro_r": 0.2808,
+   "micro_f1": 0.3932
+  },
+  "blens_strict": {
+   "n": 16405,
+   "micro_p": 0.4852,
+   "micro_r": 0.1752,
+   "micro_f1": 0.2575
+  }
+ }
+}

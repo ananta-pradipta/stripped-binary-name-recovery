@@ -1,0 +1,295 @@
+<title>Dual-Head Function Naming</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F6F8; --panel:#FFFFFF; --ink:#172033; --ink-2:#4A5666; --ink-3:#7A8794;
+  --rule:#C9D2D9; --accent:#0E6B85; --accent-ink:#0B5468; --ours:#E4F0F3; --ours-strong:#CFE4EA;
+  --neg:#8C3B2A; --neg-bg:#F6E9E5; --pos:#2E6B45; --pos-bg:#E5F0E8; --mark:#FFF1C9;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F161D; --panel:#151E27; --ink:#DCE3E8; --ink-2:#A6B2BD; --ink-3:#74818D;
+    --rule:#2B3743; --accent:#5CB8D1; --accent-ink:#8FD0E2; --ours:#17303A; --ours-strong:#1E3F4B;
+    --neg:#E2907F; --neg-bg:#3A221C; --pos:#8CCBA1; --pos-bg:#1B3325; --mark:#4A3B12;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F161D; --panel:#151E27; --ink:#DCE3E8; --ink-2:#A6B2BD; --ink-3:#74818D;
+  --rule:#2B3743; --accent:#5CB8D1; --accent-ink:#8FD0E2; --ours:#17303A; --ours-strong:#1E3F4B;
+  --neg:#E2907F; --neg-bg:#3A221C; --pos:#8CCBA1; --pos-bg:#1B3325; --mark:#4A3B12;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:200px minmax(0,1fr);gap:3rem}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);padding:2rem 1rem 4rem}.toc{display:none}}
+.toc{position:sticky;top:2rem;align-self:start;font-size:.86rem;line-height:1.4}
+.toc .eyebrow{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0 0 .6rem}
+.toc ol{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.35rem}
+.toc a{color:var(--ink-2);display:flex;gap:.5rem}
+.toc a b{font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:500;color:var(--ink-3);min-width:1.4em}
+.toc a:hover{color:var(--accent)}
+main{min-width:0}
+header.hero{border-bottom:1px solid var(--rule);padding-bottom:1.6rem;margin-bottom:2.2rem}
+.eyebrow{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 .8rem}
+h1{font-family:Newsreader,Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(2rem,4vw,2.9rem);line-height:1.1;margin:0 0 .9rem;text-wrap:balance;letter-spacing:-.01em}
+.lede{font-size:1.15rem;color:var(--ink-2);max-width:66ch;margin:0}
+.meta{margin-top:1.2rem;display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.78rem;color:var(--ink-3)}
+section{margin:0 0 3rem}
+h2{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:1.75rem;line-height:1.15;margin:0 0 1rem;text-wrap:balance;display:flex;gap:.7rem;align-items:baseline}
+h2 .n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.9rem;color:var(--accent);font-weight:500}
+h3{font-family:Newsreader,Georgia,serif;font-weight:600;font-size:1.2rem;margin:1.6rem 0 .5rem;text-wrap:balance}
+p,li{max-width:70ch}
+p{margin:0 0 1rem}
+ul,ol{padding-left:1.3rem;margin:0 0 1rem}
+li{margin:0 0 .4rem}
+code,kbd{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--panel);border:1px solid var(--rule);border-radius:3px;padding:.05em .3em}
+.callout{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--accent);padding:1rem 1.2rem;margin:1.2rem 0;max-width:78ch}
+.callout p:last-child{margin:0}
+.callout.neg{border-left-color:var(--neg)}
+.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.9rem;margin:1rem 0 1.2rem}
+.def{background:var(--panel);border:1px solid var(--rule);padding:.9rem 1rem;border-radius:4px}
+.def b{display:block;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.82rem;color:var(--accent);margin-bottom:.3rem}
+.def span{font-size:.93rem;color:var(--ink-2)}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:4px;background:var(--panel);margin:.8rem 0 .6rem}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{padding:.5rem .7rem;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top;white-space:nowrap}
+th{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);background:var(--bg)}
+td.num,th.num{text-align:right;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.84rem}
+td.lbl{white-space:normal;min-width:16ch}
+tr.ours td{background:var(--ours)}
+tr.head td{background:var(--ours-strong);font-weight:600}
+tr.oracle td{color:var(--ink-3);font-style:italic}
+tr:last-child td{border-bottom:none}
+.cap{font-size:.84rem;color:var(--ink-2);max-width:78ch;margin:0 0 1.2rem}
+.cap b{color:var(--ink)}
+.pill{display:inline-block;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.72rem;padding:.1em .5em;border-radius:999px;border:1px solid var(--rule);color:var(--ink-2);vertical-align:middle;margin-left:.3rem}
+.pill.neg{color:var(--neg);background:var(--neg-bg);border-color:transparent}
+.pill.pos{color:var(--pos);background:var(--pos-bg);border-color:transparent}
+.pill.wash{background:var(--mark);border-color:transparent}
+.ladder{list-style:none;padding:0;margin:1rem 0;display:grid;gap:.6rem;max-width:80ch}
+.ladder li{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:1rem;padding:.7rem .9rem;background:var(--panel);border:1px solid var(--rule);border-radius:4px;margin:0;max-width:none}
+.ladder .k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.8rem;color:var(--accent);font-weight:500}
+.ladder .v{font-size:.95rem}
+.ladder .v small{display:block;color:var(--ink-3);font-size:.82rem;margin-top:.15rem}
+.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin:1rem 0 1.4rem}
+.stage{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:.85rem 1rem}
+.stage .t{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.78rem;color:var(--accent);margin-bottom:.35rem}
+.stage p{font-size:.92rem;color:var(--ink-2);margin:0}
+.stage .r{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.82rem;color:var(--ink);margin-top:.5rem}
+footer{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1rem;font-size:.82rem;color:var(--ink-3);font-family:"IBM Plex Mono",ui-monospace,monospace;line-height:1.6}
+@media (prefers-reduced-motion:no-preference){a{transition:border-color .15s}}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Sections">
+  <p class="eyebrow">Sections</p>
+  <ol>
+    <li><a href="#s1"><b>1</b>The problem</a></li>
+    <li><a href="#s2"><b>2</b>Why we restarted</a></li>
+    <li><a href="#s3"><b>3</b>Evaluation protocol</a></li>
+    <li><a href="#s4"><b>4</b>The two representations</a></li>
+    <li><a href="#s5"><b>5</b>Heads and router</a></li>
+    <li><a href="#s6"><b>6</b>Headline results</a></li>
+    <li><a href="#s7"><b>7</b>Against the baselines</a></li>
+    <li><a href="#s8"><b>8</b>What was tried and closed</a></li>
+    <li><a href="#s9"><b>9</b>Findings</a></li>
+    <li><a href="#s10"><b>10</b>Glossary</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">CS785 · function name recovery from stripped x86-64 binaries · state as of 30 Aug 2026</p>
+  <h1>Dual-Head Function Naming</h1>
+  <p class="lede">A reader's guide to the experiments: what the task is, why the evaluation was rebuilt, how the two heads and the router work, and how the final system compares with SymGen and BLens when every system is trained on the same data.</p>
+  <div class="meta"><span>test = 268,178 functions · 50 packages</span><span>metric v2 sub-token F1</span><span>all baselines retrained on our train tier</span><span>source: results/dualhead_v2/FINAL_TABLES.md</span></div>
+</header>
+
+<section id="s1">
+<h2><span class="n">1</span>The problem</h2>
+<p>When a binary is <em>stripped</em>, its symbol table is removed and every internal function becomes an anonymous address (<code>sub_4a3f20</code>). Reverse engineers, vulnerability analysts and decompiler users spend most of their time re-deriving what those functions are. The task is to predict the original developer-given name — <code>ngx_http_upstream_init_keepalive_peer</code>, <code>mbedtls_ssl_write_fragment</code> — from the stripped code alone.</p>
+<p>A name is scored as a bag of sub-tokens (<code>ngx · http · upstream · init · keepalive · peer</code>). Predicting <code>ngx_http_upstream_init_peer</code> earns partial credit (F1 = 0.91); predicting nothing, or something unrelated, earns 0. Exact match (EM) is reported alongside F1 but is a much harsher signal.</p>
+<p>Two things make this hard. First, most functions in a fresh project have names the model has never seen — in our test tier <b>87.5 % of functions carry a novel name</b>. Second, the same source compiled at different optimisation levels, or slightly different versions of the same project, produce near-identical binaries: a system can look excellent by memorising those and still fail on genuinely new code. Separating the two situations is the spine of everything below.</p>
+</section>
+
+<section id="s2">
+<h2><span class="n">2</span>Why we restarted (August 2026)</h2>
+<p>The spring system (submitted to CCS as "HyDRA", rejected on generalisability grounds) reported a cross-project F1 of 0.74. An audit on 18 Aug showed why the reviewers were right to be suspicious: <b>89.5 % of the old test functions were token-identical to a training function</b>, because the split was by binary rather than by package, and the corpus contained many versions and optimisation levels of the same projects. The 0.74 was essentially the "seen-name" stratum — functions whose name was already in the training set.</p>
+<p>Rather than patch the split, the project was reset on 17 Aug: the binary lifter defects were fixed (B1–B9, plus an <code>eh_frame</code>-based function rooter that finds 99 % of functions where the stock BAP pass found 71 %), the corpus was rebuilt, and an honest evaluation protocol was agreed on 23 Aug. Every number on this page comes from that protocol.</p>
+<div class="callout"><p><b>Honest baseline under the new protocol:</b> the unchanged CCS-era decoder scores test micro-F1 <b>0.086</b> (macro 0.308). Seen-name functions: 0.526. Novel-name functions: 0.016. That gap — not the 0.74 — is the actual starting point of this work.</p></div>
+</section>
+
+<section id="s3">
+<h2><span class="n">3</span>Evaluation protocol (dataset v2, split policy v3, metric v2)</h2>
+<h3>Corpus</h3>
+<p>120 open-source C/C++ packages, 1,890 binaries, compiled at O0–O3 with GCC, lifted with BAP (patched) and independently decompiled with Ghidra. Ground-truth names come from the unstripped twin of each binary.</p>
+<h3>Three package-disjoint tiers</h3>
+<div class="defs">
+  <div class="def"><b>train · 190,151 functions</b><span>997 binaries. Deduplicated on (token-hash, name) so a function is learned once.</span></div>
+  <div class="def"><b>val · 10,617 functions</b><span>10 whole packages never in train. Used for every model-selection and router-fitting decision.</span></div>
+  <div class="def"><b>test · 268,178 functions</b><span>611 binaries, 50 packages never in train. Two hygiene drops: functions whose body is token-identical to a training function (81,988) and exported symbols recoverable from the dynamic symbol table (12,746).</span></div>
+</div>
+<h3>Regimes and strata</h3>
+<p>Test packages are tagged by how close they are to the training corpus. The grouping unit is the <em>package family</em> (name overlap ≥ 0.35 on non-ubiquitous names), so a version pair like <code>gzip</code>/<code>gzip2</code> lands in the same family.</p>
+<div class="defs">
+  <div class="def"><b>NCT — near-clone transfer · 23 packages · 44,510 fns</b><span>Family-linked to a training package (e.g. nginx118 vs the nginx forks in train, version pairs of GNU tools). Tests robustness to versions and compilers.</span></div>
+  <div class="def"><b>FT — far transfer · 27 packages · 223,158 fns</b><span>No family relation to train (bdb, icu, mbedtls, libsodium, mutt, fossil…). Tests genuine generalisation. bdb + icu alone are 44 % of the test tier — hence macro.</span></div>
+  <div class="def"><b>seen-name · 32,996 fns</b><span>The ground-truth name occurs somewhere in the training tier (often shared gnulib code).</span></div>
+  <div class="def"><b>novel-name · 234,672 fns</b><span>The name is absent from train. The only way to score here is to compose it from evidence.</span></div>
+</div>
+<h3>Metric</h3>
+<p><b>Metric v2</b>: names are C++-demangled, templates and argument lists stripped, split on underscores and camelCase, lower-cased; sub-token precision/recall/F1 per function. <b>Micro</b> averages over functions (dominated by the big packages); <b>macro</b> averages the per-package means (every package counts once). Both are always reported. <b>Selective F1 @ k %</b> is the F1 on the k % of functions the system is most confident about — the number an analyst sees if the tool only speaks when sure.</p>
+</section>
+
+<section id="s4">
+<h2><span class="n">4</span>The two input representations</h2>
+<p>The whole redesign rests on giving the model two different views of a function.</p>
+<div class="pipe">
+  <div class="stage"><div class="t">View A · lifted IR (BAP)</div><p>Instruction-type tokens (~2.3K semantic classes: <code>CALL_malloc</code>, <code>MEM_WRITE_ARG_64</code>, <code>COND_BRANCH_ZF</code>…) per basic block → 4-layer Transformer block encoder → 3-layer graph attention over the control-flow graph → attention pooling → 1024-d function embedding. Gated fusion adds external (PLT) calls, the token signatures of up to five callees and five callers, and — new in this cycle (A1a) — the identifier-shaped strings the function references in <code>.rodata</code> (log/assert messages that literally contain names).</p><div class="r">34 M parameters · milliseconds per function</div></div>
+  <div class="stage"><div class="t">View B · decompiled text (Ghidra)</div><p>The stripped binary is decompiled to C-like pseudocode with all names masked; the text (≤ 1,024 tokens, covering 82 % of functions) is fed to a code language model. This is the representation the strongest published system (SymGen) uses, at 34 B parameters; we use it at 220 M.</p><div class="r">CodeT5+ 220 M · Ghidra decompilation required</div></div>
+</div>
+<p>View A is cheap, compiler-aware and excellent at recognising code it has seen a variant of. View B carries the surface cues (constants, string literals, call shapes, control structure in readable form) that a language model can turn into a plausible new name. Neither view alone covers both regimes — that is the dual-head thesis, and section 6 measures it.</p>
+</section>
+
+<section id="s5">
+<h2><span class="n">5</span>Heads and router</h2>
+<ul class="ladder">
+  <li><span class="k">D · BAP decoder</span><span class="v">A GRU sequence decoder over the View-A embedding — the original architecture, kept as the ablation reference. Test 0.086 → <b>0.100 / 0.339</b> with the string channel (A1a).<small>Chosen by the router 0.5 % of the time in a 3-head union; dropped from the final system.</small></span></li>
+  <li><span class="k">R · BAP retrieval</span><span class="v">k-nearest-neighbour lookup of the View-A embedding against all 190K training functions; the top neighbour's name is the prediction (re-ranked by string overlap). Trained with a <em>name-aware</em> contrastive objective (C1): the InfoNCE target for a pair is soft, proportional to the sub-token F1 between their names, with cross-package pairs up-weighted and hard negatives mined from the previous encoder's neighbours. Test <b>0.127 / 0.385</b>; NCT 0.564, novel-name 0.035.<small>Owns the near-clone regime. Almost blind on novel names by construction — it can only return names that exist.</small></span></li>
+  <li><span class="k">A4 · generation</span><span class="v">CodeT5+ 220 M fine-tuned on the Ghidra pseudocode of the 190K training functions (names masked exactly as SymGen's builder does). Test <b>0.185 / 0.368</b>; FT 0.121; <b>novel-name 0.123</b> — five times the retrieval head.<small>Two seeds agree within ±0.001. A second run with the public SymGen corpus added won on val (0.237 vs 0.200) but lost on test (−0.007); reported, not adopted.</small></span></li>
+  <li><span class="k">Router</span><span class="v">A gradient-boosted classifier on 11 per-function features — retrieval similarity and margin, external-call and string Jaccard to the neighbour, decoder and generator confidences, sizes — fit on <em>val only</em>. It picks R or A4 for each function (82 % right on the 31.6 % of functions where the heads disagree) and its score doubles as the abstention signal for selective prediction.<small>Simpler thresholds on retrieval similarity alone reach 0.196–0.198; the learned router adds +0.007 and, more importantly, a calibrated confidence.</small></span></li>
+</ul>
+</section>
+
+<section id="s6">
+<h2><span class="n">6</span>Headline results — full test tier</h2>
+<p>268,178 functions, 50 unseen packages. Every row uses greedy decoding; nothing on this table was tuned on test.</p>
+<div class="tbl"><table>
+<thead><tr><th class="lbl">System</th><th class="num">micro F1</th><th class="num">macro F1</th><th class="num">FT</th><th class="num">NCT</th><th class="num">novel-name</th><th class="num">sel. F1 @5 / 10 / 20 / 30 %</th></tr></thead>
+<tbody>
+<tr><td class="lbl">CCS-era decoder, honest protocol (P2)</td><td class="num">0.086</td><td class="num">0.308</td><td class="num">0.019</td><td class="num">0.383</td><td class="num">0.016</td><td class="num">—</td></tr>
+<tr class="ours"><td class="lbl">D · BAP decoder + string channel (A1a)</td><td class="num">0.100</td><td class="num">0.339</td><td class="num">0.027</td><td class="num">0.465</td><td class="num">0.024</td><td class="num">—</td></tr>
+<tr class="ours"><td class="lbl">R · BAP retrieval + string rerank (A1a) <span class="pill">prev. best</span></td><td class="num">0.118</td><td class="num">0.381</td><td class="num">0.029</td><td class="num">0.553</td><td class="num">—</td><td class="num">0.954 / 0.754 / 0.448 / —</td></tr>
+<tr class="ours"><td class="lbl">R · BAP retrieval, name-aware contrastive (C1 λ1.0)</td><td class="num">0.127</td><td class="num">0.385</td><td class="num">0.040</td><td class="num">0.564</td><td class="num">0.035</td><td class="num">—</td></tr>
+<tr class="ours"><td class="lbl">A4 · generation head, CodeT5+ 220 M (mean of seeds 42, 43)</td><td class="num">0.185 ± 0.000</td><td class="num">0.369 ± 0.001</td><td class="num">0.121</td><td class="num">0.505 ± 0.001</td><td class="num">0.123</td><td class="num">—</td></tr>
+<tr class="ours"><td class="lbl">R ∪ A4, regime router (NCT→R, FT→A4)</td><td class="num">0.195</td><td class="num">0.424</td><td class="num">0.121</td><td class="num">0.564</td><td class="num">—</td><td class="num">—</td></tr>
+<tr class="ours"><td class="lbl">R ∪ A4, similarity-threshold router</td><td class="num">0.196</td><td class="num">0.429</td><td class="num">0.112</td><td class="num">0.617</td><td class="num">—</td><td class="num">0.656 / 0.645 / 0.560 / 0.468</td></tr>
+<tr class="head"><td class="lbl">R ∪ A4, learned GBT router — final system</td><td class="num">0.205 ± 0.001</td><td class="num">0.438 ± 0.001</td><td class="num">0.120</td><td class="num">0.633</td><td class="num">0.121</td><td class="num">0.943 / 0.880 / 0.690 / 0.534</td></tr>
+<tr class="ours"><td class="lbl">R ∪ D ∪ A4, learned 3-head router</td><td class="num">0.203</td><td class="num">0.430</td><td class="num">0.120</td><td class="num">0.617</td><td class="num">—</td><td class="num">—</td></tr>
+<tr class="oracle"><td class="lbl">oracle head choice (upper bound, R ∪ A4)</td><td class="num">0.224</td><td class="num">0.471</td><td class="num">0.134</td><td class="num">0.675</td><td class="num">—</td><td class="num">—</td></tr>
+</tbody></table></div>
+<p class="cap"><b>How to read it.</b> From the honest baseline (0.086) to the final system (0.205) is a 2.4× gain in micro-F1 and +0.13 macro. The generation head supplies almost all of the novel-name signal (0.123 vs 0.024); the retrieval head supplies the near-clone regime (0.633 in the union vs 0.505 for A4 alone). The router recovers 91 % of the gap between the best single head and the oracle. Selective prediction is the practical headline: on the 10 % of functions the system is most confident about, F1 is <b>0.88</b>; at 20 % coverage, 0.69 (the previous best system reached 0.45 at the same coverage).</p>
+<h3>Per-package view (largest packages)</h3>
+<div class="tbl"><table>
+<thead><tr><th class="lbl">Package</th><th>Regime</th><th class="num">functions</th><th class="num">R</th><th class="num">A4</th><th class="num">union</th><th class="num">oracle</th></tr></thead>
+<tbody>
+<tr><td class="lbl">bdb</td><td>FT</td><td class="num">96,210</td><td class="num">0.038</td><td class="num">0.155</td><td class="num">0.153</td><td class="num">0.162</td></tr>
+<tr><td class="lbl">icu</td><td>FT</td><td class="num">48,369</td><td class="num">0.022</td><td class="num">0.042</td><td class="num">0.042</td><td class="num">0.058</td></tr>
+<tr><td class="lbl">mbedtls</td><td>FT</td><td class="num">30,322</td><td class="num">0.030</td><td class="num">0.104</td><td class="num">0.099</td><td class="num">0.114</td></tr>
+<tr><td class="lbl">fossil</td><td>NCT</td><td class="num">16,196</td><td class="num">0.282</td><td class="num">0.249</td><td class="num">0.366</td><td class="num">0.409</td></tr>
+<tr><td class="lbl">libsodium</td><td>FT</td><td class="num">9,363</td><td class="num">0.025</td><td class="num">0.079</td><td class="num">0.083</td><td class="num">0.096</td></tr>
+<tr><td class="lbl">gettext</td><td>FT</td><td class="num">6,713</td><td class="num">0.124</td><td class="num">0.191</td><td class="num">0.196</td><td class="num">0.223</td></tr>
+<tr><td class="lbl">openresty</td><td>NCT</td><td class="num">5,028</td><td class="num">0.477</td><td class="num">0.564</td><td class="num">0.636</td><td class="num">0.668</td></tr>
+<tr><td class="lbl">cvs</td><td>FT</td><td class="num">4,096</td><td class="num">0.150</td><td class="num">0.330</td><td class="num">0.340</td><td class="num">0.371</td></tr>
+<tr><td class="lbl">angie</td><td>NCT</td><td class="num">3,467</td><td class="num">0.685</td><td class="num">0.677</td><td class="num">0.788</td><td class="num">0.831</td></tr>
+<tr><td class="lbl">nginx118</td><td>NCT</td><td class="num">3,438</td><td class="num">0.763</td><td class="num">0.715</td><td class="num">0.853</td><td class="num">0.891</td></tr>
+</tbody></table></div>
+<p class="cap">The union beats both heads on every near-clone package and ties the generation head on far-transfer packages; icu (C++ template-heavy, 48K functions) is the hardest package for every system on this page, including the baselines.</p>
+</section>
+
+<section id="s7">
+<h2><span class="n">7</span>Against the published baselines — same training data, same functions</h2>
+<p>Two systems define the state of the art: <b>SymGen</b> (NDSS 2025; CodeLlama-34B with a LoRA adapter, reads Ghidra decompilation) and <b>BLens</b> (CCS 2025; CLAP + PalmTree embeddings, a CoCa-style contrastive pre-training and a transformer name decoder with confidence-thresholded abstention). Both were <em>retrained on our 190,151-function training tier</em> with their published recipes (SymGen: 1 epoch, 1,485 steps on 4×A100; BLens: 80 + 80 epochs, best epoch by its own validation) and scored with metric v2 on exactly the same functions as our heads. The earlier comparison, where SymGen's adapter had been trained on its own corpus that overlaps nine of our test packages, is retired.</p>
+<h3>7a · SymGen samples (metric v2 · micro / macro / EM)</h3>
+<p>SymGen inference costs ~2.6 s per function on an 80 GB GPU, so it is evaluated on two stratified samples: 7,471 far-transfer functions from 24 packages and 6,986 near-clone functions from 23 packages.</p>
+<div class="tbl"><table>
+<thead><tr><th class="lbl">System</th><th class="num">FT sample</th><th class="num">NCT sample</th></tr></thead>
+<tbody>
+<tr><td class="lbl">SymGen · CodeLlama-34B + LoRA, retrained on our tier</td><td class="num">0.124 / 0.138 / 2.7 %</td><td class="num">0.260 / 0.258 / 7.7 %</td></tr>
+<tr><td class="lbl">SymGen · original adapter (own corpus) — legacy</td><td class="num">0.120 / 0.137 / 2.8 %</td><td class="num">0.236 / 0.234 / 7.3 %</td></tr>
+<tr class="ours"><td class="lbl">ours · R, BAP retrieval</td><td class="num">0.039 / 0.047 / 1.4 %</td><td class="num">0.744 / 0.747 / 68.8 %</td></tr>
+<tr class="ours"><td class="lbl">ours · D, BAP decoder</td><td class="num">0.034 / 0.044 / 1.2 %</td><td class="num">0.660 / 0.659 / 57.8 %</td></tr>
+<tr class="ours"><td class="lbl">ours · A4 generation head, 220 M</td><td class="num">0.115 / 0.124 / 3.3 %</td><td class="num">0.633 / 0.633 / 44.0 %</td></tr>
+<tr class="head"><td class="lbl">ours · R ∪ A4, learned router</td><td class="num">0.112 / 0.120 / 3.5 %</td><td class="num">0.780 / 0.781 / 67.9 %</td></tr>
+<tr class="oracle"><td class="lbl">oracle union</td><td class="num">0.130 / 0.139 / 3.7 %</td><td class="num">0.827 / 0.828 / 73.8 %</td></tr>
+</tbody></table></div>
+<p class="cap"><b>Reading.</b> With identical training data the 34 B model is +0.009 F1 over our 220 M generation head on far transfer — and below it on exact match — while on near-clone code it reaches 0.260 against 0.780 for our union. Retraining SymGen fairly moved it by +0.004 (FT) and +0.025 (NCT); the earlier "different corpus" objection changes nothing.</p>
+<h3>7b · BLens on the full matched test tier (267,668 functions, 50 packages · micro / macro / EM)</h3>
+<div class="tbl"><table>
+<thead><tr><th class="lbl">System</th><th class="num">all</th><th class="num">FT (223,158)</th><th class="num">NCT (44,510)</th><th class="num">seen-name (32,996)</th><th class="num">novel-name (234,672)</th></tr></thead>
+<tbody>
+<tr><td class="lbl">BLens · retrained on our tier</td><td class="num">0.059 / 0.171 / 1.3 %</td><td class="num">0.013 / 0.021 / 0.2 %</td><td class="num">0.287 / 0.346 / 7.1 %</td><td class="num">0.382 / 0.223 / 10.7 %</td><td class="num">0.013 / 0.044 / 0.0 %</td></tr>
+<tr class="ours"><td class="lbl">ours · R, BAP retrieval</td><td class="num">0.126 / 0.378 / 8.8 %</td><td class="num">0.039 / 0.061 / 0.7 %</td><td class="num">0.562 / 0.750 / 49.4 %</td><td class="num">0.769 / 0.530 / 70.8 %</td><td class="num">0.035 / 0.098 / 0.0 %</td></tr>
+<tr class="ours"><td class="lbl">ours · D, BAP decoder</td><td class="num">0.076 / 0.236 / 3.0 %</td><td class="num">0.029 / 0.045 / 0.3 %</td><td class="num">0.311 / 0.461 / 16.5 %</td><td class="num">0.426 / 0.333 / 24.5 %</td><td class="num">0.027 / 0.057 / 0.0 %</td></tr>
+<tr class="ours"><td class="lbl">ours · A4 generation head</td><td class="num">0.184 / 0.359 / 6.5 %</td><td class="num">0.121 / 0.132 / 2.4 %</td><td class="num">0.502 / 0.626 / 27.3 %</td><td class="num">0.618 / 0.493 / 39.2 %</td><td class="num">0.123 / 0.181 / 1.9 %</td></tr>
+<tr class="head"><td class="lbl">ours · R ∪ A4, learned router</td><td class="num">0.204 / 0.431 / 10.2 %</td><td class="num">0.119 / 0.128 / 2.5 %</td><td class="num">0.632 / 0.786 / 49.1 %</td><td class="num">0.796 / 0.576 / 69.2 %</td><td class="num">0.121 / 0.178 / 1.9 %</td></tr>
+<tr class="oracle"><td class="lbl">oracle union</td><td class="num">0.223 / 0.463 / 11.1 %</td><td class="num">0.133 / 0.151 / 2.6 %</td><td class="num">0.673 / 0.829 / 54.1 %</td><td class="num">0.849 / 0.635 / 76.3 %</td><td class="num">0.135 / 0.218 / 2.0 %</td></tr>
+</tbody></table></div>
+<p class="cap"><b>Caveats we will state.</b> BLens abstains on 46.0 % of functions (its confidence threshold; an empty answer scores 0). It also emits its own expanded vocabulary (<code>init→initialise</code>, <code>dir→directory</code>) while every system is scored against the raw name; scored against its own canonical targets it reaches 0.090 overall and 0.167 on the functions it answers — still below our retrieval head alone (0.126). Its contrastive pre-training loss rose on our package-disjoint validation set every epoch (recipe run as published). BLens shows the same recognizer signature as every other system: 0.38 on seen names, 0.013 on novel ones.</p>
+<h3>7c · External benchmark — SymGen's own held-out packages</h3>
+<p>Five packages from SymGen's public corpus that are in neither our train tier nor our test tier (gmp, libpng, libmicrohttpd, poke, libredwg; 9,991 scorable functions). Our generation head scores micro <b>0.223</b> / macro 0.189 / EM 16.1 % (0.233 when the public SymGen corpus is added to its training data).</p>
+</section>
+
+<section id="s8">
+<h2><span class="n">8</span>What was tried and closed</h2>
+<p>Every variant below was pre-registered with a gate, run on the same protocol, and closed on the test verdict. They matter for the paper because they explain <em>which</em> changes moved the number.</p>
+<div class="tbl"><table>
+<thead><tr><th class="lbl">Variant</th><th class="lbl">What it was</th><th class="num">val</th><th class="num">test</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td class="lbl">A1a string channel</td><td class="lbl">identifier-shaped <code>.rodata</code> strings referenced by the function, fed to the BAP encoder</td><td class="num">0.131 (P2 0.114)</td><td class="num">decoder 0.100 / 0.339 (P2 0.086 / 0.308)</td><td><span class="pill pos">adopted</span></td></tr>
+<tr><td class="lbl">A2 magic-constant lexicon</td><td class="lbl">crypto/CRC/zlib immediates → semantic tokens</td><td class="num">—</td><td class="num">census: 325 of 183K functions, 0 % precision</td><td><span class="pill neg">killed by census</span></td></tr>
+<tr><td class="lbl">A3+ literal / ABI / rodata-table tokens</td><td class="lbl">argument-count and register-use header, rodata constant tables</td><td class="num">0.132 (= A1a)</td><td class="num">0.091 / 0.294 (A1a 0.100 / 0.339); 37 of 49 packages worse</td><td><span class="pill neg">negative</span></td></tr>
+<tr><td class="lbl">BAP v3 retrain (+ SymGen public corpus)</td><td class="lbl">A1a recipe on 2.15 M functions, 40K per-package cap</td><td class="num">0.164 (A1a 0.133)</td><td class="num">union 0.204 / 0.439 (= A1a)</td><td><span class="pill wash">wash</span></td></tr>
+<tr><td class="lbl">A4 run 2 (+ SymGen rows)</td><td class="lbl">generation head with 568K extra decompiled functions</td><td class="num">0.237 (run 1 0.200)</td><td class="num">0.178 / 0.348 (run 1 0.185 / 0.368)</td><td><span class="pill wash">val-selected, test −0.007</span></td></tr>
+<tr><td class="lbl">C1 exact-name contrastive (control)</td><td class="lbl">positives = identical names only</td><td class="num">0.160</td><td class="num">retrieval 0.117 / 0.386</td><td><span class="pill wash">+0.002</span></td></tr>
+<tr><td class="lbl">C1 soft name-aware contrastive λ0.3 / λ1.0</td><td class="lbl">soft targets ∝ name F1, cross-package up-weighting, mined hard negatives</td><td class="num">0.158 / 0.159</td><td class="num">retrieval 0.124 / 0.126; union 0.2045 / 0.2052</td><td><span class="pill pos">λ1.0 adopted (+0.011 retrieval)</span></td></tr>
+<tr><td class="lbl">3-head router (R ∪ D ∪ A4)</td><td class="lbl">decoder as a third choice</td><td class="num">—</td><td class="num">0.203 / 0.430 (2-head 0.205 / 0.439)</td><td><span class="pill neg">decoder dropped</span></td></tr>
+<tr><td class="lbl">Head-choice router on BAP heads only (R vs D)</td><td class="lbl">before the generation head existed</td><td class="num">—</td><td class="num">router picks retrieval 100 % of the time</td><td><span class="pill neg">degenerate</span></td></tr>
+</tbody></table></div>
+<div class="callout neg"><p><b>A finding in its own right:</b> three times, a data addition that raised validation F1 by +0.03–0.04 (A3+, the v3 corpus, A4 run 2) was flat or negative on test. The validation packages are small GNU utilities; the additions were GNU-heavy. Validation on this task cannot arbitrate GNU-heavy data changes — we report both numbers and select by protocol (val), which is why A4 run 2 appears alongside run 1.</p></div>
+</section>
+
+<section id="s9">
+<h2><span class="n">9</span>Findings the paper will rest on</h2>
+<ol>
+  <li><b>Regime specialisation is real and cross-system.</b> Retrieval over lifted IR owns near-clone code (0.744 vs SymGen 0.260 on the same functions); a decompilation language model owns far transfer and novel names (0.123 vs 0.035). No single system, including a 34 B one, holds both.</li>
+  <li><b>The union is the contribution, and it is measurable inside one system.</b> R ∪ A4 with a learned router: 0.205 / 0.438, oracle 0.224 / 0.471. The router closes 91 % of the head-choice gap.</li>
+  <li><b>Calibrated abstention is the practical headline.</b> Selective F1 0.94 / 0.88 / 0.69 at 5 / 10 / 20 % coverage; expected calibration error ≈ 0.005. An analyst can be given the confident 10 % with near-usable precision.</li>
+  <li><b>Everyone is a recognizer on novel names.</b> Seen-name vs novel-name: ours 0.796 vs 0.121, BLens 0.382 vs 0.013, SymGen's novel-name F1 on the NCT sample 0.267. Exact match on novel names is ≤ 2 % for every system. The paper frames far transfer as a coverage boundary, not a solved problem.</li>
+  <li><b>Fair baselines change nothing about the ordering.</b> Retraining SymGen and BLens on our tier moved SymGen by +0.004 / +0.025 and left BLens at 0.059 overall.</li>
+  <li><b>Cost.</b> Retrieval-only is 34 M parameters, BAP-only, milliseconds per function. The full union adds a 220 M model and Ghidra decompilation; SymGen needs a 34 B model and ~2.6 s per function on an 80 GB GPU.</li>
+</ol>
+<p><b>Reproducibility.</b> Two seeds of the generation head agree within ±0.001 on every column; the retrieval encoder's λ sweep (0.3 vs 1.0) is a wash at the system level (±0.002).</p>
+</section>
+
+<section id="s10">
+<h2><span class="n">10</span>Glossary</h2>
+<div class="tbl"><table>
+<thead><tr><th class="lbl">Term</th><th class="lbl">Meaning</th></tr></thead>
+<tbody>
+<tr><td class="lbl">BAP / BAP-IR</td><td class="lbl">Binary Analysis Platform; the lifted intermediate representation our encoder reads (View A).</td></tr>
+<tr><td class="lbl">Ghidra decompilation</td><td class="lbl">C-like pseudocode recovered from the stripped binary; input to the generation head and to SymGen (View B).</td></tr>
+<tr><td class="lbl">P2-Baseline</td><td class="lbl">The unchanged CCS-era decoder re-trained and scored under the honest protocol (0.086 / 0.308).</td></tr>
+<tr><td class="lbl">A1a</td><td class="lbl">P2 encoder plus the referenced-string channel; the BAP checkpoint behind the decoder and the pre-C1 retrieval head.</td></tr>
+<tr><td class="lbl">C1</td><td class="lbl">Name-aware soft contrastive training of the retrieval encoder; λ is the loss weight (1.0 adopted).</td></tr>
+<tr><td class="lbl">A4</td><td class="lbl">The generation head: CodeT5+ 220 M fine-tuned on masked Ghidra pseudocode of our train tier (run 1); run 2 adds the public SymGen corpus.</td></tr>
+<tr><td class="lbl">R / D</td><td class="lbl">Retrieval head / decoder head over the BAP representation.</td></tr>
+<tr><td class="lbl">GBT router</td><td class="lbl">Gradient-boosted classifier over 11 features choosing R or A4 per function; its score is the abstention confidence.</td></tr>
+<tr><td class="lbl">NCT / FT</td><td class="lbl">Near-clone transfer (test package family-linked to train) / far transfer (no relation).</td></tr>
+<tr><td class="lbl">seen-name / novel-name</td><td class="lbl">Ground-truth name present / absent in the training tier.</td></tr>
+<tr><td class="lbl">micro / macro</td><td class="lbl">Function-weighted / package-weighted mean F1.</td></tr>
+<tr><td class="lbl">selective F1 @ k %</td><td class="lbl">F1 on the k % most-confident functions (abstain on the rest).</td></tr>
+<tr><td class="lbl">oracle</td><td class="lbl">Upper bound where the better head is chosen with knowledge of the answer.</td></tr>
+<tr><td class="lbl">SymGen / BLens</td><td class="lbl">NDSS 2025 (CodeLlama-34B + LoRA on decompilation) / CCS 2025 (CLAP + PalmTree embeddings, contrastive pre-training, transformer decoder with abstention).</td></tr>
+</tbody></table></div>
+</section>
+
+<footer>
+numbers: results/dualhead_v2/FINAL_TABLES.md (T1–T6) · results/dualhead_v2/RESULTS_LEDGER.md (job ids per row) · matched_baselines_sgours_a4v1.json · blens_ours_v2_matched.json · router3_c1l10_a4v1.json<br>
+final checkpoints: retrieval encoder c1_soft_l10_seed42.pt (epoch 7) · generation head dh2/checkpoints/a4_codet5p220m_v1/best · router fit on val_xproj · protocol: dataset v2, split policy v3, metric v2
+</footer>
+</main>
+</div>

@@ -37,8 +37,13 @@ def split_name(name: str) -> List[str]:
     "handleClient"     → ["handle", "client"]
     "hash_get_next"    → ["hash", "get", "next"]
     """
-    name = normalize_name(name)
-    name = re.sub(r'([a-z])([A-Z])', r'\1_\2', name)
+    # metric v2 (2026-08-24): camelCase must be split BEFORE lowercasing.
+    # The old order (normalize_name first) lowercased the name so the camel
+    # regexes never fired: "selectExpander" scored as ONE token and a correct
+    # "select_expander" prediction got F1=0. 6.2% of dataset-v2 test names are
+    # camelCase (fossil 39%, expat 81%, icu 95% incl. mangled).
+    name = name.replace(' ', '').strip('_.')
+    name = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', name)
     name = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1_\2', name)
     tokens = re.split(r'[_.\-]+', name)
     tokens = [t.strip().lower() for t in tokens if t.strip()]
