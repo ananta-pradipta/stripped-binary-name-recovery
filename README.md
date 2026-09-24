@@ -17,8 +17,8 @@ Because published evaluations of this task leak (on a 300K-function corpus split
 
 **Key results (220M parameters):**
 - **LineageBench test tier (268,178 functions, 50 held-out packages):** 0.472 package-level / 0.237 function-level sub-token F1, vs. SymGen-34B 0.196 / 0.145 and BLens 0.171 / 0.059 trained on the same data.
-  - **Far transfer (FT, 27 packages):** 0.145 F1 (SymGen-34B 0.118, BLens 0.013)
-  - **Reuse-heavy transfer (RHT, 23 packages):** 0.693 F1 (SymGen-34B 0.276, BLens 0.287)
+  - **Far transfer (FT, 27 packages):** 0.169 package-level / 0.145 function-level F1 (SymGen-34B 0.144 / 0.118, BLens 0.021 / 0.013)
+  - **Reuse-heavy transfer (RHT, 23 packages):** 0.828 package-level / 0.693 function-level F1 (SymGen-34B 0.257 / 0.276, BLens 0.346 / 0.287)
 - **Punstrip (public cross-project split, BLens's own evaluator):** 0.549 full / 0.467 strict, vs. published BLens 0.461 / 0.293 and SymGen-34B trained on Punstrip 0.435 / 0.395.
 - **Selective prediction:** 0.95 F1 on the 5% of functions ranked most confident, 0.90 at 10%, 0.72 at 20% (ECE 0.036).
 - **Efficiency:** 155x fewer parameters and ~95x faster per-function inference than the 34B baseline; 6.5 h fine-tuning on one A100-40GB.
@@ -187,14 +187,14 @@ means of the per-package means (two packages hold 44% of the test functions, so 
 
 ### Main results (LineageBench test tier, 268K functions, 50 packages; every system trained on the same tier)
 
-| System | Params | P (fn) | R (fn) | F1 (fn) | F1 (pkg) | EM | FT F1 | RHT F1 |
+| System | Params | P (fn) | R (fn) | F1 (fn) | F1 (pkg) | EM | FT F1 (fn / pkg) | RHT F1 (fn / pkg) |
 |---|---|---|---|---|---|---|---|---|
-| SymGen-34B (CodeLlama + LoRA, authors' pipeline) | 34B | 0.154 | 0.144 | 0.145 | 0.196 | 2.9% | 0.118 | 0.276 |
-| BLens (authors' code, CLAP + PalmTree) | ~200M | 0.077 | 0.054 | 0.059 | 0.171 | 1.2% | 0.013 | 0.287 |
-| HyDRA-G (generation head only) | 220M | 0.226 | 0.209 | 0.213 | 0.400 | 5.9% | 0.144 | 0.553 |
-| HyDRA-R (retrieval head only) | 220M | 0.141 | 0.138 | 0.138 | 0.419 | 10.2% | 0.037 | 0.643 |
-| **HyDRA (routed)** | 220M | **0.249** | **0.234** | **0.237** | **0.472** | 10.7% | **0.145** | **0.693** |
-| HyDRA with oracle head choice (upper bound) | 220M | – | – | 0.255 | 0.505 | – | – | – |
+| SymGen-34B (CodeLlama + LoRA, authors' pipeline) | 34B | 0.154 | 0.144 | 0.145 | 0.196 | 2.9% | 0.118 / 0.144 | 0.276 / 0.257 |
+| BLens (authors' code, CLAP + PalmTree) | ~200M | 0.077 | 0.054 | 0.059 | 0.171 | 1.2% | 0.013 / 0.021 | 0.287 / 0.346 |
+| HyDRA-G (generation head only) | 220M | 0.226 | 0.209 | 0.213 | 0.400 | 5.9% | 0.144 / 0.167 | 0.553 / 0.674 |
+| HyDRA-R (retrieval head only) | 220M | 0.141 | 0.138 | 0.138 | 0.419 | 10.2% | 0.037 / 0.075 | 0.643 / 0.824 |
+| **HyDRA (routed)** | 220M | **0.249** | **0.234** | **0.237** | **0.472** | 10.7% | **0.145** / **0.169** | **0.693** / **0.828** |
+| HyDRA with oracle head choice (upper bound) | 220M | – | – | 0.255 | 0.505 | – | 0.160 / 0.189 | 0.730 / 0.876 |
 
 ### By name category (F1 / EM)
 
