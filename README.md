@@ -1,4 +1,4 @@
-# HyDRA: Hybrid Decoder-Retrieval with Adaptive Routing for Dual-Regime Function Name Recovery in Stripped Binaries
+# HyDRA: Hybrid Retrieval and Generation with Adaptive Routing for Function Name Recovery in Stripped Binaries
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.5](https://img.shields.io/badge/pytorch-2.5+-ee4c2c.svg)](https://pytorch.org/)
@@ -11,14 +11,14 @@
 
 ## Abstract
 
-HyDRA recovers function names from stripped x86-64 binaries with **one fine-tuned 220M-parameter code language model serving two heads**. Function name recovery faces two regimes at once: *near-clone code* (library routines, versions, forks) whose name already exists somewhere, and *genuinely new code* whose name must be composed from evidence. The model's decoder is the **generation head** (composes names), its mean-pooled encoder states drive the **retrieval head** (copies the name of the most similar training function), and a **learned per-function router** picks the head from four confidence features. Every prediction carries a **calibrated abstention score** so an analyst can apply only the names above a chosen confidence. Each function is presented as its masked Ghidra decompilation plus a **module-context digest**: string literals and library-call identifiers of the functions adjacent to it in the address space.
+HyDRA recovers function names from stripped x86-64 binaries with **one fine-tuned 220M-parameter code language model serving two heads**. Function name recovery faces two regimes at once: *reused code* (library routines, versions, forks) whose name already exists somewhere, and *genuinely new code* whose name must be composed from evidence. The model's decoder is the **generation head** (composes names), its mean-pooled encoder states drive the **retrieval head** (copies the name of the most similar training function), and a **learned per-function router** picks the head from four confidence features. Every prediction carries a **calibrated abstention score** so an analyst can apply only the names above a chosen confidence. Each function is presented as its masked Ghidra decompilation plus a **binary-neighbourhood context**: string literals and library-call identifiers of the functions adjacent to it in the address space.
 
 Because published evaluations of this task leak (on a 300K-function corpus split at the binary level, 89.5% of test functions are token-identical to a training function and 97% of test names occur in training), the repository also releases **LineageBench**, a package-family-disjoint, deduplicated, linker-visible-name-excluded evaluation protocol that reports by transfer regime and name category, and applies it to the public **Punstrip** benchmark.
 
 **Key results (220M parameters):**
 - **LineageBench test tier (268,178 functions, 50 held-out packages):** 0.472 package-level / 0.237 function-level sub-token F1, vs. SymGen-34B 0.196 / 0.145 and BLens 0.171 / 0.059 trained on the same data.
   - **Far transfer (FT, 27 packages):** 0.145 F1 (SymGen-34B 0.118, BLens 0.013)
-  - **Near-clone transfer (NCT, 23 packages):** 0.693 F1 (SymGen-34B 0.276, BLens 0.287)
+  - **Reuse-heavy transfer (RHT, 23 packages):** 0.693 F1 (SymGen-34B 0.276, BLens 0.287)
 - **Punstrip (public cross-project split, BLens's own evaluator):** 0.549 full / 0.467 strict, vs. published BLens 0.461 / 0.293 and SymGen-34B trained on Punstrip 0.435 / 0.395.
 - **Selective prediction:** 0.95 F1 on the 5% of functions ranked most confident, 0.90 at 10%, 0.72 at 20% (ECE 0.036).
 - **Efficiency:** 155x fewer parameters and ~95x faster per-function inference than the 34B baseline; 6.5 h fine-tuning on one A100-40GB.
@@ -33,7 +33,7 @@ Stripped binary
     v
 Input construction (Ghidra headless)
   • decompile function f, replace every FUN_xxxx placeholder with [MASK]
-  • module-context digest: up to 40 identifier tokens (strings + library calls) mined from the
+  • binary-neighbourhood context: up to 40 identifier tokens (strings + library calls) mined from the
     ±10 address-adjacent functions, ranked by how many neighbours contain them, prepended as a C comment
     x_f = Digest(neighbours) || Mask(Decompile(f))
     |
@@ -80,7 +80,7 @@ stripped-binary-name-recovery/
 │   ├── design_split_v2.py           # LineageBench: package families, tiers, regimes -> data/split_v2.json
 │   ├── export_baseline_protocol.py  # Protocol tier records (binary, address, name, regime, category, flags)
 │   ├── build_corpus_manifest.py     # Corpus manifest (binaries, packages, compilers, optimisation levels)
-│   ├── a4_build_modctx_dm.py        # HyDRA inputs: masked Ghidra text + module-context digest (canonical targets)
+│   ├── a4_build_modctx_dm.py        # HyDRA inputs: masked Ghidra text + binary-neighbourhood context (canonical targets)
 │   ├── a4_build_modctx.py           # Digest variants used in the ablations
 │   ├── a4_build_poolctx.py          #   (wider three-tier digest)
 │   ├── a4_build_baptext.py          #   (linearised BAP-IR instead of decompiled text)
@@ -140,7 +140,7 @@ The scripts refer to the workspace that holds the corpus, Ghidra decompilations 
 python3 scripts/design_split_v2.py
 python3 scripts/export_baseline_protocol.py
 
-# 2. Inputs: masked Ghidra decompilation + module-context digest for train / val / test
+# 2. Inputs: masked Ghidra decompilation + binary-neighbourhood context for train / val / test
 python3 scripts/a4_build_modctx_dm.py --src $WORKSPACE/results/baseline_protocol_v2 --out $WORKSPACE/data/modctx_dm
 
 # 3. Generation head: fine-tune CodeT5+ 220M (3 epochs, lr 5e-5, batch 32, bf16, ~6.5 h on one A100-40GB)
@@ -187,7 +187,7 @@ means of the per-package means (two packages hold 44% of the test functions, so 
 
 ### Main results (LineageBench test tier, 268K functions, 50 packages; every system trained on the same tier)
 
-| System | Params | P (fn) | R (fn) | F1 (fn) | F1 (pkg) | EM | FT F1 | NCT F1 |
+| System | Params | P (fn) | R (fn) | F1 (fn) | F1 (pkg) | EM | FT F1 | RHT F1 |
 |---|---|---|---|---|---|---|---|---|
 | SymGen-34B (CodeLlama + LoRA, authors' pipeline) | 34B | 0.154 | 0.144 | 0.145 | 0.196 | 2.9% | 0.118 | 0.276 |
 | BLens (authors' code, CLAP + PalmTree) | ~200M | 0.077 | 0.054 | 0.059 | 0.171 | 1.2% | 0.013 | 0.287 |
@@ -216,7 +216,7 @@ router keeps both.
 |---|---|
 | CodeT5+ 220M from random initialisation (same data, digest, schedule) | 0.069 (outputs collapse) |
 | Public checkpoint, masked decompiled text only | 0.188 |
-| + module-context digest (±10 neighbours) = HyDRA-G | 0.213 / 0.400 |
+| + binary-neighbourhood context (±10 neighbours) = HyDRA-G | 0.213 / 0.400 |
 | Linearised BAP-IR instead of decompiled text (decompiler-free) | 0.184 (head), 0.220 (system) |
 | Wider three-tier digest | 0.217 on test, but lower on validation (not adopted) |
 | Second pass feeding predictions back into digests | 0.201 (worse in every category) |
@@ -254,7 +254,7 @@ to ±0.001 (BLens 0.461 / 0.293, XFL 0.296 / 0.085).
 |---|---|---|---|---|---|
 | cvs (O0) | far transfer | 1,216 | 0.385 / 26.4% | 0.992 / 94.3% | 0.657 / 51.0% |
 | lighttpd (O2) | far transfer | 385 | 0.169 / 0.0% | 0.259 / 0.0% | 0.218 / 0.0% |
-| nginx 1.18 (O2) | near-clone transfer | 397 | 0.950 / 85.9% | 1.000 / 100% | 1.000 / 100% |
+| nginx 1.18 (O2) | reuse-heavy transfer | 397 | 0.950 / 85.9% | 1.000 / 100% | 1.000 / 100% |
 
 Debian's shipped `tcpreplay` 4.2.6-1 (Punstrip test, 1,398 functions): the two CVE sites present as functions
 (`dlt_en10mb_encode`, CVE-2018-17974; `get_l2len`, CVE-2018-20553) are named exactly with confidence >= 0.999 in every
@@ -280,7 +280,7 @@ executable that contains them; suite-wide F1 0.752 / EM 59.2%.
 - **LineageBench tiers:** 16 package families (>= 35% overlap of names present in < 3 packages); train 59 packages /
   997 binaries, validation 10 / 104, test 50 / 611. Train deduplicated to one pair per (body hash, name):
   434,651 -> 190,151. Validation and test drop bodies that occur in training (-81,988) and linker-visible names (-12,746):
-  test 268,178 functions (27 FT packages, 223K functions; 23 NCT, 45K), validation 10,617.
+  test 268,178 functions (27 FT packages, 223K functions; 23 RHT, 45K), validation 10,617.
 - **Punstrip:** the public Debian corpus of XFL / BLens; 10,047 binaries rebuilt from snapshot.debian.org by exact
   symbol-table match; 395K train / 18K val / 23.9K test functions; a second HyDRA trained only on its training split.
 - **Not tracked here (size):** decompilations, embeddings, the 190K-function retrieval index, checkpoints. They are
@@ -292,7 +292,7 @@ executable that contains them; suite-wide F1 0.752 / EM 59.2%.
 
 Join your predictions on `(binary, address)` with the protocol tier records, canonicalise (demangle, split, lower-case)
 and score with `src/evaluation/metrics.py` (`compute_subtoken_f1`, `compute_subtoken_precision_recall`); report
-function-level and package-level means, per regime (FT / NCT) and per name category. Prediction dumps of every system
+function-level and package-level means, per regime (FT / RHT) and per name category. Prediction dumps of every system
 in the paper are under `results/`, so a new comparison needs no retraining of the baselines.
 
 ---
