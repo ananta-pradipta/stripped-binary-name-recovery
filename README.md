@@ -216,7 +216,7 @@ router keeps both.
 | Variant | F1 |
 |---|---|
 | CodeT5+ 220M from random initialisation (same data, digest, schedule) | 0.069 (outputs collapse) |
-| Public checkpoint, masked decompiled text only | 0.184 |
+| Public checkpoint, masked decompiled text only | 0.188 |
 | + module-context digest (±10 neighbours) = HyDRA-G | 0.213 / 0.400 |
 | Linearised BAP-IR instead of decompiled text (decompiler-free) | 0.184 (head), 0.220 (system) |
 | Wider three-tier digest | 0.217 on test, but lower on validation (not adopted) |
