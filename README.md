@@ -1,295 +1,140 @@
-# HyDRA: Hybrid Decoder-Retrieval Architecture for Adaptive Dual-Regime Binary Function Name Recovery
-
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch 2.5](https://img.shields.io/badge/pytorch-2.5+-ee4c2c.svg)](https://pytorch.org/)
-[![BAP 2.5](https://img.shields.io/badge/BAP-2.5.0-green.svg)](https://github.com/BinaryAnalysisPlatform/bap)
+# HyDRA: Hybrid Decoder-Retrieval with Adaptive Routing for Dual-Regime Function Name Recovery in Stripped Binaries
 
 > NJIT: Ananta Dian Pradipta, Robert Blacha, Zhihao Lin, Haotian Zhang
 
----
-
-## Abstract
-
-HyDRA recovers function names from stripped x86-64 binaries by coupling a graph-neural-network encoder with an **adaptive dual-regime inference mechanism**. A cascaded gated fusion over three inter-procedural context sources (external calls, callee signatures, caller signatures) supplies the encoder signal. At inference, a per-binary adaptive gate routes each query to one of two heads: **k-NN retrieval** for near-clone paradigms and a **GRU decoder pretrained as an unconditional sub-token language model** for novel codebases.
-
-**Key Results (25M parameters, `best_model.pt`):**
-- **Test Set:** 70.8% Exact Match, 0.770 F1 (13,559 functions)
-- **Cross-Project (7 packages, 13,581 functions):** 0.738 aggregate F1
-  - **Near-Clone Transfer (NCT, nginx118 / angie / tengine):** **0.833 F1**
-  - **Far Transfer (FT, recutils / dash / gettext / psmisc):** **0.606 F1**
-- **Efficiency:** 25M parameters, trained from scratch on BAP-IR with no source-code pretraining. $\sim$1,360× smaller than SymGen's CodeLlama-34B and ~40× faster per-function inference.
+This repository holds the code, benchmark protocol, prediction dumps and result tables behind the FSE submission
+*HyDRA: Hybrid Decoder-Retrieval with Adaptive Routing for Dual-Regime Function Name Recovery in Stripped Binaries*.
+The earlier CCS-era system (graph-attention encoder over BAP-IR with cascaded gated fusion) is retained under `src/`
+because it builds the benchmark and serves as the decompiler-free ablation; it is no longer the system under test.
 
 ---
 
-## Architecture
+## What HyDRA does
+
+Function name recovery faces two regimes at once: **near-clone code** (library routines, versions, forks) whose name
+already exists somewhere, and **genuinely new code** whose name must be composed from evidence. HyDRA keeps one head
+per regime and pays for one model:
 
 ```
-Stripped Binary → BAP → BAP-IR (.bir files)
-    ↓
-Stage 1: Instruction-Type Tokenization (~1,510 semantic types)
-         → Embedding(256-dim) + Positional Encoding
-         → Transformer (4 layers, 8 heads)
-         → Mean Pool over tokens
-         → b_i ∈ R^512 per block
-    ↓
-Stage 2: GAT (3 layers, 8 heads) over CFG edges
-         → Attention Pooling over blocks
-         → f ∈ R^1024 (function-level embedding)
-    ↓
-Cascaded Gated Fusion (conditional bypass when no context):
-  1. External calls:  gate ⊙ f + (1-gate) ⊙ ext_emb
-  2. Callee context:  gate ⊙ z + (1-gate) ⊙ callee_ctx
-  3. Caller context:  gate ⊙ z + (1-gate) ⊙ caller_ctx
-    ↓
-Adaptive Dual-Path Inference (per-binary gate on external-call Jaccard):
-  • Path A (k-NN retrieval):  cosine similarity over encoder embeddings
-                              + BinFilter (post-retrieval binary-similarity filter)
-                              → nearest training function name
-  • Path B (LM-pretrained decoder):  GRU + beam search (k=5, repetition penalty)
-                                     → Votes sub-token sequence → function name
-
-  Routing: if J_max(binary, training) ≥ τ_bin (0.5): Path A else Path B
+stripped binary --Ghidra--> masked decompiled function  +  module-context digest
+                             (FUN_xxxx -> [MASK])          (strings + library calls of the +-10 address neighbours)
+        |
+        v
+CodeT5+ 220M encoder-decoder, fine-tuned once on (input -> name)
+        |-- decoder            -> generated name  n_gen, confidence c_gen        (generation head, HyDRA-G)
+        |-- mean-pooled encoder -> cosine k-NN over 190K embedded training fns
+                               -> retrieved name n_ret, similarity s1, margin s1-s2   (retrieval head, HyDRA-R)
+        |
+        v
+router rho(z), z = <s1, s1-s2, c_gen, s1-c_gen>, MLP fit on the validation tier (weighted by |F1_R - F1_G|)
+abstention alpha(z, rho) -> expected F1 q_hat; the analyst applies the name only if q_hat >= tau
 ```
 
----
+## LineageBench: the evaluation protocol
 
-## Key Innovations
+Published function-naming evaluations leak: on a 300K-function corpus split at the binary level, 89.5% of test
+functions are token-identical to a training function and 97% of test names occur in training. LineageBench is a
+protocol plus a controlled corpus:
 
-| Innovation | Impact |
-|---|---|
-| Instruction-Type Tokenization (1,510 types) | Raw-token F1 ~0.03 → instruction-type F1 >0.5 (same architecture) |
-| Multi-context cascaded fusion (ext + callee + caller) with conditional bypass | Resolves the **ext-call paradox** (ext calls alone hurt cross-project F1 by −0.066; callee/caller context recovers +0.086) |
-| Adaptive dual-path inference (k-NN ↔ decoder) | Per-binary gate: retrieval for near-clones, decoder for novel codebases |
-| LM-pretrained decoder (XFL 397K corpus) | Enables compositional generation on packages with OOV full names but in-corpus sub-tokens |
-| Votes sub-token tokenizer (rule + corpus-frequency) | 95% less OOV vs BPE at comparable vocab size |
-| Self-supervised pretraining (MLM + contrastive, 84.4% embedding transfer) | Largest single contribution: +0.13 cross-project F1 |
-| Conditional gate bypass | Eliminates 47% mode collapse (xmalloc default) on context-less functions |
-| Indirect-jump (ENDBR64) resolution | O0 EM: 1.6% → 41.5% |
+1. **Package families** (>=35% overlap of rare names) so that versions and forks never straddle the split.
+2. **Whole-family tiers**: train 59 packages / 997 binaries, validation 10 / 104, test 50 / 611 (GCC and Clang, O0-O3).
+3. **Deduplication and filtering**: one training pair per (body hash, name); test/validation functions whose body
+   occurs in training are dropped, as are linker-visible names (exported for dynamic linking, still readable after strip).
+4. **Reporting** per transfer regime (far transfer FT vs near-clone transfer NCT) and per name category
+   (seen / novel-known / novel-OOV).
 
----
+Test tier: 268,178 functions, 50 packages (27 FT, 23 NCT). Every baseline is trained, selected and scored under the
+same tiers and canonicalisation. The same protocol is applied to the public Punstrip benchmark (XFL, BLens).
 
-## Repository Structure
+## Headline results
 
-```
-stripped-binary-name-recovery/
-├── scripts/                        # Pipeline scripts
-│   ├── 01_setup_environment.sh     # Install dependencies
-│   ├── 02_compile_dataset.sh       # Download, compile, strip binaries
-│   ├── 03_preprocess.sh            # BAP lifting, graph extraction
-│   ├── 04_train.sh                 # Train model variants
-│   ├── predict.py                  # Single-binary prediction
-│   ├── eval_test.py                # Test eval with all metrics
-│   ├── eval_cross_project.py       # Cross-project eval (decoder + k-NN + BinFilter + adaptive gate)
-│   ├── eval_knn_hybrid.py          # k-NN hybrid evaluation utilities
-│   ├── eval_knn_ablation.py        # k-NN ablation experiments
-│   ├── eval_full.py                # Full evaluation pipeline
-│   ├── error_analysis.py           # Prediction error analysis
-│   ├── statistical_significance.py # Statistical significance tests
-│   ├── build_pretrain_pairs.py     # Build contrastive pairs for pretraining
-│   ├── archive/                    # Archived scripts
-│   └── *.sbatch                    # Slurm scripts for HPC training/eval
-│
-├── src/
-│   ├── preprocessing/
-│   │   ├── parse_bap.py            # BAP-IR → CFG (V3 instruction-type tokenization)
-│   │   ├── extract_external.py     # PLT/GOT external call extraction
-│   │   ├── build_dataset.py        # PyTorch dataset with callee/caller context
-│   │   ├── build_votes.py          # Votes name tokenizer
-│   │   └── extract_strings.py      # String reference extraction
-│   ├── models/
-│   │   ├── block_encoder.py        # Transformer block encoder with mean pooling
-│   │   ├── graph_encoder.py        # GAT with attention pooling over CFG
-│   │   ├── external_encoder.py     # Bi-GRU encoders for ext/callee/caller context
-│   │   ├── gated_fusion.py         # Conditional cascaded gated fusion
-│   │   ├── decoder.py              # GRU decoder with beam search
-│   │   ├── function_namer.py       # Full model assembly
-│   │   └── pretrain_heads.py       # MLM + contrastive pretraining heads
-│   ├── training/
-│   │   ├── train.py                # Training loop (AMP, scheduled sampling)
-│   │   ├── pretrain.py             # Self-supervised pretraining (MLM + contrastive)
-│   │   ├── pretrain_decoder.py     # Decoder LM pretraining on name corpus
-│   │   ├── pretrain_dataset.py     # Pretraining data loader
-│   │   └── contrastive_sampler.py  # Batch sampler for contrastive learning
-│   └── evaluation/
-│       └── metrics.py              # F1, EM, n-gram similarity, edit distance
-│
-├── configs/
-│   ├── optimized.yaml              # 8M ablation-model config
-│   ├── optimized_large.yaml        # 25M config (headline model)
-│   ├── pretrain.yaml               # Encoder pretraining config
-│   └── ablation_model[2-4].yaml    # Compute-controlled ablation configs
-│
-├── results/                        # Evaluation outputs (JSON)
-├── data/                           # Preprocessed data (not tracked)
-├── demo/                           # Cross-project evaluation data
-└── checkpoints/                    # Model weights (not tracked)
-```
+Package-level sub-token F1 is the headline (two packages hold 44% of the test functions); function-level F1 is in
+every table as well. Precision, recall, F1 and exact match are defined in the paper (Eq. 5).
 
----
-
-## Quick Start
-
-```bash
-git clone https://github.com/ananta-pradipta/stripped-binary-name-recovery.git
-cd stripped-binary-name-recovery
-
-# Setup environment (installs BAP, PyTorch, dependencies)
-bash scripts/01_setup_environment.sh
-source activate.sh
-
-# Full pipeline
-bash scripts/02_compile_dataset.sh   # Compile binaries at -O0/1/2/3 and strip
-bash scripts/03_preprocess.sh        # BAP lift + extract features + build vocabularies
-python3 -m src.training.train --config configs/optimized_large.yaml --seed 42
-
-# Predict on any stripped binary
-python3 scripts/predict.py --binary /path/to/stripped/binary
-```
-
-### Full training pipeline (headline model)
-
-```bash
-# 1. Build encoder pretraining pairs
-python3 scripts/build_pretrain_pairs.py
-
-# 2. Pretrain encoder (MLM + contrastive)
-python3 -m src.training.pretrain --config configs/pretrain.yaml --seed 42
-
-# 3. Pretrain decoder (XFL 397K-name LM)
-python3 -m src.training.pretrain_decoder --corpus data/xfl_397k_names.txt
-
-# 4. Fine-tune with pretrained encoder and decoder
-python3 -m src.training.train \
-  --config configs/optimized_large.yaml \
-  --seed 42 \
-  --pretrained-encoder checkpoints/pretrained_encoder.pt \
-  --pretrained-decoder checkpoints/pretrained_decoder.pt
-```
-
-### HPC Training (Slurm)
-
-```bash
-# Submit a training job
-sbatch scripts/train.sbatch
-
-# Submit the 7-package cross-project evaluation
-sbatch scripts/eval_xproj.sbatch
-```
-
----
-
-## Evaluation
-
-### Ablation Study (compute-controlled, 8M parameters per variant)
-
-Each variant trained at matched compute on a 300K-function corpus; evaluated on a fixed cross-project set. F1 values are decoder-only sub-token F1 over 3 random seeds (mean ± std).
-
-| # | Model | Params | Test F1 | Cross-Project F1 (seed mean ± std) |
-|---|---|---|---|---|
-| 1 | DeBin (ExtraTrees baseline) | — | 0.535 | — |
-| 2 | GAT + Decoder (basic) | ~8M | 0.606 | 0.473 ± 0.006 |
-| 3 | + External Calls | ~8M | 0.683 | **0.408 ± 0.017** (ext-call paradox) |
-| 4 | + Callee/Caller Context | ~8M | 0.781 | 0.493 ± 0.018 |
-| 5 | **+ Pretrain + Scale (headline)** | **25M** | **0.770** | **0.738 (adaptive gate)** |
-
-**Ablation findings:**
-- **Model 2 → 3 (+ext):** Test F1 +0.077 but cross-project F1 **−0.066 (≈4σ)** — the **ext-call paradox**. External calls alone help in-distribution but hurt cross-project generalization.
-- **Model 3 → 4 (+callee/caller):** cross-project F1 **+0.086 (≈5σ)** — multi-context gated fusion disambiguates the library-call shortcuts from step 3.
-- **Model 4 → 5 (+pretrain + scale):** +0.13 cross-project F1 on the 7-pkg set — the single largest contribution.
-
-### Cross-Project Results (7 unseen packages, 13,581 functions)
-
-Stratified by per-binary external-call Jaccard similarity (J\_max) to training:
-
-**Near-Clone Transfer (NCT, J\_max ≥ 0.70):**
-
-| Package | N | Retrieval (k-NN) | Decoder | **Adaptive Gate** | %-kNN | %-Dec |
-|---|---|---|---|---|---|---|
-| nginx118 | 3,470 | 0.878 | 0.773 | **0.878** | 82.8 | 17.2 |
-| angie | 3,893 | 0.819 | 0.709 | **0.819** | 76.4 | 23.6 |
-| tengine | 554 | 0.531 | 0.630 | 0.645 | 91.3 | 8.7 |
-| **NCT subtotal** | **7,917** | 0.825 | 0.731 | **0.833** | 79.2 | 20.8 |
-
-**Far Transfer (FT, J\_max < 0.45):**
-
-| Package | N | Retrieval (k-NN) | Decoder | **Adaptive Gate** | %-kNN | %-Dec |
-|---|---|---|---|---|---|---|
-| recutils | 2,550 | 0.308 | 0.311 | 0.346 | 56.2 | 43.8 |
-| dash | 1,324 | 0.130 | 0.770 | **0.815** | 17.4 | 82.6 |
-| gettext | 1,518 | 0.036 | 0.807 | **0.834** | 11.5 | 88.5 |
-| psmisc | 272 | 0.167 | 0.745 | **0.761** | 23.2 | 76.8 |
-| **FT subtotal** | **5,664** | 0.187 | 0.572 | **0.606** | 27.1 | 72.9 |
-
-**7-pkg aggregate:** 13,581 functions, **F1 = 0.738** (gate) vs. 0.558 (retrieval-only) vs. 0.665 (decoder-only).
-
-**Regime interpretation:** NCT is retrieval-dominant (retrieval alone ≈ gate); FT is decoder-dominant (decoder alone ≪ gate). The adaptive gate's value is largest in the FT regime where retrieval collapses but the LM-pretrained decoder composes novel sub-token sequences.
-
-### Comparison with Published Systems (7-pkg cross-project set)
-
-| System | Venue | Params | Cross-Project F1 |
-|---|---|---|---|
-| SymLM | CCS'22 | 86M | 0.277 |
-| BLens (retrained c+p) | USENIX Sec'25 | ~200M | 0.454 |
-| SymGen (released ckpt, zero-shot) | NDSS'25 | 34B (CodeLlama-34B) | 0.450 |
-| SymGen + LoRA (fine-tuned on our corpus) | NDSS'25 | 34B | 0.630 |
-| StarCoder-3B (zero-shot) | — | 3B | 0.654 |
-| **HyDRA (ours)** | — | **25M** | **0.738** |
-
-HyDRA leads the SymGen + LoRA reproduction by **+0.108 F1 overall**, widening to **+0.38 F1** on the three non-recutils far-transfer packages (dash / gettext / psmisc) where CodeLlama has no GNU pretraining advantage.
-
-### Head-to-head with SymGen (matched functions, original 4-pkg subset)
-
-For a strict apples-to-apples comparison against SymGen + LoRA on the original 4-package cross-project set, we restrict both systems to **the same function set**: for every `(package, ground-truth-name)` key that appears in both evaluation runs, we take `min(count_HyDRA, count_SymGen)` predictions from each side. Matched subset: **8,062 functions** (3,428 unique `(package, name)` keys across angie / nginx118 / tengine / recutils).
-
-| Package | N | HyDRA F1 | HyDRA EM | SymGen F1 | SymGen EM | Δ F1 |
-|---|---|---|---|---|---|---|
-| nginx118 | 2,815 | **0.880** | 71.9% | 0.642 | 30.9% | **+0.238** |
-| angie | 3,159 | **0.814** | 62.6% | 0.643 | 29.7% | **+0.171** |
-| tengine | 554 | **0.739** | 66.8% | 0.701 | 45.8% | +0.038 |
-| recutils | 1,534 | 0.359 | 27.5% | **0.636** | 39.8% | −0.277 |
-| **Overall** | **8,062** | **0.745** | **59.5%** | 0.645 | 33.2% | **+0.100** |
-
-On the matched set, HyDRA (25M, from scratch) leads SymGen + LoRA (34B) by **+0.100 F1** and **+26.3 pp EM**. Recutils is the only package where SymGen wins — consistent with CodeLlama-34B's source-code pretraining having already seen recutils on GitHub.
-
-### End-to-End Cost Comparison (single A100-80GB)
-
-| System | Params | Train | Preproc / binary | Inference / function | End-to-end (100-fn binary) |
+| System (same training data) | Params | F1 fn-level | F1 pkg-level | FT | NCT |
 |---|---|---|---|---|---|
-| **HyDRA (ours)** | **25M** | **2.2 GPU-h** | **~60 s (BAP)** | **~5 ms** | **~60 s** |
-| BLens (retrained c+p) | ~200M | 8 GPU-h | ~100 s (Ghidra+CLAP) | ~20 ms | ~102 s |
-| SymGen + LoRA | 34B | 72 GPU-h (4×A100 DDP) | ~180 s (Ghidra+decomp.) | ~200 ms | ~200 s |
-| StarCoder-3B (zero-shot) | 3B | 0 (pretrained) | ~180 s (Ghidra+decomp.) | ~80 ms | ~188 s |
+| SymGen-34B (CodeLlama + LoRA, authors' pipeline) | 34B | 0.145 | 0.196 | 0.118 | 0.276 |
+| BLens (authors' code, CLAP + PalmTree) | ~200M | 0.059 | 0.171 | 0.013 | 0.287 |
+| HyDRA-G (generation head only) | 220M | 0.213 | 0.400 | 0.144 | 0.553 |
+| HyDRA-R (retrieval head only) | 220M | 0.138 | 0.419 | 0.037 | 0.643 |
+| **HyDRA (routed)** | 220M | **0.237** | **0.472** | **0.145** | **0.693** |
 
-**End-to-end wall-clock reduction:** 41–70% vs LLM-based baselines on a typical 100-function binary; 44–80% on the full 13.6K-function cross-project set.
+By name category (F1 / exact match): retrieval owns seen names (0.870 / 81.8%), generation owns novel names
+(0.201 novel-known, 0.119 novel-OOV); the routed system keeps both (0.859 / 77.5%, 0.201, 0.120).
 
----
+Punstrip (public cross-project split, 22,926 functions, BLens's own evaluator, full / strict): HyDRA 0.549 / 0.467,
+SymGen-34B trained on Punstrip-train 0.435 / 0.395, BLens published 0.461 / 0.293. Precision / recall under that
+evaluator: HyDRA 0.557 / 0.542, BLens 0.656 / 0.355 (abstains on 46%).
 
-## Dataset
+Selective prediction: 0.95 F1 on the 5% of functions the abstention score ranks highest, 0.90 at 10%, 0.72 at 20%
+(ECE 0.036). Cost: 6.5 h fine-tuning on one A100-40GB, ~40 ms per function at inference; 155x fewer parameters and
+95x faster per function than the 34B baseline.
 
-- **Training:** 300,013 functions from 77 open-source packages (851 binaries, optimization levels O0/O1/O2/O3)
-  - Distribution: O0 47%, O1 16%, O2 16%, O3 15%, default 6%
-- **Test:** 13,559 held-out functions (same-package cross-binary evaluation)
-- **Cross-Project:** 13,581 functions from **7 fully held-out packages** (tengine, angie, nginx118, recutils, dash, gettext, psmisc) at all 4 optimization levels. Released at `data/cross_project/`.
-- **Compilation:** `gcc -g -O{0,1,2,3}`, stripped with `strip -s`
-- **Binary lifter:** BAP 2.5.0 (language-agnostic intermediate representation)
-- **Token vocabulary:** 2,279 instruction types (V3 tokenization, deterministic)
-- **Name vocabulary:** 7,004 sub-tokens (Votes tokenizer, rule-based splitting with corpus-frequency filter)
-- **Decoder LM pretraining corpus:** 397K names (73K from our compiled training set + 329K from the XFL release)
+## Repository map
 
----
+```
+scripts/
+  a4_build_modctx_dm.py      build HyDRA inputs: masked Ghidra text + module-context digest (demangled targets)
+  a4_build_modctx.py, a4_build_poolctx.py, a4_build_baptext.py   digest variants / BAP-text ablation inputs
+  a4_train_codet5p.py        fine-tune CodeT5+ 220M (generation head)
+  a4_predict.py              greedy decoding + confidence c_gen for the protocol tiers
+  c_lmemb_knn.py             retrieval head: mean-pooled encoder embeddings, FAISS/torch cosine k-NN, s1 and margin
+  router3_eval.py, ablation_router.py   routers (GBT / MLP), feature ablations, selective prediction
+  design_split_v2.py, export_baseline_protocol.py, build_corpus_manifest.py   LineageBench construction
+  punstrip/                  Punstrip rebuild, SymGen/BLens retrain glue, BLens-evaluator re-implementation, strata
+  dh2_sbatch/                Slurm launchers used on the cluster (paths are cluster-specific)
+src/                         legacy BAP-IR pipeline: parse_bap.py (instruction-type tokens = body hash), GNN models,
+                             metrics.py (sub-token P/R/F1, exact match, split_name)
+baselines/                   SymGen (LoRA) and BLens retrain recipes and outputs
+results/dualhead_v2/         LineageBench results: per_pkg_single_backbone.json (per-package / regime / category),
+                             score_symgen_full*.json (baselines on identical keys), case_study_*.json, FINAL_TABLES.md
+results/punstrip/            Punstrip reports: score_report_extra_final.json (both scorers), punstrip_strata_v2.json
+results/experiment_log.md    every number in the paper, with the job that produced it
+docs/                        dataset card, protocol design notes, contributor guides
+data/split_v2.json           LineageBench split manifest (families, tiers, regimes)
+```
+
+## Reproducing the main table
+
+Cluster paths in the scripts (`/project/.../dh2`) point at the workspace where the corpus, Ghidra decompilations and
+embeddings live; set them to your own copy. The order is:
+
+```bash
+# 1. LineageBench: families, tiers, dedup, linker-visible filter -> data/split_v2.json, protocol tier files
+python3 scripts/design_split_v2.py && python3 scripts/export_baseline_protocol.py
+
+# 2. Inputs: masked Ghidra decompilation + module-context digest for train/val/test
+python3 scripts/a4_build_modctx_dm.py --src <protocol dir> --out <data dir>
+
+# 3. Generation head: fine-tune CodeT5+ 220M (3 epochs, lr 5e-5, batch 32, bf16) and decode the tiers
+python3 scripts/a4_train_codet5p.py --model Salesforce/codet5p-220m --data-dir <data dir> --tag modctx_dm --bf16
+python3 scripts/a4_predict.py <checkpoint> --tiers val,test --tag modctx_dm --bf16
+
+# 4. Retrieval head: embed train/val/test with the fine-tuned encoder, cosine k-NN, s1 and margin
+python3 scripts/c_lmemb_knn.py
+
+# 5. Router + abstention (fit on validation only) and every table of the paper
+python3 scripts/router3_eval.py --a4 <a4 preds tsv> --out results/dualhead_v2/router.json
+```
+
+Baselines: `baselines/symgen/` (authors' pipeline, one LoRA epoch on the LineageBench training tier) and
+`baselines/blens*/` (authors' code, 80 + 80 epochs, CLAP and PalmTree embeddings extracted by us). Punstrip:
+`scripts/punstrip/` and `results/punstrip/PLAN.md`.
+
+## Scoring a new system on LineageBench
+
+Join your predictions on `(binary, address)` with the protocol tier records, canonicalise (demangle, split on
+underscores / camel-case / digits, lower-case) and score with `src/evaluation/metrics.py`
+(`compute_subtoken_f1`, `compute_subtoken_precision_recall`); report function-level and package-level means, and
+per regime and name category. Prediction dumps of every system in the paper are under `results/`, so a new
+comparison needs no retraining of the baselines.
 
 ## References
 
-- He, J., Ivanov, P., Tsankov, P., Raychev, V., & Vechev, M. (2018). **Debin: Predicting Debug Information in Stripped Binaries.** CCS'18.
-- David, Y., Alon, U., & Yahav, E. (2020). **Neural Reverse Engineering of Stripped Binaries using Augmented Control Flow Graphs** (NERO). OOPSLA'20.
-- Jin, X., Pei, K., Won, J. Y., & Lin, Z. (2022). **SymLM: Predicting Function Names in Stripped Binaries via Context-Sensitive Execution-Aware Code Embeddings.** CCS'22.
-- Patrick-Evans, J., Dannehl, M., & Kinder, J. (2023). **XFL: Naming Functions in Binaries with Extreme Multi-Label Learning.** IEEE S&P'23.
-- Benoit, T., Wang, Y., Dannehl, M., & Kinder, J. (2025). **BLens: Contrastive Captioning of Binary Functions using Ensemble Embedding.** USENIX Security'25.
-- Jiang, L., Jin, X., & Lin, Z. (2025). **Beyond Classification: Inferring Function Names in Stripped Binaries via Domain Adapted LLMs** (SymGen). NDSS'25.
-- Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018). **Graph Attention Networks.** ICLR'18.
-- Khandelwal, U., Levy, O., Jurafsky, D., Zettlemoyer, L., & Lewis, M. (2020). **Generalization through Memorization: Nearest Neighbor Language Models.** ICLR'20.
-
----
+- He et al. **Debin**, CCS 2018. - David et al. **NERO**, OOPSLA 2020. - Jin et al. **SymLM**, CCS 2022.
+- Patrick-Evans et al. **XFL**, IEEE S&P 2023 (Punstrip). - Benoit et al. **BLens**, USENIX Security 2025.
+- Jiang et al. **SymGen** ("Beyond Classification"), NDSS 2025. - Wang et al. **CodeT5+**, EMNLP 2023.
+- Ye et al. **Epitome**, FSE 2024. - Allamanis. **The adverse effects of code duplication**, Onward! 2019.
 
 ## License
 
