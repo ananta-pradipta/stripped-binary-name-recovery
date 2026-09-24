@@ -278,7 +278,8 @@ executable that contains them; suite-wide F1 0.752 / EM 59.2%.
 - **Per-function record:** BAP instruction-type token sequence (body hash), Ghidra decompilation with the placeholder
   masked, string literals and named library calls, debug name, linker-visible flag.
 - **LineageBench tiers:** 16 package families (>= 35% overlap of names present in < 3 packages); train 59 packages /
-  997 binaries, validation 10 / 104, test 50 / 611. Train deduplicated to one pair per (body hash, name):
+  997 binaries, validation 10 / 104 (package-disjoint from both other tiers; coreutils3, csplit2 and cppi are
+  reuse-heavy relative to training by design so the router sees both regimes), test 50 / 611. Train deduplicated to one pair per (body hash, name):
   434,651 -> 190,151. Validation and test drop bodies that occur in training (-81,988) and linker-visible names (-12,746):
   test 268,178 functions (27 FT packages, 223K functions; 23 RHT, 45K), validation 10,617.
 - **Punstrip:** the public Debian corpus of XFL / BLens; 10,047 binaries rebuilt from snapshot.debian.org by exact
