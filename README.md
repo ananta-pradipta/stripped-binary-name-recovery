@@ -101,7 +101,6 @@ stripped-binary-name-recovery/
 │
 ├── baselines/
 │   ├── symgen/                      # CodeLlama-34B + LoRA with the authors' pipeline; predictions and logs
-│   ├── starcoder/, llasm/           # Zero-shot LLM baselines from the CCS-era study
 │   └── training_logs/
 │
 ├── results/
@@ -163,7 +162,7 @@ python3 scripts/score_pr.py $WORKSPACE/blens/LORD-inference-logs-test.txt     # 
 see baselines/symgen/ and scripts/a4_build_symgen_ft.py
 
 # BLens: authors' code, CLAP + PalmTree embeddings extracted by us, 80 + 80 epochs, selection on our validation tier
-see docs/task_blens_evaluation.md
+see scripts/blens_v2/ and results/dualhead_v2/PAPER_NOTES.md
 
 # Punstrip: rebuild the 10,047 Debian binaries, train a second HyDRA on Punstrip-train only, score with BLens's evaluator
 see results/punstrip/PLAN.md and scripts/punstrip/
