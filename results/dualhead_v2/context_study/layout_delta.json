@@ -1,0 +1,66 @@
+[
+ {
+  "compiler": "clang",
+  "opt": "O0",
+  "n": 1957,
+  "no_ctx": 0.082,
+  "addr_ctx": 0.1145,
+  "delta": 0.0325
+ },
+ {
+  "compiler": "clang",
+  "opt": "O1",
+  "n": 8045,
+  "no_ctx": 0.3271,
+  "addr_ctx": 0.3796,
+  "delta": 0.0525
+ },
+ {
+  "compiler": "clang",
+  "opt": "O2",
+  "n": 1358,
+  "no_ctx": 0.0859,
+  "addr_ctx": 0.095,
+  "delta": 0.0091
+ },
+ {
+  "compiler": "clang",
+  "opt": "O3",
+  "n": 7982,
+  "no_ctx": 0.3285,
+  "addr_ctx": 0.373,
+  "delta": 0.0444
+ },
+ {
+  "compiler": "gcc",
+  "opt": "O0",
+  "n": 77854,
+  "no_ctx": 0.1683,
+  "addr_ctx": 0.2008,
+  "delta": 0.0325
+ },
+ {
+  "compiler": "gcc",
+  "opt": "O1",
+  "n": 55682,
+  "no_ctx": 0.1796,
+  "addr_ctx": 0.2057,
+  "delta": 0.0261
+ },
+ {
+  "compiler": "gcc",
+  "opt": "O2",
+  "n": 59500,
+  "no_ctx": 0.1875,
+  "addr_ctx": 0.2095,
+  "delta": 0.022
+ },
+ {
+  "compiler": "gcc",
+  "opt": "O3",
+  "n": 55758,
+  "no_ctx": 0.1772,
+  "addr_ctx": 0.1979,
+  "delta": 0.0207
+ }
+]

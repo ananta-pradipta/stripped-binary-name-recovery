@@ -1,0 +1,35 @@
+{
+ "train": {
+  "rows_in": 190151,
+  "rows_out": 190133,
+  "skipped": {
+   "addr_missing_or_failed": 17,
+   "mask_not_applied": 1
+  },
+  "empty_ctx": 180,
+  "mean_src_fns": 19.82,
+  "frac_with_src": 0.9997,
+  "targets_canonized": 4173
+ },
+ "val": {
+  "rows_in": 10617,
+  "rows_out": 10617,
+  "skipped": {},
+  "empty_ctx": 2,
+  "mean_src_fns": 19.5,
+  "frac_with_src": 1.0,
+  "targets_canonized": 0
+ },
+ "test": {
+  "rows_in": 268178,
+  "rows_out": 268136,
+  "skipped": {
+   "addr_missing_or_failed": 40,
+   "mask_not_applied": 2
+  },
+  "empty_ctx": 2146,
+  "mean_src_fns": 19.94,
+  "frac_with_src": 1.0,
+  "targets_canonized": 38019
+ }
+}

@@ -1,0 +1,23 @@
+{
+ "val": {
+  "rows_in": 10617,
+  "rows_out": 10617,
+  "skipped": {},
+  "empty_ctx": 10617,
+  "mean_src_fns": 0.0,
+  "frac_with_src": 0.0,
+  "targets_canonized": 0
+ },
+ "test": {
+  "rows_in": 268178,
+  "rows_out": 268136,
+  "skipped": {
+   "addr_missing_or_failed": 40,
+   "mask_not_applied": 2
+  },
+  "empty_ctx": 268136,
+  "mean_src_fns": 0.0,
+  "frac_with_src": 0.0,
+  "targets_canonized": 38019
+ }
+}

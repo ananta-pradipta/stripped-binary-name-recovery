@@ -4946,3 +4946,148 @@ router under-routes to retrieval there (13%) → seen EM 44% vs R 70%. Added as 
 - Seen = canonical (demangled, template-stripped) test name ∈ canonical training names. 199 test rows move from novel-known to seen. Counts: seen 33,678 (12.6%), novel-known 81,631 (30.4%), novel-OOV 152,827 (57.0%). Retrieval EM on canonical-novel rows = 0 (by construction now).
 - Per category F1/EM (common 268,136 keys): seen R 0.866/81.4%, G 0.664/39.0%, routed 0.856/77.2%, SymGen 0.262/6.9%, BLens 0.382/10.3%; novel-known R 0.046/0.0%, G 0.201/1.8%, routed 0.200/1.7%, SymGen 0.168/2.3%, BLens 0.019/0.0%; novel-OOV R 0.027/0.0%, G 0.119/0.8%, routed 0.119/0.8%, SymGen 0.106/2.3%, BLens 0.011/0.1%. Raw-flag numbers (previous Table 6) differ by ≤0.004.
 - Paper Table 6, §5.3 counts, Fig.4 ⑤, and the "82%" seen-EM mentions updated (now 81%). Report `results/dualhead_v2/canon_categories.json`.
+
+## 2026-09-25 — Advisor context checks: controlled context-source comparison (jobs 1334179–1334184)
+Trigger: advisor review 2026-09-24 (address-neighbourhood context "surprisingly effective"; TU-contiguity assumption
+too strong; wants caller/callee-only on the SAME backbone, a random-same-binary control, layout sensitivity; clearer
+contribution; BinaryAI ICSE'24). Design: `scripts/ctx_checks/a4_build_ctxvar.py` = the modctx digest recipe (same
+tokens/ranking/TOP=40/comment prefix/first-occurrence masking, dm-canonized targets) with the SOURCE SET swapped:
+win5/win10/win20 (address window), callgraph (direct callees+callers, cap 40), random (20 fns uniform from the same
+binary, seeded per (binary,addr)), empty. Smoke: win10 reproduces results/a4_modctx digests byte-for-byte (42/42 val
+rows, 6 bins); full build asserts the same on all val+test rows (exit 3 on any mismatch).
+Jobs: 1334179 build (CPU) → 1334180 train callgraph / 1334181 train random (CodeT5+ 220M, a4_train_dm recipe, 3 ep,
+bs4×8, max-src 1280) → 1334183/1334184 predict val+test; 1334182 array [win10,win5,win20,random,empty,callgraph] =
+inference-only sensitivity of the ADOPTED head (a4_codet5p220m_modctx_dm_v1) on test rows (win10 arm must reproduce
+test 0.2125). Layout JSON for the DWARF/addr2line TU-locality analysis (`ctx_layout_extract.py` → `tu_locality.py`)
+is produced by the build job.
+DEFECT FOUND (a4_build_poolctx.py, the "address+call-graph+binary-pool" row of Table 7): the calls tier resolved
+FUN_ references by string-matching the row key ('0x'+hex.lstrip('0x')), which only works when Ghidra address == BAP
+key. On PIE binaries (Ghidra base 0x100000, BAP entry +4) it resolved 0 of 176 refs (acct_ac_O0); on EXEC binaries
+it works (cvs 6963/8156). Test tier = 353 DYN / 258 EXEC → the call tier was EMPTY for ~58% of test (and train)
+binaries; the binary-pool tier was unaffected. Consequence: Table 7's 3-tier row understates call-graph context; the
+new callgraph-only head (ghidra_name-resolved) is the valid measurement. Paper must not cite the 3-tier row as a
+call-graph result.
+PAPER DISCREPANCY: §4.2 says every occurrence of the placeholder is masked; the LineageBench builders
+(a4_build_modctx.py / a4_predict.py) mask the FIRST occurrence (`replace(..., 1)`); all-occurrence masking was
+introduced only in the Punstrip builder (2026-09-04). Placeholder carries no name information either way; fix wording.
+Debug ELFs for TU locality: 401/611 test binaries still have their unstripped build (local data/raw + cross_project +
+clang_o1o3 + ftdomains2 = 320; Wulver clang_train + ftdomains + raw_wulver(15) = +81); the other 210 raw_wulver
+harvest binaries' debug ELFs were deleted for disk. Locality is measured on the 401.
+Build 1334179 COMPLETED (rc 0): win10 reproduces a4_modctx on ALL 278,753 val+test rows (0 mismatch); callgraph rows:
+train 87.1% / test 91.4% have ≥1 resolved caller/callee (mean 4.3 / 5.5 fns) but 27% / 27% empty digests (neighbours carry
+no strings/lib calls); random: mean 19.8 fns, 0.1–0.8% empty; win5 12% empty, win20 2.4% empty (test). SMOKE PASS.
+NUANCE (verified): dh2/symgen_v2/decomp/<bin>.json holds ONLY the protocol's scored rows (nginx118_O2: 1,159 labelled fns
+→ 397 decompiled = 397 protocol rows; cvs_O0 1,419 → 1,216). Hence the "±10 address neighbours" of the adopted digest are
+the ±10 nearest RETAINED functions (after train-duplicate-body and linker-visible-name removal), not all functions of the
+binary; in RHT binaries the window therefore spans a wider address range. Paper §4.2 must say "ten address-adjacent
+functions among those retained by the protocol". The TU-locality analysis uses the same retained set.
+TU locality, LOCAL share (309 test binaries with debug ELF, 19,994 scored rows; small local_main GNU tools + clang_o1o3 +
+ftdomains2 + cross_project): same-source-file share of the digest source set = win5 0.715 / win10 0.607 / win20 0.479;
+callgraph 0.611 (mean 3.2 fns); uniform-random expectation 0.235. By build: gcc O0 0.677, O1 0.633, O2 0.584, O3 0.645;
+clang O1 0.566, O3 0.563 (window ±10). Majority-same-file 0.64–0.76. Wulver share (clang_train/ftdomains/raw_wulver 81
+bins) pending → merge.
+TU locality MERGED (local 309 + Wulver 143 bins, overlap deduped by (binary,addr); merge-key bug fixed same day — first
+merge collapsed rows because addr was not stored): 103,415 scored test rows, 390 binaries, 27 packages
+(results/dualhead_v2/tu_locality_merged.json; per-machine dumps tu_locality_{local,wulver}.json).
+Same-source-file share of the digest source set (retained functions, addr2line on the unstripped build):
+  window ±5 0.745 | ±10 0.637 | ±20 0.504 ; ±10 majority-same 0.70, any-same 0.97 ; callgraph 0.447 (mean 4.7 fns) ;
+  uniform-random expectation 0.078  → the ±10 window is 8× the random baseline, callgraph 5.7×.
+  By build (±10 same / majority / cg): gcc O0 0.70/0.78/0.52, O1 0.63/0.69/0.47, O2 0.62/0.68/0.40, O3 0.63/0.68/0.31;
+  clang O0 0.48/0.40/0.62, O1 0.54/0.60/0.67, O2 0.43/0.32/0.51, O3 0.54/0.58/0.68 (clang: 16–31% of window fns have no
+  DWARF = statically linked/unknown; clang share only 12 pkgs). DYN 0.63 vs EXEC 0.65. FT 0.62 vs RHT 0.72.
+Reading: contiguity holds in our default builds at every O-level (GCC −O1..−O3 reorder within the TU only slightly:
+0.70→0.62); Clang lower but still 5–10× random. Call-graph neighbours are LESS TU-local than the address window under
+GCC (0.31–0.52) and small (≈4.7 fns, 27% carry no evidence tokens). Coverage caveat: 390/611 test binaries (the 210
+raw_wulver harvest binaries have no surviving debug ELF; 3% of rows skipped for no DWARF at the target).
+Sensitivity array 1334182 (adopted head a4_codet5p220m_modctx_dm_v1, test rows only, digest source set swapped at
+INFERENCE, no retraining) — arms 0–3 done:
+  | arm | F1 fn | F1 pkg | FT | NCT | novel |
+  | win10 (reproduction) | 0.2125 | 0.400 | 0.1444 | 0.5529 | 0.1478 |  ← equals the adopted head (paper 0.213/0.400) ✔
+  | win5  | 0.2078 | 0.394 | 0.1399 | 0.5474 | 0.1434 |
+  | win20 | 0.2114 | 0.396 | 0.1463 | 0.5373 | 0.1494 |
+  | random-20 same binary | 0.1836 | 0.352 | 0.1313 | 0.4452 | 0.1355 |  ← = no-context level (0.184)
+Reading: the trained model's gain from context (+0.029 over no context) vanishes when the same recipe is fed random
+functions of the same binary → the signal is LOCAL (same-TU vocabulary), not binary-wide vocabulary. Window size is a
+mild trade-off (±5 −0.005, ±20 −0.001 overall; ±20 slightly better on FT/novel, worse on NCT). Arms empty/callgraph pending.
+Sensitivity array 1334182 COMPLETE (arms 4–5): empty digest 0.1703 / pkg 0.310 / FT 0.1204 / NCT 0.4197 / novel 0.1241;
+callers+callees at inference 0.1960 / 0.359 / 0.1379 / 0.4869 / 0.1413. Ordering (adopted head, inference-only swap):
+win10 0.2125 > win20 0.2114 > win5 0.2078 > callgraph 0.1960 > random 0.1836 > empty 0.1703. Random ≈ trained
+no-context model (0.184); callgraph recovers ~40% of the context gain over random; empty < no-context model because the
+head was trained with a digest. Files: dh2/results/a4_modctx_dm_sens_<mode>/test_eval.json.
+Punstrip counterpart submitted (user asked "have you tried this on Punstrip?"): `scripts/ctx_checks/punstrip_build_ctxvar.py`
+(same recipe as punstrip_build_modctx.py: ALL-occurrence masking, raw-name targets; win10 reproduces punstrip/data/test.jsonl
+byte-for-byte on the smoke), modes win10/win5/win20/callgraph/random/empty on the 23,875 test rows / 451 Debian binaries;
+TU locality with Debian dbgsym companions (`rebuild/dbg/dbg_elf_bins/<binpath>.debug`). Jobs: 1335916 build+locality (CPU)
+→ 1335917 array [0 win10,1 win5,2 win20,3 random,4 empty,5 callgraph] on a4_punstrip_modctx_v1 (reference test F1 under
+our scorer 0.4013 / macro 0.6012). Outputs: punstrip/data_ctx/<mode>/test.jsonl, punstrip/data_ctx/tu_locality_test.json,
+dh2/results/a4_punstrip_modctx_sens_<mode>/test_eval.json.
+Punstrip build 1335916 COMPLETED: win10 reproduces punstrip/data/test.jsonl on all 23,873 rows (0 mismatch); callgraph
+resolved for 59% of rows (mean 2.0 fns; 47% empty digests — Debian test binaries are small); random mean 19.1 fns.
+Punstrip TU locality (Debian dbgsym .debug companions; 218/451 binaries have usable DWARF, 6,280/23,873 scored rows;
+punstrip/data_ctx/tu_locality_test.json): ±10 same-file 0.587 (±5 0.685, ±20 0.489; majority 0.64; any 0.95);
+callgraph 0.442 (1.5 fns); uniform-random expectation 0.338 (high: small binaries with few source files). So on
+distribution builds the window is 1.7× random and still above the call graph; the ordering window > callgraph > random
+holds on Debian's own builds too.
+Punstrip sensitivity array 1335917 COMPLETE (a4_punstrip_modctx_v1, 23,873 test rows, our scorer, inference-only swap):
+  win10 0.4013 / macro 0.6012 / EM 14.2%  (= reference ✔) | win20 0.3999 / 0.6017 | win5 0.3966 / 0.5983 |
+  random-20 0.3683 / 0.5889 | callgraph 0.3428 / 0.5643 | empty 0.3265 / 0.5509.
+Reading: ordering window > random > callgraph > empty on Debian builds. Random keeps more of the gain than on LineageBench
+because Debian test binaries are small (random functions are same-file 34% of the time vs 8% on our corpus); the call
+graph is weakest because 47% of functions have no caller/callee with evidence tokens (mean 2.0 fns). Same-file share
+predicts the ordering on both corpora. (seen/novel split in these EFFECT lines is void: Punstrip rows carry
+`name_seen`, not `name_seen_in_train`; use punstrip_strata.py for strata.)
+
+## 2026-09-25 — Advisor plan v2 (`hydra_fse_professor_concerns_action_plan_v2.md`) gap items launched + CPU diagnostics
+Plan §5 C4 (address + callers/callees, single ranking over the union, same 40-token budget) and §7 (random control
+excluding the ±10 window, extra seeds): builder modes `addrcall`, `random_excl` (+ `--suffix _s1/_s2`, `--seed`).
+Jobs: 1336224 build2 (CPU) → 1336225 train addrcall → 1336226 predict; 1336227 sens2 [addrcall, random_excl_s1,
+random_excl_s2] on adopted head; 1336228 Punstrip sens2 [addrcall_s1, random_excl_s1, random_excl_s2].
+Diagnostics (`scripts/ctx_checks/ctx_diagnostics.py`, outputs dh2/results/ctx_layout/{layout_delta,bootstrap,coverage}.json):
+LAYOUT Δ = F1(adopted ±10 head) − F1(no-context head a4_codet5p220m_v1), test, joined 268,136 fns:
+  gcc O0 +0.033 (0.168→0.201, n 77,854) | O1 +0.026 | O2 +0.022 | O3 +0.021 ;
+  clang O0 +0.033 (n 1,957) | O1 +0.053 (n 8,045) | O2 +0.009 (n 1,358) | O3 +0.044 (n 7,982). Positive in all 8 builds.
+BOOT (package-level paired bootstrap, 10k, 50 pkgs, inference-swap arms on identical functions): address − random
+  +0.029 fn / +0.048 pkg [0.030, 0.067], address wins 41/50; address − callgraph +0.017 / +0.042 [0.028, 0.055], 42/50;
+  address − win5 +0.005 / +0.006 [0.003, 0.010]; address − win20 +0.001 / +0.004 [−0.001, 0.010] (n.s.);
+  address − empty +0.042 / +0.091 [0.068, 0.115], 47/50.
+COVERAGE (share of 267,726 scored test fns whose 40-token digest contains ≥1 / the first / all GT sub-tokens):
+  win10 0.471 / 0.359 / 0.031 | win20 0.506 / 0.387 / 0.028 | win5 0.414 / 0.311 / 0.029 | callgraph 0.310 / 0.207 / 0.032 |
+  random 0.304 / 0.220 / 0.003 | empty 0. Prefix coverage explains the ordering (0.36 vs 0.21/0.22); callgraph tokens
+  are precise when present (all-token 0.032 ≈ window) but sparse; random tokens are generic (all-token 0.003).
+Punstrip sens2 (1336228, inference swap on a4_punstrip_modctx_v1): addrcall (window ∪ callgraph, one ranking, 40 tokens)
+0.4042 / macro 0.6018 (vs window 0.4013 → +0.003, no complementarity at inference); random_excl seed1 0.3629, seed2 0.3609
+(window-excluded random; vs random-incl 0.3683). Build2 1336224 rc 0 (addrcall train mean 22.7 src fns; random_excl 19.9).
+LineageBench sens2 (1336227, adopted head, inference swap): addrcall (window ∪ callgraph, one ranking, 40 tokens) 0.2157 /
+pkg 0.4019 / FT 0.1481 / NCT 0.5542 / novel 0.1512 (vs window 0.2125/0.400/0.1444/0.5529/0.1478 → +0.003 fn, +0.002 pkg);
+random_excl seed1 0.1825 / 0.3417 / 0.1312 / 0.4396 / 0.1354; seed2 0.1827 / 0.3444 / 0.1313 / 0.4396 / 0.1356
+(random incl. window, seed 20260925: 0.1836 / 0.3521). Three random draws: 0.1825–0.1836 (sd < 0.001) — the random
+control is stable and ≈ the no-context model (0.184).
+Trained context heads — FULL val_xproj F1 (same recipe as adopted a4_codet5p220m_modctx_dm_v1, whose full val = 0.2249, FT 0.1691,
+NCT 0.6701): callgraph-only (1334180) 0.2152 (FT 0.1609, NCT 0.6928); random-only (1334181) 0.2058 (FT 0.1510, NCT 0.6877).
+Ordering on val: address > callgraph > random, FT gaps 0.008 / 0.018; NCT inverted (any hint helps copying on the three
+reuse-heavy val packages). Predicts 1334183 (callgraph) / 1334184 (random) running; test decides.
+TRAINED CONTEXT HEADS — TEST (268,136 fns; same recipe/budget/backbone; jobs 1334183/1334184):
+  | head | val | test fn | test pkg | EM | FT | NCT | seen | novel | uniq |
+  | ±10 address (adopted, modctx_dm)   | 0.2176 | 0.2125 | 0.4000 | 5.9% | 0.1444 | 0.5530 | 0.6659 | 0.1478 | 0.169 |
+  | callers+callees only (ctxcallgraph)| 0.2158 | 0.2138 | 0.4030 | 6.1% | 0.1451 | 0.5578 | 0.6795 | 0.1474 | 0.160 |
+  | 20 random same-binary (ctxrandom)  | 0.2065 | 0.1927 | 0.3891 | 5.5% | 0.1243 | 0.5346 | 0.6395 | 0.1289 | 0.201 |
+  | none (a4 run1, Table 7)            | 0.200  | 0.184  | 0.360  |      |        |        |        |        |       |
+READING (plan v2 §16 → CASE B, not Case A): when TRAINED on the source, callers+callees match the address window
+(+0.001 fn / +0.003 pkg, within noise) despite 27% empty digests; random-trained is +0.009 over no context but −0.020
+below either local source. The inference-swap ordering (window 0.213 > callgraph 0.196) was a train/test mismatch
+effect, not a property of the source. Revised claim: LOCAL evidence outside the target (layout-adjacent OR call-adjacent)
+is what helps; binary-wide vocabulary gives a third of the gain; the address window is the cheaper source (no call-graph
+resolution, works with the decompiler's function list alone) and its layout locality is measured. C4 (union) pending
+(1336225/1336226) → decides Case B vs Case C.
+Stats on the trained heads (test, 50 pkgs, package-level paired bootstrap 10k): address − callgraph −0.003 [−0.011, +0.005],
+address wins 23/50 → TIE; address − random +0.011 [+0.002, +0.019], 33/50; callgraph − random +0.014 [+0.005, +0.023], 38/50.
+Per-function ORACLE max(address, callgraph) = 0.2612 fn (vs 0.2125 / 0.2138) → +0.049; FT oracle 0.189 (vs 0.144), NCT
+0.624 (vs 0.553); the two heads emit the same prediction for only 12.1% of functions; perfect-F1 sets overlap 5.9% of 7.4%.
+→ the two LOCAL sources are equivalent on average and strongly complementary per function (advisor's selection idea has
+headroom); C4 union head pending; a confidence-based pick is testable from existing preds.
+Zero-training selection between the two trained local-context heads (pick the head with the higher generation confidence,
+from the preds TSVs; no fitting): VAL 0.2302 vs 0.2176/0.2158 single (+0.013); TEST 0.2224 fn / 0.4199 pkg vs 0.2125/0.4000
+(+0.010 fn, +0.020 pkg); callgraph chosen for 52% of test functions. Margin sweep: best d=+0.05 on val (0.2308), d=−0.05 on
+test (0.2224) → plain max-confidence (d=0) is the val-safe rule. Oracle ceiling 0.2612. This is the advisor's
+"select context by reliability" idea in its simplest form; integrating it into the routed system = 2 generation passes per
+function + router refit (c_gen feature changes) — NOT done; decision for user/advisor.
