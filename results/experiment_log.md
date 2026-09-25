@@ -5113,3 +5113,25 @@ each, in parallel) → predict 1340918 / 1340920 / 1340922 / 1340924 (val+test).
 punstrip_ctx_diagnostics.py → punstrip/data_ctx/punstrip_ctx_{trained_comparison,bootstrap,complementarity,confidence_select,
 digest_stats}.json + results_table.csv. Callgraph coverage on Punstrip (plan §6.1): test 59% of functions with ≥1 resolved
 caller/callee, mean 2.0, 47% empty digests; train smoke 76% / 2.0 / 30% empty — recorded, to be stated with the result.
+Punstrip build 1340916 COMPLETED (~30 min): win10 reproduces punstrip/data on ALL 419,969 train+val+test rows (0 mismatch) → P3
+reuse valid. Rows per variant: train 378,060 / val 18,036 / test 23,873. Digest stats — callgraph: train 61.5% resolved (mean
+1.97 fns, 47.1% empty), val 54.6% (1.67, 52.7% empty), test 59.3% (2.03, 47.3% empty); random_excl: mean 17.7/18.1/18.2 fns,
+1.9%/1.8%/1.4% empty; addrcall: 18.8/18.9/19.4, 1.5%/0.9%/1.1% empty; win10: 17.6/17.9/18.0, 2.2%/1.1%/1.8% empty.
+Four trainings started 19:45 ET (1340917 none, 1340919 random_excl, 1340921 callgraph, 1340923 addrcall).
+Punstrip trainings, step 2000/~35,400 val_sub F1: none 0.3797 | random_excl 0.3909 | callgraph 0.4020 | addrcall 0.4343 (P3 final
+val_sub best 0.4876). Early ordering none < random < callgraph < union.
+
+## 2026-09-25 (late) — Advisor reply #2: token provenance + same-unit vs different-unit context (LineageBench, existing data)
+Advisor (23:00 ET): favours caller/callee as default if comparable in accuracy and cost (layout-independent); wants the
+compilation-unit explanation PROVEN: trace digest tokens to source files, separate prefix vs rest-of-name gains, compare
+same-unit-outside-window vs different-unit-same-binary context at fixed budget; state when address helps + limitation.
+Implementation (scripts/ctx_checks/provenance_build.py / provenance_analyze.py; source-file labels for all functions of the
+390 test binaries with debug ELFs = results/ctx_layout/files_map_test.json, 103,415 labelled functions):
+  per function: ±10 digest recomputed with per-token contributors → same-file token share; GT sub-token sources
+  (same_file / other_file / absent), prefix source; SU = ≤20 same-file functions OUTSIDE ±10; DU = ≤20 different-file
+  functions outside ±10 (seeded); rows for the adopted head → sens arms su/du. Analysis: T1 F1 by source on the identical
+  subset (incl. both-non-empty subset), T2 Δ(address−none) binned by same-file share (functions / tokens), T3 prefix
+  recall vs rest-of-name F1 for none/address/random/SU/DU, T4 Δ by prefix provenance, package bootstraps SU−DU, address−SU.
+Smoke (3 binaries, 3,862 fns): same-file share of digest TOKENS 0.647; prefix in digest from same file 66%, other file 7%,
+absent 27%; SU empty for 47% (small source files have no same-file functions outside the window) → SU/DU comparison is
+reported on the both-non-empty subset. Jobs: 1342155 build (CPU) → 1342156 array [su, du] on adopted head → 1342157 analyze.

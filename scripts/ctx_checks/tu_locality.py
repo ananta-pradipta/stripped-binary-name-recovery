@@ -44,7 +44,7 @@ def share(files, i, src):
 
 
 def analyse(layout, root):
-    per_row = []
+    per_row = []; files_map = {}
     n_bins = 0; skipped = defaultdict(int)
     for b, L in layout.items():
         elf = L['debug_elf'] or ''
@@ -54,7 +54,7 @@ def analyse(layout, root):
         addrs = L['addrs']; n = len(addrs); idx = {a: i for i, a in enumerate(addrs)}
         files = addr2file(path, addrs)
         if sum(f is not None for f in files) < 0.2 * n: skipped['no_dwarf'] += 1; continue
-        n_bins += 1
+        n_bins += 1; files_map[b] = files
         comp = 'clang' if 'clang' in b else 'gcc'
         opt = 'O' + b.rsplit('_O', 1)[-1][:1] if '_O' in b else '?'
         callers = defaultdict(set)
@@ -77,7 +77,7 @@ def analyse(layout, root):
             rec['callgraph'] = share(files, i, cg); rec['callgraph_n'] = len(cg)
             rec['random_expected'] = (by_file[t] - 1) / (n - 1) if n > 1 else 0.0
             per_row.append(rec)
-    return per_row, n_bins, dict(skipped)
+    return per_row, n_bins, dict(skipped), files_map
 
 
 def aggregate(rows):
@@ -123,9 +123,10 @@ def main():
               f"win10 same-file {agg['all']['win10']['same_file']} | callgraph {agg['all']['callgraph']['same_file']} | random {agg['all']['random_expected_same_file']}")
         return
     layout = json.load(open(args.layout))
-    rows, n_bins, skipped = analyse(layout, args.root)
+    rows, n_bins, skipped, files_map = analyse(layout, args.root)
     agg = aggregate(rows)
     json.dump({'rows': rows, 'n_binaries': n_bins, 'skipped': skipped, 'aggregate': agg}, open(args.out, 'w'))
+    json.dump(files_map, open(args.out.replace('.json', '') + '_files.json', 'w'))
     a = agg['all']
     print(f"EFFECT: tu_locality: {n_bins} binaries analysed, {len(rows)} rows, skipped {skipped}")
     if rows:
