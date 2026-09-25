@@ -27,7 +27,7 @@ the and for with not this that from func file line error warning failed invalid 
 halt baddata warning'''.split())
 MODE_SPEC = {'win5': ('window', 5), 'win10': ('window', 10), 'win20': ('window', 20),
              'callgraph': ('callgraph', CALL_FN_CAP), 'random': ('random', RANDOM_N), 'empty': ('empty', 0),
-             'addrcall': ('addrcall', 10), 'random_excl': ('random_excl', RANDOM_N)}
+             'addrcall': ('addrcall', 10), 'random_excl': ('random_excl', RANDOM_N), 'none': ('none', 0)}
 
 
 def toks(s):
@@ -53,7 +53,7 @@ def rank(ev, src):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--modes', default='win10,win5,win20,callgraph,random,empty')
-    ap.add_argument('--splits', default='test')
+    ap.add_argument('--splits', default='test', help='rows/<split>.jsonl; train,val,test')
     ap.add_argument('--seed', type=int, default=20260925)
     ap.add_argument('--limit-bins', type=int, default=None)
     ap.add_argument('--out-root', default=f'{P}/data_ctx')
@@ -124,7 +124,7 @@ def main():
                         src = random.Random(seed).sample(pool, min(par, len(pool)))
                     else: src = []
                     ctx = rank(ev, src) if src else ''
-                    text = f'/* module context: {ctx} */\n{code}'
+                    text = code if kind == 'none' else f'/* module context: {ctx} */\n{code}'
                     nii = len(r['name']) >= 4 and re.search(r'(?<![A-Za-z0-9_])' + re.escape(r['name']) + r'(?![A-Za-z0-9_])', text) is not None
                     row = {'key': f"{b}_{a}", 'binary': b, 'binpath': r['binpath'], 'package': r['package'], 'addr': a,
                            'name': r['name'], 'code': text, 'regime': r['regime'], 'name_seen': r['name_seen_in_train'],

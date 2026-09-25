@@ -5099,3 +5099,17 @@ small non-significant union gain); selection-by-reliability remains the lever (+
 DECISION (recommended to user): keep the adopted address head for the submission (union +0.004 n.s.; adopting it would
 require router refit + full system rerun), report union/callgraph/random rows + complementarity + max-conf pick as
 analysis; note the deviation from the val rule (union val 0.2192 > address 0.2176) explicitly in the paper.
+
+## 2026-09-25 — Punstrip continuation (`hydra_punstrip_context_continuation_experiment.md`): trained context variants on Punstrip
+Recipe = P3 (a4_punstrip_modctx_v1, job 1232257, 21.5 h on a100_40g): a4_train_codet5p.py, CodeT5+ 220M, Punstrip train split
+(378,060 rows, 8,834 binaries, all decompiled), --bs 8 --accum 4 --max-src 1280 --bf16 --seed 42, default lr 5e-5 / 3 epochs,
+ALL-occurrence masking, RAW-name targets (as P3; scorer canonicalises), greedy, our scorer. Only the digest source set changes.
+Variants (builder punstrip_build_ctxvar.py, --seed 1): P0 none = masked code only (no comment prefix; analogue of LineageBench C0),
+P1 random_excl = 20 uniform functions excluding target and ±10 window, P2 callgraph = direct callers+callees (ghidra_name-resolved,
+cap 40), P4 addrcall = ±10 ∪ callers/callees single ranking, 40 tokens. P3 reused (recipe verified identical; builder win10
+reproduces punstrip/data/{train,val,test} byte-for-byte — smoke 242/242 on 12 train bins; full check in the build job).
+Jobs: build 1340916 (CPU) → train none 1340917 / random_excl 1340919 / callgraph 1340921 / addrcall 1340923 (gpu:a100, ~21 h
+each, in parallel) → predict 1340918 / 1340920 / 1340922 / 1340924 (val+test). Diagnostics after: scripts/ctx_checks/
+punstrip_ctx_diagnostics.py → punstrip/data_ctx/punstrip_ctx_{trained_comparison,bootstrap,complementarity,confidence_select,
+digest_stats}.json + results_table.csv. Callgraph coverage on Punstrip (plan §6.1): test 59% of functions with ≥1 resolved
+caller/callee, mean 2.0, 47% empty digests; train smoke 76% / 2.0 / 30% empty — recorded, to be stated with the result.
