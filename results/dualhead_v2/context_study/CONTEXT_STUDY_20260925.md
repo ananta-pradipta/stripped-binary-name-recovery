@@ -6,7 +6,7 @@ All runs: CodeT5+ 220M generation head, same recipe as the adopted head (a4_code
 digest of string-literal + named-library-call identifiers, same masking, canonical targets; only the SET OF SOURCE
 FUNCTIONS changes. Builder: `scripts/ctx_checks/a4_build_ctxvar.py` (reproduces the adopted digests byte-for-byte on all
 278,753 val+test rows). Files in this folder are the raw outputs (eval JSONs, stats, locality, diagnostics).
-Address+call union head (C4): still running at export time (jobs 1336225/1336226); pending rows marked "pending".
+Address+call union head (C4) completed 2026-09-25 18:00 ET (jobs 1336225/1336226).
 
 ## 1. Trained heads (fair comparison; LineageBench test, 268,136 functions, 50 packages)
 
@@ -16,18 +16,21 @@ Address+call union head (C4): still running at export time (jobs 1336225/1336226
 | 20 random functions of the same binary | 0.2065 | 0.1927 | 0.3891 | 5.5% | 0.1243 | 0.5346 | 0.6395 | 0.1289 |
 | ±10 address neighbours (adopted) | 0.2176 | 0.2125 | 0.4000 | 5.9% | 0.1444 | 0.5530 | 0.6659 | 0.1478 |
 | callers + callees only | 0.2158 | 0.2138 | 0.4030 | 6.1% | 0.1451 | 0.5578 | 0.6795 | 0.1474 |
-| ±10 address ∪ callers/callees (C4) | pending | pending | pending | | | | | |
+| ±10 address ∪ callers/callees (C4) | 0.2192 | 0.2165 | 0.4052 | 6.0% | 0.1479 | 0.5600 | 0.6765 | 0.1509 |
 
 Package-level paired bootstrap (10k resamples over 50 packages):
 - address − callgraph: −0.003 [−0.011, +0.005], address better in 23/50 → tie
 - address − random: +0.011 [+0.002, +0.019], 33/50
 - callgraph − random: +0.014 [+0.005, +0.023], 38/50
+- union − address: +0.005 [−0.001, +0.011], 31/50 (n.s.); union − callgraph: +0.002 [−0.004, +0.008]
 
 Per-function complementarity of the two local sources: oracle max(address, callgraph) = 0.2612 fn (+0.049; FT 0.189 vs
 0.144; RHT 0.624 vs 0.553); the two heads emit the same name for only 12.1% of functions.
 Zero-training selection (per function, take the head with the higher generation confidence): val 0.2302 (+0.013);
 test 0.2224 fn / 0.4199 pkg (+0.010 / +0.020); callgraph chosen for 52% of functions. Margin sweep: val-optimal d=+0.05
 (0.2308), test-optimal d=−0.05 (0.2224) → plain max-confidence is the val-safe rule.
+With the union head: max-conf pick callgraph/union 0.2244, address/callgraph/union 0.2247; oracle over the three 0.2825.
+Conclusion (plan §16): Case B — the union captures little of the per-function complementarity; selection does.
 
 ## 2. Context swapped at inference on the ADOPTED head (no retraining)
 

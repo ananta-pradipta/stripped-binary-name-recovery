@@ -5091,3 +5091,11 @@ from the preds TSVs; no fitting): VAL 0.2302 vs 0.2176/0.2158 single (+0.013); T
 test (0.2224) → plain max-confidence (d=0) is the val-safe rule. Oracle ceiling 0.2612. This is the advisor's
 "select context by reliability" idea in its simplest form; integrating it into the routed system = 2 generation passes per
 function + router refit (c_gen feature changes) — NOT done; decision for user/advisor.
+UNION HEAD (address ∪ callers/callees, one ranking, 40 tokens; jobs 1336225/1336226): VAL 0.2192 (best of the four heads) |
+TEST fn 0.2165 pkg 0.4052 EM 6.0% | FT 0.1479 NCT 0.5600 | seen 0.6765 novel 0.1509. Bootstrap (pkg): union − address
++0.005 [−0.001, +0.011] 31/50 (n.s.); union − callgraph +0.002 [−0.004, +0.008]. Complementarity is NOT captured by the
+union: max-conf pick A/C 0.2224, C/U 0.2244, A/C/U 0.2247; oracle(A,C,U) 0.2825. → plan Case B (equivalent sources,
+small non-significant union gain); selection-by-reliability remains the lever (+0.010–0.012 fn with zero training).
+DECISION (recommended to user): keep the adopted address head for the submission (union +0.004 n.s.; adopting it would
+require router refit + full system rerun), report union/callgraph/random rows + complementarity + max-conf pick as
+analysis; note the deviation from the val rule (union val 0.2192 > address 0.2176) explicitly in the paper.
