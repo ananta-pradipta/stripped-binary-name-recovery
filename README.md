@@ -196,6 +196,16 @@ means of the per-package means (two packages hold 44% of the test functions, so 
 | **HyDRA (routed)** | 220M | **0.249** | **0.234** | **0.237** | **0.472** | 10.7% | **0.145** / **0.169** | **0.693** / **0.828** |
 | HyDRA with oracle head choice (upper bound) | 220M | – | – | 0.255 | 0.505 | – | 0.160 / 0.189 | 0.730 / 0.876 |
 
+### Context-source study (2026-09-25)
+
+Controlled comparison of what feeds the generation head's 40-token context digest (same backbone, recipe and budget;
+only the set of source functions changes), LineageBench test F1 (fn / pkg): none 0.184 / 0.360; 20 random functions
+of the same binary 0.193 / 0.389; ±10 address neighbours (adopted) 0.213 / 0.400; callers + callees 0.214 / 0.403;
+address ∪ callers/callees 0.217 / 0.405. Address vs callers/callees is a tie (package-level −0.003, 95% CI [−0.011, +0.005]);
+the two heads agree on 12% of names, an oracle choice reaches 0.261, and picking the more confident head gives 0.222.
+64% of the ±10 window lies in the target's source file (8% random; 59% on Debian builds). Full tables, locality, layout
+deltas and raw outputs: `results/dualhead_v2/context_study/`; builders in `scripts/ctx_checks/`.
+
 ### By name category (F1 / EM)
 
 | System | Seen (33.7K, 12.6%) | Novel-known (81.6K, 30.4%) | Novel-OOV (152.8K, 57.0%) |
