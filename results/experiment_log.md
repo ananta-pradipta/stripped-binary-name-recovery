@@ -5221,3 +5221,24 @@ different-file context from the same binary adds nothing when trained on it. Pac
 separate SFO from DFF. Address context HURTS when the window has no same-file function (Δ −0.02…−0.03) and helps +0.02 when
 ≥25% is same-file → the "when it helps / when it fails" statement for the paper. Caveat: ADDR-M has 20 context fns while
 SFO/DFF have n=min(20, pools) (median 20, mean 14); the n=20 stratum is the size-fair comparison.
+
+## 2026-09-26 — Punstrip trained context comparison COMPLETE (jobs 1340917–1340924; punstrip/data_ctx/punstrip_ctx_*.json)
+TEST (23,873 fns, 451 binaries, 174 packages; our canonical sub-token scorer; all heads = P3 recipe on Punstrip-train):
+  | head | val F1 | test fn | test pkg | EM |
+  | P0 none (masked body only)            | 0.4313 | 0.3726 | 0.5844 | 13.4% |
+  | P1 random 20, window-excluded, seed 1 | 0.4412 | 0.3934 | 0.5925 | 14.0% |
+  | P2 callers + callees                  | 0.4443 | 0.3862 | 0.6206 | 12.9% |
+  | P3 ±10 address (existing)             | 0.4901 | 0.4013 | 0.6012 | 14.2% |
+  | P4 address ∪ callers/callees          | 0.4896 | 0.4087 | 0.6036 | 14.3% |
+Package-level paired bootstrap (174 pkgs): P3−P1 +0.009 [+0.003, +0.015] (71/174 higher); P2−P1 +0.028 [+0.019, +0.037]
+(117/174); P3−P2 −0.019 [−0.029, −0.010] (56/174) — callgraph ABOVE address at package level, address above callgraph at
+function level (+0.015); P4−P3 +0.002 [−0.003, +0.007] n.s.; P4−P2 −0.017 [−0.027, −0.007]; P3−P0 +0.017 [+0.009, +0.025];
+P1−P0 +0.008 [+0.001, +0.015]. Function-level Δ: P3−P0 +0.029, P1−P0 +0.021, P2−P0 +0.014, P4−P0 +0.036.
+Complementarity P2/P3: same prediction 29.6% (test), both exact 21.9% of P3's 24.5% / P2's 24.9%; oracle max 0.4521 (+0.051);
+max-confidence pick: val 0.4956 (+0.006), test 0.4125 fn / 0.6343 pkg (+0.011 / +0.033), P2 chosen 43.7%.
+READING (continuation plan §15): local context > no context on both corpora (Q1 yes); local > random holds for address (+0.009
+pkg, +0.008 fn) and callgraph (+0.028 pkg) but random retains most of the function-level gain on Punstrip (small Debian
+binaries: random functions are same-file 34% of the time); address ≈ callgraph in aggregate with opposite signs at the two
+levels (callgraph wins on many small packages, address on function-weighted mass) (Q3 partly); per-function complementarity
+reproduces (Q4 yes: 30% agreement, oracle +0.05, pick +0.011/+0.033); union adds little over the better single source (Q5 yes);
+confidence is a usable selection signal (Q6 yes). Callgraph digests empty for 47% of Punstrip functions (stated).

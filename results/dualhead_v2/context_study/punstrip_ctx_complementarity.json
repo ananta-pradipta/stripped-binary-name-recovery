@@ -1,0 +1,20 @@
+{
+ "val": {
+  "n": 18036,
+  "same_prediction": 0.3409,
+  "P3_exact": 0.3038,
+  "P2_exact": 0.3041,
+  "both_exact": 0.2701,
+  "oracle_max_P2_P3": 0.5321,
+  "oracle_max_P2_P3_P4": 0.5525
+ },
+ "test": {
+  "n": 23872,
+  "same_prediction": 0.2957,
+  "P3_exact": 0.2451,
+  "P2_exact": 0.2487,
+  "both_exact": 0.2189,
+  "oracle_max_P2_P3": 0.4521,
+  "oracle_max_P2_P3_P4": 0.4747
+ }
+}

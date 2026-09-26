@@ -1,0 +1,67 @@
+{
+ "P3 \u00b110 address (adopted) - P1 random (window-excluded, seed 1)": {
+  "delta_fn": 0.0079,
+  "delta_pkg": 0.0087,
+  "ci95_pkg": [
+   0.0028,
+   0.0147
+  ],
+  "first_higher_packages": "71/174"
+ },
+ "P2 callers+callees - P1 random (window-excluded, seed 1)": {
+  "delta_fn": -0.0072,
+  "delta_pkg": 0.0281,
+  "ci95_pkg": [
+   0.0193,
+   0.0366
+  ],
+  "first_higher_packages": "117/174"
+ },
+ "P3 \u00b110 address (adopted) - P2 callers+callees": {
+  "delta_fn": 0.0151,
+  "delta_pkg": -0.0194,
+  "ci95_pkg": [
+   -0.0288,
+   -0.0097
+  ],
+  "first_higher_packages": "56/174"
+ },
+ "P4 address \u222a callers/callees - P3 \u00b110 address (adopted)": {
+  "delta_fn": 0.0074,
+  "delta_pkg": 0.0024,
+  "ci95_pkg": [
+   -0.0025,
+   0.0072
+  ],
+  "first_higher_packages": "64/174"
+ },
+ "P4 address \u222a callers/callees - P2 callers+callees": {
+  "delta_fn": 0.0225,
+  "delta_pkg": -0.017,
+  "ci95_pkg": [
+   -0.0266,
+   -0.0071
+  ],
+  "first_higher_packages": "58/174"
+ },
+ "P3 \u00b110 address (adopted) - P0 none": {
+  "delta_fn": 0.0287,
+  "delta_pkg": 0.0168,
+  "ci95_pkg": [
+   0.0093,
+   0.0247
+  ],
+  "first_higher_packages": "78/174"
+ },
+ "P1 random (window-excluded, seed 1) - P0 none": {
+  "delta_fn": 0.0209,
+  "delta_pkg": 0.0081,
+  "ci95_pkg": [
+   0.0009,
+   0.0152
+  ],
+  "first_higher_packages": "70/174"
+ },
+ "n_functions": 23872,
+ "n_packages": 174
+}

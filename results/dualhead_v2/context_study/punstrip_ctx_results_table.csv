@@ -1,0 +1,6 @@
+context_source,lineagebench_f1_fn,lineagebench_f1_pkg,punstrip_f1_fn,punstrip_f1_pkg,punstrip_em
+P0 none,0.184,0.36,0.3726,0.5844,0.1344
+P1 random (window-excluded, seed 1),0.1927,0.3891,0.3934,0.5925,0.1397
+P2 callers+callees,0.2138,0.403,0.3862,0.6206,0.1288
+P3 ±10 address (adopted),0.2125,0.4,0.4013,0.6012,0.1424
+P4 address ∪ callers/callees,0.2165,0.4052,0.4087,0.6036,0.1427

@@ -110,6 +110,27 @@ Earlier census (job 1210177, 12K novel-name functions with zero self-evidence): 
 
 Punstrip digest statistics: callers + callees resolved for 59.3% of functions, mean 2.0 functions, 47.3% empty digests; ±10 mean 18.0, 1.8% empty; random mean 19.1, 0.1% empty; union mean 19.4, 1.1% empty. (Seen/novel splits are not reported for these arms: the Punstrip row files carry a different flag key; use punstrip_strata.py for strata.) Punstrip retrained variants were not run.
 
+## Plan §14 (continuation) — Punstrip TRAINED context comparison (P3 recipe, Punstrip train split; test 23,873 fns / 451 binaries / 174 packages; our scorer)
+
+| head | val F1 | test F1 (fn) | test F1 (pkg) | EM |
+|---|---|---|---|---|
+| P0 none | 0.4313 | 0.3726 | 0.5844 | 13.44% |
+| P1 20 random same-binary, window-excluded (seed 1) | 0.4412 | 0.3934 | 0.5925 | 13.97% |
+| P2 callers + callees | 0.4443 | 0.3862 | 0.6206 | 12.88% |
+| P3 ±10 address (existing model) | 0.4901 | 0.4013 | 0.6012 | 14.24% |
+| P4 address ∪ callers/callees | 0.4896 | 0.4087 | 0.6036 | 14.27% |
+
+Package-level paired bootstrap (174 packages, 10,000 resamples): P3−P1 +0.0087 [+0.0028, +0.0147] 71/174; P2−P1 +0.0281
+[+0.0193, +0.0366] 117/174; P3−P2 −0.0194 [−0.0288, −0.0097] 56/174; P4−P3 +0.0024 [−0.0025, +0.0072] 64/174; P4−P2 −0.0170
+[−0.0266, −0.0071] 58/174; P3−P0 +0.0168 [+0.0093, +0.0247] 78/174; P1−P0 +0.0081 [+0.0009, +0.0152] 70/174.
+Function-level Δ: P3−P1 +0.0079; P2−P1 −0.0072; P3−P2 +0.0151; P4−P3 +0.0074; P4−P2 +0.0225; P3−P0 +0.0287; P1−P0 +0.0209.
+P2/P3 complementarity: same prediction 34.1% (val) / 29.6% (test); exact match P3 24.5%, P2 24.9%, both 21.9% (test); oracle
+max(P2,P3) 0.5321 val / 0.4521 test. Max-confidence selection: val 0.4956; test 0.4125 fn / 0.6343 pkg; P2 chosen 40.7% val / 43.7% test.
+Digest statistics (Punstrip): callgraph resolved for 61.5% train / 59.3% test functions, mean 2.0, 47% empty digests; random_excl
+mean 17.7–18.2, 1.4–1.9% empty; union 18.8–19.4, ~1% empty; ±10 17.6–18.0, 1–2% empty.
+Cross-benchmark (F1 fn / pkg): none 0.184/0.360 vs 0.373/0.584; random 0.193/0.389 vs 0.393/0.593; callers+callees 0.214/0.403
+vs 0.386/0.621; ±10 address 0.213/0.400 vs 0.401/0.601; union 0.217/0.405 vs 0.409/0.604 (results_table.csv).
+
 ## Reproduction checks
 - LineageBench builder ±10 mode vs adopted training data (results/a4_modctx): 278,753 val+test rows compared, 0 mismatches.
 - Punstrip builder ±10 mode vs punstrip/data/test.jsonl: 23,873 rows compared, 0 mismatches.

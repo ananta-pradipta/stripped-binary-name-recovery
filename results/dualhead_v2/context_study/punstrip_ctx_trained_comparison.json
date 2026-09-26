@@ -1,0 +1,42 @@
+{
+ "P0 none": {
+  "tag": "punstrip_ctxnone_v1",
+  "val_f1": 0.4313,
+  "test_f1_fn": 0.3726,
+  "test_f1_pkg": 0.5844,
+  "test_em": 0.1344,
+  "n_test": 23873
+ },
+ "P1 random (window-excluded, seed 1)": {
+  "tag": "punstrip_ctxrandom_excl_v1",
+  "val_f1": 0.4412,
+  "test_f1_fn": 0.3934,
+  "test_f1_pkg": 0.5925,
+  "test_em": 0.1397,
+  "n_test": 23873
+ },
+ "P2 callers+callees": {
+  "tag": "punstrip_ctxcallgraph_v1",
+  "val_f1": 0.4443,
+  "test_f1_fn": 0.3862,
+  "test_f1_pkg": 0.6206,
+  "test_em": 0.1288,
+  "n_test": 23873
+ },
+ "P3 \u00b110 address (adopted)": {
+  "tag": "punstrip_modctx_v1",
+  "val_f1": 0.4901,
+  "test_f1_fn": 0.4013,
+  "test_f1_pkg": 0.6012,
+  "test_em": 0.1424,
+  "n_test": 23873
+ },
+ "P4 address \u222a callers/callees": {
+  "tag": "punstrip_ctxaddrcall_v1",
+  "val_f1": 0.4896,
+  "test_f1_fn": 0.4087,
+  "test_f1_pkg": 0.6036,
+  "test_em": 0.1427,
+  "n_test": 23873
+ }
+}
