@@ -5242,3 +5242,28 @@ binaries: random functions are same-file 34% of the time); address ≈ callgraph
 levels (callgraph wins on many small packages, address on function-weighted mass) (Q3 partly); per-function complementarity
 reproduces (Q4 yes: 30% agreement, oracle +0.05, pick +0.011/+0.033); union adds little over the better single source (Q5 yes);
 confidence is a usable selection signal (Q6 yes). Callgraph digests empty for 47% of Punstrip functions (stated).
+
+## 2026-09-26 — Caller/callee refinement plan (`hydra_caller_callee_refinement_plan.md`): §10 strata + B1–B4 launched
+§10 stratified error analysis of B0 (flat callers+callees head, test 268,136 fns; results/ctx_layout/b0_strata.json;
+mean 3.1 callers / 3.1 callees / 15.9 digest tokens; address and none heads as references):
+  | stratum | n (share) | B0 fn / pkg / EM | address fn | none fn |
+  | empty digest      | 71,500 (26.7%) | 0.151 / 0.350 / 4.3% | 0.174 | 0.147 |
+  | non-empty digest  | 196,636 (73.3%)| 0.237 / 0.416 / 6.8% | 0.226 | 0.199 |
+  | neither relation  | 23,034 (8.6%)  | 0.304 / 0.393 / 10.0%| 0.335 | 0.299 |
+  | caller only       | 50,206 (18.7%) | 0.213 / 0.382 / 8.2% | 0.214 | 0.182 |
+  | callee only       | 35,838 (13.4%) | 0.230 / 0.483 / 7.7% | 0.230 | 0.205 |
+  | both              | 159,058 (59.3%)| 0.197 / 0.398 / 4.6% | 0.190 | 0.165 |
+  | 1 neighbour       | 42,925 (16.0%) | 0.230 / 0.390 / 9.2% | 0.234 | 0.198 |
+  | 2–3 neighbours    | 71,105 (26.5%) | 0.218 / 0.389 / 6.5% | 0.217 | 0.191 |
+  | 4+ neighbours     | 131,072 (48.9%)| 0.190 / 0.451 / 4.3% | 0.182 | 0.158 |
+Reading: B0's deficit vs address sits entirely in the empty-digest stratum (−0.023 on 27% of functions, where B0 ≈ none);
+with a non-empty digest B0 beats address (+0.010), most on 4+ neighbours (+0.008). 18% of empties have ≥1 resolved
+neighbour without evidence tokens (27% empty vs 8.6% no relation) → B3 signatures target exactly that gap.
+Variants built by scripts/ctx_checks/cg_variants_build.py: b1_role (B0 ranking, tokens grouped callees:/callers:/both:),
+b2_bal (20+20 quotas, no fill), b3_sig (per-neighbour IDF-ranked signature: strings + API + normalised code tokens
+[keywords, non-Ghidra identifiers, constant classes zero/one/pow2/small/const/large], k = max(3, 40//n), ≤40 total,
+"callee: … | caller: …"), b4_typed (b3 with api:/str:/code: segments; api/str tokens removed from code). IDF cache over
+190,151 train functions (25,377 tokens). Smoke (8 val bins): empties 10.9% for all four = functions with no relation;
+mean tokens b1 17.5 / b2 12.7 / b3 26.5 / b4 21.5. Prefix "/* call context: … */".
+Jobs: 1343979 build (+strata) → trains b1 1343980 / b2 1343982 / b3 1343984 / b4 1343986 (dm recipe, ~6.5 h) → predicts
+1343981/83/85/87 (val+test). Selection on validation per plan §12; Punstrip confirmation of the winner after.

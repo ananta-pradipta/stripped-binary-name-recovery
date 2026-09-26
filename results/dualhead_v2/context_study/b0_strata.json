@@ -1,0 +1,98 @@
+{
+ "n": 268136,
+ "mean_callers": 3.1152027329414924,
+ "mean_callees": 3.1152027329414924,
+ "mean_digest_tokens": 15.921700181997196,
+ "strata": {
+  "empty digest": {
+   "n": 71500,
+   "share": 0.2667,
+   "B0_fn": 0.151,
+   "B0_pkg": 0.3498,
+   "B0_em": 0.0428,
+   "address_fn": 0.1742,
+   "none_fn": 0.147
+  },
+  "non-empty digest": {
+   "n": 196636,
+   "share": 0.7333,
+   "B0_fn": 0.2367,
+   "B0_pkg": 0.4157,
+   "B0_em": 0.0681,
+   "address_fn": 0.2264,
+   "none_fn": 0.1991
+  },
+  "neither": {
+   "n": 23034,
+   "share": 0.0859,
+   "B0_fn": 0.3037,
+   "B0_pkg": 0.3929,
+   "B0_em": 0.1003,
+   "address_fn": 0.3353,
+   "none_fn": 0.2992
+  },
+  "caller only": {
+   "n": 50206,
+   "share": 0.1872,
+   "B0_fn": 0.2131,
+   "B0_pkg": 0.3821,
+   "B0_em": 0.0817,
+   "address_fn": 0.2136,
+   "none_fn": 0.1824
+  },
+  "callee only": {
+   "n": 35838,
+   "share": 0.1337,
+   "B0_fn": 0.2299,
+   "B0_pkg": 0.4825,
+   "B0_em": 0.0772,
+   "address_fn": 0.2303,
+   "none_fn": 0.2048
+  },
+  "both": {
+   "n": 159058,
+   "share": 0.5932,
+   "B0_fn": 0.1974,
+   "B0_pkg": 0.3984,
+   "B0_em": 0.0457,
+   "address_fn": 0.1903,
+   "none_fn": 0.1652
+  },
+  "0 neighbours": {
+   "n": 23034,
+   "share": 0.0859,
+   "B0_fn": 0.3037,
+   "B0_pkg": 0.3929,
+   "B0_em": 0.1003,
+   "address_fn": 0.3353,
+   "none_fn": 0.2992
+  },
+  "1 neighbour": {
+   "n": 42925,
+   "share": 0.1601,
+   "B0_fn": 0.2301,
+   "B0_pkg": 0.3898,
+   "B0_em": 0.0923,
+   "address_fn": 0.2335,
+   "none_fn": 0.1982
+  },
+  "2-3 neighbours": {
+   "n": 71105,
+   "share": 0.2652,
+   "B0_fn": 0.2182,
+   "B0_pkg": 0.3891,
+   "B0_em": 0.0646,
+   "address_fn": 0.2171,
+   "none_fn": 0.1908
+  },
+  "4+ neighbours": {
+   "n": 131072,
+   "share": 0.4888,
+   "B0_fn": 0.1903,
+   "B0_pkg": 0.451,
+   "B0_em": 0.0426,
+   "address_fn": 0.1815,
+   "none_fn": 0.158
+  }
+ }
+}
