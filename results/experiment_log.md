@@ -5159,3 +5159,19 @@ different-unit functions ≈ random; the gain is ~5× larger when the digest car
 functions whose prefix is in the digest (Δ ≈ +0.08 vs +0.02), regardless of which file supplied it — i.e. module (compilation-
 unit) vocabulary, chiefly the naming prefix, explains the benefit; adjacency matters only as the mechanism that makes
 same-unit functions reachable. Files: results/dualhead_v2/context_study/{provenance_analysis.json, sens_lineagebench_su/du.json}.
+
+## 2026-09-26 — Follow-up plan (`hydra_fse_source_locality_followup_plan.md`): matched-population mechanism study
+Source-file labels (addr2line on unstripped builds) now cover train 788/956 binaries (178,523/190,151 rows), val 92/104
+(4,056/10,617 rows), test 390/611 (103,415 rows): results/ctx_layout/files_map_{train,val,test}.json.
+Matched population (plan §12–§13): functions whose source file has ≥1 other function outside ±10 AND ≥1 different-file
+function outside ±10; both conditions get the SAME n = min(20, |SFO pool|, |DFF pool|) (val: n mean 10.6, median 9, n=20
+for 26%); val matched rows 2,146 (of 4,056 labelled). Four heads trained on IDENTICAL matched train rows with the dm recipe:
+NONE-M (masked body only), ADDR-M (±10 window, unchanged), SFO (same file outside ±10), DFF (different file outside ±10).
+Jobs: build 1342605 → trains sfo 1342607 / dff 1342609 / addrm 1342611 / nonem 1342613 → predicts 1342608/10/12/14 →
+samefile_analyze 1342615 (T14 table pkg/fn/prefix/remainder, §22 bootstraps, §16 bins on the matched population).
+prov_extra 1342616 (CPU): token categories same-only/diff-only/both/unknown for digest and GT-matching tokens; prefix-evidence
+coverage (first / any-remaining / all-remaining) per source incl. SU/DU; call-resolution stats (FUN_ refs resolved to retained
+functions; functions with any resolved relation); extraction cost per function (address vs callers/callees); plus rerun of
+provenance_analyze with 5-bin locality table (§16) and descriptive OLS (§17).
+Caveat to report (§12): ADDR-M keeps the full ±10 window (~20 fns) while SFO/DFF are matched to each other at n≈10; the primary
+test is SFO vs DFF; ADDR-M vs SFO is reported with this difference stated.

@@ -106,6 +106,27 @@ def main():
         bs = sorted(sum(rng.choice(d) for _ in d) / len(d) for _ in range(10000))
         boot[f'{a} - {b}'] = {'delta_pkg': round(sum(d) / len(d), 4), 'ci95': [round(bs[250], 4), round(bs[9749], 4)], 'first_higher': f'{sum(1 for x in d if x > 0)}/{len(d)}'}
         print(f"BOOT {a} - {b}: pkg {sum(d)/len(d):+.4f} CI [{bs[250]:+.4f},{bs[9749]:+.4f}] first higher {sum(1 for x in d if x>0)}/{len(d)}")
+    # 5-bin locality table (plan §16) and descriptive regression (§17)
+    bins5 = {'0%': [], '1-25%': [], '25-50%': [], '50-75%': [], '75-100%': []}
+    X = []; Y = []
+    for k in keys:
+        s = prov[k]['win_same_file_fns'] / max(1, prov[k]['win_n']); d = arms['address'][k][0] - arms['none'][k][0]
+        b = '0%' if s == 0 else '1-25%' if s <= 0.25 else '25-50%' if s <= 0.5 else '50-75%' if s <= 0.75 else '75-100%'
+        bins5[b].append((arms['address'][k][0], arms['none'][k][0]))
+        gts = prov[k]['gt_sources']; X.append([1.0, s, float(prov[k]['win_same_file_fns']), 1.0 if prov[k]['prefix_source'] != 'absent' else 0.0,
+                  float(sum(1 for g in gts if g != 'absent')), 1.0 if 'clang' in prov[k]['binary'] else 0.0]); Y.append(d)
+    t16 = {b: {'n': len(v), 'address_f1': mean([x for x, _ in v]), 'none_f1': mean([y for _, y in v]), 'delta': mean([x - y for x, y in v])} for b, v in bins5.items()}
+    print('T16', {b: (d['n'], d['address_f1'], d['none_f1'], d['delta']) for b, d in t16.items()})
+    try:
+        import numpy as np
+        Xa = np.array(X); Ya = np.array(Y); beta, *_ = np.linalg.lstsq(Xa, Ya, rcond=None)
+        pred = Xa @ beta; r2 = 1 - ((Ya - pred) ** 2).sum() / ((Ya - Ya.mean()) ** 2).sum()
+        names = ['intercept', 'same_file_share_win10', 'n_same_file_win10', 'prefix_present', 'n_gt_subtoks_present', 'clang']
+        t17 = {'coefficients': {n: round(float(b), 4) for n, b in zip(names, beta)}, 'r2': round(float(r2), 4), 'n': len(Y), 'note': 'descriptive OLS of per-function gain (address - none) on locality/evidence covariates'}
+        print('T17', t17)
+    except Exception as e:
+        t17 = {'error': str(e)}
+    out.update({'T16_bins5': t16, 'T17_regression': t17})
     out.update({'T1': t1, 'T2': t2, 'T3': t3, 'T4': t4, 'bootstrap_both_nonempty': boot,
                 'su_nonempty': len(su_nonempty), 'du_nonempty': len(du_nonempty)})
     json.dump(out, open(f'{WS}/results/ctx_layout/provenance_analysis.json', 'w'), indent=1)

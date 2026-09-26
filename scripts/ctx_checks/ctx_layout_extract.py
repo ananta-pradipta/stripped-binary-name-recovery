@@ -11,15 +11,17 @@ WS = '/project/hz79/_shared/cs785/dh2'
 RL = '/project/hz79/_shared/cs785/relift_ws'
 REF_RE = re.compile(r'\b(?:FUN_|sub_)([0-9a-fA-F]{4,})')
 GNAME_RE = re.compile(r'([0-9a-fA-F]+)$')
-out_path = sys.argv[1] if len(sys.argv) > 1 else f'{WS}/results/ctx_layout/test_layout.json'
+tier = sys.argv[2] if len(sys.argv) > 2 else 'test'
+SPLIT_KEY = {'train': 'train', 'val': 'val_xproj', 'test': 'test'}[tier]
+out_path = sys.argv[1] if len(sys.argv) > 1 else f'{WS}/results/ctx_layout/{tier}_layout.json'
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 split = json.load(open(f'{RL}/data/split_v2.json'))
 proto = defaultdict(list)
-for line in open(f'{WS}/results/baseline_protocol_v2/test.jsonl'):
+for line in open(f'{WS}/results/baseline_protocol_v2/{tier}.jsonl'):
     r = json.loads(line); proto[r['binary']].append({'addr': r['entry_addr'], 'name': r['name'], 'regime': r.get('regime'),
                                                      'seen': r.get('name_seen_in_train')})
 out = {}; n_fn = 0; n_rows = 0; n_missing = 0
-for b in split['test']:
+for b in split[SPLIT_KEY]:
     p = f'{WS}/symgen_v2/decomp/{b}.json'; lp = f'{RL}/data/labels_v2/{b}.json'
     if not os.path.exists(p) or not os.path.exists(lp): n_missing += 1; continue
     dec = json.load(open(p)); lab = json.load(open(lp))
@@ -39,4 +41,4 @@ for b in split['test']:
               'addrs': addrs, 'callees': callees, 'rows': proto.get(b, [])}
     n_fn += len(addrs); n_rows += len(proto.get(b, []))
 json.dump(out, open(out_path, 'w'))
-print(f'EFFECT: layout for {len(out)} test binaries ({n_missing} missing decomp/label), {n_fn} functions, {n_rows} protocol rows -> {out_path}', flush=True)
+print(f'EFFECT: layout for {len(out)} {tier} binaries ({n_missing} missing decomp/label), {n_fn} functions, {n_rows} protocol rows -> {out_path}', flush=True)
