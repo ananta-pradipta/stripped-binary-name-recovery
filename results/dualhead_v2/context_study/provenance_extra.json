@@ -1,0 +1,99 @@
+{
+ "labelled_functions": 103397,
+ "digest_tokens": {
+  "same_file_only": {
+   "n": 1099762,
+   "share": 0.5535
+  },
+  "both": {
+   "n": 193792,
+   "share": 0.0975
+  },
+  "different_file_only": {
+   "n": 652376,
+   "share": 0.3284
+  },
+  "unknown": {
+   "n": 40835,
+   "share": 0.0206
+  }
+ },
+ "gt_matching_tokens": {
+  "same_file_only": {
+   "n": 45763,
+   "share": 0.6398
+  },
+  "both": {
+   "n": 16533,
+   "share": 0.2311
+  },
+  "different_file_only": {
+   "n": 8797,
+   "share": 0.123
+  },
+  "unknown": {
+   "n": 439,
+   "share": 0.0061
+  }
+ },
+ "prefix_evidence_coverage": {
+  "win10": {
+   "n": 267726,
+   "first_present": 0.359,
+   "any_remaining_present": 0.3264,
+   "all_remaining_present": 0.052,
+   "n_with_remaining": 258907
+  },
+  "callgraph": {
+   "n": 267726,
+   "first_present": 0.2067,
+   "any_remaining_present": 0.231,
+   "all_remaining_present": 0.058,
+   "n_with_remaining": 258907
+  },
+  "random": {
+   "n": 267726,
+   "first_present": 0.2199,
+   "any_remaining_present": 0.1924,
+   "all_remaining_present": 0.0131,
+   "n_with_remaining": 258907
+  },
+  "su": {
+   "n": 103125,
+   "first_present": 0.1529,
+   "any_remaining_present": 0.1487,
+   "all_remaining_present": 0.0108,
+   "n_with_remaining": 99566
+  },
+  "du": {
+   "n": 103125,
+   "first_present": 0.2573,
+   "any_remaining_present": 0.1995,
+   "all_remaining_present": 0.0102,
+   "n_with_remaining": 99566
+  },
+  "addrcall": {
+   "n": 267726,
+   "first_present": 0.3847,
+   "any_remaining_present": 0.3716,
+   "all_remaining_present": 0.0726,
+   "n_with_remaining": 258907
+  }
+ },
+ "call_resolution": {
+  "binaries": 610,
+  "functions": 268178,
+  "fun_references": 1935979,
+  "resolved_to_retained_function": 1440956,
+  "resolved_share": 0.7443,
+  "functions_with_any_FUN_reference": 0.9982,
+  "functions_with_resolved_relation": 0.914
+ },
+ "extraction_cost_seconds": {
+  "address_window_total": 46.21,
+  "callers_callees_total": 56.9,
+  "address_per_function_ms": 0.172,
+  "callers_callees_per_function_ms": 0.212,
+  "note": "CPU time to build the 40-token digest for every function of every test binary from the decompiled text (shared decompilation excluded); call resolution = FUN_ address lookup"
+ }
+}

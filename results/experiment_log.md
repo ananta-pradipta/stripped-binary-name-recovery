@@ -5175,3 +5175,22 @@ functions; functions with any resolved relation); extraction cost per function (
 provenance_analyze with 5-bin locality table (§16) and descriptive OLS (§17).
 Caveat to report (§12): ADDR-M keeps the full ±10 window (~20 fns) while SFO/DFF are matched to each other at n≈10; the primary
 test is SFO vs DFF; ADDR-M vs SFO is reported with this difference stated.
+prov_extra 1342616 DONE (results/ctx_layout/provenance_extra.json):
+  Digest-token provenance (103,397 labelled test fns, ±10 digest): same-file-only 55.4% | both 9.8% | different-file-only
+  32.8% | unknown 2.1%. GT-MATCHING tokens: same-file-only 64.0% | both 23.1% | different-file-only 12.3% | unknown 0.6%
+  → 87% of the useful tokens have same-file support (65% of all tokens).
+  Prefix-evidence coverage (first GT sub-token present / any remaining / all remaining): ±10 0.359 / 0.326 / 0.052;
+  callers+callees 0.207 / 0.231 / 0.058; random 0.220 / 0.192 / 0.013; union 0.385 / 0.372 / 0.073; SU 0.153 / 0.149 / 0.011
+  and DU 0.257 / 0.200 / 0.010 on the labelled subset INCLUDING empty SU digests (49%) — compare SU/DU only on the matched
+  population (samefile_analyze).
+  Call resolution (610 test bins, 268,178 fns): 1,935,979 FUN_ references, 74.4% resolve to a retained function (the rest
+  point to functions removed by the protocol's dedup/dynsym filter or unresolved); 99.8% of functions contain ≥1 FUN_ ref.
+  Extraction cost (digest construction from decompiled text, decompilation excluded): address 0.172 ms/function,
+  callers+callees 0.212 ms/function (46 s vs 57 s for the whole test tier) — comparable, both negligible vs Ghidra.
+provenance_analyze rerun: 5-bin locality table (window same-file function share → address F1 / none F1 / Δ): 0% (3,038)
+  0.233/0.204/+0.029; 1–25% (14,531) 0.162/0.134/+0.028; 25–50% (21,015) 0.157/0.129/+0.029; 50–75% (23,504)
+  0.176/0.137/+0.039; 75–100% (41,309) 0.206/0.169/+0.036. Descriptive OLS of per-function Δ (R² 0.022, n 103,397):
+  prefix_present +0.028, n_gt_subtoks_present +0.016, same_file_share −0.016, n_same_file +0.001, clang −0.008 → once
+  evidence presence is controlled, same-file share itself adds nothing (mechanism = vocabulary, adjacency = reachability).
+Matched population built (1342605): train 112,408 rows / 788 bins (n_ctx mean 15.2, median 20; 59% full 20; SFO empty 9.2%,
+  DFF empty 3.9%), val 2,146, test 68,624 / 390 bins (n mean 14.3; SFO empty 23.6%, DFF empty 11.4%). Trains 1342607/09/11/13 running.

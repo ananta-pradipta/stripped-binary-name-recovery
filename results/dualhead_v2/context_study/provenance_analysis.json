@@ -2,6 +2,51 @@
  "n_functions": 103397,
  "n_binaries": 390,
  "n_packages": 27,
+ "T16_bins5": {
+  "0%": {
+   "n": 3038,
+   "address_f1": 0.2328,
+   "none_f1": 0.2039,
+   "delta": 0.029
+  },
+  "1-25%": {
+   "n": 14531,
+   "address_f1": 0.1619,
+   "none_f1": 0.1343,
+   "delta": 0.0276
+  },
+  "25-50%": {
+   "n": 21015,
+   "address_f1": 0.1571,
+   "none_f1": 0.1285,
+   "delta": 0.0286
+  },
+  "50-75%": {
+   "n": 23504,
+   "address_f1": 0.1761,
+   "none_f1": 0.1367,
+   "delta": 0.0394
+  },
+  "75-100%": {
+   "n": 41309,
+   "address_f1": 0.2057,
+   "none_f1": 0.1694,
+   "delta": 0.0363
+  }
+ },
+ "T17_regression": {
+  "coefficients": {
+   "intercept": 0.0145,
+   "same_file_share_win10": -0.0157,
+   "n_same_file_win10": 0.001,
+   "prefix_present": 0.0283,
+   "n_gt_subtoks_present": 0.0155,
+   "clang": -0.0078
+  },
+  "r2": 0.0224,
+  "n": 103397,
+  "note": "descriptive OLS of per-function gain (address - none) on locality/evidence covariates"
+ },
  "T1": {
   "none": {
    "f1_fn": 0.1497,
