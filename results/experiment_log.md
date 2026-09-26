@@ -5135,3 +5135,27 @@ Implementation (scripts/ctx_checks/provenance_build.py / provenance_analyze.py; 
 Smoke (3 binaries, 3,862 fns): same-file share of digest TOKENS 0.647; prefix in digest from same file 66%, other file 7%,
 absent 27%; SU empty for 47% (small source files have no same-file functions outside the window) → SU/DU comparison is
 reported on the both-non-empty subset. Jobs: 1342155 build (CPU) → 1342156 array [su, du] on adopted head → 1342157 analyze.
+Provenance build 1342155 COMPLETED: 103,397 functions / 390 binaries. Same-file share of the 40 digest tokens the adopted head
+sees: 0.651. Prefix (first GT sub-token) in the ±10 digest: from a same-file neighbour 22,634 (21.9%), from another file
+only 3,573 (3.5%), absent 77,190 (74.6%). SU (same-file outside ±10) available for 51.1% of functions (48.9% empty);
+DU available for 97.6%. Arms 1342156 [su, du] running on the adopted head; analysis 1342157 queued.
+PROVENANCE ANALYSIS (1342156/1342157; subset = 103,397 scored test fns with source-file labels, 390 bins, 27 pkgs; absolute
+levels below the full tier because the subset is FT-heavy):
+T1 F1 fn/pkg on the subset — trained heads: none 0.1497/0.296, address 0.1837/0.331, callgraph 0.1877/0.326, random 0.1626/0.317,
+  union 0.1923/0.332; inference arms on the adopted head: random 0.1583/0.297, callgraph-swap 0.1695/0.300,
+  SAME-UNIT-outside-window (SU) 0.1619/0.290, DIFFERENT-UNIT (DU) 0.1542/0.280.
+  Both-non-empty subset (n=51,944): none 0.1746 | address 0.2132 | SU 0.2067 | callgraph-swap 0.1975 | random 0.1822 | DU 0.1774.
+  Bootstrap (24 pkgs): SU − DU +0.047 [+0.017, +0.076] 20/24; address − SU +0.012 [−0.000, +0.024] 18/24; SU − random +0.035
+  [+0.008, +0.066]; DU − random −0.011 [−0.027, +0.003].
+T2 Δ(address − none) by same-file share of the WINDOW functions: 0 → +0.029 (n 3,038), (0,0.5) +0.027 (28,283), [0.5,1) +0.037
+  (44,243), 1 → +0.038 (27,833); by same-file share of the digest TOKENS: 0 → +0.008 (25,910), (0,0.5) +0.035 (18,144),
+  [0.5,1) +0.049 (21,384), 1 → +0.043 (37,959).
+T3 prefix recall / rest-of-name F1: none 0.143/0.128 → address 0.183/0.154 (Δ +0.040 / +0.027); random 0.160/0.132; SU
+  0.160/0.137; DU 0.154/0.130.
+T4 Δ(address − none) by where the GT prefix in the digest came from: same file +0.077 (n 22,634; 0.332→0.409), other file
+  +0.085 (n 3,573; 0.141→0.226), absent +0.019 (n 77,190; 0.097→0.116).
+Reading: same-unit functions OUTSIDE the window recover most of the address gain (SU ≈ address, borderline −0.012 pkg);
+different-unit functions ≈ random; the gain is ~5× larger when the digest carries same-file tokens and concentrates on
+functions whose prefix is in the digest (Δ ≈ +0.08 vs +0.02), regardless of which file supplied it — i.e. module (compilation-
+unit) vocabulary, chiefly the naming prefix, explains the benefit; adjacency matters only as the mechanism that makes
+same-unit functions reachable. Files: results/dualhead_v2/context_study/{provenance_analysis.json, sens_lineagebench_su/du.json}.
