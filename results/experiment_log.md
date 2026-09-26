@@ -5194,3 +5194,30 @@ provenance_analyze rerun: 5-bin locality table (window same-file function share 
   evidence presence is controlled, same-file share itself adds nothing (mechanism = vocabulary, adjacency = reachability).
 Matched population built (1342605): train 112,408 rows / 788 bins (n_ctx mean 15.2, median 20; 59% full 20; SFO empty 9.2%,
   DFF empty 3.9%), val 2,146, test 68,624 / 390 bins (n mean 14.3; SFO empty 23.6%, DFF empty 11.4%). Trains 1342607/09/11/13 running.
+Matched-population heads TRAINED (2026-09-26 ~07:00 ET; 112,408 matched train rows each): FULL matched val (2,146 rows, small
+and reuse-heavy — arbitrates nothing below ~0.01): NONE-M 0.2499 (FT 0.2371, NCT 0.3879) | SFO 0.2444 (0.2304 / 0.3948) |
+DFF 0.2464 (0.2334 / 0.3868) | ADDR-M 0.2563 (0.2421 / 0.4094). Predicts 1342608/10/12/14 running on 68,624 matched test
+rows; analysis 1342615 queued. Punstrip heads at step 30k/35.4k: none 0.4261, random 0.4385, callgraph 0.4409, union 0.4901
+(val_sub; P3 final 0.4876).
+MATCHED-POPULATION MECHANISM STUDY — TEST (68,624 matched fns, 223 binaries, 24 packages; four heads trained on the SAME
+112,408 matched rows; jobs 1342607–1342615; results/ctx_layout/samefile_analysis.json):
+  | head | pkg F1 | fn F1 | prefix recall | remainder F1 |
+  | NONE-M (no context)              | 0.2444 | 0.1459 | 0.1372 | 0.1292 |
+  | DFF (different file, outside ±10)| 0.2540 | 0.1481 | 0.1370 | 0.1314 |
+  | SFO (same file, outside ±10)     | 0.2512 | 0.1614 | 0.1532 | 0.1416 |
+  | ADDR-M (±10 window)              | 0.2688 | 0.1659 | 0.1612 | 0.1433 |
+  Package-level paired bootstrap (24 pkgs): SFO−DFF −0.003 [−0.022, +0.018] n.s.; ADDR−SFO +0.018 [+0.002, +0.032]; ADDR−DFF
+  +0.015 [+0.003, +0.027]; SFO−NONE +0.007 [−0.011, +0.026] n.s.; DFF−NONE +0.010 [−0.000, +0.020]; ADDR−NONE +0.024 [+0.013, +0.035].
+  Function-level, binary-cluster bootstrap (223 binaries): SFO−DFF +0.0133 [+0.0071, +0.0194]; ADDR−SFO +0.0045 [+0.0007, +0.0090];
+  ADDR−DFF +0.0178 [+0.0111, +0.0254]; SFO−NONE +0.0154 [+0.0094, +0.0214]; DFF−NONE +0.0021 [−0.0019, +0.0069] n.s.;
+  ADDR−NONE +0.0199 [+0.0127, +0.0281].
+  By matched context size n_ctx (SFO/DFF get n functions; ADDR-M always the full window): n=20 (35,747 fns): none 0.1534 |
+  dff 0.1563 | sfo 0.1744 | addr 0.1744 → SFO == ADDRESS when size-matched; n 10–19 (12,537): 0.1488 / 0.1465 / 0.1534 / 0.1619;
+  n 1–9 (20,340): 0.1311 / 0.1344 / 0.1434 / 0.1532.
+  Locality bins on the matched population (ADDR-M vs NONE-M, by same-file share of the ±10 window): 0% (999) 0.073 vs 0.102
+  → Δ −0.029; 1–25% (3,308) −0.022; 25–50% (7,222) +0.016; 50–75% (17,792) +0.023; 75–100% (39,303) +0.024.
+READING (plan §15): function-level = OUTCOME B — same-file-out ≈ address (equal at n=20) > different-file ≈ no context;
+different-file context from the same binary adds nothing when trained on it. Package-level CIs (24 packages) are too wide to
+separate SFO from DFF. Address context HURTS when the window has no same-file function (Δ −0.02…−0.03) and helps +0.02 when
+≥25% is same-file → the "when it helps / when it fails" statement for the paper. Caveat: ADDR-M has 20 context fns while
+SFO/DFF have n=min(20, pools) (median 20, mean 14); the n=20 stratum is the size-fair comparison.

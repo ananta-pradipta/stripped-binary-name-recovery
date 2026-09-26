@@ -1,0 +1,163 @@
+{
+ "n_functions": 68624,
+ "n_packages": 24,
+ "T14": {
+  "NONE-M (no context, matched-trained)": {
+   "f1_pkg": 0.2444,
+   "f1_fn": 0.1459,
+   "prefix_recall": 0.1372,
+   "remainder_f1": 0.1292
+  },
+  "DFF (different file, matched-trained)": {
+   "f1_pkg": 0.254,
+   "f1_fn": 0.1481,
+   "prefix_recall": 0.137,
+   "remainder_f1": 0.1314
+  },
+  "SFO (same file outside \u00b110, matched-trained)": {
+   "f1_pkg": 0.2512,
+   "f1_fn": 0.1614,
+   "prefix_recall": 0.1532,
+   "remainder_f1": 0.1416
+  },
+  "ADDR-M (\u00b110 address, matched-trained)": {
+   "f1_pkg": 0.2688,
+   "f1_fn": 0.1659,
+   "prefix_recall": 0.1612,
+   "remainder_f1": 0.1433
+  },
+  "random (inference arm, adopted head)": {
+   "f1_pkg": 0.275,
+   "f1_fn": 0.1521,
+   "prefix_recall": 0.1517,
+   "remainder_f1": 0.131
+  },
+  "callers+callees (inference arm, adopted head)": {
+   "f1_pkg": 0.2898,
+   "f1_fn": 0.1647,
+   "prefix_recall": 0.17,
+   "remainder_f1": 0.1397
+  },
+  "address (full-data head)": {
+   "f1_pkg": 0.318,
+   "f1_fn": 0.176,
+   "prefix_recall": 0.1786,
+   "remainder_f1": 0.1499
+  },
+  "callers+callees (full-data head)": {
+   "f1_pkg": 0.3125,
+   "f1_fn": 0.1845,
+   "prefix_recall": 0.1871,
+   "remainder_f1": 0.1562
+  },
+  "union (full-data head)": {
+   "f1_pkg": 0.3132,
+   "f1_fn": 0.1854,
+   "prefix_recall": 0.1906,
+   "remainder_f1": 0.1566
+  },
+  "none (full-data head)": {
+   "f1_pkg": 0.2729,
+   "f1_fn": 0.1425,
+   "prefix_recall": 0.1356,
+   "remainder_f1": 0.1249
+  }
+ },
+ "bootstrap": {
+  "SFO (same file outside \u00b110, matched-trained) - DFF (different file, matched-trained)": {
+   "delta_pkg": -0.0028,
+   "ci95": [
+    -0.0224,
+    0.0175
+   ],
+   "first_higher": "14/24",
+   "delta_fn": 0.0133
+  },
+  "SFO (same file outside \u00b110, matched-trained) - random (inference arm, adopted head)": {
+   "delta_pkg": -0.0238,
+   "ci95": [
+    -0.0756,
+    0.0227
+   ],
+   "first_higher": "10/24",
+   "delta_fn": 0.0093
+  },
+  "ADDR-M (\u00b110 address, matched-trained) - SFO (same file outside \u00b110, matched-trained)": {
+   "delta_pkg": 0.0176,
+   "ci95": [
+    0.0018,
+    0.0317
+   ],
+   "first_higher": "20/24",
+   "delta_fn": 0.0045
+  },
+  "ADDR-M (\u00b110 address, matched-trained) - DFF (different file, matched-trained)": {
+   "delta_pkg": 0.0148,
+   "ci95": [
+    0.0031,
+    0.0266
+   ],
+   "first_higher": "18/24",
+   "delta_fn": 0.0178
+  },
+  "SFO (same file outside \u00b110, matched-trained) - NONE-M (no context, matched-trained)": {
+   "delta_pkg": 0.0068,
+   "ci95": [
+    -0.0109,
+    0.0263
+   ],
+   "first_higher": "15/24",
+   "delta_fn": 0.0154
+  },
+  "DFF (different file, matched-trained) - NONE-M (no context, matched-trained)": {
+   "delta_pkg": 0.0096,
+   "ci95": [
+    -0.0004,
+    0.0201
+   ],
+   "first_higher": "16/24",
+   "delta_fn": 0.0021
+  },
+  "ADDR-M (\u00b110 address, matched-trained) - NONE-M (no context, matched-trained)": {
+   "delta_pkg": 0.0244,
+   "ci95": [
+    0.0133,
+    0.0347
+   ],
+   "first_higher": "21/24",
+   "delta_fn": 0.0199
+  }
+ },
+ "T16_matched": {
+  "0%": {
+   "n": 999,
+   "address_f1": 0.0725,
+   "none_f1": 0.1015,
+   "delta": -0.029
+  },
+  "1-25%": {
+   "n": 3308,
+   "address_f1": 0.0588,
+   "none_f1": 0.0811,
+   "delta": -0.0223
+  },
+  "25-50%": {
+   "n": 7222,
+   "address_f1": 0.1254,
+   "none_f1": 0.1094,
+   "delta": 0.016
+  },
+  "50-75%": {
+   "n": 17792,
+   "address_f1": 0.1471,
+   "none_f1": 0.1244,
+   "delta": 0.0226
+  },
+  "75-100%": {
+   "n": 39303,
+   "address_f1": 0.1932,
+   "none_f1": 0.169,
+   "delta": 0.0242
+  }
+ }
+}
