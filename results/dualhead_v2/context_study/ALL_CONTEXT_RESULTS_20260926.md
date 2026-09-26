@@ -42,6 +42,9 @@ Digest statistics (test rows): C1 mean 19.9 source functions, 0.8% empty digests
 | C2 callgraph − C1 random | +0.0211 | +0.0139 | [+0.0049, +0.0227] | 38 / 50 |
 | C4 union − C3 address | +0.0040 | +0.0052 | [−0.0006, +0.0106] | 31 / 50 |
 | C4 union − C2 callgraph | +0.0027 | +0.0023 | [−0.0043, +0.0082] | 31 / 50 |
+| C1 random − C0 none | +0.0074 | +0.0206 | [+0.0121, +0.0293] | 42 / 50 |
+| C2 callgraph − C0 none | +0.0286 | +0.0345 | [+0.0250, +0.0442] | 43 / 50 |
+| C3 address − C0 none | +0.0272 | +0.0315 | [+0.0224, +0.0407] | 43 / 50 |
 
 Per-function relations between heads (test): C3 and C2 emit the same prediction for 12.1% of functions; F1 = 1 for 7.4% (C3) and 7.4% (C2), both 5.9%.
 Oracle max per function: max(C3, C2) 0.2612 (FT 0.1887, RHT 0.6237); max(C3, C2, C4) 0.2825.

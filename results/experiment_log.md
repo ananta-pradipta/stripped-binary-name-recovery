@@ -5267,3 +5267,17 @@ b2_bal (20+20 quotas, no fill), b3_sig (per-neighbour IDF-ranked signature: stri
 mean tokens b1 17.5 / b2 12.7 / b3 26.5 / b4 21.5. Prefix "/* call context: … */".
 Jobs: 1343979 build (+strata) → trains b1 1343980 / b2 1343982 / b3 1343984 / b4 1343986 (dm recipe, ~6.5 h) → predicts
 1343981/83/85/87 (val+test). Selection on validation per plan §12; Punstrip confirmation of the winner after.
+Validation resolution (binary-cluster bootstrap on head differences, LineageBench): val (104 bins) half-width ≈ ±0.005–0.007 fn F1;
+test (610 bins) ±0.001–0.003. Val: address−callgraph +0.002 [−0.006,+0.008]; union−address +0.002 [−0.003,+0.007];
+union−callgraph +0.003 [−0.002,+0.008]; address−random +0.011 [+0.006,+0.015]; callgraph−random +0.009 [+0.004,+0.016].
+Test: −0.001 [−0.004,+0.001]; +0.004 [+0.003,+0.005]; +0.003 [+0.001,+0.005]; +0.020; +0.021.
+SELECTION RULE for B1–B4 (declared before results): validation function-level F1; differences within ±0.006 = tie; ties broken
+by non-empty-context rate, then simplicity; package-level val (10 pkgs) not used; test confirmed once.
+cg_build 1343979 COMPLETED: all four variants, train 190,133 / val 10,617 / test 268,136 rows. Digest stats (test): B1 role
+empty 26.7%, mean 15.9 tokens; B2 balanced empty 26.7%, mean 12.2; B3 signatures empty 8.6% (= no resolved relation), mean
+27.5; B4 typed empty 8.6%, mean 16.8. Relation mix (test): neither 8.6%, caller-only 18.7%, callee-only 13.4%, both 59.3%.
+Trainings 1343980/82/84/86 started ~14:35 ET (all four running).
+Revision-instruction §27 bootstrap (LineageBench test, 50 pkgs, 10k): random − none +0.0206 [+0.0121, +0.0293], random higher in
+42/50 (fn +0.0074) → SIGNIFICANT; also callgraph − none +0.0345 [+0.0250, +0.0442] 43/50; address − none +0.0315 [+0.0224,
++0.0407] 43/50; address − random +0.0109 [+0.0024, +0.0194]; callgraph − random +0.0139 [+0.0049, +0.0227]. Hierarchy
+target-only < generic same-binary < structurally related holds on both corpora at package level.
